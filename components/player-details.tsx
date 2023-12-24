@@ -126,10 +126,10 @@ const TeamDetails: React.FC<Props> = (props) => {
     console.log("currentFindex=",currentFindex.avg_findex)
    
    
-    const Details=mentions?.map((m:any)=>{
+    const Details=mentions?.map((m:any,i:number)=>{
        const date=convertToReadableLocalTime(m.date);
        console.log("Details date",m.date)
-        return <TeamDetailsDigest><TeamDetailsFindex>F:{m.findex}</TeamDetailsFindex><TeamDetailsSummary><i>{date}</i><br/>{m.summary}<br/><Link href={m.url}>{m.url}</Link></TeamDetailsSummary></TeamDetailsDigest>
+        return <TeamDetailsDigest key={`det${i}`}><TeamDetailsFindex>F:{m.findex}</TeamDetailsFindex><TeamDetailsSummary><i>{date}</i><br/>{m.summary}<br/><Link href={m.url}>{m.url}</Link></TeamDetailsSummary></TeamDetailsDigest>
     } )
   return (
     <div className="team">
