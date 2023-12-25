@@ -1,6 +1,5 @@
 //./lib/palette.ts
-export const palette = {
-    
+export const palette = {  
     light: { 
         colors: {
             text: "#222222",//color:"#607D8B",
