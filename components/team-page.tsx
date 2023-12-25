@@ -77,8 +77,8 @@ const Team: React.FC<Props> = (props) => {
     const { dark, league, team, player,pagetype,teamName } = props;
     const teamPlayersKey: TeamPlayersKey = {league:league||"", teamid: team || "" };
     const players = useSWR(teamPlayersKey, getTeamPlayers).data;
-    const PlayersNav = players?.map((p: { name: string }) => {
-        return p.name == player ? <SelectedSidePlayer><Link href={`/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}`}>{p.name}</Link></SelectedSidePlayer> : <SidePlayer><Link href={`/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}`}>{p.name}</Link></SidePlayer>
+    const PlayersNav = players?.map((p: { name: string,findex:string,mentions:string }) => {
+        return p.name == player ? <SelectedSidePlayer><Link href={`/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}`}>{p.name} ({`${p.findex}/${p.mentions}`})</Link></SelectedSidePlayer> : <SidePlayer><Link href={`/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}`}>{p.name} ({`${p.findex||0}/${p.mentions||0}`})</Link></SidePlayer>
       });
   console.log("team=",team,"pagetype=",pagetype)
   return (

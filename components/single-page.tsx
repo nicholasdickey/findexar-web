@@ -101,6 +101,14 @@ const Leagues = styled.div`
     text-align: center;
     font-size: 280px;
     margin: 0px;
+    a{
+        color: #fff;
+        text-decoration: none;
+        &:hover{
+          color: #4f8;
+        }
+    
+    }
  
 `;
 const LeftPanel = styled.div`
@@ -113,6 +121,20 @@ const LeftPanel = styled.div`
   justify-content:flex-start;
   align-items:flex-start; 
   padding-top:18px;
+  a{
+        color: #fff;
+        text-decoration: none;
+        &:hover{
+          color: #4f8;
+        }
+    
+    }
+`;
+const Welcome = styled.div`
+  padding-top:18px;
+  color:#aaa;
+  align-self:center;
+  font-size:12px;
   a{
         color: #fff;
         text-decoration: none;
@@ -234,7 +256,7 @@ const Landing: React.FC<Props> = (props) => {
           </Leagues>
           <MainPanel>
             <LeftPanel>
-              {league&&TeamsNav}
+              {league?TeamsNav:<Welcome>Welcome to Findexar!<br/><hr/><br/>Home of F-Index.<br/></Welcome>}
             </LeftPanel>
             <CenterPanel>
               {(pagetype=="team"||pagetype=="player")&&<Team team={team} league={league} teamName={teamName} pagetype={pagetype} player={player}/>}
