@@ -118,7 +118,7 @@ export const getServerSideProps =
                 if (player) {
                     keyDetails = { teamid: team, name: player };
                     details = await getDetails(keyDetails);
-                    console.log("go details",keyDetails,details)
+                    //console.log("go details",keyDetails,details)
                 }
                 else {
                     keyDetails= { teamid: team, name: teamName };

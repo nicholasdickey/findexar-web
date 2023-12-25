@@ -177,7 +177,7 @@ const Landing: React.FC<Props> = (props) => {
   const { dark, leagues, league, team, pagetype,player } = props;
   const leagueTeamsKey: LeagueTeamsKey = { func:"leagueTeams",league: league || "" };
   const teams = useSWR(leagueTeamsKey, getLeagueTeams).data;
-  console.log("TEAMS::::::",teams)
+  //console.log("TEAMS::::::",teams)
   const LeaguesNav = leagues?.map((l) => {
     return l == league ? <SelectedLeague><Link href={`/league/${l}`}>{l}</Link></SelectedLeague> : <League><Link href={`/league/${l}`}>{l}</Link></League>
   });

@@ -128,16 +128,16 @@ interface Props {
 const TeamDetails: React.FC<Props> = (props) => {
     const { dark, league, team, player,pagetype,teamName } = props;
     const detailsKey: DetailsKey = {teamid:team||"", name: player || "" };
-    console.log("detailsKey=",detailsKey)
+   // console.log("detailsKey=",detailsKey)
     const details = useSWR(detailsKey, getDetails).data;
-    console.log("details=",details,teamName,team)
+    //console.log("details=",details,teamName,team)
     const {mentions,currentFindex}=details;
-    console.log("currentFindex=",currentFindex.avg_findex)
+   // console.log("currentFindex=",currentFindex.avg_findex)
    
    
     const Details=mentions?.map((m:any,i:number)=>{
        const date=convertToUTCDateString(m.date);
-       console.log("Details date",m.date)
+      // console.log("Details date",m.date)
         return <TeamDetailsDigest key={`det${i}`}><TeamDetailsFindex>F:{m.findex}</TeamDetailsFindex><TeamDetailsSummary><i>{date}</i><br/>{m.summary}<br/><Link href={m.url}>{m.url}</Link></TeamDetailsSummary></TeamDetailsDigest>
     } )
   return (

@@ -82,7 +82,7 @@ export const getLeagueTeams = async ({league}:LeagueTeamsKey) => {
     try {
         const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-league-teams?league=${encodeURIComponent(league)}`;
         const res = await axios.get(url);
-        console.log("getLeagueTeams",url,res.data.teams)
+        //console.log("getLeagueTeams",url,res.data.teams)
         return res.data.teams;
     }
     catch (e) {
