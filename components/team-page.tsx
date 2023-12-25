@@ -21,7 +21,7 @@ const SelectedSidePlayer = styled.div`
     font-size: 14px;
     margin: 10px;
     a{
-        color: #ff8;
+        color: #ff8 !important;
         text-decoration: none;
         &:hover{
           color: #F8F;
@@ -78,7 +78,7 @@ const Team: React.FC<Props> = (props) => {
     const teamPlayersKey: TeamPlayersKey = {league:league||"", teamid: team || "" };
     const players = useSWR(teamPlayersKey, getTeamPlayers).data;
     const PlayersNav = players?.map((p: { name: string,findex:string,mentions:string }) => {
-        console.log("========>>>map:",p.name,player);
+        console.log("========>>>map:",p.name,player,p.name==player);
         return p.name == player ? <SelectedSidePlayer><Link href={`/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}`}>{p.name} ({`${p.findex}/${p.mentions}`})</Link></SelectedSidePlayer> : <SidePlayer><Link href={`/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}`}>{p.name} ({`${p.findex||0}/${p.mentions||0}`})</Link></SidePlayer>
       });
   console.log("team=",team,"pagetype=",pagetype)
