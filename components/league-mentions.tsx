@@ -116,7 +116,7 @@ const LeagueMentions: React.FC<Props> = ({ league }) => {
         let localUrl = type == 'person' ? `/league/${league}/team/${team}/player/${name}` : `/league/${league}/team/${team}`;
         console.log("localUrl", localUrl)
         return (
-            <div>
+            <div key={`mentions${i}`}>
                 <Link href={localUrl} key={`det${i}`}>
                     <MeantionWrap>
                         <MentionFindex>F:{findex}<br />{league}<br /></MentionFindex>
