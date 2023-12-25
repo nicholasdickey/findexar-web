@@ -77,12 +77,12 @@ const League = styled.div`
 const SelectedLeague = styled.div`
     height: 30px;
     width: 100px;
-    color: #ff8;
+    color: #ff8 !important;
     text-align: center;
     font-size: 24px;
     margin: 0px;
     a{
-        color: #ff8;
+        color: #ff8 !important;
         text-decoration: none;
         &:hover{
           color: #F8F;
