@@ -9,7 +9,7 @@ const MentionsOuterContainer = styled.div`
     display:flex;
     flex-direction:column;
     justify-content:flex-start;
-    width:100%;
+    width:80%;
     height:100%;
     padding-left:20px;
     a{

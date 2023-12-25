@@ -49,12 +49,12 @@ const SideTeam = styled.div`
 const SelectedSideTeam = styled.div`
   height: 40px;
   width: 300px;
-  color: #ff8;
+  color: #ff8 !important;
   text-align: center;
   font-size: 18px;
   margin: 10px;
   a{
-      color: #ff8;
+      color: #ff8 !important;
       text-decoration: none;
       &:hover{
         color: #F8F;
@@ -240,7 +240,7 @@ const Landing: React.FC<Props> = (props) => {
             </Leagues>
             <MainPanel>
               <LeftPanel>
-                {league ? TeamsNav : <Welcome>Welcome to Findexar!<br /><hr /><br />Home of F-Index.<br /></Welcome>}
+                {league ? TeamsNav : <Welcome>Welcome to Findexar!<br /><hr /><br />Home of F-Index.<br /><br/>Favorability rating in @mentions<br/>by pro sports writers in articles<br/> by the traditional media.</Welcome>}
               </LeftPanel>
               <CenterPanel>
                 {(pagetype == "team" || pagetype == "player") && <Team team={team} league={league} teamName={teamName} pagetype={pagetype} player={player} />}
