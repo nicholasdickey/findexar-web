@@ -116,6 +116,15 @@ interface Props {
       hour12: true,
     }).format(date);
   };
+  const convertToUTCDateString = (dateString: string): string => {
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        timeZone: 'UTC'
+    }).format(date);
+};
 const TeamDetails: React.FC<Props> = (props) => {
     const { dark, league, team, player,pagetype,teamName } = props;
     const detailsKey: DetailsKey = {teamid:team||"", name: player || "" };
@@ -127,7 +136,7 @@ const TeamDetails: React.FC<Props> = (props) => {
    
    
     const Details=mentions?.map((m:any,i:number)=>{
-       const date=convertToReadableLocalTime(m.date);
+       const date=convertToUTCDateString(m.date);
        console.log("Details date",m.date)
         return <TeamDetailsDigest key={`det${i}`}><TeamDetailsFindex>F:{m.findex}</TeamDetailsFindex><TeamDetailsSummary><i>{date}</i><br/>{m.summary}<br/><Link href={m.url}>{m.url}</Link></TeamDetailsSummary></TeamDetailsDigest>
     } )

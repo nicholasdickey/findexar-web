@@ -14,6 +14,7 @@ import { GlobalStyle } from '../components/themes/globalStyle';
 import { palette } from '../lib/palette';
 import { LeagueTeamsKey, getLeagueTeams } from '../lib/api';
 import Team from './team-page';
+import Mentions from './league-mentions';
 const Header = styled.header`
     height: 70px;
     width: 100%;
@@ -23,12 +24,6 @@ const Header = styled.header`
     font-size: 40px;
     padding-top: 10px;
     margin: 0px;
-`;
-const ContainerWrap = styled.div`
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 100%;
     a{
         color: #fff;
         text-decoration: none;
@@ -37,6 +32,14 @@ const ContainerWrap = styled.div`
         }
     
     }
+`;
+const ContainerWrap = styled.div`
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    
+   
 `;
 const SideTeam = styled.div`
     height: 40px;
@@ -84,7 +87,6 @@ const SelectedLeague = styled.div`
         &:hover{
           color: #F8F;
         }
-    
     }
 `;
 const Leagues = styled.div`
@@ -111,6 +113,14 @@ const LeftPanel = styled.div`
   justify-content:flex-start;
   align-items:flex-start; 
   padding-top:18px;
+  a{
+        color: #fff;
+        text-decoration: none;
+        &:hover{
+          color: #4f8;
+        }
+    
+    }
 `;
 const CenterPanel = styled.div`
   width:100%;
@@ -143,19 +153,21 @@ const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style
 
 const Landing: React.FC<Props> = (props) => {
   const { dark, leagues, league, team, pagetype,player } = props;
-  const leagueTeamsKey: LeagueTeamsKey = { league: league || "" };
+  const leagueTeamsKey: LeagueTeamsKey = { func:"leagueTeams",league: league || "" };
   const teams = useSWR(leagueTeamsKey, getLeagueTeams).data;
- 
+  console.log("TEAMS::::::",teams)
   const LeaguesNav = leagues?.map((l) => {
     return l == league ? <SelectedLeague><Link href={`/league/${l}`}>{l}</Link></SelectedLeague> : <League><Link href={`/league/${l}`}>{l}</Link></League>
   });
   let teamName = "";
-  const TeamsNav = teams?.map((t: { id: string, name: string }) => {
+  let TeamsNav=null;
+  if(teams&&teams.length>0)
+   TeamsNav= teams?.map((t: { id: string, name: string }) => {
     if( t.id == team)
       teamName=t.name;
     return t.id == team ? <SelectedSideTeam><Link href={`/league/${league}/team/${t.id}`}>{t.name}</Link></SelectedSideTeam> : <SideTeam><Link href={`/league/${league}/team/${t.id}`}>{t.name}</Link></SideTeam>
   });
- console.log("inside Landing:", pagetype, team)
+ console.log("inside Landing:", {league,pagetype, team})
   return <>
     <Head>
       <title>Findexar</title>
@@ -212,7 +224,7 @@ const Landing: React.FC<Props> = (props) => {
         theme={palette}>
         <GlobalStyle />
         <Header>
-          <div>FINDEXAR</div>
+          <Link href="/league">FINDEXAR</Link>
           {false && <Button variant="contained">Default</Button>}
 
         </Header>
@@ -222,10 +234,11 @@ const Landing: React.FC<Props> = (props) => {
           </Leagues>
           <MainPanel>
             <LeftPanel>
-              {TeamsNav}
+              {league&&TeamsNav}
             </LeftPanel>
             <CenterPanel>
               {(pagetype=="team"||pagetype=="player")&&<Team team={team} league={league} teamName={teamName} pagetype={pagetype} player={player}/>}
+              {pagetype=="league"&&!team&&<Mentions league={league||""} />}
             </CenterPanel>
           </MainPanel>
         </ContainerWrap>

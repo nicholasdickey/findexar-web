@@ -77,11 +77,12 @@ export const getLeagues = async () => {
         return false;
     }
 }
-export type LeagueTeamsKey = { league: string};
+export type LeagueTeamsKey = { func:string,league: string};
 export const getLeagueTeams = async ({league}:LeagueTeamsKey) => {
     try {
         const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-league-teams?league=${encodeURIComponent(league)}`;
         const res = await axios.get(url);
+        console.log("getLeagueTeams",url,res.data.teams)
         return res.data.teams;
     }
     catch (e) {
@@ -113,6 +114,20 @@ export const getDetails = async ({teamid,name}:DetailsKey) => {
     }
     catch (e) {
         console.log("getDetails", e);
+        return false;
+    }
+}
+export type MentionsKey = {func:string,league?: string};
+export const getMentions = async ({func,league}:MentionsKey) => {
+    try {
+      console.log("getMenions",league)
+        const url = league?`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-mentions?league=${encodeURIComponent(league)}`:`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-mentions`;
+        console.log("url",url)
+        const res = await axios.get(url);
+        return res.data.mentions;
+    }
+    catch (e) {
+        console.log("getMentions", e);
         return false;
     }
 }

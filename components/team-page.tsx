@@ -39,6 +39,15 @@ const RightPanel = styled.div`
   justify-content:flex-start;
   align-items:flex-start; 
   padding-top:18px;
+  a{
+        color: #fff;
+        text-decoration: none;
+        &:hover{
+          color: #4f8;
+        }
+    
+    }
+
 `;
 const CenterPanel = styled.div`
   width:100%;

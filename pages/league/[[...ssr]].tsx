@@ -9,7 +9,9 @@ import {
 //import { DocumentHeadTags, DocumentHeadTagsProps, documentGetInitialProps } from '@mui/material-nextjs/v14-pagesRouter';
 
 
-import { /*fetchSession,updateSession,*/ recordEvent, getLeagues, LeagueTeamsKey, getLeagueTeams, TeamPlayersKey, getTeamPlayers, DetailsKey, getDetails } from '../../lib/api'
+import { /*fetchSession,updateSession,*/ recordEvent, getLeagues, 
+LeagueTeamsKey, getLeagueTeams, TeamPlayersKey, getTeamPlayers, DetailsKey, getDetails,
+MentionsKey,getMentions } from '../../lib/api'
 
 interface Props {
     disable?: boolean;
@@ -50,9 +52,9 @@ export const getServerSideProps =
             let ssr = context.params?.ssr as string[];
 
             if (!ssr)
-                ssr = ['NFL'];
+                ssr = [''];
             let [arg1, arg2, arg3, arg4, arg5, arg6] = ssr;
-            let league = 'NFL';
+            let league = '';
             let team = '';//'buffalo-bills';
             let player = '';
             league = arg1;
@@ -96,13 +98,15 @@ export const getServerSideProps =
                   }*/
 
             const leagues = await getLeagues();
-            const keyLeagueTeams: LeagueTeamsKey = { league };
+            const keyLeagueTeams: LeagueTeamsKey = { func:"leagueTeams",league };
             let leagueTeams = await getLeagueTeams(keyLeagueTeams);
-            console.log("GOT leagueTeams",team,player,leagueTeams)
+           // console.log("GOT leagueTeams",team,player,leagueTeams)
             let teamPlayers;
             let details;
             let keyTeamPlayers: TeamPlayersKey;
             let keyDetails: DetailsKey={teamid:"",name:""};
+            let keyMentions:MentionsKey={func:"mentions",league};
+            let mentions = [];
             if (team) {
                 const t=leagueTeams?.find((t:any)=>t.id==team);
                 console.log("finding team to match t.id",t.id,team)
@@ -121,6 +125,10 @@ export const getServerSideProps =
                     details = await getDetails(keyDetails);
                 }   
             }
+            else {
+                mentions=await getMentions(keyMentions);
+               // console.log("GOT MENTIONS",keyMentions,mentions)
+            }
             let fallback={   
                 [unstable_serialize(keyLeagueTeams)]: leagueTeams,
                
@@ -130,8 +138,8 @@ export const getServerSideProps =
                 fallback[unstable_serialize(teamPlayers)]= teamPlayers;
             if(details&&keyDetails) 
                 fallback[unstable_serialize(keyDetails)]= details;  
-
-            
+            if(mentions&&mentions.length>0)
+                fallback[unstable_serialize(keyMentions)]= mentions;       
             return {
                 props: {
                     sessionid,

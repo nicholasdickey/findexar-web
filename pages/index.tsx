@@ -18,21 +18,21 @@ interface Props {
     utm_content?: string;
     isbot?: number;
     isfb?: number;
-    sessionid?: string;  
+    sessionid?: string;
 }
-export default function Home(props:Props) {
+export default function Home(props: Props) {
 
-    return <SinglePage  {...props}/>
+    return <SinglePage  {...props} />
 }
 export const getServerSideProps =
     async function getServerSideProps(context: GetServerSidePropsContext): Promise<any> {
         try {
             let { fbclid, utm_content, dark }:
                 { fbclid: string, utm_content: string, dark: number } = context.query as any;
-           
-           
-           
-            console.log("IRON_PASSWORD:",process.env.IRON_PASSWORD);
+
+
+
+            console.log("IRON_PASSWORD:", process.env.IRON_PASSWORD);
             utm_content = utm_content || '';
 
             fbclid = fbclid || '';
@@ -40,12 +40,12 @@ export const getServerSideProps =
             const botInfo = isbot({ ua });
 
             let host = context.req.headers.host || "";
-            
-        
+
+
             var randomstring = () => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-           // let sessionid = context.req.session?.sessionid || randomstring();
-           // const fresh = !context.req.session.sessionid;
-           const sessionid=randomstring();
+            // let sessionid = context.req.session?.sessionid || randomstring();
+            // const fresh = !context.req.session.sessionid;
+            const sessionid = randomstring();
             if (!botInfo.bot) {
                 console.log('ssr-landing-init');
                 try {
@@ -62,11 +62,17 @@ export const getServerSideProps =
                     console.log('ssr-bot-landing-init-error', x);
                 }
             }
-      /*      if (fresh || context.req.session.sessionid != sessionid) {
-                context.req.session.sessionid = sessionid;
-
-                await context.req.session.save();
-            }*/
+            /*      if (fresh || context.req.session.sessionid != sessionid) {
+                      context.req.session.sessionid = sessionid;
+      
+                      await context.req.session.save();
+                  }*/
+            return {
+                redirect: {
+                    permanent: false,
+                    destination: "/league"
+                }
+            }
             return {
                 props: {
                     sessionid,
