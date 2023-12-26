@@ -14,6 +14,14 @@ const SidePlayer = styled.div`
   font-size: 14px;
   margin: 10px;
 `;
+const TeamName = styled.div`
+  height: 40px;
+  width: 200px; 
+  color: #aea;
+  text-align: center;
+  font-size: 16px;
+  margin: 10px;
+`;
 const SelectedSidePlayer = styled.div`
   height: 40px;
   width: 200px;
@@ -86,6 +94,7 @@ const Team: React.FC<Props> = (props) => {
           {pagetype == "team" ? <TeamDetails {...props} /> : <PlayerDetails {...props} />}
         </CenterPanel>
         <RightPanel>
+          <TeamName>{teamName}</TeamName>
           {PlayersNav}
         </RightPanel>
       </MainPanel>
