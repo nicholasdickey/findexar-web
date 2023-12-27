@@ -91,9 +91,9 @@ const Icon = styled.span`
     }
 `;
 const ExtandedMention = styled.div`
- width:100%;
+ //width:100%;
     padding-right:20px;
-    margin-top:20px;
+    margin:20px;
     border-radius: 20px;
     font-size: 14px;
     padding:20px;
@@ -119,7 +119,7 @@ const Title = styled.div`
     margin-bottom: 10px;
 `;
 const Digest = styled.div`
-    font-size: 13px;
+    font-size: 14px;
     margin-left: 20px;
     margin-right: 20px;
 `;
@@ -140,7 +140,7 @@ const SiteName = styled.div`
     margin-bottom: 10px;
 `;
 const Byline = styled.div`
-    font-size: 14px;  
+    font-size: 15px;  
     width:100%;
     display: flex;
     justify-content: flex-start;
@@ -206,7 +206,7 @@ const Mention: React.FC<Props> =  ({ mentionType,league, type, team, name, date,
                         <hr />
                         <Atmention>@mention: {name} | Team: {team} | {league}</Atmention>
                     </div>
-                    {expanded && meta && <ExtandedMention>
+                    {expanded && meta && <Link href={url}><ExtandedMention>
                         <Title>{meta.title}</Title>
                         <Byline>
                                {meta.authors&&<Authors>{meta.authors}</Authors>}
@@ -221,8 +221,9 @@ const Mention: React.FC<Props> =  ({ mentionType,league, type, team, name, date,
                            
                         </Body>
                         </HorizontalContainer>
-                        {meta.url}
-                    </ExtandedMention>}
+                    
+                        {meta.url.substring(0, 50)}...
+                    </ExtandedMention></Link>}
                 </MentionSummary>
             </Link>
            
