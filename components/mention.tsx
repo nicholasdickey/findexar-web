@@ -55,18 +55,18 @@ const MentionWrap = styled.div`
 `;
 
 const MentionFindex = styled.div`
-    width:40px;
+    width:8px;
     height:100%;
     margin-right:20px;
     font-size: 18px;
-    padding-left:20px;
+   // padding-left:20px;
     padding-top:20px;
     background-color: #fff;
 `;
 const MentionSummary = styled.div`
     width:100%;
     padding-right:20px;
- 
+    margin-left:0px;
     font-size: 18px;
     padding:20px;
     background-color: #ddd;
@@ -110,7 +110,6 @@ const Body = styled.div`
     margin-bottom: 20px;
     display: flex;
     flex-direction: row;
-
 `;
 
 const Title = styled.div`
@@ -197,8 +196,9 @@ const Mention: React.FC<Props> =  ({ mentionType,league, type, team, name, date,
                     }}
                     className="material-icons-outlined">expand_more</Icon>
             </MentionFindex>
-            <Link href={localUrl}>
+           
                 <MentionSummary>
+                <Link href={localUrl}>
                     <div>
                         <LocalDate><i>{localDate}</i></LocalDate>
                         <br />
@@ -224,8 +224,9 @@ const Mention: React.FC<Props> =  ({ mentionType,league, type, team, name, date,
                     
                         {meta.url.substring(0, 50)}...
                     </ExtandedMention></Link>}
+                    </Link>
                 </MentionSummary>
-            </Link>
+           
            
            
         </MentionWrap>
