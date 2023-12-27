@@ -80,3 +80,17 @@ export const getMentions = async ({func,league}:MentionsKey) => {
     return false;
   }
 }
+
+// SWR get expanded meta
+export type MetaLinkKey = {func:string,xid?: string};
+export const getMetaLink = async ({func,xid}:MetaLinkKey) => {
+  try {
+    const url =`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-meta-link?xid=${xid}`;
+    const res = await axios.get(url);
+    return res.data.meta;
+  }
+  catch (e) {
+    console.log("getMeta", e);
+    return false;
+  }
+}

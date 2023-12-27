@@ -3,6 +3,7 @@ import React from "react";
 import Head from 'next/head'
 import Link from 'next/link'
 import { Roboto } from 'next/font/google';
+import 'material-icons/iconfont/outlined.css';
 import Script from "next/script";
 import useSWR from 'swr';
 import useSWRImmutable from 'swr/immutable'
@@ -172,18 +173,18 @@ const Landing: React.FC<Props> = (props) => {
   const leagueTeamsKey: LeagueTeamsKey = { func: "leagueTeams", league: league || "" };
   const teams = useSWR(leagueTeamsKey, getLeagueTeams).data;
 
-  const LeaguesNav = leagues?.map((l) => {
-    return l == league ? <SelectedLeague><Link href={`/league/${l}`}>{l}</Link></SelectedLeague> : <League><Link href={`/league/${l}`}>{l}</Link></League>
+  const LeaguesNav = leagues?.map((l:string,i:number) => {
+    return l == league ? <SelectedLeague key={`league-${i}`}><Link href={`/league/${l}`}>{l}</Link></SelectedLeague> : <League><Link href={`/league/${l}`}>{l}</Link></League>
   });
 
   let teamName = "";
   let TeamsNav = null;
   
   if (teams && teams.length > 0)
-    TeamsNav = teams?.map((t: { id: string, name: string }) => {
+    TeamsNav = teams?.map((t: { id: string, name: string },i:number) => {
       if (t.id == team)
         teamName = t.name;
-      return t.id == team ? <SelectedSideTeam><Link href={`/league/${league}/team/${t.id}`}>{t.name}</Link></SelectedSideTeam> : <SideTeam><Link href={`/league/${league}/team/${t.id}`}>{t.name}</Link></SideTeam>
+      return t.id == team ? <SelectedSideTeam key={`sideteam-${i}`}><Link href={`/league/${league}/team/${t.id}`}>{t.name}</Link></SelectedSideTeam> : <SideTeam key={`sideteam-${i}`}><Link href={`/league/${league}/team/${t.id}`}>{t.name}</Link></SideTeam>
     });
 
   return (
@@ -191,10 +192,10 @@ const Landing: React.FC<Props> = (props) => {
       <Head>
         <title>Findexar</title>
         <link rel="canonical" href="www.findexar.com" />
-        <meta property="og:description" content="Perception Intelligence for Major League Teams" />
+        <meta property="og:description" content="Fantasy Sports Mentions Monitor for Major League Teams and athletes" />
         <meta name="title" content="Findexar" />
         <meta property="og:title" content="Findexar" />
-        <meta name="description" content="Perception Intelligence for Major League Teams" />
+        <meta name="description" content="Fantasy Sports Mentions Monitor for Major League Teams and athletes" />
         <meta property="og:type" content="website" />
         <meta property="fb:appid" content="358234474670240" />
         <meta property="og:site_name" content="Findexar.com" />
@@ -240,7 +241,7 @@ const Landing: React.FC<Props> = (props) => {
             </Leagues>
             <MainPanel>
               <LeftPanel>
-                {league ? TeamsNav : <Welcome>Welcome to Findexar!<br /><hr /><br />Home of F-Index.<br /><br/>Favorability rating in @mentions<br/>by pro sports writers in articles<br/> by the traditional media.</Welcome>}
+                {league ? TeamsNav : <Welcome>Welcome to Findexar!<br /><hr /><br />Your indespensible Fantasy Sports<br/> research tool!<br /><br/>Monitoring and indexing <br/>athlete mentions<br/>by pro sports writers in <br/> the media.</Welcome>}
               </LeftPanel>
               <CenterPanel>
                 {(pagetype == "team" || pagetype == "player") && <Team team={team} league={league} teamName={teamName} pagetype={pagetype} player={player} />}

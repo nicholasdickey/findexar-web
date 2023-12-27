@@ -16,6 +16,7 @@
     "@mui/material-nextjs": "^5.15.0",
     "axios": "^1.6.2",
     "isbot-fast": "^1.2.0",
+    "material-icons": "^1.13.12",
     "next": "14.0.4",
     "next-session": "^4.0.5",
     "nextjs-cors": "^2.1.2",

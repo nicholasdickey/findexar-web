@@ -39,7 +39,7 @@ const SelectedSidePlayer = styled.div`
 `;
 
 const RightPanel = styled.div`
-  width:300px;
+  //width:40%;
   height:100%;
   min-height: 1000vh;
   background-color:  #668;
@@ -58,7 +58,7 @@ const RightPanel = styled.div`
 `;
 
 const CenterPanel = styled.div`
-  width:100%;
+ // width:100%;
   height:100%;
 `;
 
@@ -66,7 +66,7 @@ const MainPanel = styled.div`
   display:flex;
   flex-direction:row;
   justify-content:flex-start;
-  width:100%;
+ // width:60%;
   height:100%;
 `;
 interface Props {
@@ -84,7 +84,7 @@ const Team: React.FC<Props> = (props) => {
   const players = useSWR(teamPlayersKey, getTeamPlayers).data;
 
   const PlayersNav = players?.map((p: { name: string, findex: string, mentions: string }) => {
-    return p.name == player ? <SelectedSidePlayer><Link href={`/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}`}>{p.name} ({`${p.findex}/${p.mentions}`})</Link></SelectedSidePlayer> : <SidePlayer><Link href={`/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}`}>{p.name} ({`${p.findex || 0}/${p.mentions || 0}`})</Link></SidePlayer>
+    return p.name == player ? <SelectedSidePlayer><Link href={`/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}`}>{p.name} ({`${p.mentions}`})</Link></SelectedSidePlayer> : <SidePlayer><Link href={`/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}`}>{p.name} ({`${p.mentions || 0}`})</Link></SidePlayer>
   });
 
   return (

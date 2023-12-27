@@ -1,10 +1,10 @@
 import React from "react";
 import useSWR from 'swr';
-import Link from 'next/link';
+import useSWRImmutable from 'swr/immutable'
 import { styled } from "styled-components";
-import { MentionsKey, getMentions } from '@/lib/api';
-import { convertToUTCDateString } from "@/lib/date-convert";
+import { MentionsKey, getMentions,MetaLinkKey,getMetaLink } from '@/lib/api';
 
+import Mention from "./mention";
 const MentionsOuterContainer = styled.div`
     display:flex;
     flex-direction:column;
@@ -32,42 +32,11 @@ const MentionsBody = styled.div`
     padding-right:120px;
 `;
 
-const MeantionWrap = styled.div`
-    min-height:100px;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items:flex-start;
-    border: 1px solid #ccc;
-    margin-right:40px;
-    margin-top:20px;
-`;
-
-const MentionFindex = styled.div`
-    width:40px;
-    height:100%;
-    margin-right:20px;
-    font-size: 18px;
-    padding-left:20px;
-    padding-top:20px;
-    background-color: #fff;
-`;
-const MentionSummary = styled.div`
-    width:100%;
-    padding-right:20px;
- 
-    font-size: 18px;
-    padding:20px;
-    background-color: #ddd;
-    &:hover{
-            background-color: #ccc;
-    }  
-`;
-
 const MentionsHeader = styled.div`
     padding-top:10px;
     font-size: 18px;
 `;
+
 interface Props {
     league: string;
 }
@@ -76,28 +45,11 @@ const LeagueMentions: React.FC<Props> = ({ league }) => {
     const mentionsKey: MentionsKey = { func: "mentions", league };
     const mentions = useSWR(mentionsKey, getMentions).data;
     const Mentions = mentions.map((m: any, i: number) => {
-        const { league, type, team, name, date, url, findex, summary } = m;
-        let localDate = convertToUTCDateString(date);
-        let localUrl = type == 'person' ? `/league/${league}/team/${team}/player/${name}` : `/league/${league}/team/${team}`;
-        return (
-            <div key={`mentions${i}`}>
-                <Link href={localUrl} key={`det${i}`}>
-                    <MeantionWrap>
-                        <MentionFindex>F:{findex}<br />{league}<br /></MentionFindex>
-                        <MentionSummary>
-                            <div>
-                                <i>{localDate}</i>
-                                <br />
-                                {summary}
-                                <hr />
-                                @mention:{name} | Team:{team} 
-                            </div>
-                        </MentionSummary>
-                    </MeantionWrap>
-                </Link>
-            </div>
-        );
-    })
+        const { league, type, team, name, date, url, findex, summary,xid } = m;
+        console.log("XID:",league,name,xid)
+          return (<Mention mentionType="top" league={league} type={type} team={team} name={name} date={date} url={url} findex={findex} summary={summary} xid={xid} key={`mention${i}`} />)
+    });         
+    
     return (
         <>
             <MentionsOuterContainer>
