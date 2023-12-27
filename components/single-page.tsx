@@ -241,7 +241,7 @@ const Landing: React.FC<Props> = (props) => {
             </Leagues>
             <MainPanel>
               <LeftPanel>
-                {league ? TeamsNav : <Welcome>Welcome to Findexar!<br /><hr /><br />Your indespensible Fantasy Sports<br/> research tool!<br /><br/>Monitoring and indexing <br/>athlete mentions<br/>by pro sports writers in <br/> the media.</Welcome>}
+                {league ? TeamsNav : <Welcome>Welcome to Findexar!<br /><hr /><br />Your indispensable Fantasy Sports<br/> research tool!<br /><br/>Monitoring and indexing <br/>athlete mentions<br/>by pro sports writers in <br/> the media.</Welcome>}
               </LeftPanel>
               <CenterPanel>
                 {(pagetype == "team" || pagetype == "player") && <Team team={team} league={league} teamName={teamName} pagetype={pagetype} player={player} />}
