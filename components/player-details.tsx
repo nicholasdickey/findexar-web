@@ -1,15 +1,13 @@
 import React from "react";
 import useSWR from 'swr';
-import Link from 'next/link';
 import { styled } from "styled-components";
 import { DetailsKey, getDetails } from '@/lib/api';
-import { convertToUTCDateString } from "@/lib/date-convert";
 import Mention from "./mention";
+
 const MainPanel = styled.div`
     display:flex;
     flex-direction:column;
     justify-content:flex-start;
-   // width:100%;
     height:100%;
     padding-left:20px;
 `;
@@ -33,7 +31,6 @@ const TeamFindex = styled.div`
 `;
 
 const TeamDetailsBody = styled.div`
-   // width:100%;
     height:100%;
     display: flex;
     flex-direction: column;
@@ -100,17 +97,14 @@ const TeamDetails: React.FC<Props> = (props) => {
     const Details = mentions?.map((m: any, i: number) => {
         const { league, type, team, name, date, url, findex, summary,xid } = m;
         return (<Mention mentionType="final" league={league} type={type} team={team} name={name} date={date} url={url} findex={findex} summary={summary} xid={xid} key={`player-mention${i}`} />)
-
-        //const date = convertToUTCDateString(m.date);
-       // return <TeamDetailsDigest key={`det${i}`}><TeamDetailsFindex>F:{m.findex}</TeamDetailsFindex><TeamDetailsSummary><i>{date}</i><br />{m.summary}<br /><Link href={m.url}>{m.url}</Link></TeamDetailsSummary></TeamDetailsDigest>
     })
     return (
         <div className="team">
             <div className="team__members">
                 <TeamHeader>
                     <TeamName>{player}</TeamName>
-                  {false&&  <TeamFindex>F Index:&nbsp;{currentFindex.avg_findex}</TeamFindex>}
-                   {false&&<TeamFindex>Mentions:&nbsp;{currentFindex.mentions}</TeamFindex>}
+                    {false&&  <TeamFindex>F Index:&nbsp;{currentFindex.avg_findex}</TeamFindex>}
+                    {false&&<TeamFindex>Mentions:&nbsp;{currentFindex.mentions}</TeamFindex>}
                 </TeamHeader>
                 <MainPanel>
                 <MentionsHeader>Mentions ({currentFindex.mentions}):</MentionsHeader>

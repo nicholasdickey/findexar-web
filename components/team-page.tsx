@@ -14,6 +14,7 @@ const SidePlayer = styled.div`
   font-size: 14px;
   margin: 10px;
 `;
+
 const TeamName = styled.div`
   height: 40px;
   width: 200px; 
@@ -22,6 +23,7 @@ const TeamName = styled.div`
   font-size: 16px;
   margin: 10px;
 `;
+
 const SelectedSidePlayer = styled.div`
   height: 40px;
   width: 200px;
@@ -39,7 +41,6 @@ const SelectedSidePlayer = styled.div`
 `;
 
 const RightPanel = styled.div`
-  //width:40%;
   height:100%;
   min-height: 1000vh;
   background-color:  #668;
@@ -58,7 +59,6 @@ const RightPanel = styled.div`
 `;
 
 const CenterPanel = styled.div`
- // width:100%;
   height:100%;
 `;
 
@@ -66,7 +66,6 @@ const MainPanel = styled.div`
   display:flex;
   flex-direction:row;
   justify-content:flex-start;
- // width:60%;
   height:100%;
 `;
 interface Props {
@@ -101,4 +100,5 @@ const Team: React.FC<Props> = (props) => {
     </div>
   );
 };
+
 export default Team;

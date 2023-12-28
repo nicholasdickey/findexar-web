@@ -1,10 +1,10 @@
 import React from "react";
 import useSWR from 'swr';
-import useSWRImmutable from 'swr/immutable'
 import { styled } from "styled-components";
 import { MentionsKey, getMentions,MetaLinkKey,getMetaLink } from '@/lib/api';
 
 import Mention from "./mention";
+
 const MentionsOuterContainer = styled.div`
     display:flex;
     flex-direction:column;
@@ -61,4 +61,5 @@ const LeagueMentions: React.FC<Props> = ({ league }) => {
         </>
     );
 };
+
 export default LeagueMentions;

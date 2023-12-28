@@ -1,16 +1,13 @@
 import React from "react";
 import useSWR from 'swr';
-import Link from 'next/link';
 import { styled } from "styled-components";
 import { DetailsKey, getDetails } from '@/lib/api';
-import { convertToUTCDateString } from "@/lib/date-convert";
 import Mention from "./mention";
 
 const MainPanel = styled.div`
   display:flex;
   flex-direction:column;
   justify-content:flex-start;
- // width:100%;
   height:100%;
   padding-left:20px;
   
@@ -37,7 +34,6 @@ const TeamFindex = styled.div`
 `;
 
 const TeamDetailsBody = styled.div`
- // width:100%;
   height:100%;
   display: flex;
   flex-direction: column;
@@ -66,7 +62,7 @@ const TeamDetails: React.FC<Props> = (props) => {
   const Details = mentions?.map((m: any, i: number) => {
     const { league, type, team, name, date, url, findex, summary,xid } = m;
     return (<Mention mentionType="final" league={league} type={type} team={team} name={name} date={date} url={url} findex={findex} summary={summary} xid={xid} key={`team-mention${i}`} />)
-})
+  })
   return (
     <div className="team">
       <div className="team__members">
@@ -85,4 +81,5 @@ const TeamDetails: React.FC<Props> = (props) => {
     </div>
   );
 };
+
 export default TeamDetails;

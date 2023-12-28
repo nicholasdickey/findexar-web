@@ -8,6 +8,9 @@ import Script from "next/script";
 import useSWR from 'swr';
 import useSWRImmutable from 'swr/immutable'
 import { styled, ThemeProvider } from "styled-components";
+import { Button } from '@mui/material'
+import { ThemeProvider as MuiTP, createTheme } from '@mui/material/styles';
+import { blueGrey } from '@mui/material/colors'
 import { LeagueTeamsKey, getLeagueTeams } from '@/lib/api';
 import Team from './team-page';
 import Mentions from './league-mentions';
@@ -47,6 +50,7 @@ const SideTeam = styled.div`
   font-size: 18px;
   margin: 10px;
 `;
+
 const SelectedSideTeam = styled.div`
   height: 40px;
   width: 300px;
@@ -71,6 +75,7 @@ const League = styled.div`
   font-size: 24px;
   margin: 0px;
 `;
+
 const SelectedLeague = styled.div`
   height: 30px;
   width: 100px;
@@ -107,6 +112,7 @@ const Leagues = styled.div`
     } 
   }
 `;
+
 const LeftPanel = styled.div`
   width:300px;
   height:100%;
@@ -166,6 +172,7 @@ interface Props {
   player?: string;
   pagetype?: string;
 }
+
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 
 const Landing: React.FC<Props> = (props) => {
@@ -173,15 +180,33 @@ const Landing: React.FC<Props> = (props) => {
   const leagueTeamsKey: LeagueTeamsKey = { func: "leagueTeams", league: league || "" };
   const teams = useSWR(leagueTeamsKey, getLeagueTeams).data;
 
-  const LeaguesNav = leagues?.map((l:string,i:number) => {
-    return l == league ? <SelectedLeague key={`league-${i}`}><Link href={`/league/${l}`}>{l}</Link></SelectedLeague> : <League><Link href={`/league/${l}`}>{l}</Link></League>
+  const LeaguesNav = leagues?.map((l: string, i: number) => {
+    return l == league ? <SelectedLeague key={`league-${i}`}><Link href={`/league/${l}`}>{l}</Link></SelectedLeague> : <League key={`league-${i}`}><Link href={`/league/${l}`}>{l}</Link></League>
   });
-
+  let theme: any;
+  if (dark) {
+    theme = createTheme({
+      palette: {
+        mode: 'dark',
+        background: {
+          default: '#2d2b38',//' blueGrey[900],
+          paper: blueGrey[600],
+        }
+      },
+    })
+  }
+  else {
+    theme = createTheme({
+      palette: {
+        mode: 'light',
+      },
+    })
+  }
   let teamName = "";
   let TeamsNav = null;
-  
+
   if (teams && teams.length > 0)
-    TeamsNav = teams?.map((t: { id: string, name: string },i:number) => {
+    TeamsNav = teams?.map((t: { id: string, name: string }, i: number) => {
       if (t.id == team)
         teamName = t.name;
       return t.id == team ? <SelectedSideTeam key={`sideteam-${i}`}><Link href={`/league/${league}/team/${t.id}`}>{t.name}</Link></SelectedSideTeam> : <SideTeam key={`sideteam-${i}`}><Link href={`/league/${league}/team/${t.id}`}>{t.name}</Link></SideTeam>
@@ -227,30 +252,32 @@ const Landing: React.FC<Props> = (props) => {
         `,
       }} />
 
-      <main className={roboto.className} >
-        <ThemeProvider
-          //@ts-ignore
-          theme={palette}>
-          <GlobalStyle />
-          <Header>
-            <Link href="/league">FINDEXAR</Link>
-          </Header>
-          <ContainerWrap>
-            <Leagues>
-              {LeaguesNav}
-            </Leagues>
-            <MainPanel>
-              <LeftPanel>
-                {league ? TeamsNav : <Welcome>Welcome to Findexar!<br /><hr /><br />Your indispensable Fantasy Sports<br/> research tool!<br /><br/>Finding and indexing <br/>mentions of athletes<br/> in the media.<br/><br/><hr/>Powered by Open AI.</Welcome>}
-              </LeftPanel>
-              <CenterPanel>
-                {(pagetype == "team" || pagetype == "player") && <Team team={team} league={league} teamName={teamName} pagetype={pagetype} player={player} />}
-                {pagetype == "league" && !team && <Mentions league={league || ""} />}
-              </CenterPanel>
-            </MainPanel>
-          </ContainerWrap>
-        </ThemeProvider>
-      </main>
+      <MuiTP theme={theme}>
+        <main className={roboto.className} >
+          <ThemeProvider
+            //@ts-ignore
+            theme={palette}>
+            <GlobalStyle />
+            <Header>
+              <Link href="/league">FINDEXAR</Link>        
+            </Header>
+            <ContainerWrap>
+              <Leagues>
+                {LeaguesNav}
+              </Leagues>
+              <MainPanel>
+                <LeftPanel>
+                  {league ? TeamsNav : <Welcome>Welcome to Findexar!<br /><hr /><br />Your indispensable Fantasy Sports<br /> research tool!<br /><br />Finding and indexing <br />mentions of athletes<br /> in the media.<br /><br /><hr />Powered by Open AI.</Welcome>}
+                </LeftPanel>
+                <CenterPanel>
+                  {(pagetype == "team" || pagetype == "player") && <Team team={team} league={league} teamName={teamName} pagetype={pagetype} player={player} />}
+                  {pagetype == "league" && !team && <Mentions league={league || ""} />}
+                </CenterPanel>
+              </MainPanel>
+            </ContainerWrap>
+          </ThemeProvider>
+        </main>
+      </MuiTP>
     </>
   )
 }

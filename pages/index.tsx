@@ -3,7 +3,6 @@ import { GetServerSidePropsContext } from "next";
 import { isbot } from '../lib/isbot.js';
 import SinglePage from '../components/single-page';
 import { recordEvent } from '../lib/api'
-
 interface Props {
     disable?: boolean;
     dark?: number;

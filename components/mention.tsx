@@ -1,12 +1,9 @@
 import React, { useEffect } from "react";
-import useSWR from 'swr';
 import useSWRImmutable from 'swr/immutable'
 import Link from 'next/link';
-//import Image from 'next/image'
 import { styled } from "styled-components";
 import { MentionsKey, getMentions, MetaLinkKey, getMetaLink } from '@/lib/api';
 import { convertToUTCDateString,convertToReadableLocalTime } from "@/lib/date-convert";
-
 
 const MentionsOuterContainer = styled.div`
     display:flex;
@@ -59,7 +56,6 @@ const MentionFindex = styled.div`
     height:100%;
     margin-right:20px;
     font-size: 18px;
-   // padding-left:20px;
     padding-top:20px;
     background-color: #fff;
 `;
@@ -79,25 +75,23 @@ const MentionsHeader = styled.div`
     padding-top:10px;
     font-size: 18px;
 `;
+
 const Icon = styled.span`
     color: #555;
     font-size: 28px;
-   // margin-right:10px;
-   // margin-left:10px;
-   margin-top:10px;
-   cursor:pointer;
+    margin-top:10px;
+    cursor:pointer;
     &:hover{
             color: #F00;
     }
 `;
+
 const ExtandedMention = styled.div`
- //width:100%;
     padding-right:20px;
     margin:20px;
     border-radius: 20px;
     font-size: 14px;
     padding:20px;
-
     background-color: #eed;
     &:hover{
             background-color: #bbc;
@@ -105,6 +99,7 @@ const ExtandedMention = styled.div`
     display:flex;
     flex-direction:column;
 `;
+
 const Body = styled.div`
     font-size: 14px;
     margin-bottom: 20px;
@@ -117,6 +112,7 @@ const Title = styled.div`
     font-weight: bold;
     margin-bottom: 10px;
 `;
+
 const Digest = styled.div`
     font-size: 14px;
     margin-left: 20px;
@@ -129,27 +125,31 @@ const Image= styled.img`
     object-fit: cover;
     margin-bottom: 20px;
 `;
+
 const Authors = styled.div`
     margin-right:20px;
     margin-bottom: 10px;
 `;
+
 const SiteName = styled.div`
-    margin-right:20px;
-  
+    margin-right:20px;  
     margin-bottom: 10px;
 `;
+
 const Byline = styled.div`
     font-size: 15px;  
     width:100%;
     display: flex;
     justify-content: flex-start;
 `;
+
 const HorizontalContainer = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     align-items:flex-start;
 `;
+
 const Atmention= styled.div`
     font-size: 12px;   
 `;
@@ -157,7 +157,6 @@ const Atmention= styled.div`
 const LocalDate= styled.div`
     font-size: 12px;
 `;
-
 interface Props {
     mentionType:string;
     league: string;
@@ -172,7 +171,6 @@ interface Props {
 }
 
 const Mention: React.FC<Props> =  ({ mentionType,league, type, team, name, date, url, findex, summary, xid }) => {
-   // console.log("XID:", xid)
     const [expanded, setExpanded] = React.useState(false);
     const [localDate, setLocalDate] = React.useState(convertToUTCDateString(date));
 
@@ -180,9 +178,11 @@ const Mention: React.FC<Props> =  ({ mentionType,league, type, team, name, date,
     const mentionsKey: MetaLinkKey = { func: "meta", xid };
     const meta =  useSWRImmutable(mentionsKey, getMetaLink).data;
     let digest=meta?meta.digest.replace('<p>','').replace('</p>',''):"";
+    
     useEffect(() => {
         setLocalDate(convertToReadableLocalTime(date));
     },[date])
+
     return (
         <MentionWrap>
             <MentionFindex>
@@ -217,19 +217,15 @@ const Mention: React.FC<Props> =  ({ mentionType,league, type, team, name, date,
                         <Body>
                             <Digest>
                                 {digest}
-                            </Digest>
-                           
+                            </Digest>                          
                         </Body>
-                        </HorizontalContainer>
-                    
+                        </HorizontalContainer>      
                         {meta.url.substring(0, 50)}...
                     </ExtandedMention></Link>}
                     </Link>
-                </MentionSummary>
-           
-           
-           
+                </MentionSummary>     
         </MentionWrap>
     );
 };
+
 export default Mention;
