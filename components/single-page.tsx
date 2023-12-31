@@ -2,20 +2,31 @@
 import React from "react";
 import Head from 'next/head'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { Roboto } from 'next/font/google';
 import 'material-icons/iconfont/outlined.css';
 import Script from "next/script";
 import useSWR from 'swr';
 import useSWRImmutable from 'swr/immutable'
 import { styled, ThemeProvider } from "styled-components";
-import { Button } from '@mui/material'
+import { Tabs, Tab } from '@mui/material'
 import { ThemeProvider as MuiTP, createTheme } from '@mui/material/styles';
 import { blueGrey } from '@mui/material/colors'
+import HomeIcon from '@mui/icons-material/HomeOutlined';
+import MentionIcon from '@mui/icons-material/AlternateEmailOutlined';
+import TeamIcon from '@mui/icons-material/PeopleAltOutlined';
+import PlayerIcon from '@mui/icons-material/PersonPinOutlined';
+import ListIcon from '@mui/icons-material/ListOutlined';
+
+import { palette } from '@/lib/palette';
+import { GlobalStyle } from '@/components/themes/globalStyle';
+
 import { LeagueTeamsKey, getLeagueTeams } from '@/lib/api';
 import Team from './team-page';
 import Mentions from './league-mentions';
-import { palette } from '@/lib/palette';
-import { GlobalStyle } from '@/components/themes/globalStyle';
+import SecondaryTabs from "./secondary-tabs";
+
+
 
 const Header = styled.header`
   height: 70px;
@@ -40,6 +51,18 @@ const ContainerWrap = styled.div`
   flex-direction: column;
   height: 100%;
   width: 100%;
+  @media screen and (max-width: 1199px) {
+    display: none;
+  }
+`;
+const MobileContainerWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  @media screen and (min-width: 1200px) {
+    display: none;
+  }
 `;
 
 const SideTeam = styled.div`
@@ -131,7 +154,22 @@ const LeftPanel = styled.div`
     }
   }
 `;
-
+const LeftMobilePanel = styled.div`
+  width:100%;
+  background-color:  #333;
+  display:flex;
+  flex-direction:column;
+  //justify-content:center;
+  align-items:center; 
+  padding-top:18px;
+  a{
+    color: #fff;
+    text-decoration: none;
+    &:hover{
+      color: #4f8;
+    }
+  }
+`;
 const Welcome = styled.div`
   padding-top:18px;
   color:#aaa;
@@ -158,6 +196,11 @@ const MainPanel = styled.div`
   width:100%;
   height:100%;
 `;
+const MuiTabs = styled(Tabs)`
+  width:100%;
+  padding:0px;
+  margin:0px;
+`;
 interface Props {
   disable?: boolean;
   dark?: number;
@@ -166,23 +209,34 @@ interface Props {
   isbot?: number;
   isfb?: number;
   sessionid?: string;
-  leagues?: string[];
+  leagues: string[];
   league?: string;
   team?: string;
   player?: string;
   pagetype?: string;
+  view: string;
 }
 
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 
 const Landing: React.FC<Props> = (props) => {
-  const { dark, leagues, league, team, pagetype, player } = props;
+  let { dark, leagues, league, team, pagetype, player, view } = props;
+  view=view.toLowerCase();
+  const router = useRouter();
   const leagueTeamsKey: LeagueTeamsKey = { func: "leagueTeams", league: league || "" };
   const teams = useSWR(leagueTeamsKey, getLeagueTeams).data;
-
+  if (!view)
+    view = "Home";
   const LeaguesNav = leagues?.map((l: string, i: number) => {
     return l == league ? <SelectedLeague key={`league-${i}`}><Link href={`/league/${l}`}>{l}</Link></SelectedLeague> : <League key={`league-${i}`}><Link href={`/league/${l}`}>{l}</Link></League>
   });
+  const MobileLeaguesNav = leagues?.map((l: string, i: number) => {
+    return <Tab key={`league-${i}`} label={l} />
+  })
+  MobileLeaguesNav.unshift(<Tab key={`league-${leagues?.length}`}  icon={<HomeIcon/>}/>)
+  
+  const selectedLeague = leagues?.findIndex((l: string) => l == league)+1;
+  console.log("selectedLeague", selectedLeague)
   let theme: any;
   if (dark) {
     theme = createTheme({
@@ -259,7 +313,7 @@ const Landing: React.FC<Props> = (props) => {
             theme={palette}>
             <GlobalStyle />
             <Header>
-              <Link href="/league">FINDEXAR</Link>        
+              <Link href="/league">FINDEXAR</Link>
             </Header>
             <ContainerWrap>
               <Leagues>
@@ -270,11 +324,50 @@ const Landing: React.FC<Props> = (props) => {
                   {league ? TeamsNav : <Welcome>Welcome to Findexar!<br /><hr /><br />Your indispensable Fantasy Sports<br /> research tool!<br /><br />Finding and indexing <br />mentions of athletes<br /> in the media.<br /><br /><hr />Powered by Open AI.</Welcome>}
                 </LeftPanel>
                 <CenterPanel>
-                  {(pagetype == "team" || pagetype == "player") && <Team team={team} league={league} teamName={teamName} pagetype={pagetype} player={player} />}
+                  {(pagetype == "team" || pagetype == "player") && <Team view={view} teams={null} team={team} league={league} teamName={teamName} pagetype={pagetype} player={player} />}
                   {pagetype == "league" && !team && <Mentions league={league || ""} />}
                 </CenterPanel>
               </MainPanel>
             </ContainerWrap>
+            <MobileContainerWrap>
+              <MuiTabs
+                value={selectedLeague}
+                onChange={(event: React.SyntheticEvent, newValue: number) => { router.replace(`/league/${newValue?leagues[newValue-1]:''}?view=Mentions`) }}
+                variant="scrollable"
+                scrollButtons={true}
+                allowScrollButtonsMobile
+                aria-label="scrollable auto tabs example"
+              >
+                {MobileLeaguesNav}
+              </MuiTabs>      
+                {pagetype=='league'&&!league&&
+                <div>
+                  <SecondaryTabs options={[{ name: "Mentions", icon: <MentionIcon /> }, { name: "Lists", icon: <ListIcon /> }]} onChange={(option: any) => { console.log(option);router.replace(league?`/league/${league}?view=${encodeURIComponent(option.name)}`:`/league?view=${encodeURIComponent(option.name)}`) }} selectedOptionName={view} />          
+                  {view=='mentions'&&<CenterPanel>
+                    <Mentions league={league || ""} />
+                  </CenterPanel>}
+                  {view=='lists'&&<CenterPanel>
+                    LISTS
+                  </CenterPanel>}            
+                </div>}
+                {pagetype=='league'&&league&&
+                <div>
+                  <SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> },{ name: "Mentions", icon: <MentionIcon /> }]} onChange={(option: any) => { console.log(option);router.replace(league?`/league/${league}?view=${encodeURIComponent(option.name)}`:`/league?view=${encodeURIComponent(option.name)}`) }} selectedOptionName={view} />
+                  {view=='teams'&&
+                  <LeftMobilePanel>{TeamsNav}</LeftMobilePanel>} 
+                  {view=='mentions'&&<CenterPanel>
+                    <Mentions league={league || ""} />
+                  </CenterPanel>}          
+                </div>}
+                {(pagetype=='team'||pagetype=='player')&&
+                <div>
+                   <Team view={view} teams={<LeftMobilePanel>{TeamsNav}</LeftMobilePanel>} team={team} league={league} teamName={teamName} pagetype={pagetype} player={player} />               
+                </div>
+                }
+
+
+             
+            </MobileContainerWrap>
           </ThemeProvider>
         </main>
       </MuiTP>

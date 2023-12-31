@@ -10,6 +10,9 @@ const MainPanel = styled.div`
     justify-content:flex-start;
     height:100%;
     padding-left:20px;
+    @media screen and (max-width: 1199px ){
+    padding-left:1px;
+  }
 `;
 
 const TeamHeader = styled.div`
@@ -20,11 +23,13 @@ const TeamHeader = styled.div`
     width:100%;
     height:40px;
 `;
+
 const TeamName = styled.div`
     width:300px;
     font-size: 24px;
     margin:10px;
 `;
+
 const TeamFindex = styled.div`
     margin-right:20px;
     font-size: 18px;
@@ -37,6 +42,9 @@ const TeamDetailsBody = styled.div`
     justify-content: flex-start;
     align-items:flex-start;
     padding-right : 30px;
+    @media screen and (max-width: 1199px ){
+        padding-right:1px;
+    }
  `;
 
 const TeamDetailsDigest = styled.div`
@@ -78,6 +86,10 @@ const TeamDetailsSummary = styled.div`
 `;
 
 const MentionsHeader = styled.div`
+    @media screen and (max-width: 1199px ){
+        margin-left:10px;
+        margin-bottom:10px;
+    }
 `;
 interface Props {
     dark?: number;

@@ -13,7 +13,7 @@ interface Props {
     sessionid?: string;
 }
 export default function Home(props: Props) {
-    return <SinglePage  {...props} />
+    return <div/>
 }
 export const getServerSideProps =
     async function getServerSideProps(context: GetServerSidePropsContext): Promise<any> {

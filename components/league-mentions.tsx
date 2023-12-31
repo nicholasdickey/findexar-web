@@ -9,9 +9,10 @@ const MentionsOuterContainer = styled.div`
     display:flex;
     flex-direction:column;
     justify-content:flex-start;
-    width:80%;
+    //width:80%;
     height:100%;
     padding-left:20px;
+    padding-right:20px;
     a{
         font-size: 12px;
         color: #000;
@@ -20,6 +21,29 @@ const MentionsOuterContainer = styled.div`
           color: #222;
         }   
     }
+    @media screen and (max-width: 1199px) {
+    display: none;
+  }
+`;
+const MobileMentionsOuterContainer = styled.div`
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    //width:80%;
+    height:100%;
+    padding-left:2px;
+    padding-right:2px;
+    a{
+        font-size: 12px;
+        color: #000;
+        text-decoration: none;
+        &:hover{
+          color: #222;
+        }   
+    }
+    @media screen and (min-width: 1200px) {
+    display: none;
+  }
 `;
 
 const MentionsBody = styled.div`
@@ -29,7 +53,7 @@ const MentionsBody = styled.div`
     flex-direction: column;
     justify-content: flex-start;
     align-items:flex-start;
-    padding-right:120px;
+    //padding-right:120px;
 `;
 
 const MentionsHeader = styled.div`
@@ -58,6 +82,12 @@ const LeagueMentions: React.FC<Props> = ({ league }) => {
                     {Mentions}
                 </MentionsBody>
             </MentionsOuterContainer>
+            <MobileMentionsOuterContainer>
+              
+                <MentionsBody>
+                    {Mentions}
+                </MentionsBody>
+            </MobileMentionsOuterContainer>
         </>
     );
 };

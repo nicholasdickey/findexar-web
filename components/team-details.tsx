@@ -10,7 +10,9 @@ const MainPanel = styled.div`
   justify-content:flex-start;
   height:100%;
   padding-left:20px;
-  
+  @media screen and (max-width: 1199px ){
+    padding-left:1px;
+  } 
 `;
 
 const TeamHeader = styled.div`
@@ -23,9 +25,10 @@ const TeamHeader = styled.div`
 `;
 
 const TeamName = styled.div`
-  width:300px;
+  width:100%;
   font-size: 24px;
   margin:10px;
+  text-align:center;
 `;
 
 const TeamFindex = styled.div`
@@ -40,10 +43,11 @@ const TeamDetailsBody = styled.div`
   justify-content: flex-start;
   align-items:flex-start;
   padding-right:30px;
+  @media screen and (max-width: 1199px ){
+    padding-right:1px;
+  }
 `;
 
-const MentionsHeader = styled.div`
-`;
 interface Props {
   dark?: number;
   league?: string;
@@ -67,12 +71,11 @@ const TeamDetails: React.FC<Props> = (props) => {
     <div className="team">
       <div className="team__members">
         <TeamHeader>
-          <TeamName>{teamName}</TeamName>
+          <TeamName>{teamName}  </TeamName>
          {false&& <TeamFindex>F Index:&nbsp;{currentFindex.avg_findex}</TeamFindex>}
          {false&&<TeamFindex>Mentions:&nbsp;{currentFindex.mentions}</TeamFindex>}
         </TeamHeader>
-        <MainPanel>
-          <MentionsHeader>Mentions ({currentFindex.mentions}):</MentionsHeader>
+        <MainPanel>   
           <TeamDetailsBody>
             {Details}
           </TeamDetailsBody>

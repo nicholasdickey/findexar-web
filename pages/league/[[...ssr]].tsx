@@ -22,6 +22,9 @@ interface Props {
     team?: string;
     player?: string;
     fallback?: any,
+    pageType?: string;
+    leagues:string[];
+    view:string;
 }
 export default function Home(props: Props) {
     const fallback = props.fallback;
@@ -30,8 +33,8 @@ export default function Home(props: Props) {
 export const getServerSideProps =
     async function getServerSideProps(context: GetServerSidePropsContext): Promise<any> {
         try {
-            let { fbclid, utm_content, dark }:
-                { fbclid: string, utm_content: string, dark: number } = context.query as any;
+            let { fbclid, utm_content, dark,view="Home" }:
+                { fbclid: string, utm_content: string, dark: number,view:string } = context.query as any;
 
             let pagetype="league";
             utm_content = utm_content || '';
@@ -128,7 +131,8 @@ export const getServerSideProps =
                     player,
                     leagues,
                     pagetype,
-                    fallback
+                    fallback,
+                    view
                 }
             }
         } catch (x) {
