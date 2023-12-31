@@ -226,7 +226,9 @@ const Landing: React.FC<Props> = (props) => {
   const leagueTeamsKey: LeagueTeamsKey = { func: "leagueTeams", league: league || "" };
   const teams = useSWR(leagueTeamsKey, getLeagueTeams).data;
   if (!view)
-    view = "Home";
+    view = "home";
+  if(view=="home")
+  view="mentions";
   const LeaguesNav = leagues?.map((l: string, i: number) => {
     return l == league ? <SelectedLeague key={`league-${i}`}><Link href={`/league/${l}`}>{l}</Link></SelectedLeague> : <League key={`league-${i}`}><Link href={`/league/${l}`}>{l}</Link></League>
   });
@@ -265,7 +267,7 @@ const Landing: React.FC<Props> = (props) => {
         teamName = t.name;
       return t.id == team ? <SelectedSideTeam key={`sideteam-${i}`}><Link href={`/league/${league}/team/${t.id}`}>{t.name}</Link></SelectedSideTeam> : <SideTeam key={`sideteam-${i}`}><Link href={`/league/${league}/team/${t.id}`}>{t.name}</Link></SideTeam>
     });
-
+  console.log("view",view)
   return (
     <>
       <Head>
