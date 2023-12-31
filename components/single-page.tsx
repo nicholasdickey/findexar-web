@@ -44,6 +44,11 @@ const Header = styled.header`
         color: #4f8;
       }  
   }
+  @media screen and (max-width: 1199px) {
+    padding-top:28px;
+    font-size: 28px;
+    margin-bottom:0px;
+  }
 `;
 
 const ContainerWrap = styled.div`
@@ -315,7 +320,7 @@ const Landing: React.FC<Props> = (props) => {
             theme={palette}>
             <GlobalStyle />
             <Header>
-              <Link href="/league">FINDEXAR</Link>
+              <Link href="/league">{!league&&!team?"FINDEXAR":!team?`${league}`:player?`${player}`: `${teamName}`}</Link>
             </Header>
             <ContainerWrap>
               <Leagues>
