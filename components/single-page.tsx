@@ -48,8 +48,6 @@ const Header = styled.header`
   }
   @media screen and (max-width: 1199px) {
     height: 64px;
-    font-size: 28px;
-
   }
 `;
 
@@ -227,7 +225,7 @@ const HeaderTopline = styled.div`
  
   @media screen and (max-width: 1199px) {
     //padding-top:28px;
-    font-size: 28px;
+    font-size: 20px;
     margin-bottom:0px;
   }
 `;
