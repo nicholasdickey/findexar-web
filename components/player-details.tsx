@@ -1,6 +1,8 @@
 import React from "react";
 import useSWR from 'swr';
 import { styled } from "styled-components";
+import Skeleton from '@mui/material/Skeleton';
+import Stack from '@mui/material/Stack';
 import { DetailsKey, getDetails } from '@/lib/api';
 import Mention from "./mention";
 
@@ -103,23 +105,30 @@ interface Props {
 const TeamDetails: React.FC<Props> = (props) => {
     const { team, player } = props;
     const detailsKey: DetailsKey = { teamid: team || "", name: player || "" };
-    const details = useSWR(detailsKey, getDetails).data;
+    const {data:details,error,isLoading} = useSWR(detailsKey, getDetails);
+    if(isLoading) return (<Stack spacing={1}>
+        <Skeleton variant="rounded" animation="pulse" height={160} />
+         <Skeleton variant="rounded" animation="pulse" height={80} />
+         <Skeleton variant="rounded" animation="pulse" height={120} />
+         <Skeleton variant="rounded" animation="pulse" height={160} />
+       </Stack>)
     const { mentions, currentFindex } = details;
 
     const Details = mentions?.map((m: any, i: number) => {
         const { league, type, team, name, date, url, findex, summary,xid } = m;
         return (<Mention mentionType="final" league={league} type={type} team={team} name={name} date={date} url={url} findex={findex} summary={summary} xid={xid} key={`player-mention${i}`} />)
     })
+   
     return (
         <div className="team">
             <div className="team__members">
-                <TeamHeader>
+                {false&&<TeamHeader>
                     <TeamName>{player}</TeamName>
                     {false&&  <TeamFindex>F Index:&nbsp;{currentFindex.avg_findex}</TeamFindex>}
                     {false&&<TeamFindex>Mentions:&nbsp;{currentFindex.mentions}</TeamFindex>}
-                </TeamHeader>
+                </TeamHeader>}
                 <MainPanel>
-                <MentionsHeader>Mentions ({currentFindex.mentions}):</MentionsHeader>
+               {false&& <MentionsHeader>Mentions ({currentFindex.mentions}):</MentionsHeader>}
                     <TeamDetailsBody>
                         {Details}
                     </TeamDetailsBody>

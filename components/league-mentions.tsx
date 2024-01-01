@@ -1,6 +1,8 @@
 import React from "react";
 import useSWR from 'swr';
 import { styled } from "styled-components";
+import Skeleton from '@mui/material/Skeleton';
+import Stack from '@mui/material/Stack';
 import { MentionsKey, getMentions,MetaLinkKey,getMetaLink } from '@/lib/api';
 
 import Mention from "./mention";
@@ -67,13 +69,18 @@ interface Props {
 
 const LeagueMentions: React.FC<Props> = ({ league }) => {
     const mentionsKey: MentionsKey = { func: "mentions", league };
-    const mentions = useSWR(mentionsKey, getMentions).data;
+    const {data:mentions,error,isLoading} = useSWR(mentionsKey, getMentions);
     const Mentions = mentions.map((m: any, i: number) => {
         const { league, type, team, name, date, url, findex, summary,xid } = m;
         console.log("XID:",league,name,xid)
           return (<Mention mentionType="top" league={league} type={type} team={team} name={name} date={date} url={url} findex={findex} summary={summary} xid={xid} key={`mention${i}`} />)
     });         
-    
+    if(isLoading) return (<Stack spacing={1}>
+        <Skeleton variant="rounded" animation="pulse" height={160} />
+         <Skeleton variant="rounded" animation="pulse" height={80} />
+         <Skeleton variant="rounded" animation="pulse" height={120} />
+         <Skeleton variant="rounded" animation="pulse" height={160} />
+       </Stack>)
     return (
         <>
             <MentionsOuterContainer>

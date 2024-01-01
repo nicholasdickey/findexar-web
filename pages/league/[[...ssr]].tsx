@@ -111,7 +111,6 @@ export const getServerSideProps =
             let fallback={   
                 [unstable_serialize(keyLeagueTeams)]: leagueTeams,            
             };
-            
             if(teamPlayers)
                 fallback[unstable_serialize(teamPlayers)]= teamPlayers;
             if(details&&keyDetails) 

@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 import useSWR from 'swr';
 import Link from 'next/link';
 import { useRouter } from 'next/router'
@@ -6,6 +6,9 @@ import { styled } from "styled-components";
 import MentionIcon from '@mui/icons-material/AlternateEmailOutlined';
 import TeamIcon from '@mui/icons-material/PeopleAltOutlined';
 import PlayerIcon from '@mui/icons-material/PersonPinOutlined';
+import Skeleton from '@mui/material/Skeleton';
+import Stack from '@mui/material/Stack';
+
 import { TeamPlayersKey, getTeamPlayers } from '@/lib/api';
 import TeamDetails from "./team-details";
 import PlayerDetails from "./player-details";
@@ -94,7 +97,7 @@ const CenterPanel = styled.div`
 const MainPanel = styled.div`
   display:flex;
   flex-direction:row;
-  justify-content:flex-start;
+  justify-content:space-between;
   height:100%;
   @media screen and (max-width: 1199px) {
     display: none 
@@ -122,15 +125,42 @@ interface Props {
 
 const Team: React.FC<Props> = (props) => {
   let { view,teams,dark, league, team, player, pagetype, teamName } = props;
-  const router = useRouter();
+  const [v,setV]=React.useState((!view||view.toLowerCase()=="home")?"mentions":view.toLowerCase());
+  const [selectedTeam,setSelectedTeam]=React.useState(team);
+  const [selectedPlayer,setSelectedPlayer]=React.useState(player);
+  const [globalLoading,setGlobalLoading]=React.useState(false);
   const teamPlayersKey: TeamPlayersKey = { league: league || "", teamid: team || "" };
-  const players = useSWR(teamPlayersKey, getTeamPlayers).data;
-  if(!view||view=="home")
-    view="mentions";
+  const {data:players,error,isLoading} = useSWR(teamPlayersKey, getTeamPlayers);
+ useEffect(()=>{
+  if(!v||v=="home")
+    setV("mentions");
+ },[]);
+ useEffect(()=>{
+    setSelectedTeam(team);
+    setV("mentions");
+    setGlobalLoading(false);
+
+ },[team]);
+ useEffect(()=>{
+  setSelectedPlayer(player);
+  setV("mentions");
+  setGlobalLoading(false);
+
+},[player]);
+useEffect(()=>{
+  setV(view.toLowerCase());
+  //setGlobalLoading(true);
+},[view]);
+
+console.log("TeamPage",{v,team,pagetype,view,selectedTeam,selectedPlayer})
   const PlayersNav = players?.map((p: { name: string, findex: string, mentions: string }) => {
-    return p.name == player ? <SelectedSidePlayer><Link href={`/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}`}>{p.name} ({`${p.mentions}`})</Link></SelectedSidePlayer> : <SidePlayer><Link href={`/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}`}>{p.name} ({`${p.mentions || 0}`})</Link></SidePlayer>
+    return p.name == player ? <SelectedSidePlayer><Link onClick={()=>{ setV("mentions");setGlobalLoading(true)}} href={`/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}`}>{p.name} ({`${p.mentions}`})</Link></SelectedSidePlayer> : <SidePlayer><Link onClick={()=>{ setV("mentions");setGlobalLoading(true)}} href={`/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}`}>{p.name} ({`${p.mentions || 0}`})</Link></SidePlayer>
   });
-  console.log("Team",view,team,pagetype);
+  console.log("Team",{v,team,pagetype});
+ /* if(isLoading||globalLoading){
+    return  <MainPanel>Loading...</MainPanel>
+  }*/
+ 
   return (
     <div className="team">
       <MainPanel>
@@ -143,15 +173,24 @@ const Team: React.FC<Props> = (props) => {
         </RightPanel>
       </MainPanel>
       <MainMobilePanel>
-      {pagetype=="team"&&<SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> },{ name: "Mentions", icon: <MentionIcon /> },{name:"Players",icon:<PlayerIcon/>}]} onChange={(option: any) => { console.log(option);router.replace(`/league/${league}/team/${team}?view=${encodeURIComponent(option.name)}`) }} selectedOptionName={view} />}
-      {pagetype=="player"&&<SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> },{ name: "Mentions", icon: <MentionIcon /> },{name:"Players",icon:<PlayerIcon/>}]} onChange={(option: any) => { console.log(option);router.replace(`/league/${league}/team/${team}/player/${player}?view=${encodeURIComponent(option.name)}`) }} selectedOptionName={view} />}
-        {view=='teams'&&teams}   
-        {view=='mentions'&&pagetype == "team" && <TeamDetails {...props} />}
-        {view=='mentions'&&pagetype == "player" && <PlayerDetails {...props} />}
-        {view=='players'&&
+      {pagetype=="team"&&<SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> },{ name: "Mentions", icon: <MentionIcon /> },{name:"Players",icon:<PlayerIcon/>}]} onChange={(option: any) => { console.log(option);/*router.replace(`/league/${league}/team/${team}?view=${encodeURIComponent(option.name)}`)*/setV(option.name.toLowerCase()); }} selectedOptionName={v} />}
+      {pagetype=="player"&&<SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> },{ name: "Mentions", icon: <MentionIcon /> },{name:"Players",icon:<PlayerIcon/>}]} onChange={(option: any) => { console.log(option);/*router.replace(`/league/${league}/team/${team}/player/${player}?view=${encodeURIComponent(option.name)}`)*/setV(option.name.toLowerCase()); }} selectedOptionName={v} />}
+        {v=='teams'&&teams}  
+        {v=='mentions'&&(isLoading||globalLoading)&& <Stack spacing={1}>
+      {/* For variant="text", adjust the height via font-size */}
+ 
+     
+      <Skeleton variant="rounded" animation="pulse" height={160} />
+      <Skeleton variant="rounded" animation="pulse" height={80} />
+      <Skeleton variant="rounded" animation="pulse" height={120} />
+      <Skeleton variant="rounded" animation="pulse" height={160} />
+    </Stack>} 
+        {!isLoading&&!globalLoading&&v=='mentions'&&pagetype == "team" && <TeamDetails {...props} />}
+        {!isLoading&&!globalLoading&&v=='mentions'&&pagetype == "player" && <PlayerDetails {...props} />}
+        {v=='players'&&
          <MobilePlayersPanel>
-          <MobileTeamName>{teamName}</MobileTeamName>
-          {PlayersNav}
+         <MobileTeamName>{teamName}</MobileTeamName>
+          { globalLoading?<div>Loading...</div>:PlayersNav}
           </MobilePlayersPanel>}
       </MainMobilePanel>
     </div>

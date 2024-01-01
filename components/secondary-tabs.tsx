@@ -86,9 +86,6 @@ const AntTabs = styled(Tabs)({
     font-size: 10px;
  `;
 
-  
-
-
   const STabs = styled(Tabs)`
    background: #666 !important;
   
