@@ -45,7 +45,7 @@ export const getServerSideProps =
         return {
             redirect: {
                 permanent: false,
-                destination: "/league"
+                destination: "/pub"
             }
         }
     } catch (x) {

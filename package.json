@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@clerk/nextjs": "^4.29.1",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.1",
     "@emotion/server": "^11.11.0",
@@ -19,6 +20,7 @@
     "isbot-fast": "^1.2.0",
     "material-icons": "^1.13.12",
     "next": "14.0.4",
+    "next-auth": "^4.24.5",
     "next-session": "^4.0.5",
     "nextjs-cors": "^2.1.2",
     "react": "^18",

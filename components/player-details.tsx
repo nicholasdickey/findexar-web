@@ -1,5 +1,6 @@
 import React from "react";
 import useSWR from 'swr';
+import { useSession, signIn, signOut } from "next-auth/react"
 import { styled } from "styled-components";
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
@@ -106,6 +107,18 @@ const TeamDetails: React.FC<Props> = (props) => {
     const { team, player } = props;
     const detailsKey: DetailsKey = { teamid: team || "", name: player || "" };
     const {data:details,error,isLoading} = useSWR(detailsKey, getDetails);
+    /*const { data: session } = useSession()
+    if(!session){  
+        return (
+            <>
+              Not signed in <br />
+              <button onClick={() => signIn()}>Sign in</button>
+            </>
+          ) 
+        
+    }
+    console.log("session",session)*/
+
     if(isLoading) return (<Stack spacing={1}>
         <Skeleton variant="rounded" animation="pulse" height={160} />
          <Skeleton variant="rounded" animation="pulse" height={80} />

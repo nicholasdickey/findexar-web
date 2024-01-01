@@ -134,7 +134,7 @@ const Team: React.FC<Props> = (props) => {
  useEffect(()=>{
   if(!v||v=="home")
     setV("mentions");
- },[]);
+ },[v]);
  useEffect(()=>{
     setSelectedTeam(team);
     setV("mentions");
@@ -154,7 +154,7 @@ useEffect(()=>{
 
 console.log("TeamPage",{v,team,pagetype,view,selectedTeam,selectedPlayer})
   const PlayersNav = players?.map((p: { name: string, findex: string, mentions: string }) => {
-    return p.name == player ? <SelectedSidePlayer><Link onClick={()=>{ setV("mentions");setGlobalLoading(true)}} href={`/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}`}>{p.name} ({`${p.mentions}`})</Link></SelectedSidePlayer> : <SidePlayer><Link onClick={()=>{ setV("mentions");setGlobalLoading(true)}} href={`/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}`}>{p.name} ({`${p.mentions || 0}`})</Link></SidePlayer>
+    return p.name == player ? <SelectedSidePlayer><Link onClick={()=>{ setV("mentions");setGlobalLoading(true)}} href={`/pro/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}`}>{p.name} ({`${p.mentions}`})</Link></SelectedSidePlayer> : <SidePlayer><Link onClick={()=>{ setV("mentions");setGlobalLoading(true)}} href={`/pro/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}`}>{p.name} ({`${p.mentions || 0}`})</Link></SidePlayer>
   });
   console.log("Team",{v,team,pagetype});
  /* if(isLoading||globalLoading){

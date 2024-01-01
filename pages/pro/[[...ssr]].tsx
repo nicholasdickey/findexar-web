@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { SWRConfig, unstable_serialize } from 'swr'
-import { isbot } from '../../lib/isbot.js';
-import SinglePage from '../../components/single-page';
+import { isbot } from '@/lib/isbot.js';
+import SinglePage from '@/components/single-page';
 import {
     GetServerSidePropsContext,
 } from "next";
 
 import {  recordEvent, getLeagues, 
 LeagueTeamsKey, getLeagueTeams, TeamPlayersKey, getTeamPlayers, DetailsKey, getDetails,
-MentionsKey,getMentions } from '../../lib/api'
+MentionsKey,getMentions } from '@/lib/api'
 interface Props {
     disable?: boolean;
     dark?: number;
@@ -43,25 +43,29 @@ export const getServerSideProps =
             const botInfo = isbot({ ua });
             let host = context.req.headers.host || "";
             let ssr = context.params?.ssr as string[];
+            console.log("SSR(pro):",ssr)
             if (!ssr)
                 ssr = [''];
 
-            let [arg1, arg2, arg3, arg4, arg5, arg6] = ssr;
+            let [arg1, arg2, arg3, arg4, arg5, arg6,arg7] = ssr;
+            console.log(arg1,arg2,arg3,arg4,arg5,arg6,arg7)
             let league = '';
             let team = '';//'buffalo-bills';
             let player = '';
-            league = arg1;
-            if (arg2 == 'team') {
-                team = arg3;
+            let access=arg1;
+            league = arg2||"";
+            if (arg3 == 'team') {
+                team = arg4;
                 pagetype="team";
-                if (arg4 == 'player') {
-                    player = arg5;
+                if (arg5 == 'player') {
+                    player = arg6;
                     pagetype="player";
                 }
             }
-            else if (arg2 == 'player') {
-                player = arg3;
+            else if (arg3 == 'player') {
+                player = arg4;
             }
+            console.log("league:",league,"team:",team,"player:",player)
             var randomstring = () => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
             const sessionid = randomstring();
             if (!botInfo.bot) {

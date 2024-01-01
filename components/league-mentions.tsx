@@ -72,7 +72,7 @@ const LeagueMentions: React.FC<Props> = ({ league }) => {
     const {data:mentions,error,isLoading} = useSWR(mentionsKey, getMentions);
     const Mentions = mentions.map((m: any, i: number) => {
         const { league, type, team, name, date, url, findex, summary,xid } = m;
-        console.log("XID:",league,name,xid)
+       // console.log("XID:",league,name,xid)
           return (<Mention mentionType="top" league={league} type={type} team={team} name={name} date={date} url={url} findex={findex} summary={summary} xid={xid} key={`mention${i}`} />)
     });         
     if(isLoading) return (<Stack spacing={1}>

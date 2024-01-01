@@ -233,7 +233,7 @@ const Mention: React.FC<Props> = ({ mentionType, league, type, team, name, date,
     const [expanded, setExpanded] = React.useState(false);
     const [localDate, setLocalDate] = React.useState(convertToUTCDateString(date));
 
-    let localUrl = mentionType == "top" ? (type == 'person' ? `/league/${league}/team/${team}/player/${name}` : `/league/${league}/team/${team}`) : url;
+    let localUrl = mentionType == "top" ? (type == 'person' ? `/pro/league/${league}/team/${team}/player/${name}` : `/pub/league/${league}/team/${team}`) : url;
     const mentionsKey: MetaLinkKey = { func: "meta", xid };
     const meta = useSWRImmutable(mentionsKey, getMetaLink).data;
     let digest = meta ? meta.digest.replace('<p>', '').replace('</p>', '') : "";

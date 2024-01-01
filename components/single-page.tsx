@@ -18,7 +18,7 @@ import TeamIcon from '@mui/icons-material/PeopleAltOutlined';
 import PlayerIcon from '@mui/icons-material/PersonPinOutlined';
 import ListIcon from '@mui/icons-material/ListOutlined';
 import Avatar from '@mui/material/Avatar';
-
+import { UserButton } from "@clerk/nextjs";
 import { palette } from '@/lib/palette';
 import { GlobalStyle } from '@/components/themes/globalStyle';
 
@@ -220,7 +220,7 @@ const Subhead = styled.div`
 const HeaderTopline = styled.div`
   display:flex;
   flex-direction:row;
-  justify-content:flex-start;
+  justify-content:space-between;
   align-items:center;
  
   @media screen and (max-width: 1199px) {
@@ -229,6 +229,33 @@ const HeaderTopline = styled.div`
     margin-bottom:0px;
   }
 `;
+const HeaderLeft= styled.div`
+  display:flex;
+  flex-direction:row;
+  justify-content:flex-start;
+  align-items:center;
+ // margin-left:20px;
+  //margin-right:20px;
+  @media screen and (max-width: 1199px) {
+    margin-left:0px;
+    margin-right:0px;
+  }
+`;
+const HeaderRight= styled.div`
+  display:flex;
+  flex-direction:row;
+  justify-content:flex-start;
+  align-items:center;
+  margin-left:20px;
+  font-family: 'Roboto', sans-serif;
+  margin-right:20px;
+  @media screen and (max-width: 1199px) {
+    margin-left:20px;
+    margin-right:20px;
+  }
+`;
+
+
 const FLogo = styled.div`
   margin-left:20px;
   margin-right:20px;
@@ -281,7 +308,7 @@ const Landing: React.FC<Props> = (props) => {
     setLocalView(view);
   }, [view]);
   const LeaguesNav = leagues?.map((l: string, i: number) => {
-    return l == league ? <SelectedLeague key={`league-${i}`}><Link href={`/league/${l}`}>{l}</Link></SelectedLeague> : <League key={`league-${i}`}><Link href={`/league/${l}`}>{l}</Link></League>
+    return l == league ? <SelectedLeague key={`league-${i}`}><Link href={`/pub/league/${l}`}>{l}</Link></SelectedLeague> : <League key={`league-${i}`}><Link href={`/pub/league/${l}`}>{l}</Link></League>
   });
   const MobileLeaguesNav = leagues?.map((l: string, i: number) => {
     return <Tab key={`league-${i}`} label={l} />
@@ -316,7 +343,7 @@ const Landing: React.FC<Props> = (props) => {
     TeamsNav = teams?.map((t: { id: string, name: string }, i: number) => {
       if (t.id == localTeam)
         teamName = t.name;
-      return t.id == localTeam ? <SelectedSideTeam key={`sideteam-${i}`}><Link onClick={()=>{setLocalTeam(t.id);setLocalView("mentions")}} href={`/league/${league}/team/${t.id}`}>{t.name}</Link></SelectedSideTeam> : <SideTeam key={`sideteam-${i}`}><Link onClick={()=>{setLocalTeam(t.id);setLocalView("mentions")}}  href={`/league/${league}/team/${t.id}`}>{t.name}</Link></SideTeam>
+      return t.id == localTeam ? <SelectedSideTeam key={`sideteam-${i}`}><Link onClick={()=>{setLocalTeam(t.id);setLocalView("mentions")}} href={`/pub/league/${league}/team/${t.id}`}>{t.name}</Link></SelectedSideTeam> : <SideTeam key={`sideteam-${i}`}><Link onClick={()=>{setLocalTeam(t.id);setLocalView("mentions")}}  href={`/pub/league/${league}/team/${t.id}`}>{t.name}</Link></SideTeam>
     });
   console.log("view", localView)
   return (
@@ -367,9 +394,12 @@ const Landing: React.FC<Props> = (props) => {
             <GlobalStyle />
             <Header>
               <HeaderTopline>
+                <HeaderLeft>
                 <FLogo><Avatar sx={{ bgcolor: cyan[800] }}>Fi</Avatar></FLogo>
                 <FLogoMobile ><Avatar sx={{ bgcolor: cyan[800] }}>Fi</Avatar></FLogoMobile>
-                {!league && !localTeam ? <Link href="/league">FINDEXAR</Link> : !localTeam ? `${league}` : player ? <Link href={`/league/${league}/team/${localTeam}`}>{teamName}</Link> : `${teamName}`}
+                {!league && !localTeam ? <Link href="/pub/league">FINDEXAR</Link> : !localTeam ? `${league}` : player ? <Link href={`/pub/league/${league}/team/${localTeam}`}>{teamName}</Link> : `${teamName}`}
+                </HeaderLeft>
+               <HeaderRight> <UserButton afterSignOutUrl="/"/></HeaderRight>
               </HeaderTopline>
               <Subhead>{player ? player : ''}</Subhead>
             </Header>
@@ -392,7 +422,7 @@ const Landing: React.FC<Props> = (props) => {
             <MobileContainerWrap>
               <MuiTabs
                 value={selectedLeague}
-                onChange={(event: React.SyntheticEvent, newValue: number) => { router.replace(`/league/${newValue ? leagues[newValue - 1] : ''}?view=Mentions`) }}
+                onChange={(event: React.SyntheticEvent, newValue: number) => { router.replace(`/pub/league/${newValue ? leagues[newValue - 1] : ''}?view=Mentions`) }}
                 variant="scrollable"
                 scrollButtons={true}
                 allowScrollButtonsMobile
@@ -402,7 +432,7 @@ const Landing: React.FC<Props> = (props) => {
               </MuiTabs>
               {pagetype == 'league' && !league &&
                 <div>
-                  <SecondaryTabs options={[{ name: "Mentions", icon: <MentionIcon /> }, { name: "Lists", icon: <ListIcon /> }]} onChange={(option: any) => { console.log(option); router.replace(league ? `/league/${league}?view=${encodeURIComponent(option.name)}` : `/league?view=${encodeURIComponent(option.name)}`) }} selectedOptionName={localView} />
+                  <SecondaryTabs options={[{ name: "Mentions", icon: <MentionIcon /> }, { name: "Lists", icon: <ListIcon /> }]} onChange={(option: any) => { console.log(option); router.replace(league ? `/pub/league/${league}?view=${encodeURIComponent(option.name)}` : `/pub/league?view=${encodeURIComponent(option.name)}`) }} selectedOptionName={localView} />
                   {localView == 'mentions' && <CenterPanel>
                     <Mentions league={league || ""} />
                   </CenterPanel>}
@@ -412,7 +442,7 @@ const Landing: React.FC<Props> = (props) => {
                 </div>}
               {pagetype == 'league' && league &&
                 <div>
-                  <SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> }, { name: "Mentions", icon: <MentionIcon /> }]} onChange={(option: any) => { console.log(option); router.replace(league ? `/league/${league}?view=${encodeURIComponent(option.name)}` : `/league?view=${encodeURIComponent(option.name)}`) }} selectedOptionName={localView} />
+                  <SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> }, { name: "Mentions", icon: <MentionIcon /> }]} onChange={(option: any) => { console.log(option); router.replace(league ? `/pub/league/${league}?view=${encodeURIComponent(option.name)}` : `/pub/league?view=${encodeURIComponent(option.name)}`) }} selectedOptionName={localView} />
                   {localView == 'teams' &&
                     <LeftMobilePanel>{TeamsNav}</LeftMobilePanel>}
                   {localView == 'mentions' && <CenterPanel>
