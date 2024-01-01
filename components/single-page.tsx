@@ -427,7 +427,7 @@ const Landing: React.FC<Props> = (props) => {
             <Header>
               <HeaderTopline>
                 <HeaderLeft>
-                <FLogo><Avatar sx={{ bgcolor: cyan[800] }}>Fi</Avatar></FLogo>
+                <FLogo><Link href="/pub"><Avatar  sx={{ bgcolor: cyan[800] }}>Fi</Avatar></Link></FLogo>
                 <FLogoMobile ><Avatar sx={{ bgcolor: cyan[800] }}>Fi</Avatar></FLogoMobile>
                 {!league && !localTeam ? <Link href="/pub/league">FINDEXAR</Link> : !localTeam ? `${league}` : player ? <Link href={`/pub/league/${league}/team/${localTeam}`}>{teamName}</Link> : `${teamName}`}
                 </HeaderLeft>
