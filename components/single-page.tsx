@@ -247,12 +247,25 @@ const HeaderRight= styled.div`
   justify-content:flex-start;
   align-items:center;
   margin-left:20px;
+  margin-top:4px;
+  
   font-family: 'Roboto', sans-serif;
   margin-right:20px;
   @media screen and (max-width: 1199px) {
     margin-left:20px;
     margin-right:20px;
   }
+  &.cl-avatarBox{
+    width:40px !important;
+    height:40px !important;
+  }
+  &.cl-formButtonPrimary {
+  font-size: 14px;
+  text-transform: none;
+  background-color: #611bbd;
+  width:40px;
+  height:40px;
+}
 `;
 
 
@@ -271,6 +284,25 @@ const FLogoMobile = styled.div`
     display:none;
   }
 `;
+
+const SUserButton = styled(UserButton)`
+padding-top:30px;
+  img{width:60px !important;
+  height:60px !important;
+  }
+  &.cl-avatarBox{
+    width:40px !important;
+    height:40px !important;
+  }
+  &.cl-formButtonPrimary {
+  font-size: 14px;
+  text-transform: none;
+  background-color: #611bbd;
+  width:40px;
+  height:40px;
+}
+`;
+
 interface Props {
   disable?: boolean;
   dark?: number;
@@ -399,7 +431,7 @@ const Landing: React.FC<Props> = (props) => {
                 <FLogoMobile ><Avatar sx={{ bgcolor: cyan[800] }}>Fi</Avatar></FLogoMobile>
                 {!league && !localTeam ? <Link href="/pub/league">FINDEXAR</Link> : !localTeam ? `${league}` : player ? <Link href={`/pub/league/${league}/team/${localTeam}`}>{teamName}</Link> : `${teamName}`}
                 </HeaderLeft>
-               <HeaderRight> <UserButton afterSignOutUrl="/"/></HeaderRight>
+               <HeaderRight> <SUserButton afterSignOutUrl="/"/></HeaderRight>
               </HeaderTopline>
               <Subhead>{player ? player : ''}</Subhead>
             </Header>
