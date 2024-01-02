@@ -250,7 +250,7 @@ const HeaderRight= styled.div`
   margin-top:4px;
   
   font-family: 'Roboto', sans-serif;
-  margin-right:20px;
+  margin-right:30px;
   @media screen and (max-width: 1199px) {
     margin-left:20px;
     margin-right:20px;
