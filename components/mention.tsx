@@ -159,8 +159,9 @@ const MobileExtendedMention = styled.div`
 const Body = styled.div`
     font-size: 14px;
     margin-bottom: 20px;
-    display: flex;
-    flex-direction: row;
+    //display: flex;
+    //flex-direction: row;
+    flex: 2 1 auto;
 `;
 
 const Title = styled.div`
@@ -171,18 +172,24 @@ const Title = styled.div`
 
 const Digest = styled.div`
     font-size: 14px;
-    margin-left: 20px;
-    margin-right: 20px;
+    //margin-left: 20px;
+    //margin-right: 20px;
 `;
+const ImageWrapper = styled.div`
+  flex: 1 1 auto;
+  max-width: 50%;
+`;
+
 const Image = styled.img`
    //width: 200px;
    // max-width:10%;
+    width:100%;
     height: auto;
     object-fit: cover;
     margin-bottom: 20px;
-    @media (min-width: 1200px){
+   /* @media (min-width: 1200px){
         width:200px;
-    }
+    }*/
 `;
 
 const Authors = styled.div`
@@ -204,9 +211,10 @@ const Byline = styled.div`
 
 const HorizontalContainer = styled.div`
     display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
+  //  flex-direction: row;
+   // justify-content: flex-start;
     align-items:flex-start;
+    flex-wrap: wrap;
 `;
 
 const Atmention = styled.div`
@@ -273,7 +281,7 @@ const Mention: React.FC<Props> = ({ mentionType, league, type, team, name, date,
                                 <SiteName>{meta.site_name}</SiteName>
                             </Byline>
                             <HorizontalContainer>
-                                <Image src={meta.image} width={100} height={100} alt={meta.title} />
+                            <ImageWrapper><Image src={meta.image} alt={meta.title} /></ImageWrapper> 
                                 <Body>
                                     <Digest>
                                         {digest}
@@ -312,7 +320,7 @@ const Mention: React.FC<Props> = ({ mentionType, league, type, team, name, date,
                                 <SiteName>{meta.site_name}</SiteName>
                             </Byline>
                             <HorizontalContainer>
-                                <Image src={meta.image} width={100} height={100} alt={meta.title} />
+                            <ImageWrapper><Image src={meta.image} width={100} height={100} alt={meta.title} /></ImageWrapper>
                                 <Body>
                                     <Digest>
                                         {digest}
