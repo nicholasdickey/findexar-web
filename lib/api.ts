@@ -94,3 +94,17 @@ export const getMetaLink = async ({func,xid}:MetaLinkKey) => {
     return false;
   }
 }
+
+// SWR get player photo
+export type PlayerPhotoKey = {func:string,name: string,teamid: string};
+export const getPlayerPhoto = async ({func,name,teamid}:PlayerPhotoKey) => {
+  try {
+    const url =`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-player-photo?name=${name}&teamid=${teamid}`;
+    const res = await axios.get(url);
+    return res.data.photo;
+  }
+  catch (e) {
+    console.log("getPlayerPhoto", e);
+    return '';
+  }
+}

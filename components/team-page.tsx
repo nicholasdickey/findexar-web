@@ -121,10 +121,11 @@ interface Props {
   teamName?: string;
   teams:any;
   view:string;
+  setLocalPlayer:(player:string)=>void;
 }
 
 const Team: React.FC<Props> = (props) => {
-  let { view,teams,dark, league, team, player, pagetype, teamName } = props;
+  let { view,teams,dark, league, team, player, pagetype, teamName,setLocalPlayer } = props;
   const [v,setV]=React.useState((!view||view.toLowerCase()=="home")?"mentions":view.toLowerCase());
   const [selectedTeam,setSelectedTeam]=React.useState(team);
   const [selectedPlayer,setSelectedPlayer]=React.useState(player);
@@ -154,7 +155,7 @@ useEffect(()=>{
 
 console.log("TeamPage",{v,team,pagetype,view,selectedTeam,selectedPlayer})
   const PlayersNav = players?.map((p: { name: string, findex: string, mentions: string }) => {
-    return p.name == player ? <SelectedSidePlayer><Link onClick={()=>{ setV("mentions");setGlobalLoading(true)}} href={`/pro/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}`}>{p.name} ({`${p.mentions}`})</Link></SelectedSidePlayer> : <SidePlayer><Link onClick={()=>{ setV("mentions");setGlobalLoading(true)}} href={`/pro/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}`}>{p.name} ({`${p.mentions || 0}`})</Link></SidePlayer>
+    return p.name == player ? <SelectedSidePlayer><Link onClick={()=>{setLocalPlayer(p.name); setV("mentions");setGlobalLoading(true)}} href={`/pro/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}`}>{p.name} ({`${p.mentions}`})</Link></SelectedSidePlayer> : <SidePlayer><Link onClick={()=>{ setLocalPlayer(p.name);setV("mentions");setGlobalLoading(true)}} href={`/pro/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}`}>{p.name} ({`${p.mentions || 0}`})</Link></SidePlayer>
   });
   console.log("Team",{v,team,pagetype});
  /* if(isLoading||globalLoading){

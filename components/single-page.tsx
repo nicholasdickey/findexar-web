@@ -1,5 +1,5 @@
 
-import React,{useEffect, useState} from "react";
+import React,{use, useEffect, useState} from "react";
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -26,6 +26,7 @@ import { LeagueTeamsKey, getLeagueTeams } from '@/lib/api';
 import Team from './team-page';
 import Mentions from './league-mentions';
 import SecondaryTabs from "./secondary-tabs";
+import PlayerPhoto from "./player-photo";
 
 
 
@@ -302,6 +303,21 @@ padding-top:30px;
   height:40px;
 }
 `;
+const PlayerNameGroup = styled.div`
+  display:flex;
+  flex-direction:row;
+  justify-content:space-between;
+  align-items:center;
+  font-size: 28px;
+  //margin-left:20px;
+  margin-right:20px;
+  @media screen and (max-width: 1199px) {
+    font-size: 14px;
+  }
+`;
+const PlayerName = styled.div`
+  margin-right:20px;
+`;
 
 interface Props {
   disable?: boolean;
@@ -324,9 +340,15 @@ const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style
 const Landing: React.FC<Props> = (props) => {
   let { dark, leagues, league, team, pagetype, player, view } = props;
   const [localTeam, setLocalTeam] = useState(team);
+  const [localPlayer, setLocalPlayer] = useState(player);
+
   useEffect(() => {
     setLocalTeam(team);
   }, [team]);
+  useEffect(() => {
+    setLocalPlayer(player);
+  }, [player]);
+  
   view = view.toLowerCase();
   const router = useRouter();
   const leagueTeamsKey: LeagueTeamsKey = { func: "leagueTeams", league: league || "" };
@@ -375,7 +397,7 @@ const Landing: React.FC<Props> = (props) => {
     TeamsNav = teams?.map((t: { id: string, name: string }, i: number) => {
       if (t.id == localTeam)
         teamName = t.name;
-      return t.id == localTeam ? <SelectedSideTeam key={`sideteam-${i}`}><Link onClick={()=>{setLocalTeam(t.id);setLocalView("mentions")}} href={`/pub/league/${league}/team/${t.id}`}>{t.name}</Link></SelectedSideTeam> : <SideTeam key={`sideteam-${i}`}><Link onClick={()=>{setLocalTeam(t.id);setLocalView("mentions")}}  href={`/pub/league/${league}/team/${t.id}`}>{t.name}</Link></SideTeam>
+      return t.id == localTeam ? <SelectedSideTeam key={`sideteam-${i}`}><Link onClick={()=>{setLocalPlayer(""); setLocalTeam(t.id);setLocalView("mentions")}} href={`/pub/league/${league}/team/${t.id}`}>{t.name}</Link></SelectedSideTeam> : <SideTeam key={`sideteam-${i}`}><Link onClick={()=>{setLocalPlayer(""); setLocalTeam(t.id);setLocalView("mentions")}}  href={`/pub/league/${league}/team/${t.id}`}>{t.name}</Link></SideTeam>
     });
   console.log("view", localView)
   return (
@@ -429,11 +451,11 @@ const Landing: React.FC<Props> = (props) => {
                 <HeaderLeft>
                 <FLogo><Link href="/pub"><Avatar  sx={{ bgcolor: cyan[800] }}>Fi</Avatar></Link></FLogo>
                 <FLogoMobile ><Link href="/pub"><Avatar sx={{ bgcolor: cyan[800] }}>Fi</Avatar></Link></FLogoMobile>
-                {!league && !localTeam ? <Link href="/pub/league">FINDEXAR</Link> : !localTeam ? `${league}` : player ? <Link href={`/pub/league/${league}/team/${localTeam}`}>{teamName}</Link> : `${teamName}`}
+                {!league && !localTeam ? <Link href="/pub/league">FINDEXAR</Link> : !localTeam ? `${league}` : localPlayer ? <PlayerNameGroup><PlayerName><Link href={`/pub/league/${league}/team/${localTeam}`}>{teamName}</Link></PlayerName> <PlayerPhoto teamid={team||""} name={localPlayer||""}/></PlayerNameGroup> : `${teamName}`}
                 </HeaderLeft>
                <HeaderRight> <SUserButton afterSignOutUrl="/"/></HeaderRight>
               </HeaderTopline>
-              <Subhead>{player ? player : ''}</Subhead>
+              <Subhead>{localPlayer ? localPlayer : ''}</Subhead>
             </Header>
             <ContainerWrap>
               <Leagues>
@@ -446,7 +468,7 @@ const Landing: React.FC<Props> = (props) => {
                     {league ? TeamsNav : <Welcome>Welcome to Findexar!<br /><hr /><br />Your indispensable Fantasy Sports<br /> research tool!<br /><br />Finding and indexing <br />mentions of athletes<br /> in the media.<br /><br /><hr />Powered by Open AI.</Welcome>}
                   </LeftPanel>
                   <CenterPanel>
-                    {(pagetype == "team" || pagetype == "player") && <Team view={localView} teams={null} team={localTeam} league={league} teamName={teamName} pagetype={pagetype} player={player} />}
+                    {(pagetype == "team" || pagetype == "player") && <Team view={localView} teams={null} team={localTeam} league={league} teamName={teamName} pagetype={pagetype} player={player} setLocalPlayer={setLocalPlayer} />}
                     {pagetype == "league" && !localTeam && <Mentions league={league || ""} />}
                   </CenterPanel>
                 </MainPanel>}
@@ -483,12 +505,9 @@ const Landing: React.FC<Props> = (props) => {
                 </div>}
               {(pagetype == 'team' || pagetype == 'player') &&
                 <div>
-                  <Team view={localView} teams={<LeftMobilePanel>{TeamsNav}</LeftMobilePanel>} team={localTeam} league={league} teamName={teamName} pagetype={pagetype} player={player} />
+                  <Team view={localView} teams={<LeftMobilePanel>{TeamsNav}</LeftMobilePanel>} team={localTeam} league={league} teamName={teamName} pagetype={pagetype} player={player} setLocalPlayer={setLocalPlayer} />
                 </div>
               }
-
-
-
             </MobileContainerWrap>
           </ThemeProvider>
         </main>
