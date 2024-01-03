@@ -269,6 +269,9 @@ const ContainerCenter = styled.div`
 `;
 const HeaderCenter = styled.div`
 margin-left:60px;
+display:flex;
+flex-direction:column;
+align-items: flex-start;
 @media screen and (max-width: 1199px) {
     margin-left:0px;
     width:120px;
@@ -349,17 +352,19 @@ width:80px;
 const PlayerNameGroup = styled.div`
   display:flex;
   flex-direction:row;
-  justify-content:space-between;
+  justify-content:flex-start;
   align-items:center;
   font-size: 28px;
   //margin-left:20px;
-  //margin-right:20px;
+  margin-right:20px;
   @media screen and (max-width: 1199px) {
     font-size: 14px;
+    margin-right:0px;
   }
 `;
 const PlayerName = styled.div`
  //margin-right:20px;
+ text-align:left;
 `;
 
 interface Props {
