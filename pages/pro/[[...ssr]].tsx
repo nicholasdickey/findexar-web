@@ -2,6 +2,7 @@ import * as React from 'react';
 import { SWRConfig, unstable_serialize } from 'swr'
 import { getAuth } from "@clerk/nextjs/server";
 import { clerkClient } from "@clerk/nextjs";
+import axios from 'axios';
 import { isbot } from '@/lib/isbot.js';
 import SinglePage from '@/components/single-page';
 import {
@@ -10,7 +11,10 @@ import {
 
 import {  recordEvent, getLeagues, 
 LeagueTeamsKey, getLeagueTeams, TeamPlayersKey, getTeamPlayers, DetailsKey, getDetails,
-MentionsKey,getMentions } from '@/lib/api'
+MentionsKey,getMentions,UserListsKey,getUserLists } from '@/lib/api'
+
+const api_key = process.env.LAKE_API_KEY;
+
 interface Props {
     disable?: boolean;
     dark?: number;
@@ -29,6 +33,7 @@ interface Props {
     view:string;
     userId:string;
     createdAt:string;
+    freeUser?:boolean;
 }
 export default function Home(props: Props) {
     const fallback = props.fallback;
@@ -44,6 +49,18 @@ export const getServerSideProps =
             const user = userId ? await clerkClient.users.getUser(userId) : null;
             console.log("USER:",user);
             const createdAt = user?.createdAt;
+            let freeUser = false;
+            if (user?.emailAddresses) {
+                for (let i = 0; i < user.emailAddresses.length; i++) {
+                    const e = user.emailAddresses[i];
+                    const email = e.emailAddress;
+                    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/check-free-user?api_key=${api_key}&email=${email}`);
+                    freeUser = data.exists;
+                    if (freeUser) {
+                        break;
+                    }
+                }
+            }
             let pagetype="league";
             utm_content = utm_content || '';
             fbclid = fbclid || '';
@@ -95,8 +112,8 @@ export const getServerSideProps =
             const keyLeagueTeams: LeagueTeamsKey = { func:"leagueTeams",league };
             let leagueTeams = await getLeagueTeams(keyLeagueTeams);
            
-            let teamPlayers;
-            let details;
+            let teamPlayers=[];
+            let details=[];
             let keyTeamPlayers: TeamPlayersKey;
             let keyDetails: DetailsKey={teamid:"",name:""};
             let keyMentions:MentionsKey={func:"mentions",league};
@@ -120,15 +137,24 @@ export const getServerSideProps =
             else {
                 mentions=await getMentions(keyMentions);
             }
+            let userLists:{member:string,teamid:string,xid:string}[]=[];
+            const keyLists:UserListsKey={type:"userLists"};
+            if(view=='Lists'){
+               
+                userLists=await getUserLists(keyLists);
+            }
+
+
             let fallback={   
                 [unstable_serialize(keyLeagueTeams)]: leagueTeams,            
             };
-            if(teamPlayers)
+            //if(teamPlayers)
                 fallback[unstable_serialize(teamPlayers)]= teamPlayers;
-            if(details&&keyDetails) 
+            //if(details&&keyDetails) 
                 fallback[unstable_serialize(keyDetails)]= details;  
-            if(mentions&&mentions.length>0)
-                fallback[unstable_serialize(keyMentions)]= mentions;       
+           // if(mentions&&mentions.length>0)
+                fallback[unstable_serialize(keyMentions)]= mentions;   
+            fallback[unstable_serialize(keyLists)]= userLists;    
             return {
                 props: {
                     sessionid,
@@ -146,6 +172,7 @@ export const getServerSideProps =
                     view,
                     userId,
                     createdAt,
+                    freeUser
                 }
             }
         } catch (x) {

@@ -392,12 +392,13 @@ interface Props {
   view: string;
   userId?: string;
   createdAt?: string;
+  freeUser?:boolean;
 }
 
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 
 const Landing: React.FC<Props> = (props) => {
-  let { createdAt, userId, dark, leagues, league, team, pagetype, player, view } = props;
+  let { freeUser,createdAt, userId, dark, leagues, league, team, pagetype, player, view } = props;
   const [localTeam, setLocalTeam] = useState(team);
   const [localPlayer, setLocalPlayer] = useState(player);
   const [subscriptionPrompt, setSubscriptionPrompt] = useState(false);
@@ -425,7 +426,7 @@ const Landing: React.FC<Props> = (props) => {
   console.log("isLoaded", isLoaded, subscription, products)
   useEffect(() => {
     console.log("useEffect", isLoaded, subscription, products)
-    if (isLoaded) {
+    if (isLoaded&&!freeUser) {
       if (!subscription && userId) {
         //setRedirect(redirectToCheckout);
         //time now in milliseconds:
@@ -605,7 +606,7 @@ const Landing: React.FC<Props> = (props) => {
                   {pagetype=="league"&&<SecondaryTabs options={[{ name: "Mentions", icon: <MentionIcon />, access: "pub" }, { name: "Lists", icon: <ListIcon />, access: "pro" }, { name: "About", icon: <ContactSupportIcon />, access: "pub" }]} onChange={(option: any) => { console.log(option); router.replace(league ? `/${option.access || "pub"}/league/${league}?view=${encodeURIComponent(option.name)}` : `/${option.access}/league?view=${encodeURIComponent(option.name)}`) }} selectedOptionName={localView} />}
 
                     {subscriptionPrompt && !dismiss && <SubscriptionMenu hardStop={hardStop} setDismiss={setDismiss} {...subscriptionObject} />}
-                    {(pagetype == "team" || pagetype == "player") && <Team setDismiss={setDismiss} subscriptionPrompt={subscriptionPrompt && !dismiss} subscriptionObject={subscriptionObject} view={localView} teams={null} team={localTeam} league={league} teamName={teamName} pagetype={pagetype} player={player} setLocalPlayer={setLocalPlayer} />}
+                    {(pagetype == "team" || pagetype == "player") && <Team setDismiss={setDismiss} subscriptionPrompt={subscriptionPrompt && !dismiss} subscriptionObject={subscriptionObject} view={localView} teams={null} team={localTeam} league={league} teamName={teamName} pagetype={pagetype} player={localPlayer} setLocalPlayer={setLocalPlayer} />}
                     {pagetype == "league" && !localTeam && <Mentions league={league || ""} />}
                   </CenterPanel>
                 </MainPanel>}

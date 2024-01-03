@@ -2,6 +2,7 @@ import * as React from 'react';
 import { SWRConfig, unstable_serialize } from 'swr'
 import { getAuth } from "@clerk/nextjs/server";
 import { clerkClient } from "@clerk/nextjs";
+import axios from 'axios';
 import { isbot } from '@/lib/isbot.js';
 import SinglePage from '@/components/single-page';
 import {
@@ -13,6 +14,7 @@ import {
     LeagueTeamsKey, getLeagueTeams, TeamPlayersKey, getTeamPlayers, DetailsKey, getDetails,
     MentionsKey, getMentions
 } from '@/lib/api'
+const api_key = process.env.LAKE_API_KEY;
 interface Props {
     disable?: boolean;
     dark?: number;
@@ -29,8 +31,9 @@ interface Props {
     pageType?: string;
     leagues: string[];
     view: string;
-    userId?:string;
-    createdAt?:string;
+    userId?: string;
+    createdAt?: string;
+    freeUser?: boolean;
 }
 export default function Home(props: Props) {
     const fallback = props.fallback;
@@ -45,7 +48,19 @@ export const getServerSideProps =
             const user = userId ? await clerkClient.users.getUser(userId) : null;
 
             console.log("USER:", user);
-            const createdAt = user?.createdAt||"0";
+            const createdAt = user?.createdAt || "0";
+            let freeUser = false;
+            if (user?.emailAddresses) {
+                for (let i = 0; i < user.emailAddresses.length; i++) {
+                    const e = user.emailAddresses[i];
+                    const email = e.emailAddress;
+                    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/check-free-user?api_key=${api_key}&email=${email}`);
+                    freeUser = data.exists;
+                    if (freeUser) {
+                        break;
+                    }
+                }
+            }
             let pagetype = "league";
             utm_content = utm_content || '';
             fbclid = fbclid || '';
@@ -151,7 +166,8 @@ export const getServerSideProps =
                     fallback,
                     view,
                     userId,
-                    createdAt
+                    createdAt,
+                    freeUser
                 }
             }
         } catch (x) {

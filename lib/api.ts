@@ -108,3 +108,71 @@ export const getPlayerPhoto = async ({func,name,teamid}:PlayerPhotoKey) => {
     return '';
   }
 }
+
+// SWR get user lists from web api (protected by Clerk)
+export type UserListsKey = {type:string};
+export const getUserLists = async ({type}:UserListsKey) => {
+  try {
+    const url =`${process.env.NEXT_PUBLIC_SERVER}/api/user/get-lists`;
+    const res = await axios.get(url);
+    return res.data.lists;
+  }
+  catch (e) {
+    console.log("getUserLists", e);
+    return '';
+  }
+}
+// SWR get user lists from web api (protected by Clerk)
+export type UserAddListParams = {name:string,description:string};
+export const addUserList = async ({name,description}:UserAddListParams) => {
+  try {
+    const url =`${process.env.NEXT_PUBLIC_SERVER}/api/user/add-list?name=${name}&description=${description}`;
+    const res = await axios.get(url);
+    return true;
+  }
+  catch (e) {
+    console.log("addUserList", e);
+    return false;
+  }
+}
+
+export type UpdateListParams = {listxid:string,name:string,description:string};
+export const updateUserList = async ({name,description,listxid}:UpdateListParams) => {
+  try {
+    const url =`${process.env.NEXT_PUBLIC_SERVER}/api/user/update-list?listxid=${listxid}&name=${name}&description=${description}`;
+    const res = await axios.get(url);
+    return true;
+  }
+  catch (e) {
+    console.log("addUserList", e);
+    return false;
+  }
+}
+
+export type UserListMembersKey = {type:string,listxid:string};
+export const getUserListMembers = async ({type,listxid}:UserListMembersKey) => {
+  try {
+    const url =`${process.env.NEXT_PUBLIC_SERVER}/api/user/get-list-members?listxid=${listxid}`;
+    const res = await axios.get(url);
+    return res.data.members;
+  }
+  catch (e) {
+    console.log("getUserListMembers", e);
+    return [];
+  }
+}
+
+export type UserUpdateListMembersParams = {listxid:string,members:{member:string,teamid:string}[]};
+export const updateUserListMembers = async ({listxid,members}:UserUpdateListMembersParams) => {
+  try {
+    const url =`${process.env.NEXT_PUBLIC_SERVER}/api/user/update-list-members?listxid=${listxid}`;
+    const res = await axios.put(url,{
+      members
+    });
+    return res.data.members;
+  }
+  catch (e) {
+    console.log("getUserListMembers", e);
+    return [];
+  }
+}

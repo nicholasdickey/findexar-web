@@ -103,7 +103,7 @@ interface Props {
     teamName?: string;
 }
 
-const TeamDetails: React.FC<Props> = (props) => {
+const PlayerDetails: React.FC<Props> = (props) => {
     const { team, player } = props;
     const detailsKey: DetailsKey = { teamid: team || "", name: player || "" };
     const {data:details,error,isLoading} = useSWR(detailsKey, getDetails);
@@ -150,4 +150,4 @@ const TeamDetails: React.FC<Props> = (props) => {
         </div>
     );
 };
-export default TeamDetails;
+export default PlayerDetails;
