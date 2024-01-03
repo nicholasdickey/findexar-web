@@ -271,7 +271,7 @@ const HeaderCenter = styled.div`
 margin-left:60px;
 @media screen and (max-width: 1199px) {
     margin-left:10px;
-    width:140px;
+    width:120px;
    
   }
 `;
