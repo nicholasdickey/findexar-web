@@ -566,7 +566,7 @@ const Landing: React.FC<Props> = (props) => {
                   <ContainerCenter>
                     <HeaderCenter>
                       {!league && !localTeam ? <Link href="/pub/league">FINDEXAR</Link> : !localTeam ? `${league}` : localPlayer ? <PlayerNameGroup><PlayerName><Link href={`/pub/league/${league}/team/${localTeam}`}>{teamName}</Link></PlayerName> </PlayerNameGroup> : `${teamName}`}
-                      {!league && !localTeam && <div><Subhead>AI-powered Fantasy Sports Pro-Athletes Media Mentions Monitor</Subhead><SubheadMobile>AI-powered Fantasy Sports<br/> Pro-Athletes Mentions Monitor</SubheadMobile></div>}
+                      {!league && !localTeam && <div><Subhead>AI-powered Fantasy Sports Pro-Athletes Media Mentions Monitor</Subhead><SubheadMobile>AI-powered Fantasy Sports<br/> Athletes Mentions Monitor</SubheadMobile></div>}
                      
                       {localPlayer && <div><Subhead>{localPlayer ? localPlayer : ''}</Subhead><SubheadMobile>{localPlayer ? localPlayer : ''}</SubheadMobile></div>}
 
