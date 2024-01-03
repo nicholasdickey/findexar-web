@@ -521,13 +521,13 @@ const Landing: React.FC<Props> = (props) => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
-      <Script src={`https://www.googletagmanager.com/gtag/js?id=G-PEZZHTN0M5`} strategy="afterInteractive"></Script>
+      <Script src={`https://www.googletagmanager.com/gtag/js?id=G-LWYQDGSGWQ`} strategy="afterInteractive"></Script>
       <Script id="google-analytics" strategy="afterInteractive" dangerouslySetInnerHTML={{
         __html: `
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
-          gtag('config', 'G-XXXXXXX', {
+          gtag('config', 'G-LWYQDGSGWQ', {
             page_path: window.location.pathname,
           });
         `,
