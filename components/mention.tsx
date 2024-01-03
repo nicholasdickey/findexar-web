@@ -43,7 +43,7 @@ const MentionWrap = styled.div`
     //margin-right:40px;
     margin-top:20px;
     a{
-        font-size: 12px;
+        font-size: 16px;
         color: #000;
         text-decoration: none;
         &:hover{
@@ -65,8 +65,8 @@ const MobileMentionWrap = styled.div`
     //margin-right:40px;
     margin-top:2px;
     a{
-        font-size: 12px;
-        color: #000;
+        font-size: 16px;
+        color: #222;
         text-decoration: none;
         &:hover{
           color: #111;
@@ -92,9 +92,9 @@ const MentionSummary = styled.div`
     margin-left:0px;
     font-size: 18px;
     padding:20px;
-    background-color: #ddd;
+    background-color: #eee;
     &:hover{
-            background-color: #ccc;
+            background-color: #ddd;
     }  
 `;
 
@@ -157,7 +157,7 @@ const MobileExtendedMention = styled.div`
 `;
 
 const Body = styled.div`
-    font-size: 14px;
+    font-size: 18px;
     margin-bottom: 20px;
     //display: flex;
     //flex-direction: row;
@@ -171,7 +171,7 @@ const Title = styled.div`
 `;
 
 const Digest = styled.div`
-    font-size: 14px;
+    font-size: 18px;
     //margin-left: 20px;
     //margin-right: 20px;
 `;
@@ -218,11 +218,11 @@ const HorizontalContainer = styled.div`
 `;
 
 const Atmention = styled.div`
-    font-size: 12px;   
+    font-size: 13px;   
 `;
 
 const LocalDate = styled.div`
-    font-size: 12px;
+    font-size: 13px;
 `;
 interface Props {
     mentionType: string;
