@@ -95,8 +95,13 @@ const MentionsHeader = styled.div`
     }
 `;
 const Photo = styled.div`
-height:60px;
-width:60px;
+    height:60px;
+    width:60px;
+    @media screen and (max-width: 1199px ){
+        height:50px;
+        width:50px;
+    }
+
    `;
 interface Props {
    name:string;
@@ -116,7 +121,7 @@ const PlayerPhoto: React.FC<Props> = (props) => {
 
   
     return (
-       <Photo><Avatar sx={{width:60,height:60}} src={photo} alt={name}></Avatar></Photo>
+       <Photo><Avatar sx={{width:50,height:50}} src={photo} alt={name}></Avatar></Photo>
     );
 };
 export default PlayerPhoto;

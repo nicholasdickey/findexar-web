@@ -302,8 +302,12 @@ const HeaderRight = styled.div`
 }
 `;
 const Photo = styled.div`
-height:60px;
-width:60px;
+  height:60px;
+  width:60px;
+  @media screen and (max-width: 1199px) {
+    height:50px;
+    width:50px;
+  }
 `;
 
 const FLogo = styled.div`
