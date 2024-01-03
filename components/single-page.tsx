@@ -228,7 +228,7 @@ const Subhead = styled.div`
   }
 `;
 const SubheadMobile = styled.div`
-  font-size: 18x;
+  font-size: 17px;
   margin-top:4px;
   text-align:left;
   color: ${blueGrey[200]};
