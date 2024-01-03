@@ -270,7 +270,7 @@ const ContainerCenter = styled.div`
 const HeaderCenter = styled.div`
 margin-left:60px;
 @media screen and (max-width: 1199px) {
-    margin-left:10px;
+    margin-left:0px;
     width:120px;
    
   }
@@ -353,13 +353,13 @@ const PlayerNameGroup = styled.div`
   align-items:center;
   font-size: 28px;
   //margin-left:20px;
-  margin-right:20px;
+  //margin-right:20px;
   @media screen and (max-width: 1199px) {
     font-size: 14px;
   }
 `;
 const PlayerName = styled.div`
-  margin-right:20px;
+ //margin-right:20px;
 `;
 
 interface Props {
