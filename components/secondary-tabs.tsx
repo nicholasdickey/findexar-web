@@ -93,6 +93,7 @@ const AntTabs = styled(Tabs)({
 interface Option {
     name: string;
     icon: any;
+    access?: string;
 }
 interface Props {
     options: Option[];

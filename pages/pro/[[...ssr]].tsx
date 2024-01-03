@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { SWRConfig, unstable_serialize } from 'swr'
+import { getAuth } from "@clerk/nextjs/server";
+import { clerkClient } from "@clerk/nextjs";
 import { isbot } from '@/lib/isbot.js';
 import SinglePage from '@/components/single-page';
 import {
@@ -25,9 +27,12 @@ interface Props {
     pageType?: string;
     leagues:string[];
     view:string;
+    userId:string;
+    createdAt:string;
 }
 export default function Home(props: Props) {
     const fallback = props.fallback;
+    
     return <SWRConfig value={{ fallback }}><SinglePage  {...props} /></SWRConfig>
 }
 export const getServerSideProps =
@@ -35,7 +40,10 @@ export const getServerSideProps =
         try {
             let { fbclid, utm_content, dark,view="Home" }:
                 { fbclid: string, utm_content: string, dark: number,view:string } = context.query as any;
-
+            const { userId } : { userId: string | null }  = getAuth(context.req);
+            const user = userId ? await clerkClient.users.getUser(userId) : null;
+            console.log("USER:",user);
+            const createdAt = user?.createdAt;
             let pagetype="league";
             utm_content = utm_content || '';
             fbclid = fbclid || '';
@@ -135,7 +143,9 @@ export const getServerSideProps =
                     leagues,
                     pagetype,
                     fallback,
-                    view
+                    view,
+                    userId,
+                    createdAt,
                 }
             }
         } catch (x) {

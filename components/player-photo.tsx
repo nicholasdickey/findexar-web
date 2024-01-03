@@ -94,6 +94,10 @@ const MentionsHeader = styled.div`
         margin-bottom:10px;
     }
 `;
+const Photo = styled.div`
+height:60px;
+width:60px;
+   `;
 interface Props {
    name:string;
    teamid:string;
@@ -112,7 +116,7 @@ const PlayerPhoto: React.FC<Props> = (props) => {
 
   
     return (
-       <Avatar src={photo} alt={name}></Avatar>
+       <Photo><Avatar sx={{width:60,height:60}} src={photo} alt={name}></Avatar></Photo>
     );
 };
 export default PlayerPhoto;

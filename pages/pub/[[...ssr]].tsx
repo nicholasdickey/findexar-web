@@ -1,14 +1,18 @@
 import * as React from 'react';
 import { SWRConfig, unstable_serialize } from 'swr'
+import { getAuth } from "@clerk/nextjs/server";
+import { clerkClient } from "@clerk/nextjs";
 import { isbot } from '@/lib/isbot.js';
 import SinglePage from '@/components/single-page';
 import {
     GetServerSidePropsContext,
 } from "next";
 
-import {  recordEvent, getLeagues, 
-LeagueTeamsKey, getLeagueTeams, TeamPlayersKey, getTeamPlayers, DetailsKey, getDetails,
-MentionsKey,getMentions } from '@/lib/api'
+import {
+    recordEvent, getLeagues,
+    LeagueTeamsKey, getLeagueTeams, TeamPlayersKey, getTeamPlayers, DetailsKey, getDetails,
+    MentionsKey, getMentions
+} from '@/lib/api'
 interface Props {
     disable?: boolean;
     dark?: number;
@@ -23,8 +27,10 @@ interface Props {
     player?: string;
     fallback?: any,
     pageType?: string;
-    leagues:string[];
-    view:string;
+    leagues: string[];
+    view: string;
+    userId?:string;
+    createdAt?:string;
 }
 export default function Home(props: Props) {
     const fallback = props.fallback;
@@ -33,30 +39,34 @@ export default function Home(props: Props) {
 export const getServerSideProps =
     async function getServerSideProps(context: GetServerSidePropsContext): Promise<any> {
         try {
-            let { fbclid, utm_content, dark,view="Home" }:
-                { fbclid: string, utm_content: string, dark: number,view:string } = context.query as any;
+            let { fbclid, utm_content, dark, view = "Home" }:
+                { fbclid: string, utm_content: string, dark: number, view: string } = context.query as any;
+            const { userId }: { userId: string | null } = getAuth(context.req);
+            const user = userId ? await clerkClient.users.getUser(userId) : null;
 
-            let pagetype="league";
+            console.log("USER:", user);
+            const createdAt = user?.createdAt||"0";
+            let pagetype = "league";
             utm_content = utm_content || '';
             fbclid = fbclid || '';
             const ua = context.req.headers['user-agent'];
             const botInfo = isbot({ ua });
             let host = context.req.headers.host || "";
             let ssr = context.params?.ssr as string[];
-            console.log("SSR:",ssr)
+            console.log("SSR:", ssr)
             if (!ssr)
                 ssr = [''];
 
-            let [arg1, arg2, arg3, arg4, arg5, arg6,arg7] = ssr;
-            console.log(arg1,arg2,arg3,arg4,arg5,arg6,arg7)
+            let [arg1, arg2, arg3, arg4, arg5, arg6, arg7] = ssr;
+            console.log(arg1, arg2, arg3, arg4, arg5, arg6, arg7)
             let league = '';
             let team = '';//'buffalo-bills';
             let player = '';
-            let access=arg1;
-            league = arg2||"";
+            let access = arg1;
+            league = arg2 || "";
             if (arg3 == 'team') {
                 team = arg4;
-                pagetype="team";
+                pagetype = "team";
                 if (arg5 == 'player') {
                     return {
                         redirect: {
@@ -69,7 +79,7 @@ export const getServerSideProps =
             else if (arg3 == 'player') {
                 player = arg4;
             }
-          
+
             var randomstring = () => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
             const sessionid = randomstring();
             if (!botInfo.bot) {
@@ -88,43 +98,43 @@ export const getServerSideProps =
             }
 
             const leagues = await getLeagues();
-            const keyLeagueTeams: LeagueTeamsKey = { func:"leagueTeams",league };
+            const keyLeagueTeams: LeagueTeamsKey = { func: "leagueTeams", league };
             let leagueTeams = await getLeagueTeams(keyLeagueTeams);
-           
+
             let teamPlayers;
             let details;
             let keyTeamPlayers: TeamPlayersKey;
-            let keyDetails: DetailsKey={teamid:"",name:""};
-            let keyMentions:MentionsKey={func:"mentions",league};
+            let keyDetails: DetailsKey = { teamid: "", name: "" };
+            let keyMentions: MentionsKey = { func: "mentions", league };
             let mentions = [];
             if (team) {
-                const t=leagueTeams?.find((t:any)=>t.id==team);
-                const teamName=t.name;    
+                const t = leagueTeams?.find((t: any) => t.id == team);
+                const teamName = t.name;
                 keyTeamPlayers = { league, teamid: team };
                 teamPlayers = await getTeamPlayers(keyTeamPlayers);
-                console.log("player:",player)
-             
+                console.log("player:", player)
+
                 if (player) {
                     keyDetails = { teamid: team, name: player };
                     details = await getDetails(keyDetails);
                 }
                 else {
-                    keyDetails= { teamid: team, name: teamName };
+                    keyDetails = { teamid: team, name: teamName };
                     details = await getDetails(keyDetails);
-                }   
+                }
             }
             else {
-                mentions=await getMentions(keyMentions);
+                mentions = await getMentions(keyMentions);
             }
-            let fallback={   
-                [unstable_serialize(keyLeagueTeams)]: leagueTeams,            
+            let fallback = {
+                [unstable_serialize(keyLeagueTeams)]: leagueTeams,
             };
-            if(teamPlayers)
-                fallback[unstable_serialize(teamPlayers)]= teamPlayers;
-            if(details&&keyDetails) 
-                fallback[unstable_serialize(keyDetails)]= details;  
-            if(mentions&&mentions.length>0)
-                fallback[unstable_serialize(keyMentions)]= mentions;       
+            if (teamPlayers)
+                fallback[unstable_serialize(teamPlayers)] = teamPlayers;
+            if (details && keyDetails)
+                fallback[unstable_serialize(keyDetails)] = details;
+            if (mentions && mentions.length > 0)
+                fallback[unstable_serialize(keyMentions)] = mentions;
             return {
                 props: {
                     sessionid,
@@ -139,7 +149,9 @@ export const getServerSideProps =
                     leagues,
                     pagetype,
                     fallback,
-                    view
+                    view,
+                    userId,
+                    createdAt
                 }
             }
         } catch (x) {

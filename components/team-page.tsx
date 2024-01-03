@@ -8,11 +8,12 @@ import TeamIcon from '@mui/icons-material/PeopleAltOutlined';
 import PlayerIcon from '@mui/icons-material/PersonPinOutlined';
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
-
+import Alert from '@mui/material/Alert';
 import { TeamPlayersKey, getTeamPlayers } from '@/lib/api';
 import TeamDetails from "./team-details";
 import PlayerDetails from "./player-details";
 import SecondaryTabs from "./secondary-tabs";
+import SubscriptionMenu from "./subscription-menu";
 
 const SidePlayer = styled.div`
   height: 40px;
@@ -122,10 +123,13 @@ interface Props {
   teams:any;
   view:string;
   setLocalPlayer:(player:string)=>void;
+  subscriptionPrompt:boolean;
+  subscriptionObject:any;
+  setDismiss:any;
 }
 
 const Team: React.FC<Props> = (props) => {
-  let { view,teams,dark, league, team, player, pagetype, teamName,setLocalPlayer } = props;
+  let { setDismiss,subscriptionPrompt,subscriptionObject,view,teams,dark, league, team, player, pagetype, teamName,setLocalPlayer } = props;
   const [v,setV]=React.useState((!view||view.toLowerCase()=="home")?"mentions":view.toLowerCase());
   const [selectedTeam,setSelectedTeam]=React.useState(team);
   const [selectedPlayer,setSelectedPlayer]=React.useState(player);
@@ -153,7 +157,7 @@ useEffect(()=>{
   //setGlobalLoading(true);
 },[view]);
 
-console.log("TeamPage",{v,team,pagetype,view,selectedTeam,selectedPlayer})
+console.log("TeamPage",{subscriptionPrompt,v,team,pagetype,view,selectedTeam,selectedPlayer})
   const PlayersNav = players?.map((p: { name: string, findex: string, mentions: string }) => {
     return p.name == player ? <SelectedSidePlayer><Link onClick={()=>{setLocalPlayer(p.name); setV("mentions");setGlobalLoading(true)}} href={`/pro/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}`}>{p.name} ({`${p.mentions}`})</Link></SelectedSidePlayer> : <SidePlayer><Link onClick={()=>{ setLocalPlayer(p.name);setV("mentions");setGlobalLoading(true)}} href={`/pro/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}`}>{p.name} ({`${p.mentions || 0}`})</Link></SidePlayer>
   });
@@ -165,7 +169,9 @@ console.log("TeamPage",{v,team,pagetype,view,selectedTeam,selectedPlayer})
   return (
     <div className="team">
       <MainPanel>
+                
         <CenterPanel>
+     
           {pagetype == "team" ? <TeamDetails {...props} /> : <PlayerDetails {...props} />}
         </CenterPanel>
         <RightPanel>
@@ -174,8 +180,11 @@ console.log("TeamPage",{v,team,pagetype,view,selectedTeam,selectedPlayer})
         </RightPanel>
       </MainPanel>
       <MainMobilePanel>
+     
       {pagetype=="team"&&<SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> },{ name: "Mentions", icon: <MentionIcon /> },{name:"Players",icon:<PlayerIcon/>}]} onChange={(option: any) => { console.log(option);/*router.replace(`/league/${league}/team/${team}?view=${encodeURIComponent(option.name)}`)*/setV(option.name.toLowerCase()); }} selectedOptionName={v} />}
       {pagetype=="player"&&<SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> },{ name: "Mentions", icon: <MentionIcon /> },{name:"Players",icon:<PlayerIcon/>}]} onChange={(option: any) => { console.log(option);/*router.replace(`/league/${league}/team/${team}/player/${player}?view=${encodeURIComponent(option.name)}`)*/setV(option.name.toLowerCase()); }} selectedOptionName={v} />}
+      {subscriptionPrompt&&<SubscriptionMenu hardStop={false} {...subscriptionObject} setDismiss={setDismiss}/>}
+     
         {v=='teams'&&teams}  
         {v=='mentions'&&(isLoading||globalLoading)&& <Stack spacing={1}>
       {/* For variant="text", adjust the height via font-size */}
@@ -186,6 +195,7 @@ console.log("TeamPage",{v,team,pagetype,view,selectedTeam,selectedPlayer})
       <Skeleton variant="rounded" animation="pulse" height={120} />
       <Skeleton variant="rounded" animation="pulse" height={160} />
     </Stack>} 
+    
         {!isLoading&&!globalLoading&&v=='mentions'&&pagetype == "team" && <TeamDetails {...props} />}
         {!isLoading&&!globalLoading&&v=='mentions'&&pagetype == "player" && <PlayerDetails {...props} />}
         {v=='players'&&
