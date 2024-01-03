@@ -19,7 +19,7 @@ const SubscriptionMenu = ({hardStop,setDismiss,products,redirectToCheckout,redir
 
 <p>To maintain this high-quality service, Findexar&apos;s subscription is competitively priced at just $10 per month or $100 for an annual plan. </p>
 <h2>Plans</h2>
-      {products.map(({ product, prices }: { product: any, prices: any[] }) => (
+      {products&&products.map(({ product, prices }: { product: any, prices: any[] }) => (
         <div key={product.id}>
           <h4>{product.name}</h4>
           <Gate unsubscribed>
