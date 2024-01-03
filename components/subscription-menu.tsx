@@ -17,9 +17,9 @@ const SubscriptionMenu = ({hardStop,setDismiss,products,redirectToCheckout,redir
 
 <p>Findexar offers insights on par with those from high-end agencies like Nielsen, which typically cost professional teams and agencies tens of thousands of dollars monthly, but at a far more accessible price point.</p>
 
-<p>To maintain this high-quality service, Findexar's subscription is competitively priced at just $10 per month or $100 for an annual plan. </p>
+<p>To maintain this high-quality service, Findexar&apos;s subscription is competitively priced at just $10 per month or $100 for an annual plan. </p>
 <h2>Plans</h2>
-      {products.map(({ product, prices }) => (
+      {products.map(({ product, prices }: { product: any, prices: any[] }) => (
         <div key={product.id}>
           <h4>{product.name}</h4>
           <Gate unsubscribed>

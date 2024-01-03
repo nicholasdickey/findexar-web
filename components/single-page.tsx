@@ -428,7 +428,7 @@ const Landing: React.FC<Props> = (props) => {
       }
       //return null;
     }
-  }, [isLoaded, subscription, products]);
+  }, [isLoaded, subscription, products, userId, createdAt]);
 
   //}
   const router = useRouter();
