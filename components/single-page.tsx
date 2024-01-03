@@ -220,16 +220,25 @@ const MuiTabs = styled(Tabs)`
 const Subhead = styled.div`
   font-size: 18x;
   margin-top:4px;
-
- // margin-left:80px;
   text-align:left;
   color: ${blueGrey[200]};
   font-size:18px;
   @media screen and (max-width: 1199px ){
-    font-size: 14px;
-    width:200px;
+   display:none;
   }
 `;
+const SubheadMobile = styled.div`
+  font-size: 18x;
+  margin-top:4px;
+  text-align:left;
+  color: ${blueGrey[200]};
+  font-size:14px;
+  width:200px;
+  @media screen and (min-width: 1200px ){
+    display:none;
+  }
+`;
+
 const HeaderTopline = styled.div`
   display:flex;
   flex-direction:row;
@@ -557,7 +566,9 @@ const Landing: React.FC<Props> = (props) => {
                   <ContainerCenter>
                     <HeaderCenter>
                       {!league && !localTeam ? <Link href="/pub/league">FINDEXAR</Link> : !localTeam ? `${league}` : localPlayer ? <PlayerNameGroup><PlayerName><Link href={`/pub/league/${league}/team/${localTeam}`}>{teamName}</Link></PlayerName> </PlayerNameGroup> : `${teamName}`}
-                      {localPlayer && <Subhead>{localPlayer ? localPlayer : ''}</Subhead>}
+                      {!league && !localTeam && <div><Subhead>AI-powered Fantasy Sports Pro-Athletes Media Mentions Monitor</Subhead><SubheadMobile>AI-powered Fantasy Sports<br/> Pro-Athletes Mentions Monitor</SubheadMobile></div>}
+                     
+                      {localPlayer && <div><Subhead>{localPlayer ? localPlayer : ''}</Subhead><SubheadMobile>{localPlayer ? localPlayer : ''}</SubheadMobile></div>}
 
                     </HeaderCenter>
                     {localPlayer && <Photo><PlayerPhoto teamid={team || ""} name={localPlayer || ""} /></Photo>}
