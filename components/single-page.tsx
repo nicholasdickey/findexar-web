@@ -19,26 +19,32 @@ import MentionIcon from '@mui/icons-material/AlternateEmailOutlined';
 import TeamIcon from '@mui/icons-material/PeopleAltOutlined';
 import PlayerIcon from '@mui/icons-material/PersonPinOutlined';
 import ListIcon from '@mui/icons-material/ListOutlined';
+import StarOutlineIcon from '@mui/icons-material/StarOutline';
+import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
+import AddIcon from '@mui/icons-material/Add';
+import LoginIcon from '@mui/icons-material/Login';
 import ContactSupportIcon from '@mui/icons-material/ContactSupport';
+import Divider from '@mui/material/Divider';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
 import Modal from '@mui/material/Modal';
-
-import { UserButton } from "@clerk/nextjs";
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+import { UserButton, SignInButton } from "@clerk/nextjs";
 import { palette } from '@/lib/palette';
 import { GlobalStyle } from '@/components/themes/globalStyle';
 
-import { LeagueTeamsKey, getLeagueTeams } from '@/lib/api';
+import { LeagueTeamsKey, getLeagueTeams, UserListsKey, getUserLists } from '@/lib/api';
 import Team from './team-page';
+import List from './list-page';
 import Mentions from './league-mentions';
 import SecondaryTabs from "./secondary-tabs";
 import PlayerPhoto from "./player-photo";
 import SubscriptionMenu from "./subscription-menu";
-import { AccessAlarmsRounded } from "@mui/icons-material";
-
-
 
 const Header = styled.header`
   height: 80px;
@@ -85,8 +91,10 @@ const SideTeam = styled.div`
   height: 40px;
   width: 300px; 
   color: #fff;
-  text-align: center;
+  
+ // text-align: center;
   font-size: 18px;
+  padding-left:20px;
   margin: 10px;
 `;
 
@@ -94,8 +102,9 @@ const SelectedSideTeam = styled.div`
   height: 40px;
   width: 300px;
   color: #ff8 !important;
-  text-align: center;
+  //text-align: center;
   font-size: 18px;
+  padding-left:20px;
   margin: 10px;
   a{
       color: #ff8 !important;
@@ -105,7 +114,31 @@ const SelectedSideTeam = styled.div`
       }
   }
 `;
+const SideList = styled.div`
+  height: 30px;
+  
+ // width: 300px; 
+  color: #fff;
+ // text-align: center;
+  font-size: 18px;
+ // margin: 10px;
+`;
 
+const SelectedSideList = styled.div`
+  height: 30px;
+ // width: 300px;
+  color: #ff8 !important;
+  //text-align: center;
+  font-size: 18px;
+ // margin: 10px;
+  a{
+      color: #ff8 !important;
+      text-decoration: none;
+      &:hover{
+        color: #F8F;
+      }
+  }
+`;
 const League = styled.div`
   height: 30px;
   width: 100px; 
@@ -170,6 +203,63 @@ const LeftPanel = styled.div`
     }
   }
 `;
+const Favorites = styled.div`
+  padding-top:28px;
+  padding-left:22px;
+  color:#aaa;
+  //align-self:center;
+  font-size:12px;
+  a{
+    color: #fff;
+    text-decoration: none;
+    &:hover{
+      color: #4f8;
+    }
+  }
+`;
+const LeftText = styled.div`
+  padding-top:28px;
+  padding-left:22px;
+  padding-right:20px;
+  //width:100%;
+  color:#bbb;
+  //align-self:center;
+  font-size:12px;
+  a{
+    color: #fff;
+    text-decoration: none;
+    &:hover{
+      color: #4f8;
+    }
+  }
+`;
+const Lists = styled.div`
+  padding-top:18px;
+  padding-left:22px;
+  padding-right:22px;
+  width:200px;
+  color:#ccc;
+  align-self:flex-start;
+  font-size:28px;
+  a{
+    color: #fff;
+    text-decoration: none;
+    &:hover{
+      color: #4f8;
+    }
+  }
+`;
+const ListsContainer = styled.div`
+  //padding-top:8px;
+  padding-left:22px;
+  //width:100%;
+  display:flex ;
+  flex-direction:column;
+  justify-content:flex-start;
+  align-items:flex-start;
+`;
+
+
 const LeftMobilePanel = styled.div`
   width:100%;
   background-color:  #333;
@@ -188,9 +278,10 @@ const LeftMobilePanel = styled.div`
 `;
 const Welcome = styled.div`
   padding-top:18px;
+  padding-left:22px;
   color:#aaa;
-  align-self:center;
-  font-size:12px;
+  //align-self:center;
+  font-size:13px;
   a{
     color: #fff;
     text-decoration: none;
@@ -255,13 +346,13 @@ const LeftContainer = styled.div`
   display:flex;
   flex-direction:row;
   justify-content:flex-start;
-  align-items:center;
+  //align-items:center;
 `;
 const HeaderLeft = styled.div`
   display:flex;
   flex-direction:row;
   justify-content:flex-start;
-  align-items:center;
+  //align-items:center;
   height:56px;
  // margin-left:20px;
   //margin-right:20px;
@@ -375,7 +466,22 @@ const PlayerName = styled.div`
  //margin-right:20px;
  text-align:left;
 `;
-
+const NewListForm = styled.div`
+padding-right:20px;
+  color: #fff;//${blueGrey[900]};
+  font-size:18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items:flex-start;
+  //background-color:#000;// ${blueGrey[800]};
+  &.MuiTextField-root{
+    color:#fff !important;
+  }
+  input{
+    color:#fff;
+  }
+`;
 interface Props {
   disable?: boolean;
   dark?: number;
@@ -392,18 +498,27 @@ interface Props {
   view: string;
   userId?: string;
   createdAt?: string;
-  freeUser?:boolean;
+  freeUser?: boolean;
+  list?:string;
 }
 
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 
 const Landing: React.FC<Props> = (props) => {
-  let { freeUser,createdAt, userId, dark, leagues, league, team, pagetype, player, view } = props;
+  let { list,freeUser, createdAt, userId, dark, leagues, league, team, pagetype, player, view } = props;
   const [localTeam, setLocalTeam] = useState(team);
   const [localPlayer, setLocalPlayer] = useState(player);
+  const [localPageType, setLocalPageType] = useState(pagetype);
+  const [localLeague, setLocalLeague] = useState(league);
   const [subscriptionPrompt, setSubscriptionPrompt] = useState(false);
   const [dismiss, setDismiss] = useState(false);
   const [hardStop, setHardStop] = useState(false);
+  const [addList, setAddList] = useState(false);
+  console.log("pageType:",localPageType)
+ 
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+
   //const [redirect:(args: redirectToCheckoutArgs) => Promise<void>, setRedirect] = useState(null);
   useEffect(() => {
     setLocalTeam(team);
@@ -411,6 +526,14 @@ const Landing: React.FC<Props> = (props) => {
   useEffect(() => {
     setLocalPlayer(player);
   }, [player]);
+
+  useEffect(() => {
+    setLocalPageType(pagetype);
+  }, [pagetype]);
+
+  useEffect(() => {
+    setLocalLeague(league);
+  }, [league]);
 
   view = view.toLowerCase();
   const subscriptionObject = useSubscription();
@@ -426,7 +549,7 @@ const Landing: React.FC<Props> = (props) => {
   console.log("isLoaded", isLoaded, subscription, products)
   useEffect(() => {
     console.log("useEffect", isLoaded, subscription, products)
-    if (isLoaded&&!freeUser) {
+    if (isLoaded && !freeUser) {
       if (!subscription && userId) {
         //setRedirect(redirectToCheckout);
         //time now in milliseconds:
@@ -451,7 +574,7 @@ const Landing: React.FC<Props> = (props) => {
 
   //}
   const router = useRouter();
-  const leagueTeamsKey: LeagueTeamsKey = { func: "leagueTeams", league: league || "" };
+  const leagueTeamsKey: LeagueTeamsKey = { func: "leagueTeams", league: localLeague||"" };
   const { data: teams, error, isLoading } = useSWR(leagueTeamsKey, getLeagueTeams);
   if (!view)
     view = "home";
@@ -462,17 +585,17 @@ const Landing: React.FC<Props> = (props) => {
     setLocalView(view);
   }, [view]);
   const LeaguesNav = leagues?.map((l: string, i: number) => {
-    return l == league ? <SelectedLeague key={`league-${i}`}><Link href={`/pub/league/${l}`}>{l}</Link></SelectedLeague> : <League key={`league-${i}`}><Link href={`/pub/league/${l}`}>{l}</Link></League>
+    return l == localLeague ? <SelectedLeague key={`league-${i}`} ><Link href={`/pub/league/${l}`}>{l}</Link></SelectedLeague> : <League key={`league-${i}`}><Link href={`/pub/league/${l}`} onClick={()=>{setLocalPageType('league')}}>{l}</Link></League>
   });
   const MobileLeaguesNav = leagues?.map((l: string, i: number) => {
     return <Tab key={`league-${i}`} label={l} />
   })
   MobileLeaguesNav.unshift(<Tab key={`league-${leagues?.length}`} icon={<HomeIcon />} />)
-  LeaguesNav.unshift(league?<League key={`league-${leagues?.length}`}><Link href={`/pub`}><HomeIcon/></Link></League>:<SelectedLeague key={`league-${leagues?.length}`}><Link href={`/pub`}><HomeIcon/></Link></SelectedLeague>)
+  LeaguesNav.unshift(localLeague ? <League key={`league-${leagues?.length}`}><Link href={`/pub`} onClick={()=>{setLocalPageType('league');setLocalLeague("");setLocalTeam("")}}><HomeIcon sx={{m:0.3}}/></Link></League> : <SelectedLeague key={`league-${leagues?.length}`}><Link href={`/pub`} onClick={()=>{setLocalPageType('league');setLocalLeague("");setLocalTeam("")}}><HomeIcon sx={{m:0.3}}/></Link></SelectedLeague>)
   console.log("userId", userId);
-  const selectedLeague = leagues?.findIndex((l: string) => l == league) + 1;
+  const selectedLeague = leagues?.findIndex((l: string) => l == localLeague) + 1;
   console.log("selectedLeague", selectedLeague)
-  let theme: any;
+  
   const style = {
     position: 'absolute' as 'absolute',
     top: '50%',
@@ -484,7 +607,7 @@ const Landing: React.FC<Props> = (props) => {
     boxShadow: 24,
     // p: 4,
   };
-  if (dark) {
+ /* if (dark) {
     theme = createTheme({
       palette: {
         mode: 'dark',
@@ -501,7 +624,7 @@ const Landing: React.FC<Props> = (props) => {
         mode: 'light',
       },
     })
-  }
+  }*/
   let teamName = "";
   let TeamsNav = null;
 
@@ -509,8 +632,9 @@ const Landing: React.FC<Props> = (props) => {
     TeamsNav = teams?.map((t: { id: string, name: string }, i: number) => {
       if (t.id == localTeam)
         teamName = t.name;
-      return t.id == localTeam ? <SelectedSideTeam key={`sideteam-${i}`}><Link onClick={() => { setLocalPlayer(""); setLocalTeam(t.id); setLocalView("mentions") }} href={`/pub/league/${league}/team/${t.id}`}>{t.name}</Link></SelectedSideTeam> : <SideTeam key={`sideteam-${i}`}><Link onClick={() => { setLocalPlayer(""); setLocalTeam(t.id); setLocalView("mentions") }} href={`/pub/league/${league}/team/${t.id}`}>{t.name}</Link></SideTeam>
+      return t.id == localTeam ? <SelectedSideTeam key={`sideteam-${i}`}><Link onClick={() => { setLocalPageType("team");setLocalPlayer(""); setLocalTeam(t.id); setLocalView("mentions") }} href={`/pub/league/${localLeague}/team/${t.id}`}>{t.name}</Link></SelectedSideTeam> : <SideTeam key={`sideteam-${i}`}><Link onClick={() => { setLocalPlayer(""); setLocalTeam(t.id); setLocalView("mentions") }} href={`/pub/league/${localLeague}/team/${t.id}`}>{t.name}</Link></SideTeam>
     });
+  
   console.log("view", localView)
   return (
     <>
@@ -566,10 +690,13 @@ const Landing: React.FC<Props> = (props) => {
                 </HeaderLeft>
                   <ContainerCenter>
                     <HeaderCenter>
-                      {!league && !localTeam ? <Link href="/pub/league">FINDEXAR</Link> : !localTeam ? `${league}` : localPlayer ? <PlayerNameGroup><PlayerName><Link href={`/pub/league/${league}/team/${localTeam}`}>{teamName}</Link></PlayerName> </PlayerNameGroup> : `${teamName}`}
-                      {!league && !localTeam && <div><Subhead>AI-powered Fantasy Sports Pro-Athletes Media Mentions Monitor</Subhead><SubheadMobile>AI-powered Fantasy Sports<br/> Athletes Mentions Monitor</SubheadMobile></div>}
+                      {localPageType=="league"&&!localLeague && !localTeam ? <Link href="/pub/league">FINDEXAR</Link> : !localTeam ? `${localLeague}` : localPlayer ? <PlayerNameGroup><PlayerName><Link href={`/pub/league/${localLeague}/team/${localTeam}`}>{teamName}</Link></PlayerName> </PlayerNameGroup> : `${teamName}`}
+                      {localPageType=="league"&&!localLeague && !localTeam && <div><Subhead>AI-Powered Fantasy Sports Professional Athletes Media Mentions Monitor</Subhead><SubheadMobile>AI-powered Fantasy Sports<br /> Athletes Mentions Monitor</SubheadMobile></div>}
+                      {localPageType=="list" && <Link href="/pub/league">Tracker List</Link>  }
                      
-                      {localPlayer && <div><Subhead>{localPlayer ? localPlayer : ''}</Subhead><SubheadMobile>{localPlayer ? localPlayer : ''}</SubheadMobile></div>}
+                      {localPageType=="list" && <div><Subhead>Tracks mentions for the selected players.</Subhead><SubheadMobile>Tracks mentions for the selected players.</SubheadMobile></div>}
+
+                      {localPageType=="player"&&localPlayer && <div><Subhead>{localPlayer ? localPlayer : ''}</Subhead><SubheadMobile>{localPlayer ? localPlayer : ''}</SubheadMobile></div>}
 
                     </HeaderCenter>
                     {localPlayer && <Photo><PlayerPhoto teamid={team || ""} name={localPlayer || ""} /></Photo>}
@@ -598,16 +725,33 @@ const Landing: React.FC<Props> = (props) => {
               {isLoading ?
                 <MainPanel>Loading...</MainPanel> :
                 <MainPanel>
-                  
+
                   <LeftPanel>
-                    {league ? TeamsNav : <Welcome>Welcome to Findexar!<br /><hr /><br />Your indispensable Fantasy Sports<br /> research tool!<br /><br />Finding and indexing <br />mentions of athletes<br /> in the media.<br /><br /><hr />Powered by OpenAI.</Welcome>}
+                    {localLeague ? TeamsNav : <> <Welcome>
+                      Welcome to Findexar!<br /><hr /><br />
+                      Your indispensable Fantasy Sports<br />
+                      research and tracking tool.<br /><br />
+                      Finding and indexing <br />
+                      mentions of pro athletes<br />
+                      in the media.<br /><br /><hr />
+                      Powered by OpenAI.</Welcome>
+                      <br /><br />
+                      <Favorites><Button variant="contained"><StarOutlineIcon />&nbsp;&nbsp;My Favorites</Button></Favorites>
+                      <br /><br />
+                      <LeftText><b>Tracker List:</b> Use "add to list" icons next to player name in team rosters to add or remove players to tracker list.<br/><br/><hr/></LeftText>
+                       {!userId&&<LeftText>Needs to be a logged-in user to explore the teams and individual athletes' mentions and use the tracker list or "favorites" functionality.<br /><br />Click here to sign-in or sign-up: <br /><br /><br /><SignInButton><Button variant="contained"><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></LeftText>}
+                    </>
+                    }
                   </LeftPanel>
                   <CenterPanel>
-                  {pagetype=="league"&&<SecondaryTabs options={[{ name: "Mentions", icon: <MentionIcon />, access: "pub" }, { name: "Lists", icon: <ListIcon />, access: "pro" }, { name: "About", icon: <ContactSupportIcon />, access: "pub" }]} onChange={(option: any) => { console.log(option); router.replace(league ? `/${option.access || "pub"}/league/${league}?view=${encodeURIComponent(option.name)}` : `/${option.access}/league?view=${encodeURIComponent(option.name)}`) }} selectedOptionName={localView} />}
+                    {false && localPageType == "league" && <SecondaryTabs options={[{ name: "Mentions", icon: <MentionIcon />, access: "pub" }, { name: "Lists", icon: <ListIcon />, access: "pro" }, { name: "About", icon: <ContactSupportIcon />, access: "pub" }]} onChange={(option: any) => { console.log(option); router.replace(localLeague ? `/${option.access || "pub"}/league/${localLeague}?view=${encodeURIComponent(option.name)}` : `/${option.access}/league?view=${encodeURIComponent(option.name)}`) }} selectedOptionName={localView} />}
 
                     {subscriptionPrompt && !dismiss && <SubscriptionMenu hardStop={hardStop} setDismiss={setDismiss} {...subscriptionObject} />}
-                    {(pagetype == "team" || pagetype == "player") && <Team setDismiss={setDismiss} subscriptionPrompt={subscriptionPrompt && !dismiss} subscriptionObject={subscriptionObject} view={localView} teams={null} team={localTeam} league={league} teamName={teamName} pagetype={pagetype} player={localPlayer} setLocalPlayer={setLocalPlayer} />}
-                    {pagetype == "league" && !localTeam && <Mentions league={league || ""} />}
+                    {(localPageType == "team" || localPageType == "player") && <Team setDismiss={setDismiss} subscriptionPrompt={subscriptionPrompt && !dismiss} subscriptionObject={subscriptionObject} view={localView} teams={null} team={localTeam} league={localLeague} teamName={teamName} pagetype={localPageType} player={localPlayer} setLocalPlayer={setLocalPlayer} setLocalPageType={setLocalPageType}/>}
+                    {localPageType == "list" && <List setDismiss={setDismiss} subscriptionPrompt={subscriptionPrompt && !dismiss} subscriptionObject={subscriptionObject} view={localView} lists={null}   listName={teamName} pagetype={localPageType}  setLocalPlayer={setLocalPlayer}  setLocalPageType={setLocalPageType}/>}
+                   
+                   
+                    {localPageType == "league" && !localTeam && <Mentions league={localLeague || ""} noUser={!userId} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} view={localView}/>}
                   </CenterPanel>
                 </MainPanel>}
             </ContainerWrap>
@@ -622,32 +766,32 @@ const Landing: React.FC<Props> = (props) => {
               >
                 {MobileLeaguesNav}
               </MuiTabs>
-              {pagetype == 'league' && !league &&
+              {localPageType == 'league' && !localLeague &&
                 <div>
-                  <SecondaryTabs options={[{ name: "Mentions", icon: <MentionIcon />, access: "pub" }, { name: "Lists", icon: <ListIcon />, access: "pro" }, { name: "About", icon: <ContactSupportIcon />, access: "pub" }]} onChange={(option: any) => { console.log(option); router.replace(league ? `/${option.access || "pub"}/league/${league}?view=${encodeURIComponent(option.name)}` : `/${option.access}/league?view=${encodeURIComponent(option.name)}`) }} selectedOptionName={localView} />
+                  <SecondaryTabs options={[{ name: "Mentions", icon: <MentionIcon />, access: "pub" }, { name: "Lists", icon: <ListIcon />, access: "pro" }, { name: "About", icon: <ContactSupportIcon />, access: "pub" }]} onChange={(option: any) => { console.log(option); router.replace(localLeague ? `/${option.access || "pub"}/league/${localLeague}?view=${encodeURIComponent(option.name)}` : `/${option.access}/league?view=${encodeURIComponent(option.name)}`) }} selectedOptionName={localView} />
                   {localView == 'mentions' && <CenterPanel>
                     {subscriptionPrompt && !dismiss && <SubscriptionMenu hardStop={hardStop} setDismiss={setDismiss} {...subscriptionObject} />}
 
-                    <Mentions league={league || ""} />
+                    <Mentions league={localLeague || "" } setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} view={localView} />
                   </CenterPanel>}
                   {localView == 'lists' && <CenterPanel>
                     LISTS
                   </CenterPanel>}
                 </div>}
-              {pagetype == 'league' && league &&
+              {localPageType == 'league' && localLeague &&
                 <div>
-                  <SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> }, { name: "Mentions", icon: <MentionIcon /> }]} onChange={(option: any) => { console.log(option); router.replace(league ? `/pub/league/${league}?view=${encodeURIComponent(option.name)}` : `/pub/league?view=${encodeURIComponent(option.name)}`) }} selectedOptionName={localView} />
+                  <SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> }, { name: "Mentions", icon: <MentionIcon /> }]} onChange={(option: any) => { console.log(option); router.replace(localLeague ? `/pub/league/${localLeague}?view=${encodeURIComponent(option.name)}` : `/pub/league?view=${encodeURIComponent(option.name)}`) }} selectedOptionName={localView} />
                   {localView == 'teams' &&
                     <LeftMobilePanel>{TeamsNav}</LeftMobilePanel>}
                   {localView == 'mentions' && <CenterPanel>
                     {subscriptionPrompt && !dismiss && <SubscriptionMenu hardStop={hardStop} setDismiss={setDismiss} {...subscriptionObject} />}
 
-                    <Mentions league={league || ""} />
+                    <Mentions league={localLeague || ""} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} view={localView}/>
                   </CenterPanel>}
                 </div>}
-              {(pagetype == 'team' || pagetype == 'player') &&
+              {(localPageType == 'team' || localPageType == 'player') &&
                 <div>
-                  <Team setDismiss={setDismiss} subscriptionPrompt={subscriptionPrompt && !dismiss} subscriptionObject={subscriptionObject} view={localView} teams={<LeftMobilePanel>{TeamsNav}</LeftMobilePanel>} team={localTeam} league={league} teamName={teamName} pagetype={pagetype} player={player} setLocalPlayer={setLocalPlayer} />
+                  <Team setDismiss={setDismiss} subscriptionPrompt={subscriptionPrompt && !dismiss} subscriptionObject={subscriptionObject} view={localView} teams={<LeftMobilePanel>{TeamsNav}</LeftMobilePanel>} team={localTeam} league={localLeague} teamName={teamName} pagetype={localPageType} player={player} setLocalPlayer={setLocalPlayer} setLocalPageType={setLocalPageType} />
                 </div>
               }
             </MobileContainerWrap>

@@ -17,7 +17,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
  // console.log("/api/subscriptions/index.ts: user:",user);
   const email=user?.emailAddresses?.[0]?.emailAddress;
-  const {data}=await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/check-free-user?api_key=${api_key}&email=${email}`);
-  res.status(200).json({exists:data.exists});
+  const {data}=await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/options/get?api_key=${api_key}&email=${email}&userid=${userId}`);
+  res.status(200).json(data);
 };
 export default handler;

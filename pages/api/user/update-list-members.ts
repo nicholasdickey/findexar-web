@@ -12,7 +12,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const body = req.body;
   let { members } = body;
   let { listxid} = req.query;
-  const {data}= await axios.put(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/update-list?api_key=${api_key}&userId=${userId}&listxid=${listxid}`,{
+  const {data}= await axios.put(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/update-list-members?api_key=${api_key}&userId=${userId}&listxid=${listxid}`,{
     members
   });
   res.status(200).json({members:data.members});

@@ -1,9 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import useSWR from 'swr';
+import Link from 'next/link';
+import { UserButton, SignInButton } from "@clerk/nextjs";
 import { styled } from "styled-components";
+import Button from '@mui/material/Button';
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
-import { MentionsKey, getMentions,MetaLinkKey,getMetaLink } from '@/lib/api';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import LoginIcon from '@mui/icons-material/Login';
+import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
+import IconButton from '@mui/material/IconButton';
+import { MentionsKey, getMentions,getFilteredMentions, getOptions, UserOptionsKey, SetTrackerFilterParams, setTrackerFilter, TrackerListMembersKey, getTrackerListMembers, removeTrackerListMember, RemoveTrackerListMemberParams } from '@/lib/api';
 
 import Mention from "./mention";
 
@@ -11,7 +19,7 @@ const MentionsOuterContainer = styled.div`
     display:flex;
     flex-direction:column;
     justify-content:flex-start;
-    //width:80%;
+    width:80%;
     height:100%;
     padding-left:20px;
     padding-right:20px;
@@ -61,39 +69,240 @@ const MentionsBody = styled.div`
 const MentionsHeader = styled.div`
     padding-top:10px;
     font-size: 18px;
+    padding-left:20px;
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+`;
+const OuterContainer = styled.div`
+    display:flex;
+    flex-direction:row;
+    justify-content:flex-start;
+    width:100%;
+    height:100%;
+    padding-left:20px;
+    padding-right:20px;
+    @media screen and (max-width: 1199px) {
+    display: none;
+  }
+`;
+const TeamName = styled.div`
+  height: 30px;
+  width: 200px; 
+  color: #aea;
+  //text-align: center;
+ // padding-left:20px;
+  font-size: 18px;
+  //margin: 10px;
+`;
+
+const RightPanel = styled.div`
+  height:100%;
+  width:320px;
+  padding-left:20px;
+  min-height: 1000vh;
+  background-color:  #668;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  align-items:flex-start; 
+  padding-top:18px;
+  a{
+    color: #fff;
+    text-decoration: none;
+    &:hover{
+      color: #4f8;
+    }
+  }
+`;
+
+const MobilePlayersPanel = styled.div`
+  height:100%;
+  background-color:  #668;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  align-items:center; 
+  a{
+    color: #fff;
+    text-decoration: none;
+    &:hover{
+      color: #4f8;
+    }
+  }
+`;
+const SideGroup = styled.div`
+  display:flex;
+  width: 220px;
+  flex-direction:row;
+  justify-content:space-between;
+  padding-right:20px;
+  align-items:center;
+ 
+`;
+const SideIcon = styled.div`
+ // margin-top:-8px;
+  color:#aaa;
+  width:20px;
+  height:20px;
+
+`;
+const SideButton = styled.div`
+  //margin-top:-8px;
+  width:45px;
+  color:#aaa;
+
+`;
+const SidePlayer = styled.div`
+  ///height: 40px;
+  width: 140px; 
+  color: #fff;
+  //text-align: center;
+  font-size: 16px;
+  //margin-top: 10px;
+ // margin-bottom:10px;
+`;
+const SelectedSidePlayer = styled.div`
+  height: 40px;
+  width: 200px;
+  color: #ff8;
+  text-align: center;
+  font-size: 14px;
+  margin: 10px;
+  a{
+    color: #ff8 !important;
+    text-decoration: none;
+    &:hover{
+      color: #F8F;
+    }
+  }
+`;
+const Empty = styled.div`
+width:100%;
+text-align:center;
+color:red;
+//background-color:#888;
+`;
+const RightExplanation = styled.div`
+  //height: 30px;
+  width: 270px; 
+  color: #ccc;
+ // text-align: center;
+  font-size: 13px;
+  margin-top: 20px;
+  margin-bottom:10px;
 `;
 
 interface Props {
     league: string;
+    noUser?: boolean;
+    setLocalPageType: (pageType: string) => void;
+    setLocalPlayer: (player: string) => void;
+    view: string;
+
 }
 
-const LeagueMentions: React.FC<Props> = ({ league }) => {
-    const mentionsKey: MentionsKey = { func: "mentions", league };
-    const {data:mentions,error,isLoading} = useSWR(mentionsKey, getMentions);
-    const Mentions = mentions.map((m: any, i: number) => {
-        const { league, type, team, name, date, url, findex, summary,xid } = m;
-       // console.log("XID:",league,name,xid)
-          return (<Mention mentionType="top" league={league} type={type} team={team} name={name} date={date} url={url} findex={findex} summary={summary} xid={xid} key={`mention${i}`} />)
-    });         
-    if(isLoading) return (<Stack spacing={1}>
+const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, setLocalPlayer, view }) => {
+
+    const optionsKey: UserOptionsKey = { type: "options" };
+    const { data: options, error: optionsError, isLoading: optionsLoading, mutate: optionsMutate } = useSWR(optionsKey, getOptions);
+    const [localTrackerFilter, setLocalTrackerFilter] = React.useState(options.tracker_filter);
+    const [globalLoading, setGlobalLoading] = React.useState(false);
+    const [v, setV] = React.useState((!view || view.toLowerCase() == "home") ? "mentions" : view.toLowerCase());
+    useEffect(() => {
+        if (optionsLoading) return;
+        setLocalTrackerFilter(options.tracker_filter);
+    }, [optionsLoading, options]);
+
+    const mentionsKey: MentionsKey = { type: localTrackerFilter==1?"filtered-mentions":"mentions", league };
+    console.log("MentionsKey",mentionsKey)
+    const { data: mentions, error, isLoading } = useSWR(mentionsKey, localTrackerFilter==1?getFilteredMentions:getMentions);
+    
+    const trackerListMembersKey: TrackerListMembersKey = { type: "tracker_list_members",league };
+    const { data: trackerListMembers, error: trackerListError, isLoading: trackerListLoading, mutate: trackerListMutate } = useSWR(trackerListMembersKey, getTrackerListMembers);
+
+    const Mentions = mentions&&mentions.map((m: any, i: number) => {
+        const { league, type, team, name, date, url, findex, summary, xid } = m;
+        // console.log("XID:",league,name,xid)
+        return (<Mention mentionType="top" league={league} type={type} team={team} name={name} date={date} url={url} findex={findex} summary={summary} xid={xid} key={`mention${i}`} />)
+    });
+    console.log("mentions:",mentions)
+    if (isLoading) return (<Stack spacing={1}>
         <Skeleton variant="rounded" animation="pulse" height={160} />
-         <Skeleton variant="rounded" animation="pulse" height={80} />
-         <Skeleton variant="rounded" animation="pulse" height={120} />
-         <Skeleton variant="rounded" animation="pulse" height={160} />
-       </Stack>)
+        <Skeleton variant="rounded" animation="pulse" height={80} />
+        <Skeleton variant="rounded" animation="pulse" height={120} />
+        <Skeleton variant="rounded" animation="pulse" height={160} />
+    </Stack>)
     return (
         <>
-            <MentionsOuterContainer>
-                <MentionsHeader>Latest Mentions:</MentionsHeader>
-                <MentionsBody>
-                    {Mentions}
-                </MentionsBody>
-            </MentionsOuterContainer>
+            <OuterContainer>
+                <MentionsOuterContainer>
+                    <MentionsHeader>Latest Mentions:&nbsp;&nbsp;&nbsp;&nbsp;<FormControlLabel control={<Checkbox size="small" disabled={noUser} checked={localTrackerFilter == 1} onChange={
+                        (event: React.ChangeEvent<HTMLInputElement>) => {
+                            setLocalTrackerFilter(event.target.checked);
+                            const params: SetTrackerFilterParams = { tracker_filter: event.target.checked ? 1 : 0 };
+                            setTrackerFilter(params);
+
+                        }} />} label="Apply Tracker List Filter" />
+                        {noUser && <SignInButton><Button size="small" variant="contained"><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton>}
+                    </MentionsHeader>
+                    <MentionsBody>
+                        {mentions&&mentions.length>0?Mentions:<Empty>No Mentions Available</Empty>}
+                    </MentionsBody>
+                </MentionsOuterContainer>
+                {localTrackerFilter && <RightPanel>
+
+                    <TeamName>Tracker List: </TeamName>
+                    {(!trackerListMembers||trackerListMembers.length==0) && <RightExplanation>Tracker list empty {league?`for ${league}`:``}</RightExplanation>}
+                    {trackerListMembers && trackerListMembers.map(({ member, teamid, league }: { member: string, teamid: string, league: string }) => {
+                        //return <SidePlayer><Link onClick={() => { setLocalPageType("player"), setLocalPlayer(p.member); setV("mentions"); setGlobalLoading(true) }} href={`/pro/league/${p.league}/team/${p.teamid}/player/${encodeURIComponent(p.member)}`}>{p.member} </Link></SidePlayer>
+                        return <SideGroup>
+                            <SidePlayer>
+                                <Link onClick={() => { setLocalPlayer(member); setV("mentions"); setGlobalLoading(true) }} href={`/pro/league/${league}/team/${teamid}/player/${encodeURIComponent(member)}`}>
+                                    {member}
+                                </Link>
+                            </SidePlayer>
+                            <SideButton>
+                                <IconButton
+                                    onClick={async () => {
+                                        console.log("TRACKED", member)
+                                        const removeTrackerListMemberParams: RemoveTrackerListMemberParams = { member, teamid: teamid || "" };
+
+                                        //to copilot: find in trackerListMembers the item with name p.name and remove it.
+                                        //then set trackerListMembers to the new array
+                                        const newTrackerListMembers = trackerListMembers.filter((p: any) => p.member != member);
+                                        trackerListMutate(newTrackerListMembers, false);
+                                        await removeTrackerListMember(removeTrackerListMemberParams);
+                                       
+
+                                    }} size="large" aria-label="Add new list">
+                                    <SideIcon>
+                                        <PlaylistRemoveIcon sx={{ color: "#afa" }} />
+                                    </SideIcon>
+                                </IconButton>
+                            </SideButton>
+                        </SideGroup>
+
+                    })
+                    }
+
+                   
+                </RightPanel>}
+            </OuterContainer>
             <MobileMentionsOuterContainer>
-              
+                <MentionsHeader>Latest Mentions:&nbsp;&nbsp;&nbsp;&nbsp;<FormControlLabel control={<Checkbox disabled={noUser} checked={localTrackerFilter == 1} onChange={
+                    (event: React.ChangeEvent<HTMLInputElement>) => {
+                        setLocalTrackerFilter(event.target.checked);
+                        const params: SetTrackerFilterParams = { tracker_filter: event.target.checked ? 1 : 0 };
+                        setTrackerFilter(params);
+
+                    }} />} label="Tracker List" />
+                    {noUser && <SignInButton><Button size="small" variant="contained"><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton>}
+                </MentionsHeader>
                 <MentionsBody>
                     {Mentions}
                 </MentionsBody>
+
             </MobileMentionsOuterContainer>
         </>
     );

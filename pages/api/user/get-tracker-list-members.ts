@@ -9,9 +9,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     res.status(401).send("Not logged in");
     return;
   }
-  let { listxid} = req.query;
-  const {data}=await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/get-list-members?api_key=${api_key}&userId=${userId}&listxid=${listxid}`);
- //console.log("$$$$$$$$$$$$$$$$$$$$ get-list-members.ts: data:", data)
+  let {league} = req.query;
+  const {data}=await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/tracker-list/get?api_key=${api_key}&userid=${userId}&league=${league}`);
   res.status(200).json({members:data.members});
 };
 export default handler;

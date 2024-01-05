@@ -39,19 +39,6 @@ export const getLeagueTeams = async ({league}:LeagueTeamsKey) => {
   }
 }
 
-// SWR get all players for the Team
-export type TeamPlayersKey = { league: string; teamid: string};
-export const getTeamPlayers = async ({league,teamid}:TeamPlayersKey) => {
-  try {
-    const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-team-players?league=${encodeURIComponent(league)}&teamid=${encodeURIComponent(teamid)}`;
-    const res = await axios.get(url);
-    return res.data.players;
-  }
-  catch (e) {
-    console.log("getTeamPlayers", e);
-    return false;
-  }
-}
 
 // SWR get all details for the Team
 export type DetailsKey = { teamid: string; name: string};
@@ -68,8 +55,8 @@ export const getDetails = async ({teamid,name}:DetailsKey) => {
 }
 
 // SWR get all mentions
-export type MentionsKey = {func:string,league?: string};
-export const getMentions = async ({func,league}:MentionsKey) => {
+export type MentionsKey = {type:string,league?: string};
+export const getMentions = async ({type,league}:MentionsKey) => {
   try {
     const url = league?`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-mentions?league=${encodeURIComponent(league)}`:`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-mentions`;
     const res = await axios.get(url);
@@ -77,6 +64,19 @@ export const getMentions = async ({func,league}:MentionsKey) => {
   }
   catch (e) {
     console.log("getMentions", e);
+    return false;
+  }
+}
+
+// SWR get filtered mentions
+export const getFilteredMentions = async ({type,league}:MentionsKey) => {
+  try {
+    const url = league?`${process.env.NEXT_PUBLIC_SERVER}/api/user/get-filtered-mentions?league=${encodeURIComponent(league)}`:`${process.env.NEXT_PUBLIC_SERVER}/api/user/get-filtered-mentions`;
+    const res = await axios.get(url);
+    return res.data.mentions;
+  }
+  catch (e) {
+    console.log("getFilteredMentions", e);
     return false;
   }
 }
@@ -99,7 +99,7 @@ export const getMetaLink = async ({func,xid}:MetaLinkKey) => {
 export type PlayerPhotoKey = {func:string,name: string,teamid: string};
 export const getPlayerPhoto = async ({func,name,teamid}:PlayerPhotoKey) => {
   try {
-    const url =`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-player-photo?name=${name}&teamid=${teamid}`;
+    const url =`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-player-photo?name=${encodeURIComponent(name)}&teamid=${encodeURIComponent(teamid)}`;
     const res = await axios.get(url);
     return res.data.photo;
   }
@@ -115,6 +115,7 @@ export const getUserLists = async ({type}:UserListsKey) => {
   try {
     const url =`${process.env.NEXT_PUBLIC_SERVER}/api/user/get-lists`;
     const res = await axios.get(url);
+    console.log("getUserLists",url,res.data.lists)
     return res.data.lists;
   }
   catch (e) {
@@ -126,25 +127,27 @@ export const getUserLists = async ({type}:UserListsKey) => {
 export type UserAddListParams = {name:string,description:string};
 export const addUserList = async ({name,description}:UserAddListParams) => {
   try {
-    const url =`${process.env.NEXT_PUBLIC_SERVER}/api/user/add-list?name=${name}&description=${description}`;
-    const res = await axios.get(url);
-    return true;
+    const url =`${process.env.NEXT_PUBLIC_SERVER}/api/user/add-list?name=${encodeURIComponent(name)}&description=${encodeURIComponent(description)}`;
+   
+    const {data} = await axios.get(url);
+    console.log("addUserList",{name,description, url,data})
+    return data.lists;
   }
   catch (e) {
     console.log("addUserList", e);
-    return false;
+    //return false;
   }
 }
 
 export type UpdateListParams = {listxid:string,name:string,description:string};
 export const updateUserList = async ({name,description,listxid}:UpdateListParams) => {
   try {
-    const url =`${process.env.NEXT_PUBLIC_SERVER}/api/user/update-list?listxid=${listxid}&name=${name}&description=${description}`;
-    const res = await axios.get(url);
-    return true;
+    const url =`${process.env.NEXT_PUBLIC_SERVER}/api/user/update-list?listxid=${listxid}&name=${encodeURIComponent(name)}&description=${encodeURIComponent(description)}`;
+    const {data} = await axios.get(url);
+    return data.lists;
   }
   catch (e) {
-    console.log("addUserList", e);
+    console.log("updateUserList", e);
     return false;
   }
 }
@@ -158,7 +161,7 @@ export const getUserListMembers = async ({type,listxid}:UserListMembersKey) => {
   }
   catch (e) {
     console.log("getUserListMembers", e);
-    return [];
+    
   }
 }
 
@@ -173,6 +176,81 @@ export const updateUserListMembers = async ({listxid,members}:UserUpdateListMemb
   }
   catch (e) {
     console.log("getUserListMembers", e);
-    return [];
   }
 }
+
+export type TrackerListMembersKey = {type:string,league?:string};
+export const getTrackerListMembers = async ({type,league}:TrackerListMembersKey) => {
+  try {
+    console.log("getTrackerListMembers",league)
+    const url =`${process.env.NEXT_PUBLIC_SERVER}/api/user/get-tracker-list-members?league=${league||""}`;
+    const res = await axios.get(url);
+    return res.data.members;
+  }
+  catch (e) {
+    console.log("getUserListMembers", e);   
+  }
+}
+export type AddTrackerListMemberParams = {member:string,teamid:string};
+export const addTrackerListMember = async ({member,teamid}:AddTrackerListMemberParams) => {
+  try {
+    const url =`${process.env.NEXT_PUBLIC_SERVER}/api/user/add-tracker-list-member?member=${encodeURIComponent(member)}&teamid=${teamid}`;
+    const res = await axios.get(url);
+    console.log("addTrackerListMember",url,res.data.success)
+    return res.data.success;
+  }
+  catch (e) {
+    console.log("addTrackerListMember", e);   
+  }
+}
+export type RemoveTrackerListMemberParams = {member:string,teamid:string};
+export const removeTrackerListMember = async ({member,teamid}:AddTrackerListMemberParams) => {
+  try {
+    const url =`${process.env.NEXT_PUBLIC_SERVER}/api/user/remove-tracker-list-member?member=${encodeURIComponent(member)}&teamid=${teamid}`;
+    const res = await axios.get(url);
+    console.log("removeTrackerListMember",url,res.data.success)
+    return res.data.success;
+  }
+  catch (e) {
+    console.log("removeTrackerListMember", e);   
+  }
+}
+// SWR get all players for the Team
+export type TeamPlayersKey = { type:string,league: string; teamid: string};
+export const getTeamPlayers = async ({type,league,teamid}:TeamPlayersKey) => {
+  try {
+    const url = `${process.env.NEXT_PUBLIC_SERVER}/api/user/get-team-players?league=${encodeURIComponent(league)}&teamid=${encodeURIComponent(teamid)}`;
+    const res = await axios.get(url);
+    return res.data.players;
+  }
+  catch (e) {
+    console.log("getTeamPlayers", e);
+    return false;
+  }
+}
+export type UserOptionsKey={type:string};
+export const getOptions = async ({}:UserOptionsKey) => {
+  try {
+    const url = `${process.env.NEXT_PUBLIC_SERVER}/api/user/user-options`;
+    const res = await axios.get(url);
+    return res.data.options;
+  }
+  catch (e) {
+    console.log("getOptions", e);
+    return false;
+  }
+}
+export type SetTrackerFilterParams={tracker_filter:number};
+export const setTrackerFilter = async ({tracker_filter}:SetTrackerFilterParams) => {
+  try {
+    const url = `${process.env.NEXT_PUBLIC_SERVER}/api/user/set-tracker-filter?tracker_filter=${tracker_filter}`;
+    await axios.get(url);
+    console.log("called setTrackerFilter",url)
+  }
+  catch (e) {
+    console.log("getTeamPlayers", e);
+    return false;
+  }
+}
+
+
