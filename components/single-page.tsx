@@ -729,10 +729,10 @@ const Landing: React.FC<Props> = (props) => {
                       in the media.<br /><br /><hr />
                       Powered by OpenAI.</Welcome>
                       <br /><br />
-                      <Favorites><Button style={{padding:10}} variant="contained"><StarOutlineIcon />&nbsp;&nbsp;My Favorites</Button></Favorites>
+                      <Favorites><Button style={{padding:10}} variant="outlined"><StarOutlineIcon />&nbsp;&nbsp;My Favorites</Button></Favorites>
                       <br /><br />
                       <LeftText><b>&ldquo;My Team&ldquo; tracker List:</b> Use &ldquo;add to list&ldquo; icons next to player name in team rosters to add or remove players to tracker list.<br/><br/><hr/></LeftText>
-                       {!userId&&<LeftText>Needs to be a logged-in user to explore the teams and individual athletes&apos; mentions and use the tracker list or &ldquo;favorites&ldquo; functionality.<br /><br />Click here to sign-in or sign-up: <br /><br /><br /><SignInButton><Button style={{padding:10}} size="small" variant="contained"><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></LeftText>}
+                       {!userId&&<LeftText>Needs to be a logged-in user to explore the teams and individual athletes&apos; mentions and use the tracker list or &ldquo;favorites&ldquo; functionality.<br /><br />Click here to sign-in or sign-up: <br /><br /><br /><SignInButton><Button style={{padding:10}} size="small" variant="outlined"><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></LeftText>}
                     </>
                     }
                   </LeftPanel>
