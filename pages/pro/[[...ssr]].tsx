@@ -59,7 +59,8 @@ export const getServerSideProps =
                     const email = e.emailAddress;
                     const { data } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/options/get?userid=${userId}&api_key=${api_key}&email=${email}`);
                     freeUser = data.exists;
-                    if (!options)
+                  //  if (!options)
+                    
                         options = data.options;
                     if (freeUser) {
                         break;
@@ -122,10 +123,10 @@ export const getServerSideProps =
             }
             let trackerListMembersKey: TrackerListMembersKey = { type: "tracker_list_members", league };
             let trackerListMembers = [];
-            if (options && options.tracker_filter == 1) {
-
-                trackerListMembers = await getTrackerListMembers(trackerListMembersKey);
-            }
+          //  if (options && options.tracker_filter == 1) {
+                const {data}=await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/tracker-list/get?api_key=${api_key}&userid=${userId}&league=${league}`);
+                trackerListMembers = data.members;
+            //}
             const leagues = await getLeagues();
             const keyLeagueTeams: LeagueTeamsKey = { func: "leagueTeams", league };
             let leagueTeams = await getLeagueTeams(keyLeagueTeams);

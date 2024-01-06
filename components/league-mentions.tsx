@@ -19,10 +19,10 @@ const MentionsOuterContainer = styled.div`
     display:flex;
     flex-direction:column;
     justify-content:flex-start;
-    width:80%;
+    width:100%;
     height:100%;
-    padding-left:20px;
-    padding-right:20px;
+   // padding-left:20px;
+   // padding-right:20px;
     a{
         font-size: 12px;
         color: #000;
@@ -82,8 +82,7 @@ const OuterContainer = styled.div`
     justify-content:flex-start;
     width:100%;
     height:100%;
-    padding-left:20px;
-    padding-right:20px;
+    margin:0px;
     @media screen and (max-width: 1199px) {
         display: none;
   }
@@ -111,7 +110,7 @@ const MobileTeamName = styled.div`
 
 const RightPanel = styled.div`
   height:100%;
-  width:320px;
+ // width:320px;
   padding-left:20px;
   min-height: 1000vh;
   background-color:  #668;
@@ -146,6 +145,9 @@ const MobilePlayersPanel = styled.div`
     &:hover{
       color: #4f8;
     }
+  }
+  @media screen and (min-width: 1200px) {
+        display: none;
   }
 `;
 const SideGroup = styled.div`
@@ -264,13 +266,13 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
         // console.log("XID:",league,name,xid)
         return (<Mention mentionType="top" league={league} type={type} team={team} name={name} date={date} url={url} findex={findex} summary={summary} xid={xid} key={`mention${i}`} />)
     });
-    console.log("league-mentions:", { v, mentions, isLoading })
-    if (isLoading) return (<Stack spacing={1}>
+    //console.log("league-mentions:", { v, mentions, isLoading })
+   /* if (isLoading) return (<Stack spacing={1}>
         <Skeleton variant="rounded" animation="pulse" height={160} />
         <Skeleton variant="rounded" animation="pulse" height={80} />
         <Skeleton variant="rounded" animation="pulse" height={120} />
         <Skeleton variant="rounded" animation="pulse" height={160} />
-    </Stack>)
+    </Stack>)*/
 
     return (
         <>
@@ -289,9 +291,9 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
                         {mentions && mentions.length > 0 ? Mentions : <Empty>No Mentions Available</Empty>}
                     </MentionsBody>
                 </MentionsOuterContainer>
-                {localTrackerFilter && <RightPanel>
+                {trackerListMembers&&trackerListMembers.length>0 && <RightPanel>
 
-                    <TeamName>My Team -Tracker List: </TeamName>
+                    <TeamName>My Team (tracker list): </TeamName>
                     {(!trackerListMembers || trackerListMembers.length == 0) && <RightExplanation>Tracker list is empty {league ? `for ${league}` : ``}<br/>Use &ldquo;add to list&ldquo; icons to the right of the<br/> player name in the team roster<br/>to add to the &ldquo;My Team&ldquo; tracker list. </RightExplanation>}
                     {trackerListMembers && trackerListMembers.map(({ member, teamid, league }: { member: string, teamid: string, league: string },i:number) => {
                         //return <SidePlayer><Link onClick={() => { setLocalPageType("player"), setLocalPlayer(p.member); setV("mentions"); setGlobalLoading(true) }} href={`/pro/league/${p.league}/team/${p.teamid}/player/${encodeURIComponent(p.member)}`}>{p.member} </Link></SidePlayer>

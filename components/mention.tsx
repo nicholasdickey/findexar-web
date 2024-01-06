@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { styled } from "styled-components";
 import { MentionsKey, getMentions, MetaLinkKey, getMetaLink } from '@/lib/api';
 import { convertToUTCDateString, convertToReadableLocalTime } from "@/lib/date-convert";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const MentionsOuterContainer = styled.div`
     display:flex;
@@ -262,7 +263,7 @@ const Mention: React.FC<Props> = ({ mentionType, league, type, team, name, date,
                         async (e) => {
                             setExpanded(!expanded);
                         }}
-                        className="material-icons-outlined">expand_more</Icon>
+                        ><ExpandMoreIcon/></Icon>
                 </MentionFindex>
 
                 <MentionSummary>

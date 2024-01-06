@@ -55,6 +55,7 @@ const Header = styled.header`
   font-size: 40px;
   padding-top: 10px;
   padding-bottom:10px;
+  font-family: 'Roboto', sans-serif;
   
   a{
       color: #fff;
@@ -73,6 +74,7 @@ const ContainerWrap = styled.div`
   flex-direction: column;
   height: 100%;
   width: 100%;
+  font-family: 'Roboto', sans-serif;
   @media screen and (max-width: 1199px) {
     display: none;
   }
@@ -294,15 +296,17 @@ const Welcome = styled.div`
 `;
 
 const CenterPanel = styled.div`
+  position:relative;
   width:100%;
   height:100%;
 `;
 
 const MainPanel = styled.div`
   display:flex;
+  position:relative;
   flex-direction:row;
   justify-content:flex-start;
-  width:100%;
+ // width:100%;
   height:100%;
 `;
 const MuiTabs = styled(Tabs)`
@@ -537,7 +541,7 @@ const Landing: React.FC<Props> = (props) => {
     setLocalLeague(league);
   }, [league]);
 
-  view = view.toLowerCase();
+  view = view?view.toLowerCase():"";
   const subscriptionObject = useSubscription();
   console.log("==============>", subscriptionObject)
   // if (subscriptionObject) {
@@ -715,15 +719,15 @@ const Landing: React.FC<Props> = (props) => {
               <Leagues>
                 {LeaguesNav}
               </Leagues>
-              {isLoading ?
-                <MainPanel>Loading...</MainPanel> :
+              
                 <MainPanel>
 
                   <LeftPanel>
                     {localLeague ? TeamsNav : <> <Welcome>
                       Welcome to Findexar!<br /><hr /><br />
                       Your indispensable Fantasy Sports<br />
-                      research and tracking tool.<br /><br />
+                      and Major Leagues athletes <br/>
+                      media research and tracking tool.<br /><br />
                       Finding and indexing <br />
                       mentions of pro athletes<br />
                       in the media.<br /><br /><hr />
@@ -745,7 +749,7 @@ const Landing: React.FC<Props> = (props) => {
                    
                     {localPageType == "league" && !localTeam && <Mentions league={localLeague || ""} noUser={!userId} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} view={localView}/>}
                   </CenterPanel>
-                </MainPanel>}
+                </MainPanel>
             </ContainerWrap>
             <MobileContainerWrap>
               <MuiTabs
