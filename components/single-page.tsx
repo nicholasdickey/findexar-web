@@ -189,8 +189,9 @@ const Leagues = styled.div`
 
 const LeftPanel = styled.div`
   width:300px;
+  height:auto !important;
   height:100%;
-  min-height: 1000vh;
+  min-height: 100%;
   background-color:  #333;
   display:flex;
   flex-direction:column;
@@ -209,7 +210,7 @@ const Favorites = styled.div`
   margin-top:28px;
   margin-left:22px;
   width:100%;
-  height:100%;
+  height:40px;
   color:#aaa;
   //align-self:center;
   font-size:12px;

@@ -179,7 +179,7 @@ export const updateUserListMembers = async ({listxid,members}:UserUpdateListMemb
   }
 }
 
-export type TrackerListMembersKey = {type:string,league?:string};
+export type TrackerListMembersKey = {type:string,league:string};
 export const getTrackerListMembers = async ({type,league}:TrackerListMembersKey) => {
   try {
     console.log("getTrackerListMembers",league)

@@ -115,10 +115,11 @@ export const getServerSideProps =
                     console.log('ssr-bot-landing-init-error', x);
                 }
             }
-            let trackerListMembersKey: TrackerListMembersKey = { type: "tracker_list_members" };
+            let trackerListMembersKey: TrackerListMembersKey = { type: "tracker_list_members",league };
             let trackerListMembers = [];
             const {data}=await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/tracker-list/get?api_key=${api_key}&userid=${userId}&league=${league}`);
             trackerListMembers = data.members;
+            console.log("!!! TRACKER LIST MEMBERS:", trackerListMembers);
             const leagues = await getLeagues();
             const keyLeagueTeams: LeagueTeamsKey = { func: "leagueTeams", league };
             let leagueTeams = await getLeagueTeams(keyLeagueTeams);
