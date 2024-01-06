@@ -10,6 +10,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return;
   }
   let {league} = req.query;
+  league=league||"";
   const {data}=await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/tracker-list/get?api_key=${api_key}&userid=${userId}&league=${league}`);
   res.status(200).json({members:data.members});
 };
