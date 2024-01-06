@@ -215,7 +215,7 @@ const SelectedSidePlayer = styled.div`
 const Empty = styled.div`
 width:100%;
 text-align:center;
-color:red;
+//color:red;
 //background-color:#888;
 `;
 const RightExplanation = styled.div`
@@ -283,7 +283,7 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
                             setTrackerFilter(params);
 
                         }} />} label="My Team Filter" />
-                        {noUser && <SignInButton><Button size="small" variant="contained"><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton>}
+                        {noUser && <SignInButton><Button size="small" variant="contained" style={{paddingRight:8,paddingTop:4,paddingBottom:4,paddingLeft:4}}><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton>}
                     </MentionsHeader>
                     <MentionsBody>
                         {mentions && mentions.length > 0 ? Mentions : <Empty>No Mentions Available</Empty>}

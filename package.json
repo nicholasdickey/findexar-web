@@ -16,7 +16,7 @@
     "@emotion/server": "^11.11.0",
     "@mui/icons-material": "^5.15.2",
     "@mui/material": "^5.15.1",
-    "@mui/material-nextjs": "^5.15.0",
+    "@mui/material-nextjs": "^5.15.3",
     "@stripe/stripe-js": "^2.2.2",
     "axios": "^1.6.2",
     "isbot-fast": "^1.2.0",
