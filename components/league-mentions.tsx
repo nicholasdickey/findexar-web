@@ -293,9 +293,9 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
 
                     <TeamName>My Team -Tracker List: </TeamName>
                     {(!trackerListMembers || trackerListMembers.length == 0) && <RightExplanation>Tracker list empty {league ? `for ${league}` : ``}</RightExplanation>}
-                    {trackerListMembers && trackerListMembers.map(({ member, teamid, league }: { member: string, teamid: string, league: string }) => {
+                    {trackerListMembers && trackerListMembers.map(({ member, teamid, league }: { member: string, teamid: string, league: string },i:number) => {
                         //return <SidePlayer><Link onClick={() => { setLocalPageType("player"), setLocalPlayer(p.member); setV("mentions"); setGlobalLoading(true) }} href={`/pro/league/${p.league}/team/${p.teamid}/player/${encodeURIComponent(p.member)}`}>{p.member} </Link></SidePlayer>
-                        return <SideGroup>
+                        return <SideGroup key={`3fdsdvb-${i}`}>
                             <SidePlayer>
                                 <Link onClick={() => { setLocalPlayer(member); setV("mentions"); setGlobalLoading(true) }} href={`/pro/league/${league}/team/${teamid}/player/${encodeURIComponent(member)}`}>
                                     {member}
@@ -344,9 +344,9 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
                     {v == 'my team' && <MobilePlayersPanel>
                         <MobileTeamName>My Team - Tracker List: </MobileTeamName>
                         {(!trackerListMembers || trackerListMembers.length == 0) && <RightExplanation>Tracker list empty {league ? `for ${league}` : ``}</RightExplanation>}
-                        {trackerListMembers && trackerListMembers.map(({ member, teamid, league }: { member: string, teamid: string, league: string }) => {
+                        {trackerListMembers && trackerListMembers.map(({ member, teamid, league }: { member: string, teamid: string, league: string },i:number) => {
                             //return <SidePlayer><Link onClick={() => { setLocalPageType("player"), setLocalPlayer(p.member); setV("mentions"); setGlobalLoading(true) }} href={`/pro/league/${p.league}/team/${p.teamid}/player/${encodeURIComponent(p.member)}`}>{p.member} </Link></SidePlayer>
-                            return <MobileSideGroup>
+                            return <MobileSideGroup key={`3fdsdvb-${i}`}>
                                 <MobileSidePlayer>
                                     <Link onClick={() => { setLocalPlayer(member); setV("mentions"); setGlobalLoading(true) }} href={`/pro/league/${league}/team/${teamid}/player/${encodeURIComponent(member)}`}>
                                         {member}

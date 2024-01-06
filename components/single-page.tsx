@@ -40,7 +40,7 @@ import { GlobalStyle } from '@/components/themes/globalStyle';
 
 import { LeagueTeamsKey, getLeagueTeams, UserListsKey, getUserLists } from '@/lib/api';
 import Team from './team-page';
-import List from './list-page';
+
 import Mentions from './league-mentions';
 import SecondaryTabs from "./secondary-tabs";
 import PlayerPhoto from "./player-photo";
@@ -570,7 +570,7 @@ const Landing: React.FC<Props> = (props) => {
       }
       //return null;
     }
-  }, [isLoaded, subscription, products, userId, createdAt]);
+  }, [isLoaded, subscription, products, userId, createdAt,freeUser]);
 
   //}
   const router = useRouter();
@@ -729,8 +729,8 @@ const Landing: React.FC<Props> = (props) => {
                       <br /><br />
                       <Favorites><Button variant="contained"><StarOutlineIcon />&nbsp;&nbsp;My Favorites</Button></Favorites>
                       <br /><br />
-                      <LeftText><b>"My Team" tracker List:</b> Use "add to list" icons next to player name in team rosters to add or remove players to tracker list.<br/><br/><hr/></LeftText>
-                       {!userId&&<LeftText>Needs to be a logged-in user to explore the teams and individual athletes' mentions and use the tracker list or "favorites" functionality.<br /><br />Click here to sign-in or sign-up: <br /><br /><br /><SignInButton><Button variant="contained"><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></LeftText>}
+                      <LeftText><b>&ldquo;My Team&ldquo; tracker List:</b> Use &ldquo;add to list&ldquo; icons next to player name in team rosters to add or remove players to tracker list.<br/><br/><hr/></LeftText>
+                       {!userId&&<LeftText>Needs to be a logged-in user to explore the teams and individual athletes&apos; mentions and use the tracker list or &ldquo;favorites&ldquo; functionality.<br /><br />Click here to sign-in or sign-up: <br /><br /><br /><SignInButton><Button variant="contained"><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></LeftText>}
                     </>
                     }
                   </LeftPanel>
@@ -739,7 +739,6 @@ const Landing: React.FC<Props> = (props) => {
 
                     {subscriptionPrompt && !dismiss && <SubscriptionMenu hardStop={hardStop} setDismiss={setDismiss} {...subscriptionObject} />}
                     {(localPageType == "team" || localPageType == "player") && <Team setDismiss={setDismiss} subscriptionPrompt={subscriptionPrompt && !dismiss} subscriptionObject={subscriptionObject} view={localView} teams={null} team={localTeam} league={localLeague} teamName={teamName} pagetype={localPageType} player={localPlayer} setLocalPlayer={setLocalPlayer} setLocalPageType={setLocalPageType}/>}
-                    {localPageType == "list" && <List setDismiss={setDismiss} subscriptionPrompt={subscriptionPrompt && !dismiss} subscriptionObject={subscriptionObject} view={localView} lists={null}   listName={teamName} pagetype={localPageType}  setLocalPlayer={setLocalPlayer}  setLocalPageType={setLocalPageType}/>}
                    
                    
                     {localPageType == "league" && !localTeam && <Mentions league={localLeague || ""} noUser={!userId} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} view={localView}/>}

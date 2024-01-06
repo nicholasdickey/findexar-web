@@ -191,8 +191,8 @@ const Team: React.FC<Props> = (props) => {
   }, [view]);
 
   console.log("TeamPage", { subscriptionPrompt, v, team, pagetype, view, selectedTeam, selectedPlayer })
-  const PlayersNav = players&&players?.map((p: { name: string, findex: string, mentions: string,tracked:boolean}) => {
-    return <SideGroup>{p.name == player ?
+  const PlayersNav = players&&players?.map((p: { name: string, findex: string, mentions: string,tracked:boolean},i:number) => {
+    return <SideGroup key={`ewfggvfn-${i}`}>{p.name == player ?
       <SelectedSidePlayer>
         <Link onClick={() => { setLocalPageType("player"); setLocalPlayer(p.name); setV("mentions"); setGlobalLoading(true) }} href={`/pro/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}`}>
           {p.name} ({`${p.mentions}`})
