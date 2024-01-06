@@ -692,7 +692,7 @@ const Landing: React.FC<Props> = (props) => {
                     <HeaderCenter>
                       {localPageType=="league"&&!localLeague && !localTeam ? <Link href="/pub/league">FINDEXAR</Link> : !localTeam ? `${localLeague}` : localPlayer ? <PlayerNameGroup><PlayerName><Link href={`/pub/league/${localLeague}/team/${localTeam}`}>{teamName}</Link></PlayerName> </PlayerNameGroup> : `${teamName}`}
                       {localPageType=="league"&&!localLeague && !localTeam && <div><Subhead>AI-Powered Fantasy Sports Professional Athletes Media Mentions Monitor</Subhead><SubheadMobile>AI-powered Fantasy Sports<br /> Athletes Mentions Monitor</SubheadMobile></div>}
-                      {localPageType=="list" && <Link href="/pub/league">Tracker List</Link>  }
+                      {localPageType=="list" && <Link href="/pub/league">My Team</Link>  }
                      
                       {localPageType=="list" && <div><Subhead>Tracks mentions for the selected players.</Subhead><SubheadMobile>Tracks mentions for the selected players.</SubheadMobile></div>}
 
@@ -708,16 +708,7 @@ const Landing: React.FC<Props> = (props) => {
                 <HeaderRight> <SUserButton afterSignOutUrl="/" /></HeaderRight>
               </HeaderTopline>
             </Header>
-            <Modal
-              open={hardStop}
-              //onClose={handleClose}
-              aria-labelledby="modal-modal-title"
-              aria-describedby="modal-modal-description"
-            >
-              <Box sx={style}>
-                <SubscriptionMenu hardStop={hardStop} setDismiss={setDismiss} {...subscriptionObject} />
-              </Box>
-            </Modal>
+           
             <ContainerWrap>
               <Leagues>
                 {LeaguesNav}
@@ -738,7 +729,7 @@ const Landing: React.FC<Props> = (props) => {
                       <br /><br />
                       <Favorites><Button variant="contained"><StarOutlineIcon />&nbsp;&nbsp;My Favorites</Button></Favorites>
                       <br /><br />
-                      <LeftText><b>Tracker List:</b> Use "add to list" icons next to player name in team rosters to add or remove players to tracker list.<br/><br/><hr/></LeftText>
+                      <LeftText><b>"My Team" tracker List:</b> Use "add to list" icons next to player name in team rosters to add or remove players to tracker list.<br/><br/><hr/></LeftText>
                        {!userId&&<LeftText>Needs to be a logged-in user to explore the teams and individual athletes' mentions and use the tracker list or "favorites" functionality.<br /><br />Click here to sign-in or sign-up: <br /><br /><br /><SignInButton><Button variant="contained"><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></LeftText>}
                     </>
                     }
@@ -768,22 +759,20 @@ const Landing: React.FC<Props> = (props) => {
               </MuiTabs>
               {localPageType == 'league' && !localLeague &&
                 <div>
-                  <SecondaryTabs options={[{ name: "Mentions", icon: <MentionIcon />, access: "pub" }, { name: "Lists", icon: <ListIcon />, access: "pro" }, { name: "About", icon: <ContactSupportIcon />, access: "pub" }]} onChange={(option: any) => { console.log(option); router.replace(localLeague ? `/${option.access || "pub"}/league/${localLeague}?view=${encodeURIComponent(option.name)}` : `/${option.access}/league?view=${encodeURIComponent(option.name)}`) }} selectedOptionName={localView} />
-                  {localView == 'mentions' && <CenterPanel>
+                  <SecondaryTabs options={[{ name: "Mentions", icon: <MentionIcon />, access: "pub" }, { name: "My Team", icon: <ListIcon />, access: "pro" }, { name: "About", icon: <ContactSupportIcon />, access: "pub" }]} onChange={(option: any) => { console.log(option); router.replace(localLeague ? `/${option.access || "pub"}/league/${localLeague}?view=${encodeURIComponent(option.name)}` : `/${option.access}/league?view=${encodeURIComponent(option.name)}`) }} selectedOptionName={localView} />
+                  {(localView == 'mentions'||localView=='my team') && <CenterPanel>
                     {subscriptionPrompt && !dismiss && <SubscriptionMenu hardStop={hardStop} setDismiss={setDismiss} {...subscriptionObject} />}
 
                     <Mentions league={localLeague || "" } setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} view={localView} />
-                  </CenterPanel>}
-                  {localView == 'lists' && <CenterPanel>
-                    LISTS
-                  </CenterPanel>}
+                  </CenterPanel>}     
                 </div>}
               {localPageType == 'league' && localLeague &&
                 <div>
-                  <SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> }, { name: "Mentions", icon: <MentionIcon /> }]} onChange={(option: any) => { console.log(option); router.replace(localLeague ? `/pub/league/${localLeague}?view=${encodeURIComponent(option.name)}` : `/pub/league?view=${encodeURIComponent(option.name)}`) }} selectedOptionName={localView} />
+                  <SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> }, { name: "Mentions", icon: <MentionIcon /> }, { name: "My Team", icon: <ListIcon />, access: "pro" }]} onChange={(option: any) => { console.log(option); router.replace(localLeague ? `/pub/league/${localLeague}?view=${encodeURIComponent(option.name)}` : `/pub/league?view=${encodeURIComponent(option.name)}`) }} selectedOptionName={localView} />
                   {localView == 'teams' &&
                     <LeftMobilePanel>{TeamsNav}</LeftMobilePanel>}
-                  {localView == 'mentions' && <CenterPanel>
+                  {(localView == 'mentions'||localView=="my team") && 
+                  <CenterPanel>
                     {subscriptionPrompt && !dismiss && <SubscriptionMenu hardStop={hardStop} setDismiss={setDismiss} {...subscriptionObject} />}
 
                     <Mentions league={localLeague || ""} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} view={localView}/>

@@ -11,7 +11,7 @@ import Checkbox from '@mui/material/Checkbox';
 import LoginIcon from '@mui/icons-material/Login';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import IconButton from '@mui/material/IconButton';
-import { MentionsKey, getMentions,getFilteredMentions, getOptions, UserOptionsKey, SetTrackerFilterParams, setTrackerFilter, TrackerListMembersKey, getTrackerListMembers, removeTrackerListMember, RemoveTrackerListMemberParams } from '@/lib/api';
+import { MentionsKey, getMentions, getFilteredMentions, getOptions, UserOptionsKey, SetTrackerFilterParams, setTrackerFilter, TrackerListMembersKey, getTrackerListMembers, removeTrackerListMember, RemoveTrackerListMemberParams } from '@/lib/api';
 
 import Mention from "./mention";
 
@@ -39,21 +39,23 @@ const MobileMentionsOuterContainer = styled.div`
     display:flex;
     flex-direction:column;
     justify-content:flex-start;
-    //width:80%;
+    width:100%;
     height:100%;
-    padding-left:2px;
-    padding-right:2px;
+  
+    align-content:flex-start;
+   // padding-left:2px;
+   // padding-right:2px;
     a{
-        font-size: 12px;
-        color: #000;
+        font-size: 18px;
+      
         text-decoration: none;
         &:hover{
           color: #222;
         }   
     }
-    @media screen and (min-width: 1200px) {
+   /* @media screen and (min-width: 1200px) {
     display: none;
-  }
+  }*/
 `;
 
 const MentionsBody = styled.div`
@@ -83,7 +85,7 @@ const OuterContainer = styled.div`
     padding-left:20px;
     padding-right:20px;
     @media screen and (max-width: 1199px) {
-    display: none;
+        display: none;
   }
 `;
 const TeamName = styled.div`
@@ -95,6 +97,17 @@ const TeamName = styled.div`
   font-size: 18px;
   //margin: 10px;
 `;
+const MobileTeamName = styled.div`
+  height: 30px;
+  //width: 200px; 
+  color: #aea;
+  //text-align: center;
+ // padding-left:20px;
+ padding-top:2px;
+  font-size: 24px;
+  //margin: 10px;
+`;
+
 
 const RightPanel = styled.div`
   height:100%;
@@ -118,11 +131,15 @@ const RightPanel = styled.div`
 
 const MobilePlayersPanel = styled.div`
   height:100%;
+  width:100%;
+  min-height:180vw;
   background-color:  #668;
   display:flex;
+  padding-left:20px;
+  padding-top:10px;
   flex-direction:column;
   justify-content:flex-start;
-  align-items:center; 
+  align-items:flex-start; 
   a{
     color: #fff;
     text-decoration: none;
@@ -134,6 +151,15 @@ const MobilePlayersPanel = styled.div`
 const SideGroup = styled.div`
   display:flex;
   width: 220px;
+  flex-direction:row;
+  justify-content:space-between;
+  padding-right:20px;
+  align-items:center;
+ 
+`;
+const MobileSideGroup = styled.div`
+  display:flex;
+  width: 90%;
   flex-direction:row;
   justify-content:space-between;
   padding-right:20px;
@@ -152,6 +178,15 @@ const SideButton = styled.div`
   width:45px;
   color:#aaa;
 
+`;
+const MobileSidePlayer = styled.div`
+  ///height: 40px;
+  width:240px; 
+  color: #fff;
+  //text-align: center;
+  font-size: 16px;
+  //margin-top: 10px;
+ // margin-bottom:10px;
 `;
 const SidePlayer = styled.div`
   ///height: 40px;
@@ -213,26 +248,30 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
         if (optionsLoading) return;
         setLocalTrackerFilter(options.tracker_filter);
     }, [optionsLoading, options]);
+    useEffect(() => {
+        setV((!view || view.toLowerCase() == "home") ? "mentions" : view.toLowerCase());
+    }, [view]);
 
-    const mentionsKey: MentionsKey = { type: localTrackerFilter==1?"filtered-mentions":"mentions", league };
-    console.log("MentionsKey",mentionsKey)
-    const { data: mentions, error, isLoading } = useSWR(mentionsKey, localTrackerFilter==1?getFilteredMentions:getMentions);
-    
-    const trackerListMembersKey: TrackerListMembersKey = { type: "tracker_list_members",league };
+    const mentionsKey: MentionsKey = { type: localTrackerFilter == 1 ? "filtered-mentions" : "mentions", league };
+    console.log("MentionsKey", mentionsKey)
+    const { data: mentions, error, isLoading } = useSWR(mentionsKey, localTrackerFilter == 1 ? getFilteredMentions : getMentions);
+
+    const trackerListMembersKey: TrackerListMembersKey = { type: "tracker_list_members", league };
     const { data: trackerListMembers, error: trackerListError, isLoading: trackerListLoading, mutate: trackerListMutate } = useSWR(trackerListMembersKey, getTrackerListMembers);
-
-    const Mentions = mentions&&mentions.map((m: any, i: number) => {
+    console.log("trackerListMembers", trackerListMembers)
+    const Mentions = mentions && mentions.map((m: any, i: number) => {
         const { league, type, team, name, date, url, findex, summary, xid } = m;
         // console.log("XID:",league,name,xid)
         return (<Mention mentionType="top" league={league} type={type} team={team} name={name} date={date} url={url} findex={findex} summary={summary} xid={xid} key={`mention${i}`} />)
     });
-    console.log("mentions:",mentions)
+    console.log("league-mentions:", { v, mentions, isLoading })
     if (isLoading) return (<Stack spacing={1}>
         <Skeleton variant="rounded" animation="pulse" height={160} />
         <Skeleton variant="rounded" animation="pulse" height={80} />
         <Skeleton variant="rounded" animation="pulse" height={120} />
         <Skeleton variant="rounded" animation="pulse" height={160} />
     </Stack>)
+
     return (
         <>
             <OuterContainer>
@@ -243,17 +282,17 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
                             const params: SetTrackerFilterParams = { tracker_filter: event.target.checked ? 1 : 0 };
                             setTrackerFilter(params);
 
-                        }} />} label="Apply Tracker List Filter" />
+                        }} />} label="My Team Filter" />
                         {noUser && <SignInButton><Button size="small" variant="contained"><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton>}
                     </MentionsHeader>
                     <MentionsBody>
-                        {mentions&&mentions.length>0?Mentions:<Empty>No Mentions Available</Empty>}
+                        {mentions && mentions.length > 0 ? Mentions : <Empty>No Mentions Available</Empty>}
                     </MentionsBody>
                 </MentionsOuterContainer>
                 {localTrackerFilter && <RightPanel>
 
-                    <TeamName>Tracker List: </TeamName>
-                    {(!trackerListMembers||trackerListMembers.length==0) && <RightExplanation>Tracker list empty {league?`for ${league}`:``}</RightExplanation>}
+                    <TeamName>My Team -Tracker List: </TeamName>
+                    {(!trackerListMembers || trackerListMembers.length == 0) && <RightExplanation>Tracker list empty {league ? `for ${league}` : ``}</RightExplanation>}
                     {trackerListMembers && trackerListMembers.map(({ member, teamid, league }: { member: string, teamid: string, league: string }) => {
                         //return <SidePlayer><Link onClick={() => { setLocalPageType("player"), setLocalPlayer(p.member); setV("mentions"); setGlobalLoading(true) }} href={`/pro/league/${p.league}/team/${p.teamid}/player/${encodeURIComponent(p.member)}`}>{p.member} </Link></SidePlayer>
                         return <SideGroup>
@@ -273,7 +312,7 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
                                         const newTrackerListMembers = trackerListMembers.filter((p: any) => p.member != member);
                                         trackerListMutate(newTrackerListMembers, false);
                                         await removeTrackerListMember(removeTrackerListMemberParams);
-                                       
+
 
                                     }} size="large" aria-label="Add new list">
                                     <SideIcon>
@@ -286,21 +325,59 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
                     })
                     }
 
-                   
+
                 </RightPanel>}
             </OuterContainer>
             <MobileMentionsOuterContainer>
-                <MentionsHeader>Latest Mentions:&nbsp;&nbsp;&nbsp;&nbsp;<FormControlLabel control={<Checkbox disabled={noUser} checked={localTrackerFilter == 1} onChange={
+                {v == 'mentions' && <MentionsHeader>Latest Mentions:&nbsp;&nbsp;&nbsp;&nbsp;<FormControlLabel control={<Checkbox disabled={noUser} checked={localTrackerFilter == 1} onChange={
                     (event: React.ChangeEvent<HTMLInputElement>) => {
                         setLocalTrackerFilter(event.target.checked);
                         const params: SetTrackerFilterParams = { tracker_filter: event.target.checked ? 1 : 0 };
                         setTrackerFilter(params);
 
-                    }} />} label="Tracker List" />
+                    }} />} label="My Team filter" />
                     {noUser && <SignInButton><Button size="small" variant="contained"><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton>}
-                </MentionsHeader>
+                </MentionsHeader>}
+               
                 <MentionsBody>
-                    {Mentions}
+                    {v == 'mentions' && Mentions}
+                    {v == 'my team' && <MobilePlayersPanel>
+                        <MobileTeamName>My Team - Tracker List: </MobileTeamName>
+                        {(!trackerListMembers || trackerListMembers.length == 0) && <RightExplanation>Tracker list empty {league ? `for ${league}` : ``}</RightExplanation>}
+                        {trackerListMembers && trackerListMembers.map(({ member, teamid, league }: { member: string, teamid: string, league: string }) => {
+                            //return <SidePlayer><Link onClick={() => { setLocalPageType("player"), setLocalPlayer(p.member); setV("mentions"); setGlobalLoading(true) }} href={`/pro/league/${p.league}/team/${p.teamid}/player/${encodeURIComponent(p.member)}`}>{p.member} </Link></SidePlayer>
+                            return <MobileSideGroup>
+                                <MobileSidePlayer>
+                                    <Link onClick={() => { setLocalPlayer(member); setV("mentions"); setGlobalLoading(true) }} href={`/pro/league/${league}/team/${teamid}/player/${encodeURIComponent(member)}`}>
+                                        {member}
+                                    </Link>
+                                </MobileSidePlayer>
+                                <SideButton>
+                                    <IconButton
+                                        onClick={async () => {
+                                            console.log("TRACKED", member)
+                                            const removeTrackerListMemberParams: RemoveTrackerListMemberParams = { member, teamid: teamid || "" };
+
+                                            //to copilot: find in trackerListMembers the item with name p.name and remove it.
+                                            //then set trackerListMembers to the new array
+                                            const newTrackerListMembers = trackerListMembers.filter((p: any) => p.member != member);
+                                            trackerListMutate(newTrackerListMembers, false);
+                                            await removeTrackerListMember(removeTrackerListMemberParams);
+
+
+                                        }} size="large" aria-label="Add new list">
+                                        <SideIcon>
+                                            <PlaylistRemoveIcon sx={{ color: "#afa" }} />
+                                        </SideIcon>
+                                    </IconButton>
+                                </SideButton>
+                            </MobileSideGroup>
+
+                        })
+                        }
+
+
+                    </MobilePlayersPanel>}
                 </MentionsBody>
 
             </MobileMentionsOuterContainer>
