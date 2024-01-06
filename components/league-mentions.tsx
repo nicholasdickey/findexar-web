@@ -292,7 +292,7 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
                 {localTrackerFilter && <RightPanel>
 
                     <TeamName>My Team -Tracker List: </TeamName>
-                    {(!trackerListMembers || trackerListMembers.length == 0) && <RightExplanation>Tracker list empty {league ? `for ${league}` : ``}</RightExplanation>}
+                    {(!trackerListMembers || trackerListMembers.length == 0) && <RightExplanation>Tracker list is empty {league ? `for ${league}` : ``}<br/>Use &ldquo;add to list&ldquo; icons to the right of the<br/> player name in the team roster<br/>to add to the &ldquo;My Team&ldquo; tracker list. </RightExplanation>}
                     {trackerListMembers && trackerListMembers.map(({ member, teamid, league }: { member: string, teamid: string, league: string },i:number) => {
                         //return <SidePlayer><Link onClick={() => { setLocalPageType("player"), setLocalPlayer(p.member); setV("mentions"); setGlobalLoading(true) }} href={`/pro/league/${p.league}/team/${p.teamid}/player/${encodeURIComponent(p.member)}`}>{p.member} </Link></SidePlayer>
                         return <SideGroup key={`3fdsdvb-${i}`}>
