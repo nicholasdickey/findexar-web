@@ -11,7 +11,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
   //let { findexarxid} = req.query;
   const {data}= await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/favorites/get?api_key=${api_key}&userid=${userId}`);
-  console.log("API: add favorite",data.success)
+  console.log("API: get favorites",data.success)
   res.status(200).json(data);
 };
 export default handler;

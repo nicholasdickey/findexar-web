@@ -13,9 +13,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   league=league||"";
   if(league.length<3)
     league="";
-  console.log("===> getTraclerListMembers:",league,`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/tracker-list/get?api_key=${api_key}&userid=${userId}&league=${league}`)
+ // console.log("===> getTraclerListMembers:",league,`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/tracker-list/get?api_key=${api_key}&userid=${userId}&league=${league}`)
   const {data}=await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/tracker-list/get?api_key=${api_key}&userid=${userId}&league=${league}`);
-  console.log("===>> getTraclerListMembers:",data)
+  //console.log("===>> getTraclerListMembers:",data)
   res.status(200).json(data);
 };
 export default handler;
