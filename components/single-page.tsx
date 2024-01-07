@@ -754,7 +754,7 @@ const Landing: React.FC<Props> = (props) => {
                         
                       }} style={{padding:10}} variant="outlined">{localView=="fav"?<HomeIcon/>:<StarOutlineIcon />}&nbsp;&nbsp;{localView=="fav"?<span>Back to Home</span>:<span>My Favorites</span>}</Button></Favorites>
                       <br /><br />
-                      <LeftText><b>&ldquo;My Team&ldquo; tracker List:</b> Use &ldquo;add to list&ldquo; icons next to player name in team rosters to add or remove players to tracker list.<br/><br/><hr/></LeftText>
+                      <LeftText><b>&ldquo;My Team&ldquo; tracker List:</b> Use &ldquo;add to list&ldquo; icons next to player name in team rosters to add or remove players to tracker list.<br/><br/><hr/>Copyright &#169; 2024, Findexar, Inc.<br/>Made in USA.</LeftText>
                        {!userId&&<LeftText>Needs to be a logged-in user to explore the teams and individual athletes&apos; mentions and use the tracker list or &ldquo;favorites&ldquo; functionality.<br /><br />Click here to sign-in or sign-up: <br /><br /><br /><SignInButton><Button style={{padding:10}} size="small" variant="outlined"><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></LeftText>}
                     </>
                     }
