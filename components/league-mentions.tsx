@@ -262,13 +262,14 @@ interface Props {
   noUser: boolean;
   setLocalPageType: (pageType: string) => void;
   setLocalPlayer: (player: string) => void;
+  setLocalLeague: (league: string) => void;
+  setLocalTeam: (team: string) => void;
   view: string;
-
 }
 
-const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, setLocalPlayer, view }) => {
+const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, setLocalPlayer,setLocalLeague, setLocalTeam,view }) => {
 
-  const optionsKey: UserOptionsKey = { type: "options" };
+  const optionsKey: UserOptionsKey = { type: "options",noUser };
   const { data: options, error: optionsError, isLoading: optionsLoading, mutate: optionsMutate } = useSWR(optionsKey, getOptions);
   const [localTrackerFilter, setLocalTrackerFilter] = React.useState(options.tracker_filter);
   const [globalLoading, setGlobalLoading] = React.useState(false);
@@ -286,19 +287,38 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
   const mentionsKey: MentionsKey = { type: localTrackerFilter == 1 ? "filtered-mentions" : "mentions", league };
   console.log("MentionsKey", mentionsKey)
   let { data: mentions, error, isLoading } = useSWR(mentionsKey, localTrackerFilter == 1 ? getFilteredMentions : getMentions);
-  const favoritesKey:FavoritesKey={type:"Favorites"};
+  const favoritesKey:FavoritesKey={type:"Favorites",noUser};
   const { data: favoritesMentions } = useSWR(favoritesKey, getFavorites);
   console.log("favoritesMentions",favoritesMentions)
   if(view=="fav"){
     mentions=favoritesMentions;
   }
-  const trackerListMembersKey: TrackerListMembersKey = { type: "tracker_list_members", league };
+  const trackerListMembersKey: TrackerListMembersKey = { type: "tracker_list_members", league,noUser };
   const { data: trackerListMembers, error: trackerListError, isLoading: trackerListLoading, mutate: trackerListMutate } = useSWR(trackerListMembersKey, getTrackerListMembers);
   console.log("trackerListMembers", trackerListMembers)
   const Mentions = mentions && mentions.map((m: any, i: number) => {
     const { league, type, team, name, date, url, findex, summary, findexarxid,fav } = m;
     // console.log("XID:",league,name,xid)
-    return (<Mention noUser={noUser} mentionType="top" league={league} type={type} team={team} name={name} date={date} url={url} findex={findex} summary={summary} findexarxid={findexarxid} fav={fav} key={`mention${i}`} />)
+    return (<Mention 
+      noUser={noUser} 
+      mentionType="top" 
+      league={league} 
+      type={type} 
+      team={team} 
+      name={name} 
+      date={date} 
+      url={url} 
+      findex={findex} 
+      summary={summary} 
+      findexarxid={findexarxid} 
+      fav={fav} 
+      key={`mention${i}`} 
+      setLocalTeam={setLocalTeam}
+      setLocalLeague={setLocalLeague}
+      setLocalPlayer={setLocalPlayer}
+      setLocalPageType={setLocalPageType}
+
+      />)
   });
   //console.log("league-mentions:", { v, mentions, isLoading })
   /* if (isLoading) return (<Stack spacing={1}>

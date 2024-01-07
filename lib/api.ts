@@ -183,9 +183,10 @@ export const updateUserListMembers = async ({listxid,members}:UserUpdateListMemb
   }
 }
 
-export type TrackerListMembersKey = {type:string,league:string};
-export const getTrackerListMembers = async ({type,league}:TrackerListMembersKey) => {
+export type TrackerListMembersKey = {type:string,league:string,noUser:boolean};
+export const getTrackerListMembers = async ({type,league,noUser}:TrackerListMembersKey) => {
   try {
+    if(noUser) return [];
     console.log("getTrackerListMembers",league)
     const url =`${process.env.NEXT_PUBLIC_SERVER}/api/user/get-tracker-list-members?league=${league||""}`;
     const res = await axios.get(url);
@@ -232,9 +233,10 @@ export const getTeamPlayers = async ({type,league,teamid}:TeamPlayersKey) => {
     return false;
   }
 }
-export type UserOptionsKey={type:string};
-export const getOptions = async ({}:UserOptionsKey) => {
+export type UserOptionsKey={type:string,noUser:boolean};
+export const getOptions = async ({type,noUser}:UserOptionsKey) => {
   try {
+    if(noUser) return {};
     const url = `${process.env.NEXT_PUBLIC_SERVER}/api/user/user-options`;
     const res = await axios.get(url);
     return res.data.options;
@@ -256,9 +258,10 @@ export const setTrackerFilter = async ({tracker_filter}:SetTrackerFilterParams) 
     return false;
   }
 }
-export type FavoritesKey = {type:string};
-export const getFavorites = async ({type}:FavoritesKey) => {
+export type FavoritesKey = {type:string,noUser:boolean};
+export const getFavorites = async ({type,noUser}:FavoritesKey) => {
   try {
+    if(noUser) return [];
     console.log("getFavorites")
     const url =`${process.env.NEXT_PUBLIC_SERVER}/api/user/get-favorites`;
     const res = await axios.get(url);

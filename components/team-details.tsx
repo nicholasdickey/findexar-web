@@ -58,10 +58,14 @@ interface Props {
   pagetype?: string;
   teamName?: string;
   noUser: boolean;
+  setLocalPageType: (pageType: string) => void;
+  setLocalPlayer: (player: string) => void;
+  setLocalLeague: (league: string) => void;
+  setLocalTeam: (team: string) => void;
 }
 
 const TeamDetails: React.FC<Props> = (props) => {
-  const { team, teamName,noUser } = props;
+  const { team, teamName,noUser,...rest } = props;
   const detailsKey: DetailsKey = { type:"Details",teamid: team || "", name: teamName || "" };
   console.log("detailsKey",detailsKey)
   const {data:details,error,isLoading} = useSWR(detailsKey, getDetails);
@@ -75,7 +79,7 @@ const TeamDetails: React.FC<Props> = (props) => {
 
   const Details = mentions?.map((m: any, i: number) => {
     const { league, type, team, name, date, url, findex, summary,findexarxid,fav } = m;
-    return (<Mention noUser={noUser} mentionType="final" league={league} type={type} team={team} name={name} date={date} url={url} findex={findex} summary={summary} findexarxid={findexarxid} fav={fav} key={`team-mention${i}`} />)
+    return (<Mention noUser={noUser} mentionType="final" league={league} type={type} team={team} name={name} date={date} url={url} findex={findex} summary={summary} findexarxid={findexarxid} fav={fav} key={`team-mention${i}`} {...rest} />)
   })
   
   return (

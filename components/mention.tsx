@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import useSWRImmutable from 'swr/immutable'
 import Link from 'next/link';
 import { styled } from "styled-components";
-import { MentionsKey, getMentions, MetaLinkKey, getMetaLink,addFavorite,removeFavorite } from '@/lib/api';
+import { MentionsKey, getMentions, MetaLinkKey, getMetaLink, addFavorite, removeFavorite } from '@/lib/api';
 import { convertToUTCDateString, convertToReadableLocalTime } from "@/lib/date-convert";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
@@ -117,7 +117,7 @@ const Icon = styled.span`
             color: #F00;
     }
 `;
-const MobileIcon= styled.span`
+const MobileIcon = styled.span`
     color:#888;
     font-size: 38px;
    // margin-top:-20px;
@@ -127,7 +127,7 @@ const MobileIcon= styled.span`
             color: #F00;
     }
 `;
-const MobileIconContainer= styled.div`
+const MobileIconContainer = styled.div`
     display:flex;
     flex-direction:row;
     justify-content:flex-end;
@@ -245,11 +245,15 @@ interface Props {
     findex: string;
     summary: string;
     findexarxid: string;
-    fav:number;
-    noUser:boolean;
+    fav: number;
+    noUser: boolean;
+    setLocalPageType: (pageType: string) => void;
+    setLocalPlayer: (player: string) => void;
+    setLocalLeague: (league: string) => void;
+    setLocalTeam: (team: string) => void;
 }
 
-const Mention: React.FC<Props> = ({ noUser,mentionType, league, type, team, name, date, url, findex, summary, findexarxid,fav }) => {
+const Mention: React.FC<Props> = ({ noUser, mentionType, league, type, team, name, date, url, findex, summary, findexarxid, fav, setLocalPageType, setLocalPlayer, setLocalLeague, setLocalTeam }) => {
     const [expanded, setExpanded] = React.useState(false);
     const [localDate, setLocalDate] = React.useState(convertToUTCDateString(date));
     const [localFav, setLocalFav] = React.useState(fav);
@@ -257,13 +261,13 @@ const Mention: React.FC<Props> = ({ noUser,mentionType, league, type, team, name
     useEffect(() => {
 
         setLocalFav(fav);
-    },[fav]);
+    }, [fav]);
 
     let localUrl = /*mentionType == "top" ?*/ (type == 'person' ? `/pro/league/${league}/team/${team}/player/${name}` : `/pub/league/${league}/team/${team}`) /*: url*/;
-    const mentionsKey: MetaLinkKey = { func: "meta", findexarxid};
+    const mentionsKey: MetaLinkKey = { func: "meta", findexarxid };
     const meta = useSWRImmutable(mentionsKey, getMetaLink).data;
     let digest = meta ? meta.digest.replace('<p>', '').replace('</p>', '') : "";
-    console.log("expanded:", {findexarxid,expanded, meta,fav});
+    // console.log("expanded:", {findexarxid,expanded, meta,fav});
     useEffect(() => {
         setLocalDate(convertToReadableLocalTime(date));
     }, [date])
@@ -280,76 +284,79 @@ const Mention: React.FC<Props> = ({ noUser,mentionType, league, type, team, name
                         async (e) => {
                             setExpanded(!expanded);
                         }}
-                        ><ExpandMoreIcon/></Icon>
+                    ><ExpandMoreIcon /></Icon>
                 </MentionFindex>
 
                 <MentionSummary>
-                   
-                        <div>
-                            <Topline><LocalDate><i>{localDate}</i></LocalDate>{localFav!=1?<StarOutlineIcon onClick={()=>{if(noUser) return; setLocalFav(1);addFavorite({findexarxid})}} style={{color: "#888"}}/>:<StarIcon onClick={()=>{if(noUser) return; setLocalFav(0);removeFavorite({findexarxid})}} style={{color:"FFA000"}}/>}</Topline>
-                            <br />
-                            <Link href={localUrl}>
+
+                    <div>
+                        <Topline><LocalDate><i>{localDate}</i></LocalDate>{localFav != 1 ? <StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); addFavorite({ findexarxid }) }} style={{ color: "#888" }} /> : <StarIcon onClick={() => { if (noUser) return; setLocalFav(0); removeFavorite({ findexarxid }) }} style={{ color: "FFA000" }} />}</Topline>
+                        <br />
+                        <Link href={localUrl} onClick={() => { setLocalLeague(league); setLocalTeam(team); setLocalPlayer(type == 'person' ? name : ''); if (type == 'person') setLocalPageType('player'); else setLocalPageType('team'); }}>
                             {summary}
-                            </Link>
-                            <hr />
-                            <Atmention>@mention: {name} | Team: {team} | {league}</Atmention>
-                        </div>
-                        {expanded && meta && <Link href={url}><ExtendedMention>
-                            <Title>{meta.title}</Title>
-                            <Byline>
-                                {meta.authors && <Authors>{meta.authors}</Authors>}
-                                <SiteName>{meta.site_name}</SiteName>
-                            </Byline>
-                            <HorizontalContainer>
-                            <ImageWrapper><Image src={meta.image} alt={meta.title} /></ImageWrapper> 
-                                <Body>
-                                    <Digest>
-                                        {digest}
-                                    </Digest>
-                                </Body>
-                            </HorizontalContainer>
-                            {meta.url.substring(0, 50)}...
-                        </ExtendedMention></Link>}
-                   
+                        </Link>
+                        <hr />
+                        <Atmention>@mention: {name} | Team: {team} | {league}</Atmention>
+                    </div>
+                    {expanded && meta && <Link href={url}><ExtendedMention>
+                        <Title>{meta.title}</Title>
+                        <Byline>
+                            {meta.authors && <Authors>{meta.authors}</Authors>}
+                            <SiteName>{meta.site_name}</SiteName>
+                        </Byline>
+                        <HorizontalContainer>
+                            <ImageWrapper><Image src={meta.image} alt={meta.title} /></ImageWrapper>
+                            <Body>
+                                <Digest>
+                                    {digest}
+                                </Digest>
+                            </Body>
+                        </HorizontalContainer>
+                        {meta.url.substring(0, 50)}...
+                    </ExtendedMention></Link>}
+
                 </MentionSummary>
             </MentionWrap>
             <MobileMentionWrap>
 
 
                 <MentionSummary>
-                <Link href={localUrl}>
-                        <div>
-                            <LocalDate><i>{localDate}</i></LocalDate>
-                            <br />
-                            {summary}
-                            <hr />
-                            <Atmention>@mention: {name} | Team: {team} | {league}</Atmention>
 
-                        </div>
-                    </Link>
+                    <div>
+                        <Topline><LocalDate><i>{localDate}</i></LocalDate>{localFav != 1 ? <StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); addFavorite({ findexarxid }) }} style={{ color: "#888" }} /> : <StarIcon onClick={() => { if (noUser) return; setLocalFav(0); removeFavorite({ findexarxid }) }} style={{ color: "FFA000" }} />}</Topline>
+
+                        <br />
+                        <Link href={localUrl} onClick={() => { setLocalLeague(league); setLocalTeam(team); setLocalPlayer(type == 'person' ? name : ''); if (type == 'person') setLocalPageType('player'); else setLocalPageType('team'); }}>
+                            {summary}
+                        </Link>
+                        <hr />
+                        <Atmention>@mention: {name} | Team: {team} | {league}</Atmention>
+
+                    </div>
+
                     <MobileIconContainer><MobileIcon onClick={
-                                async (e) => {
-                                    setExpanded(!expanded);
-                                }}
-                                className="material-icons-outlined">{!expanded?"expand_more":"expand_less"}</MobileIcon></MobileIconContainer>
-                 
-                        {expanded && meta && <Link href={url}><MobileExtendedMention>
-                            <Title>{meta.title}</Title>
-                            <Byline>
-                                {meta.authors && <Authors>{meta.authors}</Authors>}
-                                <SiteName>{meta.site_name}</SiteName>
-                            </Byline>
-                            <HorizontalContainer>
+                        async (e) => {
+                            setExpanded(!expanded);
+                        }}
+                        className="material-icons-outlined">{!expanded ? "expand_more" : "expand_less"}</MobileIcon></MobileIconContainer>
+
+                    {expanded && meta && <Link href={url}><MobileExtendedMention>
+                        <Title>{meta.title}</Title>
+                        <Byline>
+                            {meta.authors && <Authors>{meta.authors}</Authors>}
+                            <SiteName>{meta.site_name}</SiteName>
+                        </Byline>
+                        <HorizontalContainer>
                             <ImageWrapper><Image src={meta.image} width={100} height={100} alt={meta.title} /></ImageWrapper>
-                                <Body>
-                                    <Digest>
-                                        {digest}
-                                    </Digest>
-                                </Body>
-                            </HorizontalContainer>
-                            {meta.url.substring(0, 30)}...
-                        </MobileExtendedMention></Link>}
-                    
+                            <Body>
+                                <Digest>
+                                    {digest}
+                                </Digest>
+                            </Body>
+                        </HorizontalContainer>
+                        {meta.url.substring(0, 30)}...
+                    </MobileExtendedMention></Link>}
+
                 </MentionSummary>
             </MobileMentionWrap>
         </>

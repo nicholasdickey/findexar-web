@@ -153,16 +153,19 @@ interface Props {
   teamName?: string;
   teams: any;
   view: string;
-  setLocalPlayer: (player: string) => void;
-  setLocalPageType: (pagetype: string) => void;
+
   subscriptionPrompt: boolean;
   subscriptionObject: any;
   setDismiss: any;
   noUser:boolean;
+  setLocalPageType: (pageType: string) => void;
+  setLocalPlayer: (player: string) => void;
+  setLocalLeague: (league: string) => void;
+  setLocalTeam: (team: string) => void;
 }
 
 const Team: React.FC<Props> = (props) => {
-  let { noUser,setDismiss, subscriptionPrompt, subscriptionObject, view, teams, dark, league, team, player, pagetype, teamName, setLocalPlayer, setLocalPageType } = props;
+  let { noUser,setDismiss, subscriptionPrompt, subscriptionObject, view, teams, dark, league, team, player, pagetype, teamName, setLocalPlayer, setLocalPageType} = props;
   const [v, setV] = React.useState((!view || view.toLowerCase() == "home") ? "mentions" : view.toLowerCase());
   const [selectedTeam, setSelectedTeam] = React.useState(team);
   const [selectedPlayer, setSelectedPlayer] = React.useState(player);

@@ -12,7 +12,7 @@ import {
 import {
     recordEvent, getLeagues,
     LeagueTeamsKey, getLeagueTeams, TeamPlayersKey, getTeamPlayers, DetailsKey, getDetails,
-    MentionsKey, getMentions, TrackerListMembersKey, getTrackerListMembers
+    MentionsKey, getMentions, TrackerListMembersKey, FavoritesKey
 } from '@/lib/api'
 const api_key = process.env.LAKE_API_KEY;
 interface Props {
@@ -51,7 +51,8 @@ export const getServerSideProps =
             const createdAt = user?.createdAt || "0";
             let freeUser = false;
             let options = { tracker_filter: 0 };
-            if (user?.emailAddresses) {
+
+            if (userId && user?.emailAddresses) {
                 for (let i = 0; i < user.emailAddresses.length; i++) {
                     const e = user.emailAddresses[i];
                     const email = e.emailAddress;
@@ -64,7 +65,7 @@ export const getServerSideProps =
                     }
                 }
             }
-            console.log("OPTIONS:", userId, options)
+            //console.log("OPTIONS:", userId, options)
             let pagetype = "league";
             utm_content = utm_content || '';
             fbclid = fbclid || '';
@@ -115,19 +116,21 @@ export const getServerSideProps =
                     console.log('ssr-bot-landing-init-error', x);
                 }
             }
-            let trackerListMembersKey: TrackerListMembersKey = { type: "tracker_list_members", league };
+            let trackerListMembersKey: TrackerListMembersKey = { type: "tracker_list_members", league,noUser:userId?false:true };
             let trackerListMembers = [];
-            const { data } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/tracker-list/get?api_key=${api_key}&userid=${userId}&league=${league}`);
-            trackerListMembers = data.members;
-            console.log("!!! TRACKER LIST MEMBERS:", trackerListMembers);
+            if (userId) {
+                const { data } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/tracker-list/get?api_key=${api_key}&userid=${userId}&league=${league}`);
+                trackerListMembers = data.members;
+            }
+           // console.log("!!! TRACKER LIST MEMBERS:", trackerListMembers);
             const leagues = await getLeagues();
             const keyLeagueTeams: LeagueTeamsKey = { func: "leagueTeams", league };
             let leagueTeams = await getLeagueTeams(keyLeagueTeams);
 
             let teamPlayers = [];
             let details = {};
-            let keyTeamPlayers: TeamPlayersKey={type:"teamPlayers",league,teamid:""};
-            let keyDetails: DetailsKey = { type:"Details", teamid: "", name: "" };
+            let keyTeamPlayers: TeamPlayersKey = { type: "teamPlayers", league, teamid: "" };
+            let keyDetails: DetailsKey = { type: "Details", teamid: "", name: "" };
             let keyMentions: MentionsKey = { type: "mentions", league };
             let mentions = [];
             //  console.log(111,options)
@@ -145,9 +148,9 @@ export const getServerSideProps =
                     details = data.details;
                 }
                 else {
-                  
+
                     keyDetails = { type: "Details", teamid: team, name: teamName };
-                    console.log("SSR Details",keyDetails)
+                    console.log("SSR Details", keyDetails)
                     //details = await getDetails(keyDetails);
                     const { data } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/get-details-favorites?api_key=${api_key}&userid=${userId}&teamid=${team}&name=${encodeURIComponent(teamName as string || "")}`);
                     details = data.details;
@@ -165,6 +168,8 @@ export const getServerSideProps =
                 else
                     mentions = await getMentions(keyMentions);
             }
+            let favoritesKey:FavoritesKey={type:"Favorites",noUser:userId?false:true};
+            let favorites:any[]=[];
             // let userLists:{member:string,teamid:string,xid:string}[]=[];
             // const keyLists:UserListsKey={type:"userLists"};
             /* if(pagetype=='league'&&!league){
@@ -182,8 +187,9 @@ export const getServerSideProps =
             fallback[unstable_serialize(keyDetails)] = details;
             //if (mentions && mentions.length > 0)
             fallback[unstable_serialize(keyMentions)] = mentions;
+            fallback[unstable_serialize(favoritesKey)] = favorites;
             //fallback[unstable_serialize(keyLists)]= userLists;    
-            fallback[unstable_serialize({ type: "options" })] = options;
+            fallback[unstable_serialize({ type: "options" ,noUser:userId?false:true})] = options;
             fallback[unstable_serialize(trackerListMembersKey)] = trackerListMembers;
             // console.log("view:", view)
             return {

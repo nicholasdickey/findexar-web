@@ -101,11 +101,15 @@ interface Props {
     player?: string;
     pagetype?: string;
     teamName?: string;
-    noUser:boolean
+    noUser:boolean;
+    setLocalPageType: (pageType: string) => void;
+    setLocalPlayer: (player: string) => void;
+    setLocalLeague: (league: string) => void;
+    setLocalTeam: (team: string) => void;
 }
 
 const PlayerDetails: React.FC<Props> = (props) => {
-    const { team, player,noUser } = props;
+    const { team, player,noUser,...rest } = props;
     const detailsKey: DetailsKey = {type:"Details", teamid: team || "", name: player || "" };
     console.log("PlayerDetails:",detailsKey)
     const {data:details,error,isLoading} = useSWR(detailsKey, getDetails);
@@ -131,7 +135,7 @@ const PlayerDetails: React.FC<Props> = (props) => {
 
     const Details = mentions?.map((m: any, i: number) => {
         const { league, type, team, name, date, url, findex, summary,findexarxid,fav } = m;
-        return (<Mention noUser={noUser} mentionType="final" league={league} type={type} team={team} name={name} date={date} url={url} findex={findex} summary={summary} findexarxid={findexarxid} fav={fav} key={`player-mention${i}`} />)
+        return (<Mention noUser={noUser} mentionType="final" league={league} type={type} team={team} name={name} date={date} url={url} findex={findex} summary={summary} findexarxid={findexarxid} fav={fav} key={`player-mention${i}`} {...rest} />)
     })
    
     return (
@@ -142,7 +146,12 @@ const PlayerDetails: React.FC<Props> = (props) => {
                   </TeamHeader>}
                 <MainPanel>
                     <TeamDetailsBody>
-                        {Details}
+                        {isLoading?<Stack spacing={1}>
+        <Skeleton variant="rounded" animation="pulse" height={160} />
+         <Skeleton variant="rounded" animation="pulse" height={80} />
+         <Skeleton variant="rounded" animation="pulse" height={120} />
+         <Skeleton variant="rounded" animation="pulse" height={160} />
+       </Stack>:Details}
                     </TeamDetailsBody>
                 </MainPanel>
             </div>

@@ -12,7 +12,7 @@ import {
 import {
     recordEvent, getLeagues,
     LeagueTeamsKey, getLeagueTeams, TeamPlayersKey, getTeamPlayers, DetailsKey, getDetails,
-    MentionsKey, getMentions, TrackerListMembersKey, getTrackerListMembers,FavoritesKey
+    MentionsKey, getMentions, TrackerListMembersKey,FavoritesKey
 } from '@/lib/api'
 
 const api_key = process.env.LAKE_API_KEY;
@@ -53,7 +53,7 @@ export const getServerSideProps =
             const createdAt = user?.createdAt;
             let freeUser = false;
             let options = { tracker_filter: 0 };
-            if (user?.emailAddresses) {
+            if (userId&&user?.emailAddresses) {
                 for (let i = 0; i < user.emailAddresses.length; i++) {
                     const e = user.emailAddresses[i];
                     const email = e.emailAddress;
@@ -67,7 +67,7 @@ export const getServerSideProps =
                     }
                 }
             }
-            console.log("OPTIONS:", options)
+           // console.log("OPTIONS:", options)
             let pagetype = "league";
             utm_content = utm_content || '';
             fbclid = fbclid || '';
@@ -121,12 +121,13 @@ export const getServerSideProps =
                     console.log('ssr-bot-landing-init-error', x);
                 }
             }
-            let trackerListMembersKey: TrackerListMembersKey = { type: "tracker_list_members", league };
+            let trackerListMembersKey: TrackerListMembersKey = { type: "tracker_list_members", league, noUser: userId ? false : true };
             let trackerListMembers = [];
-          //  if (options && options.tracker_filter == 1) {
+            if(userId){
                 const {data}=await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/tracker-list/get?api_key=${api_key}&userid=${userId}&league=${league}`);
                 trackerListMembers = data.members;
-            //}
+            }
+        
             const leagues = await getLeagues();
             const keyLeagueTeams: LeagueTeamsKey = { func: "leagueTeams", league };
             let leagueTeams = await getLeagueTeams(keyLeagueTeams);
@@ -172,7 +173,7 @@ export const getServerSideProps =
                     mentions = await getMentions(keyMentions);
 
             }
-            let favoritesKey:FavoritesKey={type:"Favorites"}
+            let favoritesKey:FavoritesKey={type:"Favorites",noUser:userId?false:true};
             let favorites=[];
             if(view=='fav'&&userId){
                 const {data}=await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/favorites/get?api_key=${api_key}&userid=${userId}`);
@@ -197,7 +198,7 @@ export const getServerSideProps =
             fallback[unstable_serialize(keyMentions)] = mentions;
             fallback[unstable_serialize(favoritesKey)] = favorites;
             //fallback[unstable_serialize(keyLists)]= userLists;    
-            fallback[unstable_serialize({ type: "options" })] = options;
+            fallback[unstable_serialize({ type: "options" ,noUser:userId?false:true})] = options;
             fallback[unstable_serialize(trackerListMembersKey)] = trackerListMembers;
             return {
                 props: {
