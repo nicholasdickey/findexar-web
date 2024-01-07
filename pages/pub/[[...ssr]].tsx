@@ -58,7 +58,7 @@ export const getServerSideProps =
                     const { data } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/options/get?userid=${userId}&api_key=${api_key}&email=${email}`);
                     freeUser = data.exists;
                     //if (options)
-                        options = data.options;
+                    options = data.options;
                     if (freeUser) {
                         break;
                     }
@@ -72,12 +72,12 @@ export const getServerSideProps =
             const botInfo = isbot({ ua });
             let host = context.req.headers.host || "";
             let ssr = context.params?.ssr as string[];
-           // console.log("SSR:", ssr)
+            // console.log("SSR:", ssr)
             if (!ssr)
                 ssr = [''];
 
             let [arg1, arg2, arg3, arg4, arg5, arg6, arg7] = ssr;
-          //  console.log(arg1, arg2, arg3, arg4, arg5, arg6, arg7)
+            //  console.log(arg1, arg2, arg3, arg4, arg5, arg6, arg7)
             let league = '';
             let team = '';//'buffalo-bills';
             let player = '';
@@ -115,9 +115,9 @@ export const getServerSideProps =
                     console.log('ssr-bot-landing-init-error', x);
                 }
             }
-            let trackerListMembersKey: TrackerListMembersKey = { type: "tracker_list_members",league };
+            let trackerListMembersKey: TrackerListMembersKey = { type: "tracker_list_members", league };
             let trackerListMembers = [];
-            const {data}=await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/tracker-list/get?api_key=${api_key}&userid=${userId}&league=${league}`);
+            const { data } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/tracker-list/get?api_key=${api_key}&userid=${userId}&league=${league}`);
             trackerListMembers = data.members;
             console.log("!!! TRACKER LIST MEMBERS:", trackerListMembers);
             const leagues = await getLeagues();
@@ -126,33 +126,40 @@ export const getServerSideProps =
 
             let teamPlayers = [];
             let details = {};
-            let keyTeamPlayers: TeamPlayersKey;
-            let keyDetails: DetailsKey = { teamid: "", name: "" };
+            let keyTeamPlayers: TeamPlayersKey={type:"teamPlayers",league,teamid:""};
+            let keyDetails: DetailsKey = { type:"Details", teamid: "", name: "" };
             let keyMentions: MentionsKey = { type: "mentions", league };
             let mentions = [];
-          //  console.log(111,options)
+            //  console.log(111,options)
             if (team) {
                 const t = leagueTeams?.find((t: any) => t.id == team);
                 const teamName = t.name;
                 keyTeamPlayers = { type: "teamPlayers", league, teamid: team };
                 teamPlayers = await getTeamPlayers(keyTeamPlayers);
-               // console.log("player:", player)
+                console.log("player:", player)
 
                 if (player) {
-                    keyDetails = { teamid: team, name: player };
-                    details = await getDetails(keyDetails);
+                    keyDetails = { type: "Details", teamid: team, name: player };
+                    //details = await getDetails(keyDetails);
+                    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/get-details-favorites?api_key=${api_key}&userid=${userId}&teamid=${team}&name=${encodeURIComponent(player as string || "")}`);
+                    details = data.details;
                 }
                 else {
-                    keyDetails = { teamid: team, name: teamName };
-                    details = await getDetails(keyDetails);
+                  
+                    keyDetails = { type: "Details", teamid: team, name: teamName };
+                    console.log("SSR Details",keyDetails)
+                    //details = await getDetails(keyDetails);
+                    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/get-details-favorites?api_key=${api_key}&userid=${userId}&teamid=${team}&name=${encodeURIComponent(teamName as string || "")}`);
+                    details = data.details;
+
                 }
             }
             else {
                 if (options && options.tracker_filter == 1) {
                     keyMentions = { type: "filtered-mentions", league };
-                    const url = league ? `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/get-filtered-mentions?league=${encodeURIComponent(league as string)}&userid=${encodeURIComponent(userId as string)}&api_key=${api_key}` : `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/get-filtered-mentions?userid=${encodeURIComponent(userId as string)}&api_key=${api_key}`;
+                    const url = league ? `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/get-filtered-mentions-favorites?league=${encodeURIComponent(league as string)}&userid=${encodeURIComponent(userId as string)}&api_key=${api_key}` : `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/get-filtered-mentions-favorites?userid=${encodeURIComponent(userId as string)}&api_key=${api_key}`;
                     const { data } = await axios.get(url);
-                  //  console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++", url,data.mentions)
+                    //  console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++", url,data.mentions)
                     mentions = data.mentions;
                 }
                 else
@@ -170,7 +177,7 @@ export const getServerSideProps =
 
 
             //if (teamPlayers)
-            fallback[unstable_serialize(teamPlayers)] = teamPlayers;
+            fallback[unstable_serialize(keyTeamPlayers)] = teamPlayers;
             //if (details && keyDetails)
             fallback[unstable_serialize(keyDetails)] = details;
             //if (mentions && mentions.length > 0)
@@ -178,7 +185,7 @@ export const getServerSideProps =
             //fallback[unstable_serialize(keyLists)]= userLists;    
             fallback[unstable_serialize({ type: "options" })] = options;
             fallback[unstable_serialize(trackerListMembersKey)] = trackerListMembers;
-           // console.log("view:", view)
+            // console.log("view:", view)
             return {
                 props: {
                     sessionid,

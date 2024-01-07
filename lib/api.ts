@@ -41,11 +41,13 @@ export const getLeagueTeams = async ({league}:LeagueTeamsKey) => {
 
 
 // SWR get all details for the Team
-export type DetailsKey = { teamid: string; name: string};
-export const getDetails = async ({teamid,name}:DetailsKey) => {
+export type DetailsKey = { type:string,teamid: string; name: string};
+export const getDetails = async ({type,teamid,name}:DetailsKey) => {
   try {
-    const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-details?teamid=${encodeURIComponent(teamid)}&name=${encodeURIComponent(name)}`;
-    const res = await axios.get(url);
+  //  const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-details?teamid=${encodeURIComponent(teamid)}&name=${encodeURIComponent(name)}`;
+  const url = `${process.env.NEXT_PUBLIC_SERVER}/api/user/get-details-favorites?teamid=${encodeURIComponent(teamid)}&name=${encodeURIComponent(name)}`;
+      
+  const res = await axios.get(url);
     return res.data.details;
   }
   catch (e) {
@@ -82,11 +84,13 @@ export const getFilteredMentions = async ({type,league}:MentionsKey) => {
 }
 
 // SWR get expanded meta
-export type MetaLinkKey = {func:string,xid?: string};
-export const getMetaLink = async ({func,xid}:MetaLinkKey) => {
+export type MetaLinkKey = {func:string,findexarxid: string};
+export const getMetaLink = async ({func,findexarxid}:MetaLinkKey) => {
   try {
-    const url =`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-meta-link?xid=${xid}`;
+    const url =`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-meta-link?xid=${findexarxid}`;
+    
     const res = await axios.get(url);
+    //console.log("getMetaLink=>",{findexarxid,url,resp:res.data.meta});
     return res.data.meta;
   }
   catch (e) {
@@ -250,6 +254,41 @@ export const setTrackerFilter = async ({tracker_filter}:SetTrackerFilterParams) 
   catch (e) {
     console.log("getTeamPlayers", e);
     return false;
+  }
+}
+export type FavoritesKey = {type:string};
+export const getFavorites = async ({type}:FavoritesKey) => {
+  try {
+    console.log("getFavorites")
+    const url =`${process.env.NEXT_PUBLIC_SERVER}/api/user/get-favorites`;
+    const res = await axios.get(url);
+    return res.data.favorites;
+  }
+  catch (e) {
+    console.log("getFavorites", e);   
+  }
+}
+export type FavoriteParams = {findexarxid:string};
+export const addFavorite = async ({findexarxid}:FavoriteParams) => {
+  try {
+    const url =`${process.env.NEXT_PUBLIC_SERVER}/api/user/add-favorite?findexarxid=${encodeURIComponent(findexarxid)}`;
+    const res = await axios.get(url);
+    console.log("addTrackerListMember",url,res.data.success)
+    return res.data.success;
+  }
+  catch (e) {
+    console.log("addTrackerListMember", e);   
+  }
+}
+export const removeFavorite = async ({findexarxid}:FavoriteParams) => {
+  try {
+    const url =`${process.env.NEXT_PUBLIC_SERVER}/api/user/remove-favorite?findexarxid=${encodeURIComponent(findexarxid)}`;
+    const res = await axios.get(url);
+    console.log("addTrackerListMember",url,res.data.success)
+    return res.data.success;
+  }
+  catch (e) {
+    console.log("addTrackerListMember", e);   
   }
 }
 

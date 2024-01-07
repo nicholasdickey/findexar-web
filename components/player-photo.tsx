@@ -5,7 +5,6 @@ import { styled } from "styled-components";
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 import { PlayerPhotoKey,getPlayerPhoto } from '@/lib/api';
-import Mention from "./mention";
 import Avatar from '@mui/material/Avatar';
 const MainPanel = styled.div`
     display:flex;

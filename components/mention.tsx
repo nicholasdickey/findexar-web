@@ -2,9 +2,12 @@ import React, { useEffect } from "react";
 import useSWRImmutable from 'swr/immutable'
 import Link from 'next/link';
 import { styled } from "styled-components";
-import { MentionsKey, getMentions, MetaLinkKey, getMetaLink } from '@/lib/api';
+import { MentionsKey, getMentions, MetaLinkKey, getMetaLink,addFavorite,removeFavorite } from '@/lib/api';
 import { convertToUTCDateString, convertToReadableLocalTime } from "@/lib/date-convert";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import StarOutlineIcon from '@mui/icons-material/StarOutline';
+import StarIcon from '@mui/icons-material/Star';
+
 
 const MentionsOuterContainer = styled.div`
     display:flex;
@@ -180,6 +183,11 @@ const ImageWrapper = styled.div`
   flex: 1 1 auto;
   max-width: 50%;
 `;
+const Topline = styled.div`
+    display:flex;
+    flex-direction:row;
+    justify-content :space-between ;
+`;
 
 const Image = styled.img`
    //width: 200px;
@@ -235,18 +243,26 @@ interface Props {
     url: string;
     findex: string;
     summary: string;
-    xid: string
+    findexarxid: string;
+    fav:number;
+    noUser:boolean;
 }
 
-const Mention: React.FC<Props> = ({ mentionType, league, type, team, name, date, url, findex, summary, xid }) => {
+const Mention: React.FC<Props> = ({ noUser,mentionType, league, type, team, name, date, url, findex, summary, findexarxid,fav }) => {
     const [expanded, setExpanded] = React.useState(false);
     const [localDate, setLocalDate] = React.useState(convertToUTCDateString(date));
+    const [localFav, setLocalFav] = React.useState(fav);
+
+    useEffect(() => {
+
+        setLocalFav(fav);
+    },[fav]);
 
     let localUrl = /*mentionType == "top" ?*/ (type == 'person' ? `/pro/league/${league}/team/${team}/player/${name}` : `/pub/league/${league}/team/${team}`) /*: url*/;
-    const mentionsKey: MetaLinkKey = { func: "meta", xid };
+    const mentionsKey: MetaLinkKey = { func: "meta", findexarxid};
     const meta = useSWRImmutable(mentionsKey, getMetaLink).data;
     let digest = meta ? meta.digest.replace('<p>', '').replace('</p>', '') : "";
-
+   // console.log("expanded:", {findexarxid,expanded, meta,fav});
     useEffect(() => {
         setLocalDate(convertToReadableLocalTime(date));
     }, [date])
@@ -267,11 +283,13 @@ const Mention: React.FC<Props> = ({ mentionType, league, type, team, name, date,
                 </MentionFindex>
 
                 <MentionSummary>
-                    <Link href={localUrl}>
+                   
                         <div>
-                            <LocalDate><i>{localDate}</i></LocalDate>
+                            <Topline><LocalDate><i>{localDate}</i></LocalDate>{localFav!=1?<StarOutlineIcon onClick={()=>{if(noUser) return; setLocalFav(1);addFavorite({findexarxid})}} style={{color: "#888"}}/>:<StarIcon onClick={()=>{if(noUser) return; setLocalFav(0);removeFavorite({findexarxid})}} style={{color:"FFA000"}}/>}</Topline>
                             <br />
+                            <Link href={localUrl}>
                             {summary}
+                            </Link>
                             <hr />
                             <Atmention>@mention: {name} | Team: {team} | {league}</Atmention>
                         </div>
@@ -291,7 +309,7 @@ const Mention: React.FC<Props> = ({ mentionType, league, type, team, name, date,
                             </HorizontalContainer>
                             {meta.url.substring(0, 50)}...
                         </ExtendedMention></Link>}
-                    </Link>
+                   
                 </MentionSummary>
             </MentionWrap>
             <MobileMentionWrap>

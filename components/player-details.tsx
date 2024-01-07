@@ -101,11 +101,13 @@ interface Props {
     player?: string;
     pagetype?: string;
     teamName?: string;
+    noUser:boolean
 }
 
 const PlayerDetails: React.FC<Props> = (props) => {
-    const { team, player } = props;
-    const detailsKey: DetailsKey = { teamid: team || "", name: player || "" };
+    const { team, player,noUser } = props;
+    const detailsKey: DetailsKey = {type:"Details", teamid: team || "", name: player || "" };
+    console.log("PlayerDetails:",detailsKey)
     const {data:details,error,isLoading} = useSWR(detailsKey, getDetails);
     /*const { data: session } = useSession()
     if(!session){  
@@ -119,17 +121,17 @@ const PlayerDetails: React.FC<Props> = (props) => {
     }
     console.log("session",session)*/
 
-    if(isLoading) return (<Stack spacing={1}>
+   /* if(isLoading) return (<Stack spacing={1}>
         <Skeleton variant="rounded" animation="pulse" height={160} />
          <Skeleton variant="rounded" animation="pulse" height={80} />
          <Skeleton variant="rounded" animation="pulse" height={120} />
          <Skeleton variant="rounded" animation="pulse" height={160} />
-       </Stack>)
-    const { mentions, currentFindex } = details;
+       </Stack>)*/
+    const { mentions } = details?details:[];
 
     const Details = mentions?.map((m: any, i: number) => {
-        const { league, type, team, name, date, url, findex, summary,xid } = m;
-        return (<Mention mentionType="final" league={league} type={type} team={team} name={name} date={date} url={url} findex={findex} summary={summary} xid={xid} key={`player-mention${i}`} />)
+        const { league, type, team, name, date, url, findex, summary,findexarxid,fav } = m;
+        return (<Mention noUser={noUser} mentionType="final" league={league} type={type} team={team} name={name} date={date} url={url} findex={findex} summary={summary} findexarxid={findexarxid} fav={fav} key={`player-mention${i}`} />)
     })
    
     return (
@@ -137,11 +139,8 @@ const PlayerDetails: React.FC<Props> = (props) => {
             <div className="team__members">
                 {false&&<TeamHeader>
                     <TeamName>{player}</TeamName>
-                    {false&&  <TeamFindex>F Index:&nbsp;{currentFindex.avg_findex}</TeamFindex>}
-                    {false&&<TeamFindex>Mentions:&nbsp;{currentFindex.mentions}</TeamFindex>}
-                </TeamHeader>}
+                  </TeamHeader>}
                 <MainPanel>
-               {false&& <MentionsHeader>Mentions ({currentFindex.mentions}):</MentionsHeader>}
                     <TeamDetailsBody>
                         {Details}
                     </TeamDetailsBody>

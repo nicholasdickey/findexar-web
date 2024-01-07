@@ -11,7 +11,7 @@ import Checkbox from '@mui/material/Checkbox';
 import LoginIcon from '@mui/icons-material/Login';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import IconButton from '@mui/material/IconButton';
-import { MentionsKey, getMentions, getFilteredMentions, getOptions, UserOptionsKey, SetTrackerFilterParams, setTrackerFilter, TrackerListMembersKey, getTrackerListMembers, removeTrackerListMember, RemoveTrackerListMemberParams } from '@/lib/api';
+import { MentionsKey, getMentions, getFilteredMentions, getOptions, UserOptionsKey, SetTrackerFilterParams, setTrackerFilter, TrackerListMembersKey, getTrackerListMembers, removeTrackerListMember, RemoveTrackerListMemberParams,getFavorites,FavoritesKey } from '@/lib/api';
 
 import Mention from "./mention";
 
@@ -78,7 +78,7 @@ const MentionsHeader = styled.div`
     display:flex;
     flex-direction:row;
     align-items:center;
-    justify-content:space-between
+    justify-content:space-between;
 `;
 const OuterContainer = styled.div`
     display:flex;
@@ -244,7 +244,7 @@ const RightExplanation = styled.div`
 
 interface Props {
   league: string;
-  noUser?: boolean;
+  noUser: boolean;
   setLocalPageType: (pageType: string) => void;
   setLocalPlayer: (player: string) => void;
   view: string;
@@ -266,17 +266,24 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
     setV((!view || view.toLowerCase() == "home") ? "mentions" : view.toLowerCase());
   }, [view]);
 
+
+
   const mentionsKey: MentionsKey = { type: localTrackerFilter == 1 ? "filtered-mentions" : "mentions", league };
   console.log("MentionsKey", mentionsKey)
-  const { data: mentions, error, isLoading } = useSWR(mentionsKey, localTrackerFilter == 1 ? getFilteredMentions : getMentions);
-
+  let { data: mentions, error, isLoading } = useSWR(mentionsKey, localTrackerFilter == 1 ? getFilteredMentions : getMentions);
+  const favoritesKey:FavoritesKey={type:"Favorites"};
+  const { data: favoritesMentions } = useSWR(favoritesKey, getFavorites);
+  console.log("favoritesMentions",favoritesMentions)
+  if(view=="fav"){
+    mentions=favoritesMentions;
+  }
   const trackerListMembersKey: TrackerListMembersKey = { type: "tracker_list_members", league };
   const { data: trackerListMembers, error: trackerListError, isLoading: trackerListLoading, mutate: trackerListMutate } = useSWR(trackerListMembersKey, getTrackerListMembers);
   console.log("trackerListMembers", trackerListMembers)
   const Mentions = mentions && mentions.map((m: any, i: number) => {
-    const { league, type, team, name, date, url, findex, summary, xid } = m;
+    const { league, type, team, name, date, url, findex, summary, findexarxid,fav } = m;
     // console.log("XID:",league,name,xid)
-    return (<Mention mentionType="top" league={league} type={type} team={team} name={name} date={date} url={url} findex={findex} summary={summary} xid={xid} key={`mention${i}`} />)
+    return (<Mention noUser={noUser} mentionType="top" league={league} type={type} team={team} name={name} date={date} url={url} findex={findex} summary={summary} findexarxid={findexarxid} fav={fav} key={`mention${i}`} />)
   });
   //console.log("league-mentions:", { v, mentions, isLoading })
   /* if (isLoading) return (<Stack spacing={1}>
@@ -290,7 +297,7 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
     <>
       <OuterContainer>
         <MentionsOuterContainer>
-          <MentionsHeader><span>Latest Mentions:</span><FormControlLabel control={<Checkbox size="small" disabled={noUser} checked={localTrackerFilter == 1} onChange={
+          {view!="fav"&&<MentionsHeader><span>Latest Mentions:</span><FormControlLabel control={<Checkbox size="small" disabled={noUser} checked={localTrackerFilter == 1} onChange={
             (event: React.ChangeEvent<HTMLInputElement>) => {
               setLocalTrackerFilter(event.target.checked);
               const params: SetTrackerFilterParams = { tracker_filter: event.target.checked ? 1 : 0 };
@@ -298,7 +305,8 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
 
             }} />} label="My Team Filter" />
             {noUser && <SignInButton><Button size="small" variant="outlined" style={{ paddingRight: 8, paddingTop: 4, paddingBottom: 4, paddingLeft: 4 }}><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton>}
-          </MentionsHeader>
+          </MentionsHeader>}
+          {view=="fav"&&<MentionsHeader><span>Favorites:</span></MentionsHeader>}
           <MentionsBody>
             {mentions && mentions.length > 0 ? Mentions : isLoading ? <Stack spacing={1}>
               <Skeleton variant="rounded" animation="pulse" height={160} />
@@ -308,11 +316,12 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
             </Stack> : <Empty>No Mentions Available</Empty>}
           </MentionsBody>
         </MentionsOuterContainer>
-        {trackerListMembers && trackerListMembers.length > 0 && <RightPanel>
+        {view!="fav"&&trackerListMembers && trackerListMembers.length > 0 && <RightPanel>
 
           <TeamName>My Team (player tracker list): </TeamName>
           {(!trackerListMembers || trackerListMembers.length == 0) && <RightExplanation>Tracker list is empty {league ? `for ${league}` : ``}<br />Use &ldquo;add to list&ldquo; icons to the right of the<br /> player name in the team roster<br />to add to the &ldquo;My Team&ldquo; tracker list. </RightExplanation>}
           {trackerListMembers && trackerListMembers.map(({ member, teamid, league }: { member: string, teamid: string, league: string }, i: number) => {
+            console.log("TRACKER LIST MEMBER", member, teamid, league)
             //return <SidePlayer><Link onClick={() => { setLocalPageType("player"), setLocalPlayer(p.member); setV("mentions"); setGlobalLoading(true) }} href={`/pro/league/${p.league}/team/${p.teamid}/player/${encodeURIComponent(p.member)}`}>{p.member} </Link></SidePlayer>
             return <SideGroup key={`3fdsdvb-${i}`}>
               <SidePlayer>

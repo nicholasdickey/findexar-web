@@ -45,6 +45,7 @@ import Mentions from './league-mentions';
 import SecondaryTabs from "./secondary-tabs";
 import PlayerPhoto from "./player-photo";
 import SubscriptionMenu from "./subscription-menu";
+import { get } from "http";
 
 const Header = styled.header`
   height: 80px;
@@ -191,7 +192,7 @@ const LeftPanel = styled.div`
   width:300px;
   height:auto !important;
   height:100%;
-  min-height: 100%;
+  min-height: 200vw;
   background-color:  #333;
   display:flex;
   flex-direction:column;
@@ -359,9 +360,9 @@ const HeaderLeft = styled.div`
   display:flex;
   flex-direction:row;
   justify-content:flex-start;
-  //align-items:center;
+  align-items:center;
   height:56px;
- // margin-left:20px;
+  margin-left:20px;
   //margin-right:20px;
   @media screen and (max-width: 1199px) {
     margin-left:0px;
@@ -521,6 +522,7 @@ const Landing: React.FC<Props> = (props) => {
   const [dismiss, setDismiss] = useState(false);
   const [hardStop, setHardStop] = useState(false);
   const [addList, setAddList] = useState(false);
+  const [favorites, setFavorites] = useState(false);
   console.log("pageType:",localPageType)
  
   const theme = useTheme();
@@ -583,6 +585,7 @@ const Landing: React.FC<Props> = (props) => {
   const router = useRouter();
   const leagueTeamsKey: LeagueTeamsKey = { func: "leagueTeams", league: localLeague||"" };
   const { data: teams, error, isLoading } = useSWR(leagueTeamsKey, getLeagueTeams);
+
   if (!view)
     view = "home";
   if (view == "home")
@@ -734,7 +737,22 @@ const Landing: React.FC<Props> = (props) => {
                       in the media.<br /><br /><hr />
                       Powered by OpenAI.</Welcome>
                       <br /><br />
-                      <Favorites><Button style={{padding:10}} variant="outlined"><StarOutlineIcon />&nbsp;&nbsp;My Favorites</Button></Favorites>
+                      <Favorites><Button onClick={()=>{
+                        setFavorites(!favorites);
+                       
+                       if(!favorites){
+                        setLocalView("fav") 
+                         // setLocalPageType("Favorites");
+                         // setLocalLeague("");
+                         // setLocalTeam("");
+                          router.push("/pro?view=fav");
+                        }
+                        else {
+                          setLocalView("mentions") 
+                          router.push("/pub");
+                        }
+                        
+                      }} style={{padding:10}} variant="outlined">{localView=="fav"?<HomeIcon/>:<StarOutlineIcon />}&nbsp;&nbsp;{localView=="fav"?<span>Back to Home</span>:<span>My Favorites</span>}</Button></Favorites>
                       <br /><br />
                       <LeftText><b>&ldquo;My Team&ldquo; tracker List:</b> Use &ldquo;add to list&ldquo; icons next to player name in team rosters to add or remove players to tracker list.<br/><br/><hr/></LeftText>
                        {!userId&&<LeftText>Needs to be a logged-in user to explore the teams and individual athletes&apos; mentions and use the tracker list or &ldquo;favorites&ldquo; functionality.<br /><br />Click here to sign-in or sign-up: <br /><br /><br /><SignInButton><Button style={{padding:10}} size="small" variant="outlined"><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></LeftText>}
@@ -745,7 +763,7 @@ const Landing: React.FC<Props> = (props) => {
                     {false && localPageType == "league" && <SecondaryTabs options={[{ name: "Mentions", icon: <MentionIcon />, access: "pub" }, { name: "Lists", icon: <ListIcon />, access: "pro" }, { name: "About", icon: <ContactSupportIcon />, access: "pub" }]} onChange={(option: any) => { console.log(option); router.replace(localLeague ? `/${option.access || "pub"}/league/${localLeague}?view=${encodeURIComponent(option.name)}` : `/${option.access}/league?view=${encodeURIComponent(option.name)}`) }} selectedOptionName={localView} />}
 
                     {subscriptionPrompt && !dismiss && <SubscriptionMenu hardStop={hardStop} setDismiss={setDismiss} {...subscriptionObject} />}
-                    {(localPageType == "team" || localPageType == "player") && <Team setDismiss={setDismiss} subscriptionPrompt={subscriptionPrompt && !dismiss} subscriptionObject={subscriptionObject} view={localView} teams={null} team={localTeam} league={localLeague} teamName={teamName} pagetype={localPageType} player={localPlayer} setLocalPlayer={setLocalPlayer} setLocalPageType={setLocalPageType}/>}
+                    {(localPageType == "team" || localPageType == "player") && <Team noUser={!userId} setDismiss={setDismiss} subscriptionPrompt={subscriptionPrompt && !dismiss} subscriptionObject={subscriptionObject} view={localView} teams={null} team={localTeam} league={localLeague} teamName={teamName} pagetype={localPageType} player={localPlayer} setLocalPlayer={setLocalPlayer} setLocalPageType={setLocalPageType}/>}
                    
                    
                     {localPageType == "league" && !localTeam && <Mentions league={localLeague || ""} noUser={!userId} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} view={localView}/>}
@@ -769,7 +787,7 @@ const Landing: React.FC<Props> = (props) => {
                   {(localView == 'mentions'||localView=='my team') && <CenterPanel>
                     {subscriptionPrompt && !dismiss && <SubscriptionMenu hardStop={hardStop} setDismiss={setDismiss} {...subscriptionObject} />}
 
-                    <Mentions league={localLeague || "" } setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} view={localView} />
+                    <Mentions noUser={!userId} league={localLeague || "" } setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} view={localView} />
                   </CenterPanel>}     
                 </div>}
               {localPageType == 'league' && localLeague &&
@@ -781,12 +799,12 @@ const Landing: React.FC<Props> = (props) => {
                   <CenterPanel>
                     {subscriptionPrompt && !dismiss && <SubscriptionMenu hardStop={hardStop} setDismiss={setDismiss} {...subscriptionObject} />}
 
-                    <Mentions league={localLeague || ""} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} view={localView}/>
+                    <Mentions noUser={!userId} league={localLeague || ""} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} view={localView}/>
                   </CenterPanel>}
                 </div>}
               {(localPageType == 'team' || localPageType == 'player') &&
                 <div>
-                  <Team setDismiss={setDismiss} subscriptionPrompt={subscriptionPrompt && !dismiss} subscriptionObject={subscriptionObject} view={localView} teams={<LeftMobilePanel>{TeamsNav}</LeftMobilePanel>} team={localTeam} league={localLeague} teamName={teamName} pagetype={localPageType} player={player} setLocalPlayer={setLocalPlayer} setLocalPageType={setLocalPageType} />
+                  <Team noUser={!userId} setDismiss={setDismiss} subscriptionPrompt={subscriptionPrompt && !dismiss} subscriptionObject={subscriptionObject} view={localView} teams={<LeftMobilePanel>{TeamsNav}</LeftMobilePanel>} team={localTeam} league={localLeague} teamName={teamName} pagetype={localPageType} player={player} setLocalPlayer={setLocalPlayer} setLocalPageType={setLocalPageType} />
                 </div>
               }
             </MobileContainerWrap>

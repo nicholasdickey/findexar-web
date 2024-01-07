@@ -10,7 +10,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return;
     }
     let { league } = req.query;
-    const url = league ? `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/get-filtered-mentions-favorites?league=${encodeURIComponent(league as string)}&userid=${encodeURIComponent(userId)}&api_key=${api_key}` : `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/get-filtered-mentions-favorites?userid=${encodeURIComponent(userId)}&api_key=${api_key}`;
+    const url = league ? `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/get-mentions-favorites?league=${encodeURIComponent(league as string)}&userid=${encodeURIComponent(userId)}&api_key=${api_key}` : `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/get-mentions-favorites?userid=${encodeURIComponent(userId)}&api_key=${api_key}`;
     const { data } = await axios.get(url);
    // console.log("$$$$$$$$$$$$$$$$$$$$ get-filtered-mentions.ts: data:", url,data)
     res.status(200).json(data);
