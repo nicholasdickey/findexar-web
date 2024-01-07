@@ -119,7 +119,7 @@ const MobileTeamName = styled.div`
 const RightPanel = styled.div`
   height:auto !important;
   height:100%;
-  width:380px;
+  width:300px;
   padding-left:20px;
   min-height: 1000vh;
   background-color:  #668;

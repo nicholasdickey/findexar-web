@@ -31,7 +31,7 @@ const SidePlayer = styled.div`
 `;
 
 const TeamName = styled.div`
-  height: 30px;
+  height: 40px;
   width: 200px; 
   color: #aea;
   //text-align: center;
@@ -49,6 +49,7 @@ const MobileTeamName = styled.div`
 `;
 const SideGroup = styled.div`
   display:flex;
+  width:280px;
   flex-direction:row;
   justify-content:space-between;
   padding-right:20px;
@@ -88,7 +89,7 @@ const SelectedSidePlayer = styled.div`
 const RightPanel = styled.div`
   height:100%;
   min-height: 1000vh;
-  width:300px;
+  min-width:300px;
   background-color:  #668;
   display:flex;
   flex-direction:column;

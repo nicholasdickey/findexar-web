@@ -71,7 +71,7 @@ const TeamDetails: React.FC<Props> = (props) => {
      <Skeleton variant="rounded" animation="pulse" height={120} />
      <Skeleton variant="rounded" animation="pulse" height={160} />
    </Stack>)*/
-  const { mentions, currentFindex } = details;
+  const { mentions } = details?details:[];
 
   const Details = mentions?.map((m: any, i: number) => {
     const { league, type, team, name, date, url, findex, summary,findexarxid,fav } = m;
@@ -83,8 +83,6 @@ const TeamDetails: React.FC<Props> = (props) => {
       <div className="team__members">
        {false&&<TeamHeader>
           <TeamName>{teamName}  </TeamName>
-         {false&& <TeamFindex>F Index:&nbsp;{currentFindex.avg_findex}</TeamFindex>}
-         {false&&<TeamFindex>Mentions:&nbsp;{currentFindex.mentions}</TeamFindex>}
         </TeamHeader>}
         <MainPanel>   
           <TeamDetailsBody>
