@@ -85,8 +85,8 @@ const MobileMentionsHeader = styled.div`
     padding-top:10px;
     font-size: 16px;
     //width:100%;
-    padding-left:6px;
-    padding-right:6px;
+    padding-left:20px;
+    padding-right:20px;
     display:flex;
     flex-direction:row;
     align-items:center;
@@ -372,7 +372,7 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
         </RightPanel>}
       </OuterContainer>
       <MobileMentionsOuterContainer>
-        {v == 'mentions' &&<MobileMentionsHeader><b></b> <FormControlLabel control={<Checkbox disabled={noUser} checked={localTrackerFilter == 1} onChange={
+        {v == 'mentions' &&<MobileMentionsHeader> <FormControlLabel control={<Checkbox disabled={noUser} checked={localTrackerFilter == 1} onChange={
           (event: React.ChangeEvent<HTMLInputElement>) => {
             setLocalTrackerFilter(event.target.checked);
             const params: SetTrackerFilterParams = { tracker_filter: event.target.checked ? 1 : 0 };
