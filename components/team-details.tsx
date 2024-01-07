@@ -65,32 +65,37 @@ interface Props {
 }
 
 const TeamDetails: React.FC<Props> = (props) => {
-  const { team, teamName,noUser,...rest } = props;
-  const detailsKey: DetailsKey = { type:"Details",teamid: team || "", name: teamName || "" };
-  console.log("detailsKey",detailsKey)
-  const {data:details,error,isLoading} = useSWR(detailsKey, getDetails);
- /* if(isLoading) return (<Stack spacing={1}>
-    <Skeleton variant="rounded" animation="pulse" height={160} />
-     <Skeleton variant="rounded" animation="pulse" height={80} />
-     <Skeleton variant="rounded" animation="pulse" height={120} />
+  const { team, teamName, noUser, ...rest } = props;
+  const detailsKey: DetailsKey = { type: "Details", teamid: team || "", name: teamName || "" };
+  console.log("detailsKey", detailsKey)
+  const { data: details, error, isLoading } = useSWR(detailsKey, getDetails);
+  /* if(isLoading) return (<Stack spacing={1}>
      <Skeleton variant="rounded" animation="pulse" height={160} />
-   </Stack>)*/
-  const { mentions } = details?details:[];
+      <Skeleton variant="rounded" animation="pulse" height={80} />
+      <Skeleton variant="rounded" animation="pulse" height={120} />
+      <Skeleton variant="rounded" animation="pulse" height={160} />
+    </Stack>)*/
+  const { mentions } = details ? details : [];
 
   const Details = mentions?.map((m: any, i: number) => {
-    const { league, type, team, name, date, url, findex, summary,findexarxid,fav } = m;
+    const { league, type, team, name, date, url, findex, summary, findexarxid, fav } = m;
     return (<Mention noUser={noUser} mentionType="final" league={league} type={type} team={team} name={name} date={date} url={url} findex={findex} summary={summary} findexarxid={findexarxid} fav={fav} key={`team-mention${i}`} {...rest} />)
   })
-  
+
   return (
     <div className="team">
       <div className="team__members">
-       {false&&<TeamHeader>
+        {false && <TeamHeader>
           <TeamName>{teamName}  </TeamName>
         </TeamHeader>}
-        <MainPanel>   
+        <MainPanel>
           <TeamDetailsBody>
-            {Details}
+            {isLoading ? <Stack spacing={1}>
+              <Skeleton variant="rounded" animation="pulse" height={160} />
+              <Skeleton variant="rounded" animation="pulse" height={80} />
+              <Skeleton variant="rounded" animation="pulse" height={120} />
+              <Skeleton variant="rounded" animation="pulse" height={160} />
+            </Stack> : Details}
           </TeamDetailsBody>
         </MainPanel>
       </div>
