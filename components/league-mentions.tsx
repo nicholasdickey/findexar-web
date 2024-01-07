@@ -173,7 +173,7 @@ const SideGroup = styled.div`
 const MobileSideGroup = styled.div`
   display:flex;
   width: 100%;
-  padding-right:120px;
+  padding-right:20px;
   height:40px;
   flex-direction:row;
   justify-content:space-around;
