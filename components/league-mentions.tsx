@@ -25,7 +25,7 @@ const MentionsOuterContainer = styled.div`
    // padding-left:20px;
    // padding-right:20px;
     a{
-        font-size: 12px;
+        font-size: 15px;
         color: #000;
         text-decoration: none;
         &:hover{
@@ -97,7 +97,7 @@ const TeamName = styled.div`
   color: #aea;
   //text-align: center;
  // padding-left:20px;
-  font-size: 18px;
+  font-size: 20px;
   padding-top:2px;
   padding-bottom:20px;
   //margin: 10px;
@@ -318,7 +318,7 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
         </MentionsOuterContainer>
         {view!="fav"&&trackerListMembers && trackerListMembers.length > 0 && <RightPanel>
 
-          <TeamName>My Team (player tracker list): </TeamName>
+          <TeamName>My Team: </TeamName>
           {(!trackerListMembers || trackerListMembers.length == 0) && <RightExplanation>Tracker list is empty {league ? `for ${league}` : ``}<br />Use &ldquo;add to list&ldquo; icons to the right of the<br /> player name in the team roster<br />to add to the &ldquo;My Team&ldquo; tracker list. </RightExplanation>}
           {trackerListMembers && trackerListMembers.map(({ member, teamid, league }: { member: string, teamid: string, league: string }, i: number) => {
             console.log("TRACKER LIST MEMBER", member, teamid, league)

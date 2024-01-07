@@ -25,7 +25,7 @@ const SidePlayer = styled.div`
   width: 200px; 
   color: #fff;
   //text-align: center;
-  font-size: 14px;
+  font-size: 16px;
   padding-left:20px;
   margin: 10px;
 `;
@@ -36,7 +36,7 @@ const TeamName = styled.div`
   color: #aea;
   //text-align: center;
   padding-left:20px;
-  font-size: 18px;
+  font-size: 20px;
   margin: 10px;
 `;
 
@@ -73,7 +73,7 @@ const SelectedSidePlayer = styled.div`
   width: 200px;
   color: #ff8;
  // text-align: center;
-  font-size: 14px;
+  font-size: 16px;
   padding-left:20px;
   margin: 10px;
   a{
