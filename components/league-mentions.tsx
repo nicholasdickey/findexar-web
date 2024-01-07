@@ -358,20 +358,20 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
         </RightPanel>}
       </OuterContainer>
       <MobileMentionsOuterContainer>
-        {v == 'mentions' && <MentionsHeader>Latest Mentions:&nbsp;&nbsp;&nbsp;&nbsp;<FormControlLabel control={<Checkbox disabled={noUser} checked={localTrackerFilter == 1} onChange={
+        {v == 'mentions' && <MentionsHeader>Mentions:&nbsp;&nbsp;&nbsp;&nbsp;<FormControlLabel control={<Checkbox disabled={noUser} checked={localTrackerFilter == 1} onChange={
           (event: React.ChangeEvent<HTMLInputElement>) => {
             setLocalTrackerFilter(event.target.checked);
             const params: SetTrackerFilterParams = { tracker_filter: event.target.checked ? 1 : 0 };
             setTrackerFilter(params);
 
-          }} />} label="My Team filter" />
+          }} />} label="My Team" />
           {noUser && <SignInButton><Button size="small" variant="contained"><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton>}
         </MentionsHeader>}
 
         <MentionsBody>
           {v == 'mentions' && Mentions}
           {v == 'my team' && <MobilePlayersPanel>
-            <MobileTeamName>My Team (player tracker list): </MobileTeamName>
+            <MobileTeamName>My Team : </MobileTeamName>
             {(!trackerListMembers || trackerListMembers.length == 0) && <RightExplanation>Tracker list empty {league ? `for ${league}` : ``}</RightExplanation>}
             {trackerListMembers && trackerListMembers.map(({ member, teamid, league }: { member: string, teamid: string, league: string }, i: number) => {
               //return <SidePlayer><Link onClick={() => { setLocalPageType("player"), setLocalPlayer(p.member); setV("mentions"); setGlobalLoading(true) }} href={`/pro/league/${p.league}/team/${p.teamid}/player/${encodeURIComponent(p.member)}`}>{p.member} </Link></SidePlayer>
