@@ -85,6 +85,8 @@ const MobileContainerWrap = styled.div`
   flex-direction: column;
   height: 100%;
   width: 100%;
+  color: #111;
+  font-family: 'Roboto', sans-serif;
   @media screen and (min-width: 1200px) {
     display: none;
   }
