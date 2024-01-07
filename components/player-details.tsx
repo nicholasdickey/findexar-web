@@ -110,9 +110,9 @@ interface Props {
 
 const PlayerDetails: React.FC<Props> = (props) => {
     const { team, player,noUser,...rest } = props;
-    const detailsKey: DetailsKey = {type:"Details", teamid: team || "", name: player || "" };
+    const detailsKey: DetailsKey = {type:"Details", teamid: team || "", name: player || "",noUser };
     console.log("PlayerDetails:",detailsKey)
-    const {data:details,error,isLoading} = useSWR(detailsKey, getDetails);
+    const {data:details,error,isLoading,mutate} = useSWR(detailsKey, getDetails);
     /*const { data: session } = useSession()
     if(!session){  
         return (
@@ -135,7 +135,7 @@ const PlayerDetails: React.FC<Props> = (props) => {
 
     const Details = mentions?.map((m: any, i: number) => {
         const { league, type, team, name, date, url, findex, summary,findexarxid,fav } = m;
-        return (<Mention noUser={noUser} mentionType="final" league={league} type={type} team={team} name={name} date={date} url={url} findex={findex} summary={summary} findexarxid={findexarxid} fav={fav} key={`player-mention${i}`} {...rest} />)
+        return (<Mention noUser={noUser} mentionType="final" league={league} type={type} team={team} name={name} date={date} url={url} findex={findex} summary={summary} findexarxid={findexarxid} fav={fav} key={`player-mention${i}`} {...rest} mutate={()=>mutate()} />)
     })
    
     return (

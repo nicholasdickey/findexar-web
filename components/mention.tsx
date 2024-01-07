@@ -7,6 +7,7 @@ import { convertToUTCDateString, convertToReadableLocalTime } from "@/lib/date-c
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import StarIcon from '@mui/icons-material/Star';
+import { mutate } from "swr";
 
 
 const MentionsOuterContainer = styled.div`
@@ -251,9 +252,10 @@ interface Props {
     setLocalPlayer: (player: string) => void;
     setLocalLeague: (league: string) => void;
     setLocalTeam: (team: string) => void;
+    mutate:()=>void;
 }
 
-const Mention: React.FC<Props> = ({ noUser, mentionType, league, type, team, name, date, url, findex, summary, findexarxid, fav, setLocalPageType, setLocalPlayer, setLocalLeague, setLocalTeam }) => {
+const Mention: React.FC<Props> = ({ noUser, mentionType, league, type, team, name, date, url, findex, summary, findexarxid, fav, setLocalPageType, setLocalPlayer, setLocalLeague, setLocalTeam,mutate }) => {
     const [expanded, setExpanded] = React.useState(false);
     const [localDate, setLocalDate] = React.useState(convertToUTCDateString(date));
     const [localFav, setLocalFav] = React.useState(fav);
@@ -290,7 +292,7 @@ const Mention: React.FC<Props> = ({ noUser, mentionType, league, type, team, nam
                 <MentionSummary>
 
                     <div>
-                        <Topline><LocalDate><i>{localDate}</i></LocalDate>{localFav != 1 ? <StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); addFavorite({ findexarxid }) }} style={{ color: "#888" }} /> : <StarIcon onClick={() => { if (noUser) return; setLocalFav(0); removeFavorite({ findexarxid }) }} style={{ color: "FFA000" }} />}</Topline>
+                        <Topline><LocalDate><i>{localDate}</i></LocalDate>{localFav != 1 ? <StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); addFavorite({ findexarxid });mutate() }} style={{ color: "#888" }} /> : <StarIcon onClick={() => { if (noUser) return; setLocalFav(0); removeFavorite({ findexarxid });mutate(); }} style={{ color: "FFA000" }} />}</Topline>
                         <br />
                         <Link href={localUrl} onClick={() => { setLocalLeague(league); setLocalTeam(team); setLocalPlayer(type == 'person' ? name : ''); if (type == 'person') setLocalPageType('player'); else setLocalPageType('team'); }}>
                             {summary}
@@ -323,7 +325,7 @@ const Mention: React.FC<Props> = ({ noUser, mentionType, league, type, team, nam
                 <MentionSummary>
 
                     <div>
-                        <Topline><LocalDate><i>{localDate}</i></LocalDate>{localFav != 1 ? <StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); addFavorite({ findexarxid }) }} style={{ color: "#888" }} /> : <StarIcon onClick={() => { if (noUser) return; setLocalFav(0); removeFavorite({ findexarxid }) }} style={{ color: "FFA000" }} />}</Topline>
+                        <Topline><LocalDate><i>{localDate}</i></LocalDate>{localFav != 1 ? <StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); addFavorite({ findexarxid });mutate(); }} style={{ color: "#888" }} /> : <StarIcon onClick={() => { if (noUser) return; setLocalFav(0); removeFavorite({ findexarxid });mutate(); }} style={{ color: "FFA000" }} />}</Topline>
 
                         <br />
                         <Link href={localUrl} onClick={() => { setLocalLeague(league); setLocalTeam(team); setLocalPlayer(type == 'person' ? name : ''); if (type == 'person') setLocalPageType('player'); else setLocalPageType('team'); }}>

@@ -135,10 +135,10 @@ export const getServerSideProps =
             let teamPlayers = [];
             let details = {};
             let keyTeamPlayers: TeamPlayersKey={type:"teamPlayers",league,teamid:""};
-            let keyDetails: DetailsKey = { type:"Details",teamid: "", name: "" };
-            let keyMentions: MentionsKey = { type: "mentions", league };
+            let keyDetails: DetailsKey = { type:"Details",teamid: "", name: "" ,noUser:userId?false:true};
+            let keyMentions: MentionsKey = { type: "mentions", league, noUser: userId ? false : true };
             if (options && options.tracker_filter == 1) {
-                keyMentions = { type: "filtered-mentions", league };
+                keyMentions = { type: "filtered-mentions", league,noUser:userId?false:true };
             }
             let mentions = [];
             if (team) {
@@ -149,28 +149,46 @@ export const getServerSideProps =
                 console.log("player:",keyTeamPlayers, player,teamPlayers)
 
                 if (player) {
-                    keyDetails = { type:"Details",teamid: team, name: player };
+                    keyDetails = { type:"Details",teamid: team, name: player,noUser:userId?false:true };
                     //details = await getDetails(keyDetails);
+                   if(userId){
                     const {data}= await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/get-details-favorites?api_key=${api_key}&userid=${userId}&teamid=${team}&name=${encodeURIComponent(player as string||"")}`);
                     details=data.details;
                     console.log("================>Player details:::",`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/get-details-favorites?api_key=${api_key}&userid=${userId}&teamid=${team}&name=${encodeURIComponent(player as string||"")}`,details)
+                   }
+                   else{
+                    details=await getDetails(keyDetails);
+                   } 
+                   
                 }
                 else {
-                    keyDetails = { type:"Details",teamid: team, name: teamName };
+                    keyDetails = { type:"Details",teamid: team, name: teamName,noUser:userId?false:true };
                     //details = await getDetails(keyDetails);
+                    if(userId){
                     const {data}= await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/get-details-favorites?api_key=${api_key}&userid=${userId}&teamid=${team}&name=${encodeURIComponent(teamName as string||"")}`);
                     details=data.details;
+                    }
+                    else {
+                        details=await getDetails(keyDetails);
+                    }
                 }
             }
             else {
                 if (options && options.tracker_filter == 1) {
-                    keyMentions = { type: "filtered-mentions", league };
+                    keyMentions = { type: "filtered-mentions", league,noUser:userId?false:true };
                     const url = league ? `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/get-filtered-mentions-favorites?league=${encodeURIComponent(league as string)}&userid=${encodeURIComponent(userId as string)}&api_key=${api_key}` : `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/get-filtered-mentions-favorites?userid=${encodeURIComponent(userId as string)}&api_key=${api_key}`;
                     const { data } = await axios.get(url);
                     mentions = data.mentions;
                 }
-                else
-                    mentions = await getMentions(keyMentions);
+                else {
+                    if (userId) {
+                        const url = league ? `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/get-mentions-favorites?league=${encodeURIComponent(league as string)}&userid=${encodeURIComponent(userId)}&api_key=${api_key}` : `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/get-mentions-favorites?userid=${encodeURIComponent(userId)}&api_key=${api_key}`;
+                        const { data } = await axios.get(url);
+                        mentions = data.mentions;
+                    }
+                    else
+                        mentions = await getMentions(keyMentions);
+                }
 
             }
             let favoritesKey:FavoritesKey={type:"Favorites",noUser:userId?false:true};

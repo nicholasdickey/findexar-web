@@ -66,9 +66,9 @@ interface Props {
 
 const TeamDetails: React.FC<Props> = (props) => {
   const { team, teamName, noUser, ...rest } = props;
-  const detailsKey: DetailsKey = { type: "Details", teamid: team || "", name: teamName || "" };
+  const detailsKey: DetailsKey = { type: "Details", teamid: team || "", name: teamName || "",noUser };
   console.log("detailsKey", detailsKey)
-  const { data: details, error, isLoading } = useSWR(detailsKey, getDetails);
+  const { data: details, error, isLoading,mutate } = useSWR(detailsKey, getDetails);
   /* if(isLoading) return (<Stack spacing={1}>
      <Skeleton variant="rounded" animation="pulse" height={160} />
       <Skeleton variant="rounded" animation="pulse" height={80} />
@@ -79,7 +79,7 @@ const TeamDetails: React.FC<Props> = (props) => {
 
   const Details = mentions?.map((m: any, i: number) => {
     const { league, type, team, name, date, url, findex, summary, findexarxid, fav } = m;
-    return (<Mention noUser={noUser} mentionType="final" league={league} type={type} team={team} name={name} date={date} url={url} findex={findex} summary={summary} findexarxid={findexarxid} fav={fav} key={`team-mention${i}`} {...rest} />)
+    return (<Mention noUser={noUser} mentionType="final" league={league} type={type} team={team} name={name} date={date} url={url} findex={findex} summary={summary} findexarxid={findexarxid} fav={fav} key={`team-mention${i}`} mutate={()=>mutate()} {...rest} />)
   })
 
   return (
