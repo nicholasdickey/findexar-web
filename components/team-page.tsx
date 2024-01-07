@@ -23,7 +23,7 @@ import { Add } from "@mui/icons-material";
 const SidePlayer = styled.div`
   //height: 40px;
   width: 200px; 
-  color: #fff;
+  color: #eee;
   //text-align: center;
   font-size: 16px;
   padding-left:20px;
@@ -97,7 +97,7 @@ const RightPanel = styled.div`
   align-items:flex-start; 
   padding-top:18px;
   a{
-    color: #fff;
+    color: #eee;
     text-decoration: none;
     &:hover{
       color: #4f8;

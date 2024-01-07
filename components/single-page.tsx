@@ -93,7 +93,7 @@ const MobileContainerWrap = styled.div`
 const SideTeam = styled.div`
   height: 40px;
   width: 300px; 
-  color: #fff;
+  color: #aaa;
   
  // text-align: center;
   font-size: 18px;
@@ -172,15 +172,16 @@ const Leagues = styled.div`
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-evenly;
-  height: 30px;
+  align-items: center;
+  height: 38px;
   width: 100%;
-  background-color: #888;
-  color: #fff;
+  background-color: #555;
+  color: #aaa;
   text-align: center;
-  font-size: 280px;
+  font-size: 28px;
   margin: 0px;
   a{
-    color: #fff;
+    color: #ccc;
     text-decoration: none;
     &:hover{
       color: #4f8;
@@ -200,7 +201,7 @@ const LeftPanel = styled.div`
   align-items:flex-start; 
   padding-top:18px;
   a{
-    color: #fff;
+    color: #ccc;
     text-decoration: none;
     &:hover{
       color: #4f8;

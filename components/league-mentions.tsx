@@ -129,7 +129,7 @@ const RightPanel = styled.div`
   align-items:flex-start; 
   padding-top:18px;
   a{
-    color: #fff;
+    color: #eee;
     text-decoration: none;
     &:hover{
       color: #4f8;
@@ -206,7 +206,7 @@ const MobileSidePlayer = styled.div`
 const SidePlayer = styled.div`
   height: 30px;
   width: 140px; 
-  color: #fff;
+  color: #ccc;
   //text-align: center;
   font-size: 16px;
   //margin-top: 10px;
