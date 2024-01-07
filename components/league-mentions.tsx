@@ -21,9 +21,10 @@ const MentionsOuterContainer = styled.div`
     justify-content:flex-start;
     width:100%;
     height:100%;
+
     font-family: 'Roboto', sans-serif;
    // padding-left:20px;
-   // padding-right:20px;
+    padding-right:20px;
     a{
         font-size: 15px;
         color: #000;
@@ -118,7 +119,7 @@ const MobileTeamName = styled.div`
 const RightPanel = styled.div`
   height:auto !important;
   height:100%;
-  width:340px;
+  width:380px;
   padding-left:20px;
   min-height: 1000vh;
   background-color:  #668;
@@ -161,7 +162,7 @@ const MobilePlayersPanel = styled.div`
 `;
 const SideGroup = styled.div`
   display:flex;
-  width: 220px;
+  width: 260px;
   height:40px;
   flex-direction:row;
   justify-content:space-between;

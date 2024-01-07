@@ -262,7 +262,7 @@ const Mention: React.FC<Props> = ({ noUser,mentionType, league, type, team, name
     const mentionsKey: MetaLinkKey = { func: "meta", findexarxid};
     const meta = useSWRImmutable(mentionsKey, getMetaLink).data;
     let digest = meta ? meta.digest.replace('<p>', '').replace('</p>', '') : "";
-   // console.log("expanded:", {findexarxid,expanded, meta,fav});
+    console.log("expanded:", {findexarxid,expanded, meta,fav});
     useEffect(() => {
         setLocalDate(convertToReadableLocalTime(date));
     }, [date])
