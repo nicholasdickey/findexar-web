@@ -146,7 +146,7 @@ export const getServerSideProps =
                 const teamName = t.name;
                 keyTeamPlayers = { type: 'teamPlayers', league, teamid: team };
                 teamPlayers = await getTeamPlayers(keyTeamPlayers);
-                console.log("player:",keyTeamPlayers, player,teamPlayers)
+                //console.log("player:",keyTeamPlayers, player,teamPlayers)
 
                 if (player) {
                     keyDetails = { type:"Details",teamid: team, name: player,noUser:userId?false:true };
@@ -154,7 +154,7 @@ export const getServerSideProps =
                    if(userId){
                     const {data}= await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/get-details-favorites?api_key=${api_key}&userid=${userId}&teamid=${team}&name=${encodeURIComponent(player as string||"")}`);
                     details=data.details;
-                    console.log("================>Player details:::",`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/get-details-favorites?api_key=${api_key}&userid=${userId}&teamid=${team}&name=${encodeURIComponent(player as string||"")}`,details)
+                    //console.log("================>Player details:::",`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/get-details-favorites?api_key=${api_key}&userid=${userId}&teamid=${team}&name=${encodeURIComponent(player as string||"")}`,details)
                    }
                    else{
                     details=await getDetails(keyDetails);

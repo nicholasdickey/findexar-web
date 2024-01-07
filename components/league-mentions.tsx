@@ -406,14 +406,14 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
           }} />} label="My Team" />
 
           {noUser && <SignInButton><Button size="small" variant="outlined"><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton>}
-          {!noUser &&  <FormControlLabel control={<Checkbox disabled={noUser||(localTrackerFilter == 1)} checked={false} onChange={
+          {!league&&!noUser &&  <FormControlLabel control={<Checkbox disabled={noUser||(localTrackerFilter == 1)} checked={false} onChange={
             (event: React.ChangeEvent<HTMLInputElement>) => {
               setLocalView("fav");
               router.push(league ? `/pro/league/${league}?view=fav` : `/pro?view=fav`)
-            }} />} label="Favories" />}
+            }} />} label="Favorites" />}
         </MobileMentionsHeader>}
 
-        {(view == "fav") && <MobileMentionsHeader><FormControlLabel control={<Checkbox disabled={true} checked={localTrackerFilter == 1} onChange={
+        {(view == "fav"&&!league) && <MobileMentionsHeader><FormControlLabel control={<Checkbox disabled={true} checked={localTrackerFilter == 1} onChange={
           (event: React.ChangeEvent<HTMLInputElement>) => {
             setLocalTrackerFilter(event.target.checked);
             const params: SetTrackerFilterParams = { tracker_filter: event.target.checked ? 1 : 0 };
@@ -424,7 +424,7 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
             (event: React.ChangeEvent<HTMLInputElement>) => {
               setLocalView("mentions");
               router.push(league ? `/pro/league/${league}` : `/pro`)
-            }} />} label="Favories" />}</MobileMentionsHeader>}
+            }} />} label="Favorites" />}</MobileMentionsHeader>}
 
         <MentionsBody>
           {(view == 'mentions') && isLoading && <Stack spacing={1}>
