@@ -71,7 +71,7 @@ const MobileMentionWrap = styled.div`
     margin-top:2px;
     margin-bottom:10px;
     a{
-        font-size: 16px;
+        font-size: 18px;
         color: #222;
         text-decoration: none;
         &:hover{
