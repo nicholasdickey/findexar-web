@@ -105,6 +105,7 @@ const TeamName = styled.div`
 `;
 const MobileTeamName = styled.div`
   height: 30px;
+  margin-left:20px;
   //width: 200px; 
   color: #aea;
   //text-align: center;
@@ -143,8 +144,8 @@ const MobilePlayersPanel = styled.div`
   min-height:180vw;
   background-color:  #668;
   display:flex;
-  padding-left:20px;
-  padding-right:20px;
+  //padding-left:20px;
+  //padding-right:20px;
   padding-top:10px;
   flex-direction:column;
   justify-content:flex-start;
@@ -172,12 +173,14 @@ const SideGroup = styled.div`
 `;
 const MobileSideGroup = styled.div`
   display:flex;
-  width: 100%;
-  padding-right:20px;
+  //width: 100%;
+  //padding-right:20px;
+  //weight:240px;
+  margin-left:20px;
   height:40px;
   flex-direction:row;
   justify-content:space-around;
-  padding-right:20px;
+ // padding-right:20px;
   align-items:center;
  
 `;
@@ -371,7 +374,7 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
         <MentionsBody>
           {v == 'mentions' && Mentions}
           {v == 'my team' && <MobilePlayersPanel>
-            <MobileTeamName>My Team : </MobileTeamName>
+            <MobileTeamName>My Team: </MobileTeamName>
             {(!trackerListMembers || trackerListMembers.length == 0) && <RightExplanation>Tracker list empty {league ? `for ${league}` : ``}</RightExplanation>}
             {trackerListMembers && trackerListMembers.map(({ member, teamid, league }: { member: string, teamid: string, league: string }, i: number) => {
               //return <SidePlayer><Link onClick={() => { setLocalPageType("player"), setLocalPlayer(p.member); setV("mentions"); setGlobalLoading(true) }} href={`/pro/league/${p.league}/team/${p.teamid}/player/${encodeURIComponent(p.member)}`}>{p.member} </Link></SidePlayer>

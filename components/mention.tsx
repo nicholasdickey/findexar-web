@@ -68,6 +68,7 @@ const MobileMentionWrap = styled.div`
     //border: 1px solid #ccc;
     //margin-right:40px;
     margin-top:2px;
+    margin-bottom:10px;
     a{
         font-size: 16px;
         color: #222;
