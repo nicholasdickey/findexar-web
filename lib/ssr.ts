@@ -205,7 +205,7 @@ const ssr=async (context: GetServerSidePropsContext) => {
                 fallback,
                 view,
                 userId,
-                createdAt,
+                createdAt:createdAt||"",
                 freeUser,
                 list,
 

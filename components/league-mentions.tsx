@@ -315,7 +315,7 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
   // now swrInfinite code:
   const { data, error: mentionsError, mutate, size, setSize, isValidating, isLoading } = useSWRInfinite(fetchMentionsKey, fetchMentions, { initialSize: 1, })
   let mentions = data ? [].concat(...data) : [];
-  //console.log("LOADED MENTIONS FROM FALLBACK", { data })
+  console.log("LOADED MENTIONS FROM FALLBACK", { data })
   const isLoadingMore =
     isLoading || (size > 0 && data && typeof data[size - 1] === "undefined");
   const isEmpty = data?.[0]?.length === 0;
@@ -325,7 +325,7 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
 
   const favoritesKey: FavoritesKey = { type: "Favorites", noUser };
   const { data: favoritesMentions, mutate: mutateFavorites } = useSWR(favoritesKey, getFavorites);
-  console.log("favoritesMentions", favoritesMentions)
+  //console.log("favoritesMentions", favoritesMentions)
   if (view == "fav") {
     mentions = favoritesMentions;
   }
