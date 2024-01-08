@@ -470,7 +470,7 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
             }} />} label="Favorites" />}</MobileMentionsHeader>}
 
         <MentionsBody>
-          {Mentions}
+         
           {(view == 'mentions' || view == 'fav') && Mentions}
           {(view == 'my team') && <MobilePlayersPanel>
             <MobileTeamName>My Team: </MobileTeamName>
