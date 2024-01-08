@@ -323,7 +323,7 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
     isEmpty || (data && data[data.length - 1]?.length < 25);
   const isRefreshing = isValidating && data && data.length === size;
 
-  const favoritesKey: FavoritesKey = { type: "Favorites", noUser };
+  const favoritesKey: FavoritesKey = { type: "Favorites", noUser,noLoad:view!="fav" };
   const { data: favoritesMentions, mutate: mutateFavorites } = useSWR(favoritesKey, getFavorites);
   //console.log("favoritesMentions", favoritesMentions)
   if (view == "fav") {

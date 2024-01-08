@@ -43,7 +43,7 @@ const Readme = () => {
 <p>Unfortunately, AI technology doesn&apos;t come free or cheap. We have to charge a monthly subscription fee to provide such a service. It is $10 per month or $100 per year. Compared to the thousands paid monthly by teams, agents, and athletes for more primitive services provided by traditional manual media monitors, it is a rock-bottom price.</p>
 <p>You can explore the platform for three days for free and without any obligations or entering credit card information. But you will need to create a free account to explore all the features.</p>
 <h2>What&apos;s next?</h2>
-<p>As the product grows and AI technology matures, we will be adding full video mentions and will experiment with AI-based prediction ability, based on the data we collect. Join us on this journey!</p>
+<p>As the product grows and AI technology matures, we will be adding full video mentions and will experiment with AI-based prediction ability, based on the data we collect. Also adding more leagues, such as Premier League and MLS. Join us on this journey!</p>
 <p>Let us know what else you would like to see in our product.</p>
 <p>Copyright © 2024, Findexar, Inc.</p>
 <p>Made in Northern Minnesota, USA.</p>

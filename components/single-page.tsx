@@ -34,7 +34,7 @@ import { UserButton, SignInButton } from "@clerk/nextjs";
 import { palette } from '@/lib/palette';
 import { GlobalStyle } from '@/components/themes/globalStyle';
 
-import { LeagueTeamsKey, getLeagueTeams, UserListsKey, getUserLists } from '@/lib/api';
+import { LeagueTeamsKey, getLeagueTeams } from '@/lib/api';
 import Team from './team-page';
 
 import Mentions from './league-mentions';

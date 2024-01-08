@@ -270,10 +270,10 @@ export const setTrackerFilter = async ({ tracker_filter }: SetTrackerFilterParam
     return false;
   }
 }
-export type FavoritesKey = { type: string, noUser: boolean };
-export const getFavorites = async ({ type, noUser }: FavoritesKey) => {
+export type FavoritesKey = { type: string, noUser: boolean,noLoad:boolean };
+export const getFavorites = async ({ type, noUser,noLoad }: FavoritesKey) => {
   try {
-    if (noUser) return [];
+    if (noUser||noLoad) return [];
     console.log("getFavorites")
     const url = `${process.env.NEXT_PUBLIC_SERVER}/api/user/get-favorites`;
     const res = await axios.get(url);
