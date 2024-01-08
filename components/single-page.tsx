@@ -50,7 +50,7 @@ import { get } from "http";
 const Header = styled.header`
   height: 80px;
   width: 100%;
-  background-color: #444;
+  background-color: #333;
   color: #fff;
   text-align: center;
   font-size: 40px;
@@ -705,7 +705,7 @@ const Landing: React.FC<Props> = (props) => {
                   <ContainerCenter>
                     <HeaderCenter>
                       {localPageType=="league"&&!localLeague && !localTeam ? <Link href="/pub/league">FINDEXAR</Link> : !localTeam ? `${localLeague}` : localPlayer ? <PlayerNameGroup><PlayerName><Link href={`/pub/league/${localLeague}/team/${localTeam}`}>{teamName}</Link></PlayerName> </PlayerNameGroup> : `${teamName}`}
-                      {localPageType=="league"&&!localLeague && !localTeam && <div><Subhead>Major Leagues and Fantasy Sports Professional Athletes and Teams Media Monitor</Subhead><SubheadMobile>Major Leagues Real-Time<br />Media Index And Monitor</SubheadMobile></div>}
+                      {localPageType=="league"&&!localLeague && !localTeam && <div><Subhead>Major Leagues and Fantasy Sports Professional Athletes and Teams Media Monitor</Subhead><SubheadMobile>Professional Athletes<br />Media Index And Monitor</SubheadMobile></div>}
                       {localPageType=="list" && <Link href="/pub/league">My Team</Link>  }
                      
                       {localPageType=="list" && <div><Subhead>Tracks mentions for the selected players.</Subhead><SubheadMobile>Tracks mentions for the selected players.</SubheadMobile></div>}

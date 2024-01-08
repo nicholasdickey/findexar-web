@@ -45,9 +45,11 @@ const MentionWrap = styled.div`
     flex-direction: row;
     justify-content: flex-start;
     align-items:flex-start;
-    //border: 1px solid #ccc;
-    //margin-right:40px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-left:8px;
     margin-top:20px;
+    z-index:200;
     a{
         font-size: 16px;
         color: #000;
@@ -61,16 +63,18 @@ const MentionWrap = styled.div`
   }
 `;
 const MobileMentionWrap = styled.div`
-    width:100%;
+    //width:100%;
     min-height:100px;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     align-items:flex-start;
-    //border: 1px solid #ccc;
-    //margin-right:40px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
     margin-top:2px;
     margin-bottom:10px;
+    margin-left:4px;
+    margin-right:4px;
     a{
         font-size: 18px;
         color: #222;
@@ -86,12 +90,14 @@ const MobileMentionWrap = styled.div`
 
 
 const MentionFindex = styled.div`
-    width:8px;
-    height:100%;
+    width:6px;
+    //height:100%;
     margin-right:20px;
+    margin-top:40px;
     font-size: 18px;
     padding-top:20px;
     background-color: #fff;
+    border-radius: 30px;
 `;
 const MentionSummary = styled.div`
     width:100%;
@@ -102,7 +108,8 @@ const MentionSummary = styled.div`
     background-color: #eee;
     &:hover{
             background-color: #ddd;
-    }  
+    } 
+    border-radius: 0px 5px 5px 0px;
 `;
 
 const MentionsHeader = styled.div`
@@ -134,12 +141,13 @@ const MobileIconContainer = styled.div`
     flex-direction:row;
     justify-content:flex-end;
     align-items:flex-start;
+    margin-bottom:20px;
     width:100%;
 `;
 
 const ExtendedMention = styled.div`
     margin:20px;
-    border-radius: 20px;
+    border-radius: 10px;
     font-size: 14px;
     padding:20px;
     background-color: #eed;
@@ -190,6 +198,7 @@ const Topline = styled.div`
     display:flex;
     flex-direction:row;
     justify-content :space-between ;
+    margin-bottom:4px;
 `;
 
 const Image = styled.img`
@@ -227,20 +236,35 @@ const HorizontalContainer = styled.div`
    // justify-content: flex-start;
     align-items:flex-start;
     flex-wrap: wrap;
+   
 `;
 
 const Atmention = styled.div`
     font-size: 13px;   
 `;
+const Atmention2 = styled.div`
+    font-size: 13px;  
+    text-align:right; 
+    height:30px;
+`;
+const MobileAtmention2 = styled.div`
+    font-size: 13px;  
+    //text-align:right; 
+    //height:30px;
+    margin-bottom:-20px;
+`;
+
+
 
 const LocalDate = styled.div`
-    font-size: 13px;
+    font-size: 12px;
 `;
 interface Props {
     mentionType: string;
     league: string;
     type: string;
     team: string;
+    teamName: string;
     name: string;
     date: string;
     url: string;
@@ -253,16 +277,16 @@ interface Props {
     setLocalPlayer: (player: string) => void;
     setLocalLeague: (league: string) => void;
     setLocalTeam: (team: string) => void;
-    mutate:()=>void;
+    mutate: () => void;
+    
 }
 
-const Mention: React.FC<Props> = ({ noUser, mentionType, league, type, team, name, date, url, findex, summary, findexarxid, fav, setLocalPageType, setLocalPlayer, setLocalLeague, setLocalTeam,mutate }) => {
+const Mention: React.FC<Props> = ({ noUser, mentionType, league, type, team, teamName,name, date, url, findex, summary, findexarxid, fav, setLocalPageType, setLocalPlayer, setLocalLeague, setLocalTeam, mutate }) => {
     const [expanded, setExpanded] = React.useState(false);
     const [localDate, setLocalDate] = React.useState(convertToUTCDateString(date));
     const [localFav, setLocalFav] = React.useState(fav);
 
     useEffect(() => {
-
         setLocalFav(fav);
     }, [fav]);
 
@@ -272,15 +296,19 @@ const Mention: React.FC<Props> = ({ noUser, mentionType, league, type, team, nam
     let digest = meta ? meta.digest.replace('<p>', '').replace('</p>', '') : "";
     // console.log("expanded:", {findexarxid,expanded, meta,fav});
     useEffect(() => {
-        setLocalDate(convertToReadableLocalTime(date));
+        try {
+            setLocalDate(convertToReadableLocalTime(date));
+        }
+        catch (x) {
+            console.log("EXCEPTION CONVERTING DATE");
+        }
     }, [date])
-
+  
     return (
         <>
             <MentionWrap>
                 <MentionFindex>
-                    {false && <span> F: {findex}</span>}
-                    <br />
+                    
                     {mentionType == "top1" && <span>{league}</span>}
                     <br />
                     <Icon onClick={
@@ -293,13 +321,14 @@ const Mention: React.FC<Props> = ({ noUser, mentionType, league, type, team, nam
                 <MentionSummary>
 
                     <div>
-                        <Topline><LocalDate><i>{localDate}</i></LocalDate>{localFav != 1 ?  noUser?<SignInButton><StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); addFavorite({ findexarxid });mutate() }} style={{ color: "#888" }} /></SignInButton>:<StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); addFavorite({ findexarxid });mutate(); }} style={{ color: "#888" }} />: <StarIcon onClick={() => { if (noUser) return; setLocalFav(0); removeFavorite({ findexarxid });mutate(); }} style={{ color: "FFA000" }} />}</Topline>
-                        <br />
+                        <Topline><LocalDate><i>{localDate}</i></LocalDate>{!localFav ? noUser ? <SignInButton><StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); addFavorite({ findexarxid }); mutate() }} style={{ color: "#888" }} /></SignInButton> : <StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); addFavorite({ findexarxid }); mutate(); }} style={{ color: "#888" }} /> : <StarIcon onClick={() => { if (noUser) return; setLocalFav(0); removeFavorite({ findexarxid }); mutate(); }} style={{ color: "FFA000" }} />}</Topline>
+                       
                         <Link href={localUrl} onClick={() => { setLocalLeague(league); setLocalTeam(team); setLocalPlayer(type == 'person' ? name : ''); if (type == 'person') setLocalPageType('player'); else setLocalPageType('team'); }}>
                             {summary}
                         </Link>
                         <hr />
-                        <Atmention>@mention: {name} | Team: {team} | {league}</Atmention>
+                        <Atmention><b>{(type=="person")&&'@'}{name}</b> | {type=="person"?`${teamName} |`:""} {league} </Atmention>
+                        <Atmention2>{meta?.site_name}</Atmention2>
                     </div>
                     {expanded && meta && <Link href={url}><ExtendedMention>
                         <Title>{meta.title}</Title>
@@ -326,14 +355,14 @@ const Mention: React.FC<Props> = ({ noUser, mentionType, league, type, team, nam
                 <MentionSummary>
 
                     <div>
-                        <Topline><LocalDate><i>{localDate}</i></LocalDate>{localFav != 1 ?  noUser?<SignInButton><StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); addFavorite({ findexarxid });mutate(); }} style={{ color: "#888" }} /></SignInButton>:<StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); addFavorite({ findexarxid });mutate(); }} style={{ color: "#888" }} /> : <StarIcon onClick={() => { if (noUser) return; setLocalFav(0); removeFavorite({ findexarxid });mutate(); }} style={{ color: "FFA000" }} />}</Topline>
+                        <Topline><LocalDate><b><i>{localDate}</i></b></LocalDate>{!localFav  ? noUser ? <SignInButton><StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); addFavorite({ findexarxid }); mutate(); }} style={{ color: "#888" }} /></SignInButton> : <StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); addFavorite({ findexarxid }); mutate(); }} style={{ color: "#888" }} /> : <StarIcon onClick={() => { if (noUser) return; setLocalFav(0); removeFavorite({ findexarxid }); mutate(); }} style={{ color: "FFA000" }} />}</Topline>
 
-                        <br />
                         <Link href={localUrl} onClick={() => { setLocalLeague(league); setLocalTeam(team); setLocalPlayer(type == 'person' ? name : ''); if (type == 'person') setLocalPageType('player'); else setLocalPageType('team'); }}>
                             {summary}
                         </Link>
                         <hr />
-                        <Atmention>@mention: {name} | Team: {team} | {league}</Atmention>
+                        <Atmention><b>{(type=="person")&&'@'}{name}</b> | {type=="person"?`${teamName} |`:""}  {league}</Atmention>  
+                        <MobileAtmention2>{meta?.site_name}</MobileAtmention2>
 
                     </div>
 

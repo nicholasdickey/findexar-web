@@ -169,6 +169,7 @@ interface Props {
   setLocalPlayer: (player: string) => void;
   setLocalLeague: (league: string) => void;
   setLocalTeam: (team: string) => void;
+
 }
 
 const Team: React.FC<Props> = (props) => {

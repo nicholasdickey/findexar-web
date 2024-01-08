@@ -72,23 +72,27 @@ interface Props {
     setLocalPlayer: (player: string) => void;
     setLocalLeague: (league: string) => void;
     setLocalTeam: (team: string) => void;
+   
 }
 
 const TeamPlayerMentions: React.FC<Props> = (props) => {
     const { league, team, teamName, noUser, player, ...rest } = props;
-    const [localTeam, setLocalTeam] = React.useState(team);
-    const [localPlayer, setLocalPlayer] = React.useState(player);
+   // const [localTeam, setLocalTeam] = React.useState(team);
+   // const [localPlayer, setLocalPlayer] = React.useState(player);
 
     console.log("teamPlayerMentions", team, teamName, noUser)
     const fetchMentionsKey = (pageIndex: number, previousPageData: any): FetchedMentionsKey | null => {
-        console.log("getMentionsKey", pageIndex, previousPageData)
-        let key: FetchedMentionsKey = { type: "FetchedMentions", teamid: localTeam || "", name: localPlayer ? localPlayer : teamName || "", noUser, page: pageIndex, league, favorites: 0 };
+        console.log("getMentionsKey=", pageIndex, previousPageData)
+        let key: FetchedMentionsKey = { type: "FetchedMentions", teamid: team || "", name: player || "", noUser, page: pageIndex, league, myteam: 0 };
+        console.log("getMentionsKey=>>>",key)
+        
         if (previousPageData && !previousPageData.length) return null // reached the end
         return key;
     }
     // now swrInfinite code:
-    const { data, error: mentionsError, mutate, size, setSize, isValidating, isLoading } = useSWRInfinite(fetchMentionsKey, fetchMentions, { initialSize: 1 })
+    const { data, error: mentionsError, mutate, size, setSize, isValidating, isLoading } = useSWRInfinite(fetchMentionsKey, fetchMentions, { initialSize: 1, })
     const mentions = data ? [].concat(...data) : [];
+  //  console.log("LOADED MENTIONS FROM FALLBACK",{data,fm,mentions})
     const isLoadingMore =
         isLoading || (size > 0 && data && typeof data[size - 1] === "undefined");
     const isEmpty = data?.[0]?.length === 0;
@@ -96,20 +100,24 @@ const TeamPlayerMentions: React.FC<Props> = (props) => {
         isEmpty || (data && data[data.length - 1]?.length < 25);
     const isRefreshing = isValidating && data && data.length === size;
 
-    useEffect(() => {
+   /* useEffect(() => {
         if (team != localTeam) {
             setLocalTeam(team);
-            setSize(0);
+           // setSize(0);
         }
+        
+    },[team]);
+    useEffect(() => {
         if (player != localPlayer) {
             setLocalPlayer(player);
-            setSize(0);
+           // setSize(0);
         }
-    },[team,player]);
+    },[player]);*/
 
     const Mentions = mentions?.map((m: any, i: number) => {
-        const { league, type, team, name, date, url, findex, summary, findexarxid, fav } = m;
-        return (<Mention noUser={noUser} mentionType="final" league={league} type={type} team={team} name={name} date={date} url={url} findex={findex} summary={summary} findexarxid={findexarxid} fav={fav} key={`team-mention${i}`} mutate={() => mutate()} {...rest} />)
+        const { league, type, team, teamName, name, date, url, findex, summary, findexarxid, fav } = m;
+       // console.log("rendering mention", m,i)
+        return (<Mention noUser={noUser} mentionType="final" league={league} type={type} team={team} teamName={teamName} name={name} date={date} url={url} findex={findex} summary={summary} findexarxid={findexarxid} fav={fav} key={`team-mention${i}`} mutate={() => mutate()} {...rest} />)
     })
 
     return (
@@ -120,12 +128,7 @@ const TeamPlayerMentions: React.FC<Props> = (props) => {
                 </TeamHeader>}
                 <MainPanel>
                     <TeamDetailsBody>
-                        {isLoading ? <Stack spacing={1}>
-                            <Skeleton variant="rounded" animation="pulse" height={160} />
-                            <Skeleton variant="rounded" animation="pulse" height={80} />
-                            <Skeleton variant="rounded" animation="pulse" height={120} />
-                            <Skeleton variant="rounded" animation="pulse" height={160} />
-                        </Stack> : Mentions}
+                        {Mentions}
                     </TeamDetailsBody>
                     <div style={{ fontFamily: "sans-serif" }}>
                         <LoadMore

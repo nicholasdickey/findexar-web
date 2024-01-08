@@ -78,8 +78,8 @@ const TeamDetails: React.FC<Props> = (props) => {
   const { mentions } = details ? details : [];
 
   const Details = mentions?.map((m: any, i: number) => {
-    const { league, type, team, name, date, url, findex, summary, findexarxid, fav } = m;
-    return (<Mention noUser={noUser} mentionType="final" league={league} type={type} team={team} name={name} date={date} url={url} findex={findex} summary={summary} findexarxid={findexarxid} fav={fav} key={`team-mention${i}`} mutate={()=>mutate()} {...rest} />)
+    const { league, type, team, teamName,name, date, url, findex, summary, findexarxid, fav } = m;
+    return (<Mention noUser={noUser} mentionType="final" league={league} type={type} team={team} teamName={teamName} name={name} date={date} url={url} findex={findex} summary={summary} findexarxid={findexarxid} fav={fav} key={`team-mention${i}`} mutate={()=>mutate()} {...rest} />)
   })
 
   return (

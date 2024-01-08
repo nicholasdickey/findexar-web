@@ -348,16 +348,16 @@ export const getPagedFilteredMentions = async ({ type, league, noUser,page }: Pa
 // SWR infinite:
 // SWR get all mentions
 // favorites: 0=unfiltered, 1=only favorites (my team)
-export type FetchedMentionsKey = { type: string, league?: string, noUser: boolean,page:number,teamid:string,name:string,favorites:number };
-export const fetchMentions = async ({ type, league, noUser,page,teamid,name,favorites }: FetchedMentionsKey) => {
+export type FetchedMentionsKey = { type: string, league?: string, noUser: boolean,page:number,teamid:string,name:string,myteam:number };
+export const fetchMentions = async ({ type, league, noUser,page,teamid,name,myteam }: FetchedMentionsKey) => {
   try {
-    console.log("api: fetchMentions",type, league, noUser,page,teamid,name,favorites)
+    console.log("api: fetchMentions",type, league, noUser,page,teamid,name,myteam)
     let url = '';
     if (!noUser) {
-      url =  `${process.env.NEXT_PUBLIC_SERVER}/api/user/fetch-mentions?league=${encodeURIComponent(league||"")}&page=${page||0}&teamid=${encodeURIComponent(teamid||"")}&name=${encodeURIComponent(name||"")}&favorites=${encodeURIComponent(favorites||"")}`;
+      url =  `${process.env.NEXT_PUBLIC_SERVER}/api/user/fetch-mentions?league=${encodeURIComponent(league||"")}&page=${page||0}&teamid=${encodeURIComponent(teamid||"")}&name=${encodeURIComponent(name||"")}&myteam=${encodeURIComponent(myteam||"")}`;
     }
     else {
-      url =  `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?league=${encodeURIComponent(league ||"")}&page=${page||0}&teamid=${encodeURIComponent(teamid||"")}&name=${encodeURIComponent(name||"")}&favorites=${encodeURIComponent(favorites||"")}`;
+      url =  `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?league=${encodeURIComponent(league ||"")}&page=${page||0}&teamid=${encodeURIComponent(teamid||"")}&name=${encodeURIComponent(name||"")}&myteam=${encodeURIComponent(myteam||"")}`;
     }
     console.log("fetchMentions-url",url)
     const res = await axios.get(url);
