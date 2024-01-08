@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-
+import useSWRInfinite from 'swr/infinite'
 import useSWR from 'swr';
 import Link from 'next/link';
 import { useRouter } from 'next/router'
@@ -290,6 +290,16 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
   const mentionsKey: MentionsKey = { type: localTrackerFilter == 1 ? "filtered-mentions" : "mentions", league, noUser };
   console.log("MentionsKey", mentionsKey)
   let { data: mentions, error, isLoading, mutate: mutateMentions } = useSWR(mentionsKey, localTrackerFilter == 1 ? getFilteredMentions : getMentions);
+
+  //in parallel, implement infinite scrolling
+
+  const getMentionsKey=(pageIndex: number, previousPageData: any)=> {
+    console.log("getMentionsKey",pageIndex,previousPageData)
+    if (previousPageData && !previousPageData.length) return null // reached the end
+    return mentionsKey;
+  }
+
+
   const favoritesKey: FavoritesKey = { type: "Favorites", noUser };
   const { data: favoritesMentions, mutate: mutateFavorites } = useSWR(favoritesKey, getFavorites);
   console.log("favoritesMentions", favoritesMentions)

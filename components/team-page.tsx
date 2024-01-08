@@ -13,11 +13,12 @@ import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import IconButton from '@mui/material/IconButton';
 import { AddTrackerListMemberParams, addTrackerListMember,RemoveTrackerListMemberParams,removeTrackerListMember,getTeamPlayers,TeamPlayersKey } from '@/lib/api';
-import TeamDetails from "./team-details";
-import PlayerDetails from "./player-details";
+//import TeamDetails from "./team-details";
+//import PlayerDetails from "./player-details";
 import SecondaryTabs from "./secondary-tabs";
 import SubscriptionMenu from "./subscription-menu";
 import { Add } from "@mui/icons-material";
+import TeamPlayerMentions from "./team-player-mentions";
 
 
 const SidePlayer = styled.div`
@@ -87,9 +88,15 @@ const SelectedSidePlayer = styled.div`
 `;
 
 const RightPanel = styled.div`
-  height:100%;
-  min-height: 1000vh;
+ // height:100%;
+  //min-height: 1000vh;
   min-width:300px;
+
+  
+  height:auto !important;
+  height:100%;
+  min-height: 200vw;
+
   background-color:  #668;
   display:flex;
   flex-direction:column;
@@ -174,7 +181,7 @@ const Team: React.FC<Props> = (props) => {
 
   const teamPlayersKey: TeamPlayersKey = { type:'teamPlayers',league: league || "", teamid: team || "" };
   const { data: players, error, isLoading,mutate:mutatePlayers } = useSWR(teamPlayersKey, getTeamPlayers);
-  console.log("players", players);
+  //console.log("players", players);
   useEffect(() => {
     if (!v || v == "home")
       setV("mentions");
@@ -258,7 +265,8 @@ const Team: React.FC<Props> = (props) => {
     <div className="team">
       <MainPanel>
         <CenterPanel>
-          {pagetype == "team" ? <TeamDetails {...props} /> : <PlayerDetails {...props} />}
+          {pagetype == "team" ? <TeamPlayerMentions {...props} /> : <TeamPlayerMentions {...props} />}
+        
         </CenterPanel>
         <RightPanel>
           <TeamName>{teamName}</TeamName>
@@ -272,18 +280,8 @@ const Team: React.FC<Props> = (props) => {
         {subscriptionPrompt && <SubscriptionMenu hardStop={false} {...subscriptionObject} setDismiss={setDismiss} />}
 
         {v == 'teams' && teams}
-        {v == 'mentions' && (isLoading || globalLoading) && <Stack spacing={1}>
-          {/* For variant="text", adjust the height via font-size */}
-
-
-          <Skeleton variant="rounded" animation="pulse" height={160} />
-          <Skeleton variant="rounded" animation="pulse" height={80} />
-          <Skeleton variant="rounded" animation="pulse" height={120} />
-          <Skeleton variant="rounded" animation="pulse" height={160} />
-        </Stack>}
-
-        {!isLoading && !globalLoading && v == 'mentions' && pagetype == "team" && <TeamDetails {...props} />}
-        {!isLoading && !globalLoading && v == 'mentions' && pagetype == "player" && <PlayerDetails {...props} />}
+        
+        {v == 'mentions' && <TeamPlayerMentions {...props} />}
         {v == 'players' &&
           <MobilePlayersPanel>
             <MobileTeamName>{teamName}</MobileTeamName>

@@ -308,3 +308,63 @@ export const removeFavorite = async ({ findexarxid }: FavoriteParams) => {
 }
 
 
+//swr infinite:
+// SWR get all mentions
+export type PagedMentionsKey = { type: string, league?: string, noUser: boolean,page:number };
+export const getPagedMentions = async ({ type, league, noUser,page }: PagedMentionsKey) => {
+  try {
+    let url = '';
+    if (!noUser) {
+      url = league ? `${process.env.NEXT_PUBLIC_SERVER}/api/user/get-mentions-favorites?league=${encodeURIComponent(league)}&page=${page}` : `${process.env.NEXT_PUBLIC_SERVER}/api/user/get-mentions-favorites?page=${page}`;
+    }
+    else {
+      url = league ? `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-mentions?league=${encodeURIComponent(league)}&page=${page}` : `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-mentions?page=${page}`;
+    }
+    const res = await axios.get(url);
+    return res.data.mentions;
+  }
+  catch (e) {
+    console.log("getPageMentions", e);
+    return false;
+  }
+}
+
+// SWR get filtered mentions
+export const getPagedFilteredMentions = async ({ type, league, noUser,page }: PagedMentionsKey) => {
+  try {
+    if (noUser) {
+      return;
+    }
+    const url = league ? `${process.env.NEXT_PUBLIC_SERVER}/api/user/get-filtered-mentions?league=${encodeURIComponent(league)}&page=${page}` : `${process.env.NEXT_PUBLIC_SERVER}/api/user/get-filtered-mentions?page=${page}`;
+    const res = await axios.get(url);
+    return res.data.mentions;
+  }
+  catch (e) {
+    console.log("getPagedFilteredMentions", e);
+    return false;
+  }
+}
+
+// SWR infinite:
+// SWR get all mentions
+// favorites: 0=unfiltered, 1=only favorites (my team)
+export type FetchedMentionsKey = { type: string, league?: string, noUser: boolean,page:number,teamid:string,name:string,favorites:number };
+export const fetchMentions = async ({ type, league, noUser,page,teamid,name,favorites }: FetchedMentionsKey) => {
+  try {
+    console.log("api: fetchMentions",type, league, noUser,page,teamid,name,favorites)
+    let url = '';
+    if (!noUser) {
+      url =  `${process.env.NEXT_PUBLIC_SERVER}/api/user/fetch-mentions?league=${encodeURIComponent(league||"")}&page=${page||0}&teamid=${encodeURIComponent(teamid||"")}&name=${encodeURIComponent(name||"")}&favorites=${encodeURIComponent(favorites||"")}`;
+    }
+    else {
+      url =  `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?league=${encodeURIComponent(league ||"")}&page=${page||0}&teamid=${encodeURIComponent(teamid||"")}&name=${encodeURIComponent(name||"")}&favorites=${encodeURIComponent(favorites||"")}`;
+    }
+    console.log("fetchMentions-url",url)
+    const res = await axios.get(url);
+    return res.data.mentions;
+  }
+  catch (e) {
+    console.log("getPageMentions", e);
+    return false;
+  }
+}
