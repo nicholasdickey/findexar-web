@@ -549,7 +549,7 @@ const Landing: React.FC<Props> = (props) => {
 
   view = view?view.toLowerCase():"";
   const subscriptionObject = useSubscription();
-  console.log("==============>", subscriptionObject)
+  //console.log("==============>", subscriptionObject)
   // if (subscriptionObject) {
   const {
     isLoaded,
@@ -669,6 +669,7 @@ const Landing: React.FC<Props> = (props) => {
         <link rel="apple-touch-icon" href="/apple-icon.png"></link>
         <meta name="theme-color" content={dark ? palette.dark.colors.background : palette.light.colors.background} />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        {(pagetype!='league'||league||team||player)&&<meta name="robots" content="noindex,nofollow" />}
         <link
           rel="shortcut icon"
           type="image/png"
