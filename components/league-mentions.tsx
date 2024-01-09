@@ -271,6 +271,15 @@ const LoadMore = styled.div`
     font-size:18px;
     padding-bottom:140px;
 `;
+const MobileLoadMore = styled.div`
+    width:100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items:center;
+    font-size:18px;
+    padding-bottom:20px;
+`;
 interface Props {
   league: string;
   noUser: boolean;
@@ -470,7 +479,23 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
 
         <MentionsBody>
          
-          {(view == 'mentions' || view == 'fav') && Mentions}
+          {(view == 'mentions' || view == 'fav') && 
+          <>
+            {Mentions}
+            <MobileLoadMore >
+            <LoadMore
+            // disabled={isLoadingMore || isReachingEnd}
+
+            ><Button style={{ padding: 4, marginTop: 20 }} onClick={() => setSize(size + 1)} variant="outlined">
+                {isLoadingMore
+                  ? "loading..."
+                  : isReachingEnd
+                    ? "no more mentions"
+                    : "load more"}
+              </Button>
+            </LoadMore>
+          </MobileLoadMore>
+          </>}
           {(view == 'my team') && <MobilePlayersPanel>
             <MobileTeamName>My Team: </MobileTeamName>
             {(!trackerListMembers || trackerListMembers.length == 0) && <RightExplanation>Tracker list empty {league ? `for ${league}` : ``}</RightExplanation>}
