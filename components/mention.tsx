@@ -201,6 +201,7 @@ const Topline = styled.div`
     display:flex;
     flex-direction:row;
     justify-content :space-between ;
+    align-items:center;
     margin-bottom:4px;
 `;
 
@@ -253,7 +254,7 @@ const Atmention2 = styled.div`
 const MobileAtmention2 = styled.div`
     font-size: 13px;  
     //text-align:right; 
-    //height:30px;
+    height:30px;
     margin-bottom:-20px;
 `;
 
