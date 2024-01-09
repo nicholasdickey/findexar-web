@@ -37,11 +37,13 @@ const MentionsBody = styled.div`
     align-items:flex-start;
     padding-right:120px;
 `;
-
-const MentionWrap = styled.div`
+interface MentionsProps {
+    hide: boolean;
+}
+const MentionWrap = styled.div<MentionsProps>`
     width:100%;
     min-height:100px;
-    display: flex;
+    //display: flex;
     flex-direction: row;
     justify-content: flex-start;
     align-items:flex-start;
@@ -58,14 +60,15 @@ const MentionWrap = styled.div`
           color: #111;
         }   
     }
+    display:${props => props.hide ? 'none' : 'flex'};
     @media screen and (max-width: 1199px) {
     display: none;
   }
 `;
-const MobileMentionWrap = styled.div`
+const MobileMentionWrap = styled.div<MentionsProps>`
     flex-grow:1;
     min-height:100px;
-    display: flex;
+    display:${props => props.hide ? 'none' : 'flex'};
     flex-direction: row;
     justify-content: flex-start;
     align-items:flex-start;
@@ -84,7 +87,7 @@ const MobileMentionWrap = styled.div`
         }   
     }
     @media screen and (min-width: 1200px) {
-    display: none;
+        display: none;
   }
 `;
 
@@ -285,13 +288,18 @@ const Mention: React.FC<Props> = ({ noUser, mentionType, league, type, team, tea
     const [expanded, setExpanded] = React.useState(false);
     const [localDate, setLocalDate] = React.useState(convertToUTCDateString(date));
     const [localFav, setLocalFav] = React.useState(fav);
-
+    const [hide, setHide] = React.useState(false);
     useEffect(() => {
         setLocalFav(fav);
     }, [fav]);
     useEffect(() => {
-        if(!summary||summary.length<6||!date||!url)
+        if(!summary||summary.length<6||!date||!url){
+            setHide(true);
             mutate();
+        }
+        if(summary&&summary.length>6&&date&&url){
+            setHide(false);
+        }
     }, [summary,mutate,date,url]);
 
     let localUrl = /*mentionType == "top" ?*/ (type == 'person' ? `/pro/league/${league}/team/${team}/player/${name}` : `/pub/league/${league}/team/${team}`) /*: url*/;
