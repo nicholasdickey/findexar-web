@@ -16,12 +16,13 @@ import {
 } from '@/lib/api'
 const api_key = process.env.LAKE_API_KEY
 
-const ssr=async (context: GetServerSidePropsContext) => {
+const ssr = async (context: GetServerSidePropsContext) => {
     try {
         let { fbclid, utm_content, dark, view = "Home" }:
             { fbclid: string, utm_content: string, dark: number, view: string } = context.query as any;
         const { userId }: { userId: string | null } = getAuth(context.req);
         const user = userId ? await clerkClient.users.getUser(userId) : null;
+        view = view.toLowerCase();
         //console.log("USER:",user);
         const createdAt = user?.createdAt;
         let freeUser = false;
@@ -94,10 +95,15 @@ const ssr=async (context: GetServerSidePropsContext) => {
                 console.log('ssr-bot-landing-init-error', x);
             }
         }
-        let trackerListMembersKey: TrackerListMembersKey = { type: "tracker_list_members", league, noUser: userId ? false : true };
+        let trackerListMembersKey: TrackerListMembersKey = { type: "tracker_list_members", league, noUser: userId ? false : true, noLoad: view != 'my team' };
         let trackerListMembers = [];
-        if (userId) {
+        console.log("view==>", view, view == 'my team');
+        if (userId && view == 'my team') {
+            // create milliseconds timestamp
+            console.log("TRACKER LIST MEMBERS START")
+            const timestamp = new Date().getTime();
             const { data } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/tracker-list/get?api_key=${api_key}&userid=${userId}&league=${league}`);
+            console.log("TRACKER LIST MEMBERS TIME:", new Date().getTime() - timestamp, "ms");
             trackerListMembers = data.members;
         }
 
@@ -113,8 +119,8 @@ const ssr=async (context: GetServerSidePropsContext) => {
         if (options && options.tracker_filter == 1) {
             keyMentions = { type: "filtered-mentions", league, noUser: userId ? false : true };
         }
-       // let mentions = [];
-        let fetchMentions=[];
+        // let mentions = [];
+        let fetchMentions = [];
         if (team) {
 
             const { data: dataMentions } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?api_key=${api_key}&userid=${userId}&teamid=${team}&name=${encodeURIComponent(player as string || "")}&page=0&league=${league}&favorites=0`);
@@ -128,38 +134,42 @@ const ssr=async (context: GetServerSidePropsContext) => {
         }
         else {
             if (options && options.tracker_filter == 1) {
-               // keyMentions = { type: "filtered-mentions", league, noUser: userId ? false : true };
-               // const url = league ? `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/get-filtered-mentions-favorites?league=${encodeURIComponent(league as string)}&userid=${encodeURIComponent(userId as string)}&api_key=${api_key}` : `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/get-filtered-mentions-favorites?userid=${encodeURIComponent(userId as string)}&api_key=${api_key}`;
-               const { data: dataMentions } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?api_key=${api_key}&userid=${userId}&teamid=${team}&name=${encodeURIComponent(player as string || "")}&page=0&league=${league}&myteam=1`);
-               fetchMentions = dataMentions.mentions;
-
-               //const { data } = await axios.get(url);
-               // mentions = data.mentions;
+                // keyMentions = { type: "filtered-mentions", league, noUser: userId ? false : true };
+                // const url = league ? `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/get-filtered-mentions-favorites?league=${encodeURIComponent(league as string)}&userid=${encodeURIComponent(userId as string)}&api_key=${api_key}` : `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/get-filtered-mentions-favorites?userid=${encodeURIComponent(userId as string)}&api_key=${api_key}`;
+                if (view == 'mentions') {
+                    const { data: dataMentions } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?api_key=${api_key}&userid=${userId}&teamid=${team}&name=${encodeURIComponent(player as string || "")}&page=0&league=${league}&myteam=1`);
+                    fetchMentions = dataMentions.mentions;
+                }
+                //const { data } = await axios.get(url);
+                // mentions = data.mentions;
             }
             else {
                 if (userId) {
-                  /*  const url = league ? `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/get-mentions-favorites?league=${encodeURIComponent(league as string)}&userid=${encodeURIComponent(userId)}&api_key=${api_key}` : `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/get-mentions-favorites?userid=${encodeURIComponent(userId)}&api_key=${api_key}`;
-                    const { data } = await axios.get(url);
-                    mentions = data.mentions;
-                    */
-                    const { data: dataMentions } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?api_key=${api_key}&userid=${userId}&teamid=${team}&name=${encodeURIComponent(player as string || "")}&page=0&league=${league}&myteam=0`);
-                    fetchMentions = dataMentions.mentions;
-    
+                    /*  const url = league ? `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/get-mentions-favorites?league=${encodeURIComponent(league as string)}&userid=${encodeURIComponent(userId)}&api_key=${api_key}` : `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/get-mentions-favorites?userid=${encodeURIComponent(userId)}&api_key=${api_key}`;
+                      const { data } = await axios.get(url);
+                      mentions = data.mentions;
+                      */
+                    if (view == 'mentions') {
+                        const { data: dataMentions } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?api_key=${api_key}&userid=${userId}&teamid=${team}&name=${encodeURIComponent(player as string || "")}&page=0&league=${league}&myteam=0`);
+                        fetchMentions = dataMentions.mentions;
+                    }
                 }
-                else{
-                    const { data: dataMentions } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?api_key=${api_key}&userid=${userId}&teamid=${team}&name=${encodeURIComponent(player as string || "")}&page=0&league=${league}&myteam=0`);
-                    fetchMentions = dataMentions.mentions;
+                else {
+                    if (view == 'mentions') {
+                        const { data: dataMentions } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?api_key=${api_key}&userid=${userId}&teamid=${team}&name=${encodeURIComponent(player as string || "")}&page=0&league=${league}&myteam=0`);
+                        fetchMentions = dataMentions.mentions;
+                    }
                 }
-                   // mentions = await getMentions(keyMentions);
+                // mentions = await getMentions(keyMentions);
             }
 
         }
-        let favoritesKey: FavoritesKey = { type: "Favorites", noUser: userId ? false : true,noLoad:view!='fav' };
-        let favorites:any[] = [];
+        let favoritesKey: FavoritesKey = { type: "Favorites", noUser: userId ? false : true, noLoad: view != 'fav' };
+        let favorites: any[] = [];
         if (view == 'fav' && userId) {
             const { data } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/favorites/get?api_key=${api_key}&userid=${userId}`);
             favorites = data.favorites;
-            console.log("FAVORITES:========================>", `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/favorites/get?api_key=${api_key}&userid=${userId}`,favorites);
+            console.log("FAVORITES:========================>", `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/favorites/get?api_key=${api_key}&userid=${userId}`, favorites);
         }
         /* let userLists:{member:string,teamid:string,xid:string}[]=[];
           const keyLists:UserListsKey={type:"userLists"};
@@ -177,18 +187,18 @@ const ssr=async (context: GetServerSidePropsContext) => {
         //if(details&&keyDetails) 
         fallback[unstable_serialize(keyDetails)] = details;
         // if(mentions&&mentions.length>0)
-     //   fallback[unstable_serialize(keyMentions)] = mentions;
+        //   fallback[unstable_serialize(keyMentions)] = mentions;
         fallback[unstable_serialize(favoritesKey)] = favorites;
         //fallback[unstable_serialize(keyLists)]= userLists;    
         fallback[unstable_serialize({ type: "options", noUser: userId ? false : true })] = options;
         fallback[unstable_serialize(trackerListMembersKey)] = trackerListMembers;
-        fallback[us(page=>  {
-            const keyFetchedMentions:FetchedMentionsKey= { type: "FetchedMentions", teamid: team || "", name: player || "", noUser: userId ? false : true, page: page, league: league || "", myteam: options && options.tracker_filter == 1?1:0 }
+        fallback[us(page => {
+            const keyFetchedMentions: FetchedMentionsKey = { type: "FetchedMentions", teamid: team || "", name: player || "", noUser: userId ? false : true, page: page, league: league || "", myteam: options && options.tracker_filter == 1 ? 1 : 0,noLoad: view != 'mentions'&&view!='fav' }
             console.log("FETCHED MENTIONS KEY:", keyFetchedMentions);
             return keyFetchedMentions;
         }
-        )] =fetchMentions;
-      //  console.log("fetchedMentions:", fetchMentions)
+        )] = fetchMentions;
+        //  console.log("fetchedMentions:", fetchMentions)
         return {
             props: {
                 sessionid,
@@ -205,7 +215,7 @@ const ssr=async (context: GetServerSidePropsContext) => {
                 fallback,
                 view,
                 userId,
-                createdAt:createdAt||"",
+                createdAt: createdAt || "",
                 freeUser,
                 list,
 

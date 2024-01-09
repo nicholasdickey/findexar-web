@@ -306,7 +306,7 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
   //in parallel, implement infinite scrolling
   const fetchMentionsKey = (pageIndex: number, previousPageData: any): FetchedMentionsKey | null => {
     console.log("getMentionsKey=", pageIndex, previousPageData)
-    let key: FetchedMentionsKey = { type: "FetchedMentions", teamid: "", name: "", noUser, page: pageIndex, league, myteam: localTrackerFilter ? 1 : 0 };
+    let key: FetchedMentionsKey = { type: "FetchedMentions", teamid: "", name: "", noUser, page: pageIndex, league, myteam: localTrackerFilter ? 1 : 0,noLoad:view!="fav"&&view!="mentions" };
     console.log("getMentionsKey=>>>", key)
 
     if (previousPageData && !previousPageData.length) return null // reached the end
@@ -329,7 +329,7 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
   if (view == "fav") {
     mentions = favoritesMentions;
   }
-  const trackerListMembersKey: TrackerListMembersKey = { type: "tracker_list_members", league, noUser };
+  const trackerListMembersKey: TrackerListMembersKey = { type: "tracker_list_members", league, noUser,noLoad:view!="my team" };
   const { data: trackerListMembers, error: trackerListError, isLoading: trackerListLoading, mutate: trackerListMutate } = useSWR(trackerListMembersKey, getTrackerListMembers);
   console.log("trackerListMembers", trackerListMembers)
   const Mentions = mentions && mentions.map((m: any, i: number) => {

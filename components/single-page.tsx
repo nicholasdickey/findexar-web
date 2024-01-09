@@ -664,6 +664,7 @@ const Landing: React.FC<Props> = (props) => {
         <meta property="og:image" content="https://findexar.com/image" />
         <meta property="findexar:verify" content="findexar" />
         <meta httpEquiv='X-UA-Compatible' content='IE=edge' />
+       
         <meta name='viewport' content='width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no' />
         <link rel="apple-touch-icon" href="/apple-icon.png"></link>
         <meta name="theme-color" content={dark ? palette.dark.colors.background : palette.light.colors.background} />
@@ -805,7 +806,7 @@ const Landing: React.FC<Props> = (props) => {
               </MuiTabs>
               {localPageType == 'league' && !localLeague &&
                 <div>
-                  <SecondaryTabs options={[{ name: "Mentions", icon: <MentionIcon />, access: "pub" }, { name: "My Team", icon: <ListIcon />, access: "pro" }, { name: "Readme", icon: <ContactSupportIcon />, access: "pub" }]} onChange={(option: any) => { console.log(option); setLocalView(option.name); router.replace(localLeague ? `/${option.access || "pub"}/league/${localLeague}?view=${encodeURIComponent(option.name)}` : `/${option.access}/league?view=${encodeURIComponent(option.name)}`) }} selectedOptionName={localView} />
+                  <SecondaryTabs options={[{ name: "Mentions", icon: <MentionIcon />, access: "pub" }, { name: "My Team", icon: <ListIcon />, access: "pro" }, { name: "Readme", icon: <ContactSupportIcon />, access: "pub" }]} onChange={(option: any) => { console.log(option); setLocalView(option.name); router.replace(localLeague ? `/${option.access || "pub"}/league/${localLeague}?view=${encodeURIComponent(option.name)}` : `/${option.access}?view=${encodeURIComponent(option.name)}`) }} selectedOptionName={localView} />
                   {localView != "readme" && (localView == 'mentions' || localView == 'my team' || localView == 'fav') && <CenterPanel>
                     {subscriptionPrompt && !dismiss && <SubscriptionMenu hardStop={hardStop} setDismiss={setDismiss} {...subscriptionObject} />}
 

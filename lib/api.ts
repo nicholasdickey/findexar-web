@@ -195,10 +195,10 @@ export const updateUserListMembers = async ({ listxid, members }: UserUpdateList
   }
 }
 
-export type TrackerListMembersKey = { type: string, league: string, noUser: boolean };
-export const getTrackerListMembers = async ({ type, league, noUser }: TrackerListMembersKey) => {
+export type TrackerListMembersKey = { type: string, league: string, noUser: boolean,noLoad:boolean };
+export const getTrackerListMembers = async ({ type, league, noUser,noLoad }: TrackerListMembersKey) => {
   try {
-    if (noUser) return [];
+    if (noUser||noLoad) return [];
     console.log("getTrackerListMembers", league)
     const url = `${process.env.NEXT_PUBLIC_SERVER}/api/user/get-tracker-list-members?league=${league || ""}`;
     const res = await axios.get(url);
@@ -348,9 +348,10 @@ export const getPagedFilteredMentions = async ({ type, league, noUser,page }: Pa
 // SWR infinite:
 // SWR get all mentions
 // favorites: 0=unfiltered, 1=only favorites (my team)
-export type FetchedMentionsKey = { type: string, league?: string, noUser: boolean,page:number,teamid:string,name:string,myteam:number };
-export const fetchMentions = async ({ type, league, noUser,page,teamid,name,myteam }: FetchedMentionsKey) => {
+export type FetchedMentionsKey = { type: string, league?: string, noUser: boolean,page:number,teamid:string,name:string,myteam:number,noLoad:boolean };
+export const fetchMentions = async ({ type, league, noUser,page,teamid,name,myteam,noLoad }: FetchedMentionsKey) => {
   try {
+    if(noLoad) return [];
     console.log("api: fetchMentions",type, league, noUser,page,teamid,name,myteam)
     let url = '';
     if (!noUser) {
