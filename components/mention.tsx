@@ -63,7 +63,7 @@ const MentionWrap = styled.div`
   }
 `;
 const MobileMentionWrap = styled.div`
-    //width:100%;
+    flex-grow:1;
     min-height:100px;
     display: flex;
     flex-direction: row;
@@ -289,6 +289,10 @@ const Mention: React.FC<Props> = ({ noUser, mentionType, league, type, team, tea
     useEffect(() => {
         setLocalFav(fav);
     }, [fav]);
+    useEffect(() => {
+        if(!summary)
+        mutate();
+    }, [summary]);
 
     let localUrl = /*mentionType == "top" ?*/ (type == 'person' ? `/pro/league/${league}/team/${team}/player/${name}` : `/pub/league/${league}/team/${team}`) /*: url*/;
     const mentionsKey: MetaLinkKey = { func: "meta", findexarxid };
