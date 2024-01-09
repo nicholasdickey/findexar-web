@@ -42,7 +42,7 @@ export default function Home(props: Props) {
     <p>You have the right to access, update, or delete the information we have on you. You can do this by contacting us directly.</p>
     
     <h2>6. Cookies</h2>
-    <p>Our website may use "cookies" to enhance the user experience. You may choose to set your web browser to refuse cookies or to alert you when cookies are being sent.</p>
+    <p>Our website may use &ldquo;cookies&ldquo; to enhance the user experience. You may choose to set your web browser to refuse cookies or to alert you when cookies are being sent.</p>
     
     <h2>7. Changes to This Privacy Policy</h2>
     <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page.</p>

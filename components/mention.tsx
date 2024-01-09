@@ -292,7 +292,7 @@ const Mention: React.FC<Props> = ({ noUser, mentionType, league, type, team, tea
     useEffect(() => {
         if(!summary)
         mutate();
-    }, [summary]);
+    }, [summary,mutate]);
 
     let localUrl = /*mentionType == "top" ?*/ (type == 'person' ? `/pro/league/${league}/team/${team}/player/${name}` : `/pub/league/${league}/team/${team}`) /*: url*/;
     const mentionsKey: MetaLinkKey = { func: "meta", findexarxid };
