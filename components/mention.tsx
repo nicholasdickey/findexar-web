@@ -318,7 +318,7 @@ const Mention: React.FC<Props> = ({ noUser, mentionType, league, type, team, tea
   
     return (
         <>
-            <MentionWrap>
+            <MentionWrap hide={hide}>
                 <MentionFindex>
                     
                     {mentionType == "top1" && <span>{league}</span>}
@@ -361,7 +361,7 @@ const Mention: React.FC<Props> = ({ noUser, mentionType, league, type, team, tea
 
                 </MentionSummary>
             </MentionWrap>
-            <MobileMentionWrap>
+            <MobileMentionWrap hide={hide}>
 
 
                 <MentionSummary>
