@@ -714,7 +714,7 @@ const Landing: React.FC<Props> = (props) => {
                       {localPageType == "player" && localPlayer && <div><Subhead>{localPlayer ? localPlayer : ''}</Subhead><SubheadMobile>{localPlayer ? localPlayer : ''}</SubheadMobile></div>}
 
                     </HeaderCenter>
-                    {localPageType == "player" && localPlayer && <Photo><PlayerPhoto teamid={team || ""} name={localPlayer || ""} /></Photo>}
+                    {localPageType == "player" && localPlayer && <Photo><PlayerPhoto teamid={localTeam || ""} name={localPlayer || ""} /></Photo>}
 
                   </ContainerCenter>
 
@@ -788,7 +788,7 @@ const Landing: React.FC<Props> = (props) => {
                 </LeftPanel>
                 <CenterPanel>
                   {subscriptionPrompt && !dismiss && <SubscriptionMenu hardStop={hardStop} setDismiss={setDismiss} {...subscriptionObject} />}
-                  {localView != "readme" && (localPageType == "team" || localPageType == "player") && <Team noUser={!userId} setDismiss={setDismiss} subscriptionPrompt={subscriptionPrompt && !dismiss} subscriptionObject={subscriptionObject} view={localView} teams={null} team={localTeam} league={localLeague} teamName={teamName} pagetype={localPageType} player={localPlayer} setLocalPlayer={setLocalPlayer} setLocalPageType={setLocalPageType} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} />}
+                  {localView != "readme" && (localPageType == "team" || localPageType == "player") && <Team noUser={!userId} setDismiss={setDismiss} subscriptionPrompt={subscriptionPrompt && !dismiss} subscriptionObject={subscriptionObject} view={localView} teams={null} team={localTeam} league={localLeague} teamName={teamName} pagetype={localPageType} player={localPlayer} setLocalPlayer={setLocalPlayer} setLocalPageType={setLocalPageType} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam}  setLocalView={setLocalView}/>}
                   {localPageType == "league" && !localTeam && <Mentions league={localLeague || ""} noUser={!userId} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} view={localView} />}
                   {localView == 'readme' && <Readme />}
                 </CenterPanel>
@@ -828,7 +828,7 @@ const Landing: React.FC<Props> = (props) => {
                 </div>}
               {localView != "readme" && (localPageType == 'team' || localPageType == 'player') &&
                 <div>
-                  <Team noUser={!userId} setDismiss={setDismiss} subscriptionPrompt={subscriptionPrompt && !dismiss} subscriptionObject={subscriptionObject} view={localView} teams={<LeftMobilePanel>{TeamsNav}</LeftMobilePanel>} team={localTeam} league={localLeague} teamName={teamName} pagetype={localPageType} player={player} setLocalPlayer={setLocalPlayer} setLocalPageType={setLocalPageType} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} />
+                  <Team noUser={!userId} setDismiss={setDismiss} subscriptionPrompt={subscriptionPrompt && !dismiss} subscriptionObject={subscriptionObject} view={localView} teams={<LeftMobilePanel>{TeamsNav}</LeftMobilePanel>} team={localTeam} league={localLeague} teamName={teamName} pagetype={localPageType} player={player} setLocalPlayer={setLocalPlayer} setLocalPageType={setLocalPageType} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView}/>
                 </div>
               }
               {localView == 'readme' && <Readme />}

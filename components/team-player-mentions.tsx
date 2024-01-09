@@ -113,7 +113,7 @@ const TeamPlayerMentions: React.FC<Props> = (props) => {
            // setSize(0);
         }
     },[player]);*/
-
+    
     const Mentions = mentions?.map((m: any, i: number) => {
         const { league, type, team, teamName, name, date, url, findex, summary, findexarxid, fav } = m;
        // console.log("rendering mention", m,i)

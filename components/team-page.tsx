@@ -169,12 +169,13 @@ interface Props {
   setLocalPlayer: (player: string) => void;
   setLocalLeague: (league: string) => void;
   setLocalTeam: (team: string) => void;
+  setLocalView: (view: string) => void;
 
 }
 
 const Team: React.FC<Props> = (props) => {
-  let { noUser,setDismiss, subscriptionPrompt, subscriptionObject, view, teams, dark, league, team, player, pagetype, teamName, setLocalPlayer, setLocalPageType} = props;
-  const [v, setV] = React.useState((!view || view.toLowerCase() == "home") ? "mentions" : view.toLowerCase());
+  let { noUser,setDismiss, subscriptionPrompt, subscriptionObject, view, teams, dark, league, team, player, pagetype, teamName, setLocalPlayer, setLocalPageType,setLocalView} = props;
+ // const [v, setV] = React.useState((!view || view.toLowerCase() == "home") ? "mentions" : view.toLowerCase());
   const [selectedTeam, setSelectedTeam] = React.useState(team);
   const [selectedPlayer, setSelectedPlayer] = React.useState(player);
   const [globalLoading, setGlobalLoading] = React.useState(false);
@@ -183,38 +184,35 @@ const Team: React.FC<Props> = (props) => {
   const teamPlayersKey: TeamPlayersKey = { type:'teamPlayers',league: league || "", teamid: team || "" };
   const { data: players, error, isLoading,mutate:mutatePlayers } = useSWR(teamPlayersKey, getTeamPlayers);
   //console.log("players", players);
+  const router = useRouter();
   useEffect(() => {
-    if (!v || v == "home")
-      setV("mentions");
-  }, [v]);
+    if (!view || view == "home")
+      setLocalView("mentions");
+  }, [view]);
   useEffect(() => {
     setSelectedTeam(team);
-    setV("mentions");
+    setLocalView("mentions");
     setGlobalLoading(false);
 
   }, [team]);
   useEffect(() => {
     setSelectedPlayer(player);
-    setV("mentions");
+    setLocalView("mentions");
     setGlobalLoading(false);
 
   }, [player]);
-  useEffect(() => {
-    setV(view.toLowerCase());
-    //setGlobalLoading(true);
-  }, [view]);
-
-  console.log("TeamPage", { subscriptionPrompt, v, team, pagetype, view, selectedTeam, selectedPlayer })
+  
+  console.log("TeamPage", { subscriptionPrompt, team, pagetype, view, selectedTeam, selectedPlayer })
   const PlayersNav = players&&players?.map((p: { name: string, findex: string, mentions: string,tracked:boolean},i:number) => {
     return <SideGroup key={`ewfggvfn-${i}`}>{p.name == player ?
       <SelectedSidePlayer>
-        <Link onClick={() => { setLocalPageType("player"); setLocalPlayer(p.name); setV("mentions"); setGlobalLoading(true) }} href={`/pro/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}`}>
+        <Link onClick={() => { setLocalPageType("player"); setLocalPlayer(p.name); setLocalView("mentions"); setGlobalLoading(true) }} href={`/pro/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}`}>
           {p.name} ({`${p.mentions}`})
         </Link>
       </SelectedSidePlayer>
       :
       <SidePlayer>
-        <Link onClick={() => { setLocalPlayer(p.name); setV("mentions"); setGlobalLoading(true) }} href={`/pro/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}`}>
+        <Link onClick={() => { setLocalPlayer(p.name); setLocalView("mentions"); setGlobalLoading(true) }} href={`/pro/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}`}>
           {p.name} ({`${p.mentions || 0}`})
         </Link>
       </SidePlayer>}
@@ -258,7 +256,7 @@ const Team: React.FC<Props> = (props) => {
       </SideButton>
     </SideGroup>
   });
-  console.log("Team", { v, team, pagetype });
+  console.log("Team", { view, team, pagetype });
   /* if(isLoading||globalLoading){
      return  <MainPanel>Loading...</MainPanel>
    }*/
@@ -276,14 +274,14 @@ const Team: React.FC<Props> = (props) => {
       </MainPanel>
       <MainMobilePanel>
 
-        {pagetype == "team" && <SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> }, { name: "Mentions", icon: <MentionIcon /> }, { name: "Players", icon: <PlayerIcon /> }]} onChange={(option: any) => { console.log(option);/*router.replace(`/league/${league}/team/${team}?view=${encodeURIComponent(option.name)}`)*/setV(option.name.toLowerCase()); }} selectedOptionName={v} />}
-        {pagetype == "player" && <SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> }, { name: "Mentions", icon: <MentionIcon /> }, { name: "Players", icon: <PlayerIcon /> }]} onChange={(option: any) => { console.log(option);/*router.replace(`/league/${league}/team/${team}/player/${player}?view=${encodeURIComponent(option.name)}`)*/setV(option.name.toLowerCase()); }} selectedOptionName={v} />}
+        {pagetype == "team" && <SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> }, { name: "Mentions", icon: <MentionIcon /> }, { name: "Players", icon: <PlayerIcon /> }]} onChange={(option: any) => { console.log(option);setLocalView(option.name.toLowerCase());router.replace(`/pro/league/${league}/team/${team}?view=${encodeURIComponent(option.name.toLowerCase())}`); }} selectedOptionName={view} />}
+        {pagetype == "player" && <SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> }, { name: "Mentions", icon: <MentionIcon /> }, { name: "Players", icon: <PlayerIcon /> }]} onChange={(option: any) => { console.log(option);setLocalView(option.name.toLowerCase());router.replace(`/pro/league/${league}/team/${team}/player/${player}?view=${encodeURIComponent(option.name.toLowerCase())}`); }} selectedOptionName={view} />}
         {subscriptionPrompt && <SubscriptionMenu hardStop={false} {...subscriptionObject} setDismiss={setDismiss} />}
 
-        {v == 'teams' && teams}
+        {view == 'teams' && teams}
         
-        {v == 'mentions' && <TeamPlayerMentions {...props} />}
-        {v == 'players' &&
+        {view == 'mentions' && <TeamPlayerMentions {...props} />}
+        {view == 'players' &&
           <MobilePlayersPanel>
             <MobileTeamName>{teamName}</MobileTeamName>
             {globalLoading ? <div>Loading...</div> : PlayersNav}

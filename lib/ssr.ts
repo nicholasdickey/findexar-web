@@ -23,8 +23,10 @@ const ssr = async (context: GetServerSidePropsContext) => {
         const { userId }: { userId: string | null } = getAuth(context.req);
         const user = userId ? await clerkClient.users.getUser(userId) : null;
         view = view.toLowerCase();
+        console.log("VIEW:", view)
         if(view=='home')
             view='mentions';
+     
         //console.log("USER:",user);
         const createdAt = user?.createdAt;
         let freeUser = false;
