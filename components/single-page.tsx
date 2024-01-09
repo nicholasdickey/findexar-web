@@ -664,7 +664,7 @@ const Landing: React.FC<Props> = (props) => {
         <meta property="og:image" content="https://findexar.com/image" />
         <meta property="findexar:verify" content="findexar" />
         <meta httpEquiv='X-UA-Compatible' content='IE=edge' />
-       
+
         <meta name='viewport' content='width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no' />
         <link rel="apple-touch-icon" href="/apple-icon.png"></link>
         <meta name="theme-color" content={dark ? palette.dark.colors.background : palette.light.colors.background} />
@@ -742,7 +742,7 @@ const Landing: React.FC<Props> = (props) => {
                     in the media.<br /><br /><hr />
                     Powered by OpenAI.</Welcome>
                     <br /><br />
-                    <Favorites><Button disabled={view == 'readme'} onClick={() => {
+                    <Favorites><Button disabled={localView == 'readme'} onClick={() => {
 
 
                       if (!favorites) {
@@ -787,9 +787,9 @@ const Landing: React.FC<Props> = (props) => {
                 </LeftPanel>
                 <CenterPanel>
                   {subscriptionPrompt && !dismiss && <SubscriptionMenu hardStop={hardStop} setDismiss={setDismiss} {...subscriptionObject} />}
-                  {view != "readme" && (localPageType == "team" || localPageType == "player") && <Team noUser={!userId} setDismiss={setDismiss} subscriptionPrompt={subscriptionPrompt && !dismiss} subscriptionObject={subscriptionObject} view={localView} teams={null} team={localTeam} league={localLeague} teamName={teamName} pagetype={localPageType} player={localPlayer} setLocalPlayer={setLocalPlayer} setLocalPageType={setLocalPageType} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} />}
-                  {view != "readme" && localPageType == "league" && !localTeam && <Mentions league={localLeague || ""} noUser={!userId} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} view={localView} />}
-                  {view == 'readme' && <Readme />}
+                  {localView != "readme" && (localPageType == "team" || localPageType == "player") && <Team noUser={!userId} setDismiss={setDismiss} subscriptionPrompt={subscriptionPrompt && !dismiss} subscriptionObject={subscriptionObject} view={localView} teams={null} team={localTeam} league={localLeague} teamName={teamName} pagetype={localPageType} player={localPlayer} setLocalPlayer={setLocalPlayer} setLocalPageType={setLocalPageType} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} />}
+                  {localView != "readme" && localPageType == "league" && !localTeam && <Mentions league={localLeague || ""} noUser={!userId} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} view={localView} />}
+                  {localView == 'readme' && <Readme />}
                 </CenterPanel>
               </MainPanel>
             </ContainerWrap>

@@ -287,7 +287,12 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
   const optionsKey: UserOptionsKey = { type: "options", noUser };
   const { data: options, error: optionsError, isLoading: optionsLoading, mutate: optionsMutate } = useSWR(optionsKey, getOptions);
   const [localTrackerFilter, setLocalTrackerFilter] = React.useState(options.tracker_filter);
-  const [globalLoading, setGlobalLoading] = React.useState(false);
+  const [noLoadOverride, setNoLoadOverride] = React.useState(false);
+
+  useEffect(() => {
+    setNoLoadOverride(true);
+  },[]);
+
   // const [v, setV] = React.useState((!view || view.toLowerCase() == "home") ? "mentions" : view.toLowerCase());
   useEffect(() => {
     if (optionsLoading) return;
@@ -297,16 +302,10 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
     setV((!view || view.toLowerCase() == "home") ? "mentions" : view.toLowerCase());
   }, [view]);*/
   const router = useRouter();
-  /*
   
-    const mentionsKey: MentionsKey = { type: localTrackerFilter == 1 ? "filtered-mentions" : "mentions", league, noUser };
-    console.log("MentionsKey", mentionsKey)
-    let { data: mentions, error, isLoading, mutate: mutateMentions } = useSWR(mentionsKey, localTrackerFilter == 1 ? getFilteredMentions : getMentions);
-  */
-  //in parallel, implement infinite scrolling
   const fetchMentionsKey = (pageIndex: number, previousPageData: any): FetchedMentionsKey | null => {
     console.log("getMentionsKey=", pageIndex, previousPageData)
-    let key: FetchedMentionsKey = { type: "FetchedMentions", teamid: "", name: "", noUser, page: pageIndex, league, myteam: localTrackerFilter ? 1 : 0,noLoad:view!="fav"&&view!="mentions" };
+    let key: FetchedMentionsKey = { type: "FetchedMentions", teamid: "", name: "", noUser, page: pageIndex, league, myteam: localTrackerFilter ? 1 : 0,noLoad:view!="fav"&&view!="mentions"&&!noLoadOverride };
     console.log("getMentionsKey=>>>", key)
 
     if (previousPageData && !previousPageData.length) return null // reached the end
@@ -407,7 +406,7 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
             //return <SidePlayer><Link onClick={() => { setLocalPageType("player"), setLocalPlayer(p.member); setV("mentions"); setGlobalLoading(true) }} href={`/pro/league/${p.league}/team/${p.teamid}/player/${encodeURIComponent(p.member)}`}>{p.member} </Link></SidePlayer>
             return <SideGroup key={`3fdsdvb-${i}`}>
               <SidePlayer>
-                <Link onClick={() => { setLocalPlayer(member); setLocalView("mentions"); setGlobalLoading(true) }} href={`/pro/league/${league}/team/${teamid}/player/${encodeURIComponent(member)}`}>
+                <Link onClick={() => { setLocalPlayer(member); setLocalView("mentions"); }} href={`/pro/league/${league}/team/${teamid}/player/${encodeURIComponent(member)}`}>
                   {member}
                 </Link>
               </SidePlayer>
@@ -479,7 +478,7 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
               //return <SidePlayer><Link onClick={() => { setLocalPageType("player"), setLocalPlayer(p.member); setV("mentions"); setGlobalLoading(true) }} href={`/pro/league/${p.league}/team/${p.teamid}/player/${encodeURIComponent(p.member)}`}>{p.member} </Link></SidePlayer>
               return <MobileSideGroup key={`3fdsdvb-${i}`}>
                 <MobileSidePlayer>
-                  <Link onClick={() => { setLocalPlayer(member); setLocalView("mentions"); setGlobalLoading(true) }} href={`/pro/league/${league}/team/${teamid}/player/${encodeURIComponent(member)}`}>
+                  <Link onClick={() => { setLocalPlayer(member); setLocalView("mentions"); }} href={`/pro/league/${league}/team/${teamid}/player/${encodeURIComponent(member)}`}>
                     {member}
                   </Link>
                 </MobileSidePlayer>
