@@ -23,6 +23,8 @@ const ssr = async (context: GetServerSidePropsContext) => {
         const { userId }: { userId: string | null } = getAuth(context.req);
         const user = userId ? await clerkClient.users.getUser(userId) : null;
         view = view.toLowerCase();
+        if(view=='home')
+            view='mentions';
         //console.log("USER:",user);
         const createdAt = user?.createdAt;
         let freeUser = false;
@@ -121,8 +123,9 @@ const ssr = async (context: GetServerSidePropsContext) => {
         }
         // let mentions = [];
         let fetchMentions = [];
+        console.log("VIEW:", view,"team:",team,"player:",player,"league:",league,"userId",userId,"options:",options,"keyMentions:",keyMentions)
         if (team) {
-
+            console.log("in team")
             const { data: dataMentions } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?api_key=${api_key}&userid=${userId}&teamid=${team}&name=${encodeURIComponent(player as string || "")}&page=0&league=${league}&favorites=0`);
             fetchMentions = dataMentions.mentions;
 
@@ -150,6 +153,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
                       mentions = data.mentions;
                       */
                     if (view == 'mentions') {
+                        console.log("FETCH MENTIONS SSR")
                         const { data: dataMentions } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?api_key=${api_key}&userid=${userId}&teamid=${team}&name=${encodeURIComponent(player as string || "")}&page=0&league=${league}&myteam=0`);
                         fetchMentions = dataMentions.mentions;
                     }

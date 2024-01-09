@@ -745,34 +745,35 @@ const Landing: React.FC<Props> = (props) => {
                     <Favorites><Button disabled={localView == 'readme'} onClick={() => {
 
 
-                      if (!favorites) {
+                      if (localView != 'fav') {
                         setLocalView("fav")
                         // setLocalPageType("Favorites");
                         // setLocalLeague("");
                         // setLocalTeam("");
-                        setFavorites(true);
+                      //  setFavorites(true);
                         router.push("/pro?view=fav");
                       }
                       else {
                         setLocalView("mentions")
-                        setFavorites(false);
+                      //  setFavorites(false);
                         router.push("/pub");
 
                       }
 
                     }} style={{ padding: 10 }} variant="outlined">{localView == "fav" ? <HomeIcon /> : <StarOutlineIcon />}&nbsp;&nbsp;{localView == "fav" ? <span>Back to Home</span> : <span>My Favorites</span>}</Button></Favorites>
+                    
                     <Favorites><Button disabled={view == 'fav'} onClick={() => {
 
-                      if (!readme) {
+                      if (localView != 'readme') {
                         setLocalView("readme")
                         // setLocalPageType("Favorites");
                         // setLocalLeague("");
                         // setLocalTeam("");
-                        setReadme(true);
+                       // setReadme(true);
                         router.push("/pub?view=readme");
                       }
                       else {
-                        setReadme(false);
+                      // setReadme(false);
                         setLocalView("mentions")
                         router.push("/pub");
                       }
@@ -788,7 +789,7 @@ const Landing: React.FC<Props> = (props) => {
                 <CenterPanel>
                   {subscriptionPrompt && !dismiss && <SubscriptionMenu hardStop={hardStop} setDismiss={setDismiss} {...subscriptionObject} />}
                   {localView != "readme" && (localPageType == "team" || localPageType == "player") && <Team noUser={!userId} setDismiss={setDismiss} subscriptionPrompt={subscriptionPrompt && !dismiss} subscriptionObject={subscriptionObject} view={localView} teams={null} team={localTeam} league={localLeague} teamName={teamName} pagetype={localPageType} player={localPlayer} setLocalPlayer={setLocalPlayer} setLocalPageType={setLocalPageType} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} />}
-                  {localView != "readme" && localPageType == "league" && !localTeam && <Mentions league={localLeague || ""} noUser={!userId} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} view={localView} />}
+                  {localPageType == "league" && !localTeam && <Mentions league={localLeague || ""} noUser={!userId} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} view={localView} />}
                   {localView == 'readme' && <Readme />}
                 </CenterPanel>
               </MainPanel>
@@ -807,23 +808,23 @@ const Landing: React.FC<Props> = (props) => {
               {localPageType == 'league' && !localLeague &&
                 <div>
                   <SecondaryTabs options={[{ name: "Mentions", icon: <MentionIcon />, access: "pub" }, { name: "My Team", icon: <ListIcon />, access: "pro" }, { name: "Readme", icon: <ContactSupportIcon />, access: "pub" }]} onChange={(option: any) => { console.log(option); setLocalView(option.name); router.replace(localLeague ? `/${option.access || "pub"}/league/${localLeague}?view=${encodeURIComponent(option.name)}` : `/${option.access}?view=${encodeURIComponent(option.name)}`) }} selectedOptionName={localView} />
-                  {localView != "readme" && (localView == 'mentions' || localView == 'my team' || localView == 'fav') && <CenterPanel>
+                  <CenterPanel>
                     {subscriptionPrompt && !dismiss && <SubscriptionMenu hardStop={hardStop} setDismiss={setDismiss} {...subscriptionObject} />}
 
                     <Mentions noUser={!userId} league={localLeague || ""} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} view={localView} />
-                  </CenterPanel>}
+                  </CenterPanel>
                 </div>}
               {localPageType == 'league' && localLeague &&
                 <div>
                   <SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> }, { name: "Mentions", icon: <MentionIcon /> }, { name: "My Team", icon: <ListIcon />, access: "pro" }]} onChange={(option: any) => { console.log(option); setLocalView(option.name); router.replace(localLeague ? `/pub/league/${localLeague}?view=${encodeURIComponent(option.name)}` : `/pub/league?view=${encodeURIComponent(option.name)}`) }} selectedOptionName={localView} />
                   {localView != "readme" && localView == 'teams' &&
                     <LeftMobilePanel>{TeamsNav}</LeftMobilePanel>}
-                  {localView != "readme" && (localView == 'mentions' || localView == "my team") &&
+                  
                     <CenterPanel>
                       {subscriptionPrompt && !dismiss && <SubscriptionMenu hardStop={hardStop} setDismiss={setDismiss} {...subscriptionObject} />}
 
                       <Mentions noUser={!userId} league={localLeague || ""} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} view={localView} />
-                    </CenterPanel>}
+                    </CenterPanel>
                 </div>}
               {localView != "readme" && (localPageType == 'team' || localPageType == 'player') &&
                 <div>

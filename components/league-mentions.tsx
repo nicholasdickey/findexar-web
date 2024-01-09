@@ -375,6 +375,9 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
        <Skeleton variant="rounded" animation="pulse" height={160} />
    </Stack>)*/
   console.log("mentions view=", view, "localTrackerFilter=", localTrackerFilter)
+  if(view!="fav"&&view!="mentions"&&view!='my team'){
+    return <></>
+  }
   return (
     <>
       <OuterContainer>
