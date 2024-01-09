@@ -83,7 +83,7 @@ const TeamPlayerMentions: React.FC<Props> = (props) => {
     console.log("teamPlayerMentions", team, teamName, noUser)
     const fetchMentionsKey = (pageIndex: number, previousPageData: any): FetchedMentionsKey | null => {
         console.log("getMentionsKey=", pageIndex, previousPageData)
-        let key: FetchedMentionsKey = { type: "FetchedMentions", teamid: team || "", name: player || "", noUser, page: pageIndex, league, myteam: 0 };
+        let key: FetchedMentionsKey = { type: "FetchedMentions", teamid: team || "", name: player || "", noUser, page: pageIndex, league, myteam: 0,noLoad:false };
         console.log("getMentionsKey=>>>",key)
         
         if (previousPageData && !previousPageData.length) return null // reached the end
