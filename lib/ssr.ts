@@ -5,6 +5,7 @@ import { clerkClient } from "@clerk/nextjs";
 import axios from 'axios';
 import { isbot } from '@/lib/isbot.js';
 import SinglePage from '@/components/single-page';
+import { getCookie,setCookie } from 'cookies-next';
 import {
     GetServerSidePropsContext,
 } from "next";
@@ -84,7 +85,12 @@ const ssr = async (context: GetServerSidePropsContext) => {
         }
         console.log({ pagetype, league, team, player })
         var randomstring = () => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-        const sessionid = randomstring();
+        let sessionid=getCookie('sessionid', { req:context.req, res:context.res });
+    
+        if(!sessionid){
+            sessionid = randomstring();
+            setCookie('sessionid', sessionid, { req:context.req, res:context.res, maxAge: 60 * 6 * 24 });  
+        }
         if (!botInfo.bot) {
             try {
                 recordEvent(sessionid, 'ssr-landing-init', `{"fbclid":"${fbclid}","ua":"${ua}","utm_content":"${utm_content}"}`);

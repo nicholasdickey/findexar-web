@@ -19,6 +19,7 @@
     "@mui/material-nextjs": "^5.15.3",
     "@stripe/stripe-js": "^2.2.2",
     "axios": "^1.6.2",
+    "cookies-next": "^4.1.0",
     "isbot-fast": "^1.2.0",
     "material-icons": "^1.13.12",
     "next": "14.0.4",
