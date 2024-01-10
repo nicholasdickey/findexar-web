@@ -60,7 +60,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
         const botInfo = isbot({ ua });
         let host = context.req.headers.host || "";
         let ssr = context.params?.ssr as string[];
-        console.log("SSR(pro):", ssr)
+        console.log("SSR:", ssr)
         if (!ssr)
             ssr = [''];
 
@@ -71,24 +71,21 @@ const ssr = async (context: GetServerSidePropsContext) => {
         let player = '';
         let list = '';
         let access = arg1;
-        if (arg1 == 'league') {
-            league = arg2 || "";
-        }
-        if (arg3 == 'team') {
-            team = arg4;
+       // if (arg1 == 'league') {
+            league = arg1|| "";
+        //}
+        if (arg2 == 'team') {
+            team = arg3;
             pagetype = "team";
-            if (arg5 == 'player') {
-                player = arg6;
+            if (arg4 == 'player') {
+                player = arg5;
                 pagetype = "player";
             }
         }
-        else if (arg3 == 'player') {
-            player = arg4;
+        else if (arg2 == 'player') {
+            player = arg3;
         }
-        if (arg1 == 'list') {
-            pagetype = "list";
-            list = (arg2 || "");
-        }
+        
         console.log({ pagetype, league, team, player })
         var randomstring = () => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
         let sessionid=getCookie('sessionid', { req:context.req, res:context.res });

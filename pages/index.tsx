@@ -45,7 +45,7 @@ export const getServerSideProps =
         return {
             redirect: {
                 permanent: false,
-                destination: "/pub"
+                destination: `/pub?${fbclid ? `fbclid=${fbclid}&` : ''}${utm_content ? `utm_content=${utm_content}&` : ''}`,
             }
         }
     } catch (x) {

@@ -170,11 +170,13 @@ interface Props {
   setLocalLeague: (league: string) => void;
   setLocalTeam: (team: string) => void;
   setLocalView: (view: string) => void;
+  params:string;
+  params2:string;
 
 }
 
 const Team: React.FC<Props> = (props) => {
-  let { noUser,setDismiss, subscriptionPrompt, subscriptionObject, view, teams, dark, league, team, player, pagetype, teamName, setLocalPlayer, setLocalPageType,setLocalView} = props;
+  let { noUser,setDismiss, subscriptionPrompt, subscriptionObject, view, teams, dark, league, team, player, pagetype, teamName, setLocalPlayer, setLocalPageType,setLocalView,params,params2} = props;
  // const [v, setV] = React.useState((!view || view.toLowerCase() == "home") ? "mentions" : view.toLowerCase());
   const [selectedTeam, setSelectedTeam] = React.useState(team);
   const [selectedPlayer, setSelectedPlayer] = React.useState(player);
@@ -206,13 +208,13 @@ const Team: React.FC<Props> = (props) => {
   const PlayersNav = players&&players?.map((p: { name: string, findex: string, mentions: string,tracked:boolean},i:number) => {
     return <SideGroup key={`ewfggvfn-${i}`}>{p.name == player ?
       <SelectedSidePlayer>
-        <Link onClick={() => { setLocalPageType("player"); setLocalPlayer(p.name); setLocalView("mentions"); setGlobalLoading(true) }} href={`/pro/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}`}>
+        <Link onClick={() => { setLocalPageType("player"); setLocalPlayer(p.name); setLocalView("mentions"); setGlobalLoading(true) }} href={`/pro/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}${params}`}>
           {p.name} ({`${p.mentions}`})
         </Link>
       </SelectedSidePlayer>
       :
       <SidePlayer>
-        <Link onClick={() => { setLocalPlayer(p.name); setLocalView("mentions"); setGlobalLoading(true) }} href={`/pro/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}`}>
+        <Link onClick={() => { setLocalPlayer(p.name); setLocalView("mentions"); setGlobalLoading(true) }} href={`/pro/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}${params}`}>
           {p.name} ({`${p.mentions || 0}`})
         </Link>
       </SidePlayer>}
@@ -274,8 +276,8 @@ const Team: React.FC<Props> = (props) => {
       </MainPanel>
       <MainMobilePanel>
 
-        {pagetype == "team" && <SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> }, { name: "Mentions", icon: <MentionIcon /> }, { name: "Players", icon: <PlayerIcon /> }]} onChange={(option: any) => { console.log(option);setLocalView(option.name.toLowerCase());router.replace(`/pro/league/${league}/team/${team}?view=${encodeURIComponent(option.name.toLowerCase())}`); }} selectedOptionName={view} />}
-        {pagetype == "player" && <SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> }, { name: "Mentions", icon: <MentionIcon /> }, { name: "Players", icon: <PlayerIcon /> }]} onChange={(option: any) => { console.log(option);setLocalView(option.name.toLowerCase());router.replace(`/pro/league/${league}/team/${team}/player/${player}?view=${encodeURIComponent(option.name.toLowerCase())}`); }} selectedOptionName={view} />}
+        {pagetype == "team" && <SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> }, { name: "Mentions", icon: <MentionIcon /> }, { name: "Players", icon: <PlayerIcon /> }]} onChange={(option: any) => { console.log(option);setLocalView(option.name.toLowerCase());router.replace(`/pro/league/${league}/team/${team}?view=${encodeURIComponent(option.name.toLowerCase())}${params2}`); }} selectedOptionName={view} />}
+        {pagetype == "player" && <SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> }, { name: "Mentions", icon: <MentionIcon /> }, { name: "Players", icon: <PlayerIcon /> }]} onChange={(option: any) => { console.log(option);setLocalView(option.name.toLowerCase());router.replace(`/pro/league/${league}/team/${team}/player/${player}?view=${encodeURIComponent(option.name.toLowerCase())}${params2}`); }} selectedOptionName={view} />}
         {subscriptionPrompt && <SubscriptionMenu hardStop={false} {...subscriptionObject} setDismiss={setDismiss} />}
 
         {view == 'teams' && teams}

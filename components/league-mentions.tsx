@@ -3,7 +3,7 @@ import useSWRInfinite from 'swr/infinite'
 import useSWR from 'swr';
 import Link from 'next/link';
 import { useRouter } from 'next/router'
-import { SignInButton ,clerkClient} from "@clerk/nextjs";
+import { SignInButton ,SignedOut} from "@clerk/nextjs";
 import { styled } from "styled-components";
 import Button from '@mui/material/Button';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -266,9 +266,11 @@ interface Props {
   setLocalTeam: (team: string) => void;
   setLocalView: (view: string) => void;
   view: string;
+  params2:string;
+  params:string
 }
 
-const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, setLocalPlayer, setLocalLeague, setLocalTeam, setLocalView, view }) => {
+const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, setLocalPlayer, setLocalLeague, setLocalTeam, setLocalView, view,params,params2 }) => {
 
   const optionsKey: UserOptionsKey = { type: "options", noUser };
   const { data: options, error: optionsError, isLoading: optionsLoading, mutate: optionsMutate } = useSWR(optionsKey, getOptions);
@@ -341,6 +343,7 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
       setLocalPlayer={setLocalPlayer}
       setLocalPageType={setLocalPageType}
       mutate={() => { mutate() }}
+      params={params}
 
     />)
   });
@@ -366,7 +369,7 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
               setTrackerFilter(params);
 
             }} />} label="My Team Filter" />
-            {false&&noUser && <SignInButton><Button size="small" variant="outlined" style={{ paddingRight: 8, paddingTop: 4, paddingBottom: 4, paddingLeft: 4 }}><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton>}
+           <SignedOut><SignInButton><Button size="small" variant="outlined" style={{ paddingRight: 8, paddingTop: 4, paddingBottom: 4, paddingLeft: 4 }}><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></SignedOut>
           </MentionsHeader>}
           {(view == "fav") && <MentionsHeader><span>Favorites:</span></MentionsHeader>}
           <MentionsBody>
@@ -436,11 +439,11 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
 
           }} />} label="My Team" />
 
-          {false&&noUser && <SignInButton><Button size="small" variant="outlined"><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton>}
+          <SignedOut><SignInButton><Button size="small" variant="outlined"><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></SignedOut>
           {!league && !noUser && <FormControlLabel control={<Checkbox disabled={noUser || (localTrackerFilter == 1)} checked={false} onChange={
             (event: React.ChangeEvent<HTMLInputElement>) => {
               setLocalView("fav");
-              router.push(league ? `/pro/league/${league}?view=fav` : `/pro?view=fav`)
+              router.push(league ? `/pro/league/${league}?view=fav${params2}` : `/pro?view=fav${params2}`)
             }} />} label="Favorites" />}
         </MobileMentionsHeader>}
 
@@ -454,7 +457,7 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
           {!noUser && (localTrackerFilter != 1) && <FormControlLabel control={<Checkbox disabled={noUser} checked={true} onChange={
             (event: React.ChangeEvent<HTMLInputElement>) => {
               setLocalView("mentions");
-              router.push(league ? `/pro/league/${league}` : `/pro`)
+              router.push(league ? `/pro/league/${league}${params2}` : `/pro${params2}`)
             }} />} label="Favorites" />}</MobileMentionsHeader>}
 
         <MentionsBody>
@@ -483,7 +486,7 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
               //return <SidePlayer><Link onClick={() => { setLocalPageType("player"), setLocalPlayer(p.member); setV("mentions"); setGlobalLoading(true) }} href={`/pro/league/${p.league}/team/${p.teamid}/player/${encodeURIComponent(p.member)}`}>{p.member} </Link></SidePlayer>
               return <MobileSideGroup key={`3fdsdvb-${i}`}>
                 <MobileSidePlayer>
-                  <Link onClick={() => { setLocalPlayer(member); setLocalView("mentions"); }} href={`/pro/league/${league}/team/${teamid}/player/${encodeURIComponent(member)}`}>
+                  <Link onClick={() => { setLocalPlayer(member); setLocalView("mentions"); }} href={`/pro/league/${league}/team/${teamid}/player/${encodeURIComponent(member)}${params}`}>
                     {member}
                   </Link>
                 </MobileSidePlayer>

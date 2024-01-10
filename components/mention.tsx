@@ -253,10 +253,12 @@ interface Props {
     setLocalLeague: (league: string) => void;
     setLocalTeam: (team: string) => void;
     mutate: () => void;
+    params:string;
+
     
 }
 
-const Mention: React.FC<Props> = ({ noUser, mentionType, league, type, team, teamName,name, date, url, findex, summary, findexarxid, fav, setLocalPageType, setLocalPlayer, setLocalLeague, setLocalTeam, mutate }) => {
+const Mention: React.FC<Props> = ({ params,noUser, mentionType, league, type, team, teamName,name, date, url, findex, summary, findexarxid, fav, setLocalPageType, setLocalPlayer, setLocalLeague, setLocalTeam, mutate }) => {
     const [expanded, setExpanded] = React.useState(false);
     const [localDate, setLocalDate] = React.useState(convertToUTCDateString(date));
     const [localFav, setLocalFav] = React.useState(fav);
@@ -273,8 +275,8 @@ const Mention: React.FC<Props> = ({ noUser, mentionType, league, type, team, tea
             setHide(false);
         }
     }, [summary,mutate,date,url]);
-
-    let localUrl = /*mentionType == "top" ?*/ (type == 'person' ? `/pro/league/${league}/team/${team}/player/${name}` : `/pub/league/${league}/team/${team}`) /*: url*/;
+    //console.log("mention params:",params)
+    let localUrl = /*mentionType == "top" ?*/ (type == 'person' ? `/pro/league/${league}/team/${team}/player/${name}${params}` : `/pub/league/${league}/team/${team}${params}`) /*: url*/;
     const mentionsKey: MetaLinkKey = { func: "meta", findexarxid };
     const meta = useSWRImmutable(mentionsKey, getMetaLink).data;
     let digest = meta ? meta.digest.replace('<p>', '').replace('</p>', '') : "";
