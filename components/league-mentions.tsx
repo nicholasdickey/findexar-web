@@ -3,7 +3,7 @@ import useSWRInfinite from 'swr/infinite'
 import useSWR from 'swr';
 import Link from 'next/link';
 import { useRouter } from 'next/router'
-import { SignInButton } from "@clerk/nextjs";
+import { SignInButton ,clerkClient} from "@clerk/nextjs";
 import { styled } from "styled-components";
 import Button from '@mui/material/Button';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -272,9 +272,9 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
 
   const optionsKey: UserOptionsKey = { type: "options", noUser };
   const { data: options, error: optionsError, isLoading: optionsLoading, mutate: optionsMutate } = useSWR(optionsKey, getOptions);
-  const [localTrackerFilter, setLocalTrackerFilter] = React.useState(options.tracker_filter);
+  const [localTrackerFilter, setLocalTrackerFilter] = React.useState(options?.tracker_filter);
   const [noLoadOverride, setNoLoadOverride] = React.useState(false);
-
+  //const u=clerkClient.g
   useEffect(() => {
     setNoLoadOverride(true);
   },[]);
@@ -366,7 +366,7 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
               setTrackerFilter(params);
 
             }} />} label="My Team Filter" />
-            {noUser && <SignInButton><Button size="small" variant="outlined" style={{ paddingRight: 8, paddingTop: 4, paddingBottom: 4, paddingLeft: 4 }}><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton>}
+            {false&&noUser && <SignInButton><Button size="small" variant="outlined" style={{ paddingRight: 8, paddingTop: 4, paddingBottom: 4, paddingLeft: 4 }}><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton>}
           </MentionsHeader>}
           {(view == "fav") && <MentionsHeader><span>Favorites:</span></MentionsHeader>}
           <MentionsBody>
@@ -436,7 +436,7 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
 
           }} />} label="My Team" />
 
-          {noUser && <SignInButton><Button size="small" variant="outlined"><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton>}
+          {false&&noUser && <SignInButton><Button size="small" variant="outlined"><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton>}
           {!league && !noUser && <FormControlLabel control={<Checkbox disabled={noUser || (localTrackerFilter == 1)} checked={false} onChange={
             (event: React.ChangeEvent<HTMLInputElement>) => {
               setLocalView("fav");

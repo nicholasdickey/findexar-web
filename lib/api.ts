@@ -16,9 +16,10 @@ export const recordEvent = async (sessionid: string, name: string, params: strin
 // Get all Leagues
 export const getLeagues = async () => {
   try {
-    const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-leagues`;
+    return ["NFL","NHL","MLB","NBA"];
+    /*const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-leagues`;
     const res = await axios.get(url);
-    return res.data.leagues;
+    return res.data.leagues;*/
   }
   catch (e) {
     console.log("recordEvent", e);

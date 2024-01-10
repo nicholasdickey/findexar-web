@@ -27,6 +27,8 @@ const ssr = async (context: GetServerSidePropsContext) => {
             userId=null;
         console.log("SSR userid:", userId   )
         const user = userId ? await clerkClient.users.getUser(userId) : null;
+        console.log("========== ========= SSR CHECKPOINT 0:", new Date().getTime() - t1, "ms");
+      
         view = view.toLowerCase();
         console.log("VIEW:", view)
         if(view=='home')
@@ -90,7 +92,8 @@ const ssr = async (context: GetServerSidePropsContext) => {
         console.log({ pagetype, league, team, player })
         var randomstring = () => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
         let sessionid=getCookie('sessionid', { req:context.req, res:context.res });
-    
+        console.log("========== ========= SSR CHECKPOINT 1:", new Date().getTime() - t1, "ms");
+      
         if(!sessionid){
             sessionid = randomstring();
             setCookie('sessionid', sessionid, { req:context.req, res:context.res, maxAge: 60 * 6 * 24 });  
@@ -109,6 +112,8 @@ const ssr = async (context: GetServerSidePropsContext) => {
                 console.log('ssr-bot-landing-init-error', x);
             }
         }
+        console.log("========== ========= SSR CHECKPOINT 2:", new Date().getTime() - t1, "ms");
+      
         let trackerListMembersKey: TrackerListMembersKey = { type: "tracker_list_members", league, noUser: userId ? false : true, noLoad: view != 'my team' };
         let trackerListMembers = [];
        //console.log("view==>", view, view == 'my team');
@@ -135,6 +140,8 @@ const ssr = async (context: GetServerSidePropsContext) => {
         }
         // let mentions = [];
         let fetchMentions = [];
+        console.log("========== ========= SSR CHECKPOINT 3:", new Date().getTime() - t1, "ms");
+      
         console.log("VIEW:", view,"team:",team,"player:",player,"league:",league,"userId",userId,"options:",options,"keyMentions:",keyMentions)
         if (team) {
             console.log("in team")
@@ -217,6 +224,8 @@ const ssr = async (context: GetServerSidePropsContext) => {
         }
         )] = fetchMentions;
        // console.log("fetchedMentions:", fetchMentions)
+       console.log("========== ========= SSR TIME:", new Date().getTime() - t1, "ms");
+       console.log("SSR league:",league)
         return {
             props: {
                 sessionid,

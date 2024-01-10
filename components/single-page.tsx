@@ -457,7 +457,7 @@ interface Props {
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 
 const Landing: React.FC<Props> = (props) => {
-  let { t1,fbclid,sessionid,isfb,isbot,list, freeUser, createdAt, userId, utm_content,dark, leagues, league, team, pagetype, player, view } = props;
+  let { t1,fbclid="",sessionid="",isfb,isbot,list, freeUser, createdAt, userId, utm_content,dark, leagues, league="", team="", pagetype="league", player="", view="" } = props;
   const [localTeam, setLocalTeam] = useState(team);
   const [localPlayer, setLocalPlayer] = useState(player);
   const [localPageType, setLocalPageType] = useState(pagetype);
@@ -542,6 +542,7 @@ const Landing: React.FC<Props> = (props) => {
   useEffect(() => {
     setLocalView(view);
   }, [view]);
+  
   const LeaguesNav = leagues?.map((l: string, i: number) => {
     return l == localLeague ? <SelectedLeague key={`league-${i}`} ><Link href={`/pub/league/${l}`} onClick={() => { setLocalLeague(l); setLocalView('mentions'); setLocalPageType('league'); setLocalTeam("") }}>{l}</Link></SelectedLeague> : <League key={`league-${i}`}><Link href={`/pub/league/${l}`} onClick={() => { setLocalLeague(l); setLocalView('mentions'); setLocalPageType('league'); setLocalTeam("") }}>{l}</Link></League>
   });
