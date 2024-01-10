@@ -20,14 +20,8 @@ import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import LoginIcon from '@mui/icons-material/Login';
 import ContactSupportIcon from '@mui/icons-material/ContactSupport';
-import Divider from '@mui/material/Divider';
 import Avatar from '@mui/material/Avatar';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import Modal from '@mui/material/Modal';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { UserButton, SignInButton } from "@clerk/nextjs";
@@ -668,7 +662,7 @@ const Landing: React.FC<Props> = (props) => {
     <>
       <Head>
         <title>Findexar</title>
-        <link rel="canonical" href="www.findexar.com" />
+        <link rel="canonical" href="https://www.findexar.com/" />
         <meta property="og:description" content="Fantasy Sports Mentions Monitor for Major League Teams and athletes" />
         <meta name="title" content="Findexar" />
         <meta property="og:title" content="Findexar" />
