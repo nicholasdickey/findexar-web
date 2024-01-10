@@ -614,7 +614,7 @@ const Landing: React.FC<Props> = (props) => {
     } catch (x) {
       console.log('recordEvent', x);
     }
-  }, [])
+  }, [pagetype,league,team,player,view,]);
   const style = {
     position: 'absolute' as 'absolute',
     top: '50%',
