@@ -190,19 +190,19 @@ const Team: React.FC<Props> = (props) => {
   useEffect(() => {
     if (!view || view == "home")
       setLocalView("mentions");
-  }, [view]);
+  }, [view,setLocalView]);
   useEffect(() => {
     setSelectedTeam(team);
     setLocalView("mentions");
     setGlobalLoading(false);
 
-  }, [team]);
+  }, [team,setLocalView]);
   useEffect(() => {
     setSelectedPlayer(player);
     setLocalView("mentions");
     setGlobalLoading(false);
 
-  }, [player]);
+  }, [player,setLocalView]);
   
   console.log("TeamPage", { subscriptionPrompt, team, pagetype, view, selectedTeam, selectedPlayer })
   const PlayersNav = players&&players?.map((p: { name: string, findex: string, mentions: string,tracked:boolean},i:number) => {
