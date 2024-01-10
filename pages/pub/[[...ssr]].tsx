@@ -36,6 +36,7 @@ interface Props {
     userId?: string;
     createdAt?: string;
     freeUser?: boolean;
+    t1:number;
 }
 export default function Home(props: Props) {
     const fallback = props.fallback;

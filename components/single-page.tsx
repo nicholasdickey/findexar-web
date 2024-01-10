@@ -508,12 +508,13 @@ interface Props {
   createdAt?: string;
   freeUser?: boolean;
   list?: string;
+  t1:number;
 }
 
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 
 const Landing: React.FC<Props> = (props) => {
-  let { fbclid,sessionid,isfb,isbot,list, freeUser, createdAt, userId, dark, leagues, league, team, pagetype, player, view } = props;
+  let { t1,fbclid,sessionid,isfb,isbot,list, freeUser, createdAt, userId, utm_content,dark, leagues, league, team, pagetype, player, view } = props;
   const [localTeam, setLocalTeam] = useState(team);
   const [localPlayer, setLocalPlayer] = useState(player);
   const [localPageType, setLocalPageType] = useState(pagetype);
@@ -525,6 +526,8 @@ const Landing: React.FC<Props> = (props) => {
   const [favorites, setFavorites] = useState(false);
   const [readme, setReadme] = useState(false);
 
+  if(userId=="null")
+    userId="";
   console.log("pageType:", localPageType)
 
   const theme = useTheme();
@@ -607,10 +610,16 @@ const Landing: React.FC<Props> = (props) => {
   console.log("userId", userId);
   const selectedLeague = leagues?.findIndex((l: string) => l == localLeague) + 1;
   console.log("selectedLeague", selectedLeague)
+  
   useEffect(() => {
+    const t2= new Date().getTime();
+    recordEvent(sessionid as string||"", 'load-time', `{"fbclid":"${fbclid}","isbot":"${isbot}","league":"${league}", "team":"${team}", "player":"${player}", "pagetype":"${pagetype}", "view":"${view}", "userId":"${userId}", "utm_content":"${utm_content}","time":"${t2-t1||0}"}`);
 
+  },[]);
+  useEffect(() => {
+   
     try {
-      recordEvent(sessionid as string||"", 'single-page-loaded', `{"fbclid":"${fbclid}","isbot":"${isbot}","league":"${league}", "team":"${team}", "player":"${player}", "pagetype":"${pagetype}", "view":"${view}", "userId":"${userId}"}`);
+      recordEvent(sessionid as string||"", 'single-page-loaded', `{"fbclid":"${fbclid}","isbot":"${isbot}","league":"${league}", "team":"${team}", "player":"${player}", "pagetype":"${pagetype}", "view":"${view}", "userId":"${userId}", "utm_content":"${utm_content}"}`);
     } catch (x) {
       console.log('recordEvent', x);
     }
