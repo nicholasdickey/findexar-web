@@ -109,31 +109,6 @@ const SelectedSideTeam = styled.div`
       }
   }
 `;
-const SideList = styled.div`
-  height: 30px;
-  
- // width: 300px; 
-  color: #fff;
- // text-align: center;
-  font-size: 18px;
- // margin: 10px;
-`;
-
-const SelectedSideList = styled.div`
-  height: 30px;
- // width: 300px;
-  color: #ff8 !important;
-  //text-align: center;
-  font-size: 18px;
- // margin: 10px;
-  a{
-      color: #ff8 !important;
-      text-decoration: none;
-      &:hover{
-        color: #F8F;
-      }
-  }
-`;
 const League = styled.div`
   height: 30px;
   width: 100px; 
@@ -232,32 +207,6 @@ const LeftText = styled.div`
     }
   }
 `;
-const Lists = styled.div`
-  padding-top:18px;
-  padding-left:22px;
-  padding-right:22px;
-  width:200px;
-  color:#ccc;
-  align-self:flex-start;
-  font-size:28px;
-  a{
-    color: #fff;
-    text-decoration: none;
-    &:hover{
-      color: #4f8;
-    }
-  }
-`;
-const ListsContainer = styled.div`
-  //padding-top:8px;
-  padding-left:22px;
-  //width:100%;
-  display:flex ;
-  flex-direction:column;
-  justify-content:flex-start;
-  align-items:flex-start;
-`;
-
 
 const LeftMobilePanel = styled.div`
   width:100%;

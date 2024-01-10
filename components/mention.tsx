@@ -2,41 +2,15 @@ import React, { useEffect } from "react";
 import useSWRImmutable from 'swr/immutable'
 import Link from 'next/link';
 import { styled } from "styled-components";
-import { MentionsKey, getMentions, MetaLinkKey, getMetaLink, addFavorite, removeFavorite } from '@/lib/api';
+import { MetaLinkKey, getMetaLink, addFavorite, removeFavorite } from '@/lib/api';
 import { convertToUTCDateString, convertToReadableLocalTime } from "@/lib/date-convert";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import StarIcon from '@mui/icons-material/Star';
-import { UserButton, SignInButton } from "@clerk/nextjs";
-import { mutate } from "swr";
+import { SignInButton } from "@clerk/nextjs";
 
 
-const MentionsOuterContainer = styled.div`
-    display:flex;
-    flex-direction:column;
-    justify-content:flex-start;
-    width:100%;
-    height:100%;
-    padding-left:20px;
-    a{
-        font-size: 12px;
-        color: #000;
-        text-decoration: none;
-        &:hover{
-          color: #040404;
-        }   
-    }
-`;
 
-const MentionsBody = styled.div`
-    width:100%;
-    height:100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items:flex-start;
-    padding-right:120px;
-`;
 interface MentionsProps {
     hide: boolean;
 }
@@ -115,10 +89,7 @@ const MentionSummary = styled.div`
     border-radius: 0px 5px 5px 0px;
 `;
 
-const MentionsHeader = styled.div`
-    padding-top:10px;
-    font-size: 18px;
-`;
+
 
 const Icon = styled.span`
     color: #555;

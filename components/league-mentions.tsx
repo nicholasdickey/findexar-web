@@ -3,11 +3,9 @@ import useSWRInfinite from 'swr/infinite'
 import useSWR from 'swr';
 import Link from 'next/link';
 import { useRouter } from 'next/router'
-import { UserButton, SignInButton } from "@clerk/nextjs";
+import { SignInButton } from "@clerk/nextjs";
 import { styled } from "styled-components";
 import Button from '@mui/material/Button';
-import Skeleton from '@mui/material/Skeleton';
-import Stack from '@mui/material/Stack';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import LoginIcon from '@mui/icons-material/Login';
@@ -232,27 +230,6 @@ const SidePlayer = styled.div`
   font-size: 16px;
   //margin-top: 10px;
  // margin-bottom:10px;
-`;
-const SelectedSidePlayer = styled.div`
-  height: 40px;
-  width: 200px;
-  color: #ff8;
-  text-align: center;
-  font-size: 14px;
-  margin: 10px;
-  a{
-    color: #ff8 !important;
-    text-decoration: none;
-    &:hover{
-      color: #F8F;
-    }
-  }
-`;
-const Empty = styled.div`
-width:100%;
-text-align:center;
-//color:red;
-//background-color:#888;
 `;
 const RightExplanation = styled.div`
   //height: 30px;
