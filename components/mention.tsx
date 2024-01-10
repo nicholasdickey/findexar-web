@@ -7,7 +7,7 @@ import { convertToUTCDateString, convertToReadableLocalTime } from "@/lib/date-c
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import StarIcon from '@mui/icons-material/Star';
-import { SignInButton } from "@clerk/nextjs";
+import { SignInButton,SignedOut,SignedIn } from "@clerk/nextjs";
 
 
 
@@ -95,6 +95,7 @@ const Icon = styled.span`
     color: #555;
     font-size: 28px;
     margin-top:10px;
+    margin-bottom:-20px;
     cursor:pointer;
     &:hover{
             color: #F00;
@@ -104,7 +105,7 @@ const MobileIcon = styled.span`
     color:#888;
     font-size: 38px;
    // margin-top:-20px;
-   margin-bottom:-20px;
+   margin-bottom:-40px;
     cursor:pointer;
     &:hover{
             color: #F00;
@@ -170,6 +171,7 @@ const ImageWrapper = styled.div`
 `;
 const Topline = styled.div`
     display:flex;
+    min-height:24px;
     flex-direction:row;
     justify-content :space-between ;
     align-items:center;
@@ -307,7 +309,7 @@ const Mention: React.FC<Props> = ({ params,noUser, mentionType, league, type, te
                 <MentionSummary>
 
                     <div>
-                        <Topline><LocalDate><i>{localDate}</i></LocalDate>{!localFav ? noUser ? <SignInButton><StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); addFavorite({ findexarxid }); mutate() }} style={{ color: "#888" }} /></SignInButton> : <StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); addFavorite({ findexarxid }); mutate(); }} style={{ color: "#888" }} /> : <StarIcon onClick={() => { if (noUser) return; setLocalFav(0); removeFavorite({ findexarxid }); mutate(); }} style={{ color: "FFA000" }} />}</Topline>
+                        <Topline><LocalDate><i>{localDate}</i></LocalDate><SignedOut><SignInButton><StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); addFavorite({ findexarxid }); mutate() }} style={{ color: "#888" }} /></SignInButton></SignedOut> <SignedIn><StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); addFavorite({ findexarxid }); mutate(); }} style={{ color: "#888" }} /> : <StarIcon onClick={() => { if (noUser) return; setLocalFav(0); removeFavorite({ findexarxid }); mutate(); }} style={{ color: "FFA000" }} /></SignedIn></Topline>
                        
                         <Link href={localUrl} onClick={() => { setLocalLeague(league); setLocalTeam(team); setLocalPlayer(type == 'person' ? name : ''); if (type == 'person') setLocalPageType('player'); else setLocalPageType('team'); }}>
                             {summary}

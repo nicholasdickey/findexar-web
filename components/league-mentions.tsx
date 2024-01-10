@@ -89,6 +89,7 @@ const MentionsHeader = styled.div`
 const MobileMentionsHeader = styled.div`
     padding-top:10px;
     font-size: 16px;
+    min-height:60px;
     //width:100%;
     padding-left:20px;
     padding-right:20px;

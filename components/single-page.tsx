@@ -24,7 +24,7 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import { UserButton, SignInButton } from "@clerk/nextjs";
+import { UserButton, SignInButton,SignedOut,SignedIn } from "@clerk/nextjs";
 import { palette } from '@/lib/palette';
 import { GlobalStyle } from '@/components/themes/globalStyle';
 
@@ -713,7 +713,7 @@ const Landing: React.FC<Props> = (props) => {
 
                 </LeftContainer>
 
-                <HeaderRight> <SUserButton afterSignOutUrl="/" /></HeaderRight>
+                <HeaderRight>  <SUserButton afterSignOutUrl="/" /></HeaderRight>
               </HeaderTopline>
             </Header>
 
