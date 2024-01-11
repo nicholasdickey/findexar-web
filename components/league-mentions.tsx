@@ -304,20 +304,22 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
   // now swrInfinite code:
   const { data, error: mentionsError, mutate, size, setSize, isValidating, isLoading } = useSWRInfinite(fetchMentionsKey, fetchMentions, { initialSize: 1, })
   let mentions = data ? [].concat(...data) : [];
-  //console.log("LOADED MENTIONS FROM FALLBACK", { data })
+  console.log("LOADED MENTIONS FROM FALLBACK", { data })
   const isLoadingMore =
     isLoading || (size > 0 && data && typeof data[size - 1] === "undefined");
   const isEmpty = data?.[0]?.length === 0;
   const isReachingEnd =
     isEmpty || (data && data[data.length - 1]?.length < 25);
   const isRefreshing = isValidating && data && data.length === size;
-
+  console.log("league-mentions noUser",noUser,"trackerFilter", localTrackerFilter )
   const favoritesKey: FavoritesKey = { type: "Favorites", noUser,noLoad:view!="fav" };
   const { data: favoritesMentions, mutate: mutateFavorites } = useSWR(favoritesKey, getFavorites);
   //console.log("favoritesMentions", favoritesMentions)
   if (view == "fav") {
     mentions = favoritesMentions;
   }
+  if(!view)
+  view="mentions";
   const trackerListMembersKey: TrackerListMembersKey = { type: "tracker_list_members", league, noUser,noLoad:view!="my team" };
   const { data: trackerListMembers, error: trackerListError, isLoading: trackerListLoading, mutate: trackerListMutate } = useSWR(trackerListMembersKey, getTrackerListMembers);
   console.log("trackerListMembers", trackerListMembers)
@@ -325,6 +327,8 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
     const { league, type, team, teamName, name, date, url, findex, summary, findexarxid, fav } = m;
     // console.log("XID:",league,name,xid)
    // console.log("rendering mention",teamName)
+  
+  
     return (<Mention
       noUser={noUser}
       mentionType="top"
@@ -357,10 +361,10 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
        <Skeleton variant="rounded" animation="pulse" height={120} />
        <Skeleton variant="rounded" animation="pulse" height={160} />
    </Stack>)*/
-  console.log("mentions view=", view, "localTrackerFilter=", localTrackerFilter)
-  if(view!="fav"&&view!="mentions"&&view!='my team'){
+  //console.log("mentions view=", view, "localTrackerFilter=", localTrackerFilter)
+ /* if(view!="fav"&&view!="mentions"&&view!='my team'){
     return <></>
-  }
+  }*/
   return (
     <>
       <OuterContainer>
@@ -443,11 +447,11 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
           }} />} label="My Team" /></SignedIn>
 
           <SignedOut><SignInButton><Button size="small" variant="outlined"><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></SignedOut>
-          {!league && !noUser && <FormControlLabel control={<Checkbox disabled={noUser || (localTrackerFilter == 1)} checked={false} onChange={
+          {!league  && <SignedIn><FormControlLabel control={<Checkbox disabled={ localTrackerFilter == 1} checked={false} onChange={
             (event: React.ChangeEvent<HTMLInputElement>) => {
               setLocalView("fav");
-              router.push(league ? `/pro/league/${league}?view=fav${params2}` : `/pro?view=fav${params2}`)
-            }} />} label="Favorites" />}
+              router.push(league ? `/pro/league/${league}?view=fav${params2}` : `/pro/league?view=fav${params2}`)
+            }} />} label="Favorites" /></SignedIn>}
         </MobileMentionsHeader>}
 
         {(view == "fav" && !league) && <MobileMentionsHeader><FormControlLabel control={<Checkbox disabled={true} checked={localTrackerFilter == 1} onChange={
@@ -460,7 +464,7 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
           {!noUser && (localTrackerFilter != 1) && <FormControlLabel control={<Checkbox disabled={noUser} checked={true} onChange={
             (event: React.ChangeEvent<HTMLInputElement>) => {
               setLocalView("mentions");
-              router.push(league ? `/pro/league/${league}${params2}` : `/pro${params2}`)
+              router.push(league ? `/pro/league/${league}${params2}` : `/pro/league${params2}`)
             }} />} label="Favorites" />}</MobileMentionsHeader>}
 
         <MentionsBody>
