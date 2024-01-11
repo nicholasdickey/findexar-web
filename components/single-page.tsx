@@ -608,7 +608,7 @@ const SinglePage: React.FC<Props> = (props) => {
   useEffect(() => {
     console.log("view changed2", view, localView)
     setLocalView(view.toLowerCase());
-  }, [view]);
+  }, [view,localView]);
   let v=!localView||localView=="home"?"mentions":localView;
   v=v.toLowerCase();
   const onLeagueNavClick = async (l: string) => {
@@ -634,21 +634,24 @@ const SinglePage: React.FC<Props> = (props) => {
   //console.log("selectedLeague", selectedLeague)
 
   useEffect(() => {
-    const t2= new Date().getTime();
-    recordEvent(sessionid as string||"", `${pagetype=='landing'?'landing':'single-page'}-time`, `{"fbclid":"${fbclid}","time":"${t2-t1||0}"}`).then(()=>{});
-
-  },[]);
+    if(pagetype!='landing'){
+      const t2= new Date().getTime();
+      recordEvent(sessionid as string||"", `single-page-time`, `{"fbclid":"${fbclid}","time":"${t2-t1||0}"}`).then(()=>{});
+    }
+  },[fbclid,pagetype,sessionid,t1]);
   useEffect(() => {
     //if (!router.isReady) return;
+    if(pagetype!='landing'){
     try {
-      recordEvent(sessionid as string || "", `${pagetype=='landing'?'landing':'single-page'}-loaded`, `{"fbclid":"${fbclid}","isbot":"${isbot}","league":"${league}", "team":"${team}", "player":"${player}", "pagetype":"${pagetype}", "view":"${view}", "userId":"${localUserId}", "utm_content":"${utm_content}"}`)
+      recordEvent(sessionid as string || "", `single-page-loaded`, `{"fbclid":"${fbclid}","isbot":"${isbot}","league":"${league}", "team":"${team}", "player":"${player}", "pagetype":"${pagetype}", "view":"${view}", "userId":"${localUserId}", "utm_content":"${utm_content}"}`)
         .then((r: any) => {
           console.log("recordEvent", r);
         });
     } catch (x) {
       console.log('recordEvent', x);
     }
-  }, [pagetype, league, team, player, view, fbclid, utm_content]);
+  }
+  }, [pagetype, league, team, player, view, fbclid, utm_content,isbot,localUserId,sessionid]);
   
   /* if (dark) {
      theme = createTheme({

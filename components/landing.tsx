@@ -182,30 +182,55 @@ const Landing = () => {
     const [utm_content, setUtm_content] = useState("");
     const [params, setParams] = useState("");
     const router = useRouter();
-useEffect(() => {
-    if (!router.isReady) return;
-    const query = router.query;
-    console.log("query", query);
-    const fbclid = query.fbclid as string || "";
-    const utm_content = query.utm_content as string || "";
-    setUtm_content(utm_content);
-    setFbclid(fbclid);
-   
-    let params = ''
-    let p: string[] = [];
-   
-    console.log("parsed params", fbclid, utm_content);
-    if (fbclid)
-      p.push(`fbclid=${fbclid}`);
-    if (utm_content)
-      p.push(`utm_content=${utm_content}`);
-    if (p.length > 0) {
-      params = `?${p.join('&')}`;
-    }
-    setParams(params);
-},[router.isReady,router.query]);
+    useEffect(() => {
+        if (!router.isReady) return;
+        const query = router.query;
+        console.log("query", query);
+        const fbclid = query.fbclid as string || "";
+        const utm_content = query.utm_content as string || "";
+        setUtm_content(utm_content);
+        setFbclid(fbclid);
+    
+        let params = ''
+        let p: string[] = [];
+    
+        console.log("parsed params", fbclid, utm_content);
+        if (fbclid)
+        p.push(`fbclid=${fbclid}`);
+        if (utm_content)
+        p.push(`utm_content=${utm_content}`);
+        if (p.length > 0) {
+        params = `?${p.join('&')}`;
+        }
+        setParams(params);
+    },[router.isReady,router.query]);
+    useEffect(() => {
+        if (!router.isReady) return;
+    
+        try {
+        recordEvent( "", `landing-loaded`, `{"fbclid":"${fbclid}", "utm_content":"${utm_content}"}`)
+            .then((r: any) => {
+            console.log("recordEvent", r);
+            });
+        } catch (x) {
+        console.log('recordEvent', x);
+        }
+    
+    },[router.isReady,router.query,fbclid,utm_content]);
+
     const theme = useTheme();
-    return (
+    const onClick= ()=>{
+        try {
+            recordEvent( "", `enter-clicked`, `{"fbclid":"${fbclid}", "utm_content":"${utm_content}"}`)
+                .then((r: any) => {
+                console.log("recordEvent", r);
+                });
+            } catch (x) {
+            console.log('recordEvent', x);
+            }
+
+    }
+return (
         <>
             <Head>
                 <title>Findexar</title>
@@ -279,8 +304,8 @@ useEffect(() => {
 
                             Powered by OpenAI.
                         </MobileTextContainer></MobileContainerWrap> 
-                       <ButtonContainer><Button variant="outlined" color="primary" href={`/pub${params}`}><h2>Enter Findexar</h2></Button></ButtonContainer>
-                       <MobileButtonContainer><Button variant="outlined" color="primary" href={`/pub${params}`}><h2>Enter Findexar</h2></Button></MobileButtonContainer>
+                       <ButtonContainer><Button onClick={onClick} variant="outlined" color="primary" href={`/pub${params}`}><h2>Enter Findexar</h2></Button></ButtonContainer>
+                       <MobileButtonContainer><Button onClick={onClick}  variant="outlined" color="primary" href={`/pub${params}`}><h2>Enter Findexar</h2></Button></MobileButtonContainer>
                        
                        <ContainerWrap><TextContainerCenter>
                        
