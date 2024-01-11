@@ -464,7 +464,7 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
           {!noUser && (localTrackerFilter != 1) && <FormControlLabel control={<Checkbox disabled={noUser} checked={true} onChange={
             (event: React.ChangeEvent<HTMLInputElement>) => {
               setLocalView("mentions");
-              router.push(league ? `/pro/league/${league}${params2}` : `/pro/league${params2}`)
+              router.push(league ? `/pro/league/${league}${params}` : `/pro/league${params}`)
             }} />} label="Favorites" />}</MobileMentionsHeader>}
 
         <MentionsBody>
