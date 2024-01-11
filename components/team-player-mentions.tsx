@@ -73,6 +73,7 @@ interface Props {
     setLocalLeague: (league: string) => void;
     setLocalTeam: (team: string) => void;
     params:string;
+    sessionid:string;
    
 }
 

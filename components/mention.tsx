@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import useSWRImmutable from 'swr/immutable'
 import Link from 'next/link';
 import { styled } from "styled-components";
-import { MetaLinkKey, getMetaLink, addFavorite, removeFavorite } from '@/lib/api';
+import { MetaLinkKey, getMetaLink, addFavorite, removeFavorite, recordEvent } from '@/lib/api';
 import { convertToUTCDateString, convertToReadableLocalTime } from "@/lib/date-convert";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
@@ -254,12 +254,13 @@ interface Props {
     setLocalLeague: (league: string) => void;
     setLocalTeam: (team: string) => void;
     mutate: () => void;
-    params:string;
+    params: string;
+    sessionid: string;
 
-    
+
 }
 
-const Mention: React.FC<Props> = ({ params,noUser, mentionType, league, type, team, teamName,name, date, url, findex, summary, findexarxid, fav, setLocalPageType, setLocalPlayer, setLocalLeague, setLocalTeam, mutate }) => {
+const Mention: React.FC<Props> = ({ sessionid, params, noUser, mentionType, league, type, team, teamName, name, date, url, findex, summary, findexarxid, fav, setLocalPageType, setLocalPlayer, setLocalLeague, setLocalTeam, mutate }) => {
     const [expanded, setExpanded] = React.useState(false);
     const [localDate, setLocalDate] = React.useState(convertToUTCDateString(date));
     const [localFav, setLocalFav] = React.useState(fav);
@@ -268,14 +269,14 @@ const Mention: React.FC<Props> = ({ params,noUser, mentionType, league, type, te
         setLocalFav(fav);
     }, [fav]);
     useEffect(() => {
-        if(!summary||summary.length<6||!date||!url){
+        if (!summary || summary.length < 6 || !date || !url) {
             setHide(true);
             mutate();
         }
-        if(summary&&summary.length>6&&date&&url){
+        if (summary && summary.length > 6 && date && url) {
             setHide(false);
         }
-    }, [summary,mutate,date,url]);
+    }, [summary, mutate, date, url]);
     //console.log("mention params:",params)
     let localUrl = /*mentionType == "top" ?*/ (type == 'person' ? `/pro/league/${league}/team/${team}/player/${name}${params}` : `/pub/league/${league}/team/${team}${params}`) /*: url*/;
     const mentionsKey: MetaLinkKey = { func: "meta", findexarxid };
@@ -290,12 +291,25 @@ const Mention: React.FC<Props> = ({ params,noUser, mentionType, league, type, te
             console.log("EXCEPTION CONVERTING DATE");
         }
     }, [date])
-  
+    const onMentionNav = async (name: string) => {
+        setLocalLeague(league);
+        setLocalTeam(team);
+        setLocalPlayer(type == 'person' ? name : '');
+        if (type == 'person')
+            setLocalPageType('player');
+        else
+            setLocalPageType('team');
+        await recordEvent(sessionid as string || "",
+            'mention-nav',
+            `{"params":"${params}","name":"${name}"}`
+        );
+    }
+
     return (
         <>
             <MentionWrap hide={hide}>
                 <MentionFindex>
-                    
+
                     {mentionType == "top1" && <span>{league}</span>}
                     <br />
                     <Icon onClick={
@@ -309,12 +323,12 @@ const Mention: React.FC<Props> = ({ params,noUser, mentionType, league, type, te
 
                     <div>
                         <Topline><LocalDate><i>{localDate}</i></LocalDate>{!localFav ? noUser ? <SignInButton><StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); addFavorite({ findexarxid }); mutate() }} style={{ color: "#888" }} /></SignInButton> : <StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); addFavorite({ findexarxid }); mutate(); }} style={{ color: "#888" }} /> : <StarIcon onClick={() => { if (noUser) return; setLocalFav(0); removeFavorite({ findexarxid }); mutate(); }} style={{ color: "FFA000" }} />}</Topline>
-                       
-                        <Link href={localUrl} onClick={() => { setLocalLeague(league); setLocalTeam(team); setLocalPlayer(type == 'person' ? name : ''); if (type == 'person') setLocalPageType('player'); else setLocalPageType('team'); }}>
+
+                        <Link href={localUrl} onClick={async () => { await onMentionNav(name) }}>
                             {summary}
                         </Link>
                         <hr />
-                        <Atmention><b>{(type=="person")&&'@'}{name}</b> | {type=="person"?`${teamName} |`:""} {league} </Atmention>
+                        <Atmention><b>{(type == "person") && '@'}{name}</b> | {type == "person" ? `${teamName} |` : ""} {league} </Atmention>
                         <Atmention2>{meta?.site_name}</Atmention2>
                     </div>
                     {expanded && meta && <Link href={url}><ExtendedMention>
@@ -342,13 +356,13 @@ const Mention: React.FC<Props> = ({ params,noUser, mentionType, league, type, te
                 <MentionSummary>
 
                     <div>
-                        <Topline><LocalDate><b><i>{localDate}</i></b></LocalDate>{!localFav  ? noUser ? <SignInButton><StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); addFavorite({ findexarxid }); mutate(); }} style={{ color: "#888" }} /></SignInButton> : <StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); addFavorite({ findexarxid }); mutate(); }} style={{ color: "#888" }} /> : <StarIcon onClick={() => { if (noUser) return; setLocalFav(0); removeFavorite({ findexarxid }); mutate(); }} style={{ color: "FFA000" }} />}</Topline>
+                        <Topline><LocalDate><b><i>{localDate}</i></b></LocalDate>{!localFav ? noUser ? <SignInButton><StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); addFavorite({ findexarxid }); mutate(); }} style={{ color: "#888" }} /></SignInButton> : <StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); addFavorite({ findexarxid }); mutate(); }} style={{ color: "#888" }} /> : <StarIcon onClick={() => { if (noUser) return; setLocalFav(0); removeFavorite({ findexarxid }); mutate(); }} style={{ color: "FFA000" }} />}</Topline>
 
-                        <Link href={localUrl} onClick={() => { setLocalLeague(league); setLocalTeam(team); setLocalPlayer(type == 'person' ? name : ''); if (type == 'person') setLocalPageType('player'); else setLocalPageType('team'); }}>
+                        <Link href={localUrl} onClick={async () => { await onMentionNav(name) }}>
                             {summary}
                         </Link>
                         <hr />
-                        <Atmention><b>{(type=="person")&&'@'}{name}</b> | {type=="person"?`${teamName} |`:""}  {league}</Atmention>  
+                        <Atmention><b>{(type == "person") && '@'}{name}</b> | {type == "person" ? `${teamName} |` : ""}  {league}</Atmention>
                         <MobileAtmention2>{meta?.site_name}</MobileAtmention2>
 
                     </div>

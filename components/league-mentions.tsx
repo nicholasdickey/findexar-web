@@ -269,9 +269,10 @@ interface Props {
   view: string;
   params2:string;
   params:string
+  sessionid:string
 }
 
-const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, setLocalPlayer, setLocalLeague, setLocalTeam, setLocalView, view,params,params2 }) => {
+const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, setLocalPlayer, setLocalLeague, setLocalTeam, setLocalView, view,params,params2,sessionid }) => {
 
   const optionsKey: UserOptionsKey = { type: "options", noUser };
   const { data: options, error: optionsError, isLoading: optionsLoading, mutate: optionsMutate } = useSWR(optionsKey, getOptions);
@@ -345,6 +346,7 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
       setLocalPageType={setLocalPageType}
       mutate={() => { mutate() }}
       params={params}
+      sessionid={sessionid}
 
     />)
   });

@@ -12,7 +12,7 @@ import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import IconButton from '@mui/material/IconButton';
-import { AddTrackerListMemberParams, addTrackerListMember,RemoveTrackerListMemberParams,removeTrackerListMember,getTeamPlayers,TeamPlayersKey } from '@/lib/api';
+import { AddTrackerListMemberParams, addTrackerListMember, RemoveTrackerListMemberParams, removeTrackerListMember, getTeamPlayers, TeamPlayersKey, recordEvent } from '@/lib/api';
 //import TeamDetails from "./team-details";
 //import PlayerDetails from "./player-details";
 import SecondaryTabs from "./secondary-tabs";
@@ -164,57 +164,75 @@ interface Props {
   subscriptionPrompt: boolean;
   subscriptionObject: any;
   setDismiss: any;
-  noUser:boolean;
+  noUser: boolean;
   setLocalPageType: (pageType: string) => void;
   setLocalPlayer: (player: string) => void;
   setLocalLeague: (league: string) => void;
   setLocalTeam: (team: string) => void;
   setLocalView: (view: string) => void;
-  params:string;
-  params2:string;
+  params: string;
+  params2: string;
+  sessionid: string
 
 }
 
 const Team: React.FC<Props> = (props) => {
-  let { noUser,setDismiss, subscriptionPrompt, subscriptionObject, view, teams, dark, league, team, player, pagetype, teamName, setLocalPlayer, setLocalPageType,setLocalView,params,params2} = props;
- // const [v, setV] = React.useState((!view || view.toLowerCase() == "home") ? "mentions" : view.toLowerCase());
+  let { sessionid, noUser, setDismiss, subscriptionPrompt, subscriptionObject, view, teams, dark, league, team, player, pagetype, teamName, setLocalPlayer, setLocalPageType, setLocalView, params, params2 } = props;
+  // const [v, setV] = React.useState((!view || view.toLowerCase() == "home") ? "mentions" : view.toLowerCase());
   const [selectedTeam, setSelectedTeam] = React.useState(team);
   const [selectedPlayer, setSelectedPlayer] = React.useState(player);
   const [globalLoading, setGlobalLoading] = React.useState(false);
 
 
-  const teamPlayersKey: TeamPlayersKey = { type:'teamPlayers',league: league || "", teamid: team || "" };
-  const { data: players, error, isLoading,mutate:mutatePlayers } = useSWR(teamPlayersKey, getTeamPlayers);
+  const teamPlayersKey: TeamPlayersKey = { type: 'teamPlayers', league: league || "", teamid: team || "" };
+  const { data: players, error, isLoading, mutate: mutatePlayers } = useSWR(teamPlayersKey, getTeamPlayers);
   //console.log("players", players);
   const router = useRouter();
   useEffect(() => {
     if (!view || view == "home")
       setLocalView("mentions");
-  }, [view,setLocalView]);
+  }, [view, setLocalView]);
   useEffect(() => {
     setSelectedTeam(team);
     setLocalView("mentions");
     setGlobalLoading(false);
 
-  }, [team,setLocalView]);
+  }, [team, setLocalView]);
   useEffect(() => {
     setSelectedPlayer(player);
     setLocalView("mentions");
     setGlobalLoading(false);
 
-  }, [player,setLocalView]);
-  
+  }, [player, setLocalView]);
+  const onViewNav = async (option: { name: string, access: string }) => {
+    setLocalView(option.name.toLowerCase());
+    router.replace(`/pro/league/${league}/team/${team}?view=${encodeURIComponent(option.name.toLowerCase())}${params2}`);
+    await recordEvent(sessionid as string || "",
+      'team-view-nav',
+      `{"params":"${params}","view":"${option.name}"}`
+    );
+  }
+  const onPlayerNav = async (name: string) => {
+    setLocalPageType("player");
+    setLocalPlayer(name);
+    setLocalView("mentions");
+    setGlobalLoading(true);
+    await recordEvent(sessionid as string || "",
+      'player-nav',
+      `{"params":"${params}","player":"${name}"}`
+    );
+  }
   console.log("TeamPage", { subscriptionPrompt, team, pagetype, view, selectedTeam, selectedPlayer })
-  const PlayersNav = players&&players?.map((p: { name: string, findex: string, mentions: string,tracked:boolean},i:number) => {
+  const PlayersNav = players && players?.map((p: { name: string, findex: string, mentions: string, tracked: boolean }, i: number) => {
     return <SideGroup key={`ewfggvfn-${i}`}>{p.name == player ?
       <SelectedSidePlayer>
-        <Link onClick={() => { setLocalPageType("player"); setLocalPlayer(p.name); setLocalView("mentions"); setGlobalLoading(true) }} href={`/pro/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}${params}`}>
+        <Link onClick={async () => { onPlayerNav(p.name)}} href={`/pro/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}${params}`}>
           {p.name} ({`${p.mentions}`})
         </Link>
       </SelectedSidePlayer>
       :
       <SidePlayer>
-        <Link onClick={() => { setLocalPlayer(p.name); setLocalView("mentions"); setGlobalLoading(true) }} href={`/pro/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}${params}`}>
+        <Link onClick={() => { async () => { onPlayerNav(p.name)}}} href={`/pro/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}${params}`}>
           {p.name} ({`${p.mentions || 0}`})
         </Link>
       </SidePlayer>}
@@ -224,35 +242,35 @@ const Team: React.FC<Props> = (props) => {
             setSelectedPlayer(p.name);
             if (p.tracked == true) {
               console.log("TRACKED", p.name)
-              const removeTrackerListMemberParams:RemoveTrackerListMemberParams={ member: p.name,  teamid: team || "" };
-          
+              const removeTrackerListMemberParams: RemoveTrackerListMemberParams = { member: p.name, teamid: team || "" };
+
               //to copilot: find in players the item with name p.name and set tracked to true.
-              mutatePlayers((players:any)=>{
-                return players.map((player:any)=>{
-                  if(player.name==p.name){
-                    player.tracked=false;
+              mutatePlayers((players: any) => {
+                return players.map((player: any) => {
+                  if (player.name == p.name) {
+                    player.tracked = false;
                   }
                   return player;
                 })
-              },false);
+              }, false);
               await removeTrackerListMember(removeTrackerListMemberParams);
             }
             else {
-              const addTrackerListMemberParams:AddTrackerListMemberParams={ member: p.name,  teamid: team || "" };    
-              mutatePlayers((players:any)=>{
-                return players.map((player:any)=>{
-                  if(player.name==p.name){
-                    player.tracked=true;
+              const addTrackerListMemberParams: AddTrackerListMemberParams = { member: p.name, teamid: team || "" };
+              mutatePlayers((players: any) => {
+                return players.map((player: any) => {
+                  if (player.name == p.name) {
+                    player.tracked = true;
                   }
                   return player;
                 })
-              },false);
+              }, false);
               console.log("after mutatePlayers");
               await addTrackerListMember(addTrackerListMemberParams);
-            }     
+            }
           }} size="large" aria-label="Add new list">
           <SideIcon>
-            {p.tracked?<PlaylistRemoveIcon sx={{color:"#afa"}}/>:<PlaylistAddIcon />}
+            {p.tracked ? <PlaylistRemoveIcon sx={{ color: "#afa" }} /> : <PlaylistAddIcon />}
           </SideIcon>
         </IconButton>
       </SideButton>
@@ -267,7 +285,7 @@ const Team: React.FC<Props> = (props) => {
       <MainPanel>
         <CenterPanel>
           {pagetype == "team" ? <TeamPlayerMentions {...props} /> : <TeamPlayerMentions {...props} />}
-        
+
         </CenterPanel>
         <RightPanel>
           <TeamName>{teamName}</TeamName>
@@ -276,12 +294,12 @@ const Team: React.FC<Props> = (props) => {
       </MainPanel>
       <MainMobilePanel>
 
-        {pagetype == "team" && <SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> }, { name: "Mentions", icon: <MentionIcon /> }, { name: "Players", icon: <PlayerIcon /> }]} onChange={(option: any) => { console.log(option);setLocalView(option.name.toLowerCase());router.replace(`/pro/league/${league}/team/${team}?view=${encodeURIComponent(option.name.toLowerCase())}${params2}`); }} selectedOptionName={view} />}
-        {pagetype == "player" && <SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> }, { name: "Mentions", icon: <MentionIcon /> }, { name: "Players", icon: <PlayerIcon /> }]} onChange={(option: any) => { console.log(option);setLocalView(option.name.toLowerCase());router.replace(`/pro/league/${league}/team/${team}/player/${player}?view=${encodeURIComponent(option.name.toLowerCase())}${params2}`); }} selectedOptionName={view} />}
+        {pagetype == "team" && <SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> }, { name: "Mentions", icon: <MentionIcon /> }, { name: "Players", icon: <PlayerIcon /> }]} onChange={async (option: any) => { console.log(option); await onViewNav(option) }} selectedOptionName={view} />}
+        {pagetype == "player" && <SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> }, { name: "Mentions", icon: <MentionIcon /> }, { name: "Players", icon: <PlayerIcon /> }]} onChange={async (option: any) => { console.log(option); await onViewNav(option); }} selectedOptionName={view} />}
         {subscriptionPrompt && <SubscriptionMenu hardStop={false} {...subscriptionObject} setDismiss={setDismiss} />}
 
         {view == 'teams' && teams}
-        
+
         {view == 'mentions' && <TeamPlayerMentions {...props} />}
         {view == 'players' &&
           <MobilePlayersPanel>
