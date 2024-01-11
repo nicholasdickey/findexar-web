@@ -177,23 +177,23 @@ interface Props {
 }
 
 const Team: React.FC<Props> = (props) => {
-  let { sessionid, noUser, setDismiss, subscriptionPrompt, subscriptionObject, view, teams, dark, league, team, player, pagetype, teamName, setLocalPlayer, setLocalPageType, setLocalView, params, params2 } = props;
+  let { sessionid, noUser, setDismiss, subscriptionPrompt, subscriptionObject, view, teams, dark, league, team, player, pagetype, teamName, setLocalPlayer, setLocalPageType, setLocalView, setLocalTeam,params, params2 } = props;
   // const [v, setV] = React.useState((!view || view.toLowerCase() == "home") ? "mentions" : view.toLowerCase());
-  const [selectedTeam, setSelectedTeam] = React.useState(team);
+ /* const [selectedTeam, setSelectedTeam] = React.useState(team);
   const [selectedPlayer, setSelectedPlayer] = React.useState(player);
-  const [globalLoading, setGlobalLoading] = React.useState(false);
+  const [globalLoading, setGlobalLoading] = React.useState(false);*/
 
 
   const teamPlayersKey: TeamPlayersKey = { type: 'teamPlayers', league: league || "", teamid: team || "" };
   const { data: players, error, isLoading, mutate: mutatePlayers } = useSWR(teamPlayersKey, getTeamPlayers);
   //console.log("players", players);
   const router = useRouter();
-  useEffect(() => {
+ /* useEffect(() => {
     if (!view || view == "home")
       setLocalView("mentions");
-  }, [view, setLocalView]);
-  useEffect(() => {
-    setSelectedTeam(team);
+  }, [view, setLocalView]);*/
+  /*useEffect(() => {
+    setLocalTeam(team);
     setLocalView("mentions");
     setGlobalLoading(false);
 
@@ -203,7 +203,7 @@ const Team: React.FC<Props> = (props) => {
     setLocalView("mentions");
     setGlobalLoading(false);
 
-  }, [player, setLocalView]);
+  }, [player, setLocalView]);*/
   const onViewNav = async (option: { name: string, access: string }) => {
     setLocalView(option.name.toLowerCase());
     router.replace(`/pro/league/${league}/team/${team}?view=${encodeURIComponent(option.name.toLowerCase())}${params2}`, undefined, { shallow: true });
@@ -223,7 +223,7 @@ const Team: React.FC<Props> = (props) => {
       `{"params":"${params}","player":"${name}"}`
     );
   }
-  console.log("TeamPage", { subscriptionPrompt, team, pagetype, view, selectedTeam, selectedPlayer })
+  console.log("TeamPage", { subscriptionPrompt, team,player, pagetype, view })
   const PlayersNav = players && players?.map((p: { name: string, findex: string, mentions: string, tracked: boolean }, i: number) => {
     return <SideGroup key={`ewfggvfn-${i}`}>{p.name == player ?
       <SelectedSidePlayer>
@@ -240,7 +240,7 @@ const Team: React.FC<Props> = (props) => {
       <SideButton>
         <IconButton
           onClick={async () => {
-            setSelectedPlayer(p.name);
+            setLocalPlayer(p.name);
             if (p.tracked == true) {
               console.log("TRACKED", p.name)
               const removeTrackerListMemberParams: RemoveTrackerListMemberParams = { member: p.name, teamid: team || "" };

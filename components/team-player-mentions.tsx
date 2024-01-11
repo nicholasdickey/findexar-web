@@ -82,11 +82,11 @@ const TeamPlayerMentions: React.FC<Props> = (props) => {
    // const [localTeam, setLocalTeam] = React.useState(team);
    // const [localPlayer, setLocalPlayer] = React.useState(player);
 
-    //console.log("teamPlayerMentions", team, teamName, noUser)
+    console.log("teamPlayerMentions", {team, teamName, player,noUser})
     const fetchMentionsKey = (pageIndex: number, previousPageData: any): FetchedMentionsKey | null => {
        // console.log("getMentionsKey=", pageIndex, previousPageData)
         let key: FetchedMentionsKey = { type: "FetchedMentions", teamid: team || "", name: player || "", noUser, page: pageIndex, league, myteam: 0,noLoad:false };
-      //  console.log("getMentionsKey=>>>",key)
+         console.log("getTeamPlayerMentionsKey=>>>",key)
         
         if (previousPageData && !previousPageData.length) return null // reached the end
         return key;
@@ -94,7 +94,7 @@ const TeamPlayerMentions: React.FC<Props> = (props) => {
     // now swrInfinite code:
     const { data, error: mentionsError, mutate, size, setSize, isValidating, isLoading } = useSWRInfinite(fetchMentionsKey, fetchMentions, { initialSize: 1, })
     const mentions = data ? [].concat(...data) : [];
-  //  console.log("LOADED MENTIONS FROM FALLBACK",{data,fm,mentions})
+    console.log("LOADED MENTIONS FROM FALLBACK",{isValidating,isLoading,mentions})
     const isLoadingMore =
         isLoading || (size > 0 && data && typeof data[size - 1] === "undefined");
     const isEmpty = data?.[0]?.length === 0;

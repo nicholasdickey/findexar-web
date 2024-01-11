@@ -871,7 +871,7 @@ const Landing: React.FC<Props> = (props) => {
                 </div>}
               {v != "readme" && (localPageType == 'team' || localPageType == 'player') &&
                 <div>
-                  <Team sessionid={sessionid} params={params} params2={params2} noUser={!localUserId} setDismiss={setDismiss} subscriptionPrompt={subscriptionPrompt && !dismiss} subscriptionObject={subscriptionObject} view={v} teams={<LeftMobilePanel>{TeamsNav}</LeftMobilePanel>} team={localTeam} league={localLeague} teamName={teamName} pagetype={localPageType} player={player} setLocalPlayer={setLocalPlayer} setLocalPageType={setLocalPageType} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} />
+                  <Team sessionid={sessionid} params={params} params2={params2} noUser={!localUserId} setDismiss={setDismiss} subscriptionPrompt={subscriptionPrompt && !dismiss} subscriptionObject={subscriptionObject} view={v} teams={<LeftMobilePanel>{TeamsNav}</LeftMobilePanel>} team={localTeam} league={localLeague} teamName={teamName} pagetype={localPageType} player={localPlayer} setLocalPlayer={setLocalPlayer} setLocalPageType={setLocalPageType} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} />
                 </div>
               }
               {v == 'readme' && <Readme />}
