@@ -608,8 +608,8 @@ const SinglePage: React.FC<Props> = (props) => {
   useEffect(() => {
     console.log("view changed2", view, localView)
     setLocalView(view.toLowerCase());
-  }, [view,localView]);
-  let v=!localView||localView=="home"?"mentions":localView;
+  }, [view]);
+  let v=(!localView||localView=="home")?"mentions":localView;
   v=v.toLowerCase();
   const onLeagueNavClick = async (l: string) => {
     setLocalLeague(l);
