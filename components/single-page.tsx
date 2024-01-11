@@ -601,8 +601,8 @@ const Landing: React.FC<Props> = (props) => {
     console.log("view changed2", view, localView)
     setLocalView(view.toLowerCase());
   }, [view]);
-  const v=!localView||localView=="home"?"mentions":localView;
-  
+  let v=!localView||localView=="home"?"mentions":localView;
+  v=v.toLowerCase();
   const onLeagueNavClick = async (l: string) => {
     setLocalLeague(l);
     setLocalView('mentions');
