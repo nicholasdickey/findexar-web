@@ -90,21 +90,22 @@ const ssr = async (context: GetServerSidePropsContext) => {
         var randomstring = () => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
         let sessionid=getCookie('sessionid', { req:context.req, res:context.res });
         console.log("========== ========= SSR CHECKPOINT 1:", new Date().getTime() - t1, "ms");
-      
+        let fresh = false;
         if(!sessionid){
+            fresh=true;
             sessionid = randomstring();
             setCookie('sessionid', sessionid, { req:context.req, res:context.res, maxAge: 60 * 6 * 24 });  
         }
         if (!botInfo.bot) {
             try {
-                recordEvent(sessionid, 'ssr-landing-init', `{"fbclid":"${fbclid}","ua":"${ua}","utm_content":"${utm_content}"}`);
+                recordEvent(sessionid, `ssr-pub${fresh?'-init':''}`, `{"fbclid":"${fbclid}","ua":"${ua}","utm_content":"${utm_content}"}`);
             } catch (x) {
                 console.log('ssr-landing-init-error', x);
             }
         }
         if (botInfo.bot) {
             try {
-                await recordEvent(sessionid, 'ssr-bot-landing-init', `{"fbclid":"${fbclid}","ua":"${ua}","utm_content":"${utm_content}"}`);
+                await recordEvent(sessionid, 'ssr-bot-pub', `{"fbclid":"${fbclid}","ua":"${ua}","utm_content":"${utm_content}"}`);
             } catch (x) {
                 console.log('ssr-bot-landing-init-error', x);
             }

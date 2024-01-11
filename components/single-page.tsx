@@ -36,6 +36,7 @@ import SecondaryTabs from "./secondary-tabs";
 import PlayerPhoto from "./player-photo";
 import SubscriptionMenu from "./subscription-menu";
 import Readme from "./readme";
+import Landing from "./landing";
 const Header = styled.header`
   height: 80px;
   width: 100%;
@@ -455,7 +456,10 @@ interface Props {
 
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 
-const Landing: React.FC<Props> = (props) => {
+const SinglePage: React.FC<Props> = (props) => {
+
+
+
   let { t1, fbclid = "", sessionid = "", isfb, isbot, list, freeUser, createdAt, userId, utm_content, dark, leagues, league = "", team = "", pagetype = "league", player = "", view = "" } = props;
   const [localTeam, setLocalTeam] = useState(team);
   const [localPlayer, setLocalPlayer] = useState(player);
@@ -471,11 +475,17 @@ const Landing: React.FC<Props> = (props) => {
   const [params2, setParams2] = useState("");
   const [localUserId, setLocalUserId] = useState(userId);
 
+  
   //console.log("pageType:", localPageType)
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
- // console.log("localLeague=", localLeague, "league=", league);
+ 
+ 
+  /*if(pagetype=="landing"){
+    return <Landing/>
+  }*/
+  // console.log("localLeague=", localLeague, "league=", league);
   //const [redirect:(args: redirectToCheckoutArgs) => Promise<void>, setRedirect] = useState(null);
   useEffect(() => {
     setLocalTeam(team);
@@ -625,13 +635,13 @@ const Landing: React.FC<Props> = (props) => {
 
   useEffect(() => {
     const t2= new Date().getTime();
-    recordEvent(sessionid as string||"", 'load-time', `{"fbclid":"${fbclid}","time":"${t2-t1||0}"}`).then(()=>{});
+    recordEvent(sessionid as string||"", `${pagetype=='landing'?'landing':'single-page'}-time`, `{"fbclid":"${fbclid}","time":"${t2-t1||0}"}`).then(()=>{});
 
   },[]);
   useEffect(() => {
     //if (!router.isReady) return;
     try {
-      recordEvent(sessionid as string || "", 'single-page-loaded', `{"fbclid":"${fbclid}","isbot":"${isbot}","league":"${league}", "team":"${team}", "player":"${player}", "pagetype":"${pagetype}", "view":"${view}", "userId":"${localUserId}", "utm_content":"${utm_content}"}`)
+      recordEvent(sessionid as string || "", `${pagetype=='landing'?'landing':'single-page'}-loaded`, `{"fbclid":"${fbclid}","isbot":"${isbot}","league":"${league}", "team":"${team}", "player":"${player}", "pagetype":"${pagetype}", "view":"${view}", "userId":"${localUserId}", "utm_content":"${utm_content}"}`)
         .then((r: any) => {
           console.log("recordEvent", r);
         });
@@ -749,8 +759,8 @@ const Landing: React.FC<Props> = (props) => {
                   <ContainerCenter>
 
                     <HeaderCenter>
-                      {localPageType == "league" && !localLeague && !localTeam ? <Link href={`/pub${params}`}>FINDEXAR</Link> : !localTeam ? `${localLeague}` : localPlayer ? <PlayerNameGroup><PlayerName><Link href={`/pub/league/${localLeague}/team/${localTeam}${params}`}>{teamName}</Link></PlayerName> </PlayerNameGroup> : `${teamName}`}
-                      {localPageType == "league" && !localLeague && !localTeam && <div><Subhead>Major Leagues and Fantasy Sports Professional Athletes and Teams Media Monitor</Subhead><SubheadMobile>Professional Athletes<br />Media Index And Monitor</SubheadMobile></div>}
+                      {(localPageType == "league"||localPageType == "landing") && !localLeague && !localTeam ? <Link href={`/pub${params}`}>FINDEXAR</Link> : !localTeam ? `${localLeague}` : localPlayer ? <PlayerNameGroup><PlayerName><Link href={`/pub/league/${localLeague}/team/${localTeam}${params}`}>{teamName}</Link></PlayerName> </PlayerNameGroup> : `${teamName}`}
+                      {(localPageType == "league"||localPageType=="landing") && !localLeague && !localTeam && <div><Subhead>Major Leagues and Fantasy Sports Professional Athletes and Teams Media Monitor</Subhead><SubheadMobile>Professional Athletes<br />Media Index And Monitor</SubheadMobile></div>}
 
                       {localPageType == "player" && localPlayer && <div><Subhead>{localPlayer ? localPlayer : ''}</Subhead><SubheadMobile>{localPlayer ? localPlayer : ''}</SubheadMobile></div>}
 
@@ -764,10 +774,10 @@ const Landing: React.FC<Props> = (props) => {
                 <HeaderRight>  <SUserButton afterSignOutUrl="/" /></HeaderRight>
               </HeaderTopline>
             </Header>
-
-            <ContainerWrap>
+            {pagetype=="landing"&&<Landing/>}
+            {pagetype!=="landing"&&<ContainerWrap>
               <Leagues>
-                {LeaguesNav}
+                {pagetype!="landing"&&LeaguesNav}
               </Leagues>
 
               <MainPanel>
@@ -834,8 +844,8 @@ const Landing: React.FC<Props> = (props) => {
                   {v == 'readme' && <Readme />}
                 </CenterPanel>
               </MainPanel>
-            </ContainerWrap>
-            <MobileContainerWrap>
+            </ContainerWrap>}
+            {pagetype!="landing"&&<MobileContainerWrap>
               <MuiTabs
                 value={selectedLeague}
                 // onChange={(event: React.SyntheticEvent, newValue: number) => { setLocalLeague(newValue ? leagues[newValue - 1] : '');setLocalView('mentions');router.replace(`/pub/league/${newValue ? leagues[newValue - 1] : ''}?view=Mentions`) }}
@@ -873,11 +883,11 @@ const Landing: React.FC<Props> = (props) => {
                 </div>
               }
               {v == 'readme' && <Readme />}
-            </MobileContainerWrap>
+            </MobileContainerWrap>}
           </ThemeProvider>
         </main>
       </MuiTP>
     </>
   )
 }
-export default Landing;
+export default SinglePage;
