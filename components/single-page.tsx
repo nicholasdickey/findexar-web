@@ -599,7 +599,7 @@ const Landing: React.FC<Props> = (props) => {
   const [localView, setLocalView] = useState(view);
   useEffect(() => {
     console.log("view changed2", view, localView)
-    setLocalView(view);
+    setLocalView(view.toLowerCase());
   }, [view]);
   const v=!localView||localView=="home"?"mentions":localView;
   
@@ -687,7 +687,7 @@ const Landing: React.FC<Props> = (props) => {
   const onViewNav = async (option: { name: string, access: string }) => {
     console.log(option);
     setLocalView(option.name);
-    router.replace(localLeague ? `/${option.access || "pub"}/league/${localLeague}?view=${encodeURIComponent(option.name.toLowerCase())}${params2}` : `/${option.access}?view=${encodeURIComponent(option.name.toLowerCase())}${params2}`, undefined, { shallow: true })
+    router.replace(localLeague||option.access=='pro' ? `/${option.access || "pub"}/league/${localLeague}?view=${encodeURIComponent(option.name.toLowerCase())}${params2}` : `/${option.access}?view=${encodeURIComponent(option.name.toLowerCase())}${params2}`, undefined, { shallow: true })
     await recordEvent(sessionid as string || "",
       'view-nav',
       `{"fbclid":"${fbclid}","utm_content":"${utm_content}","view":"${option.name}"}`
