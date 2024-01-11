@@ -78,6 +78,7 @@ const MentionsBody = styled.div`
 const MentionsHeader = styled.div`
     padding-top:10px;
     font-size: 18px;
+    height:20px;
     //width:100%;
     padding-left:20px;
     padding-right:20px;
