@@ -3,7 +3,7 @@ import useSWRInfinite from 'swr/infinite'
 import useSWR from 'swr';
 import Link from 'next/link';
 import { useRouter } from 'next/router'
-import { SignInButton ,SignedOut} from "@clerk/nextjs";
+import { SignInButton ,SignedOut,SignedIn} from "@clerk/nextjs";
 import { styled } from "styled-components";
 import Button from '@mui/material/Button';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -365,13 +365,13 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
     <>
       <OuterContainer>
         <MentionsOuterContainer>
-          {(view != "fav") && <MentionsHeader><FormControlLabel control={<Checkbox size="small" disabled={noUser} checked={localTrackerFilter == 1} onChange={
+          {(view != "fav") && <MentionsHeader><SignedIn><FormControlLabel control={<Checkbox size="small" checked={localTrackerFilter == 1} onChange={
             (event: React.ChangeEvent<HTMLInputElement>) => {
               setLocalTrackerFilter(event.target.checked);
               const params: SetTrackerFilterParams = { tracker_filter: event.target.checked ? 1 : 0 };
               setTrackerFilter(params);
 
-            }} />} label="My Team Filter" />
+            }} />} label="My Team Filter" /></SignedIn>
            <SignedOut><SignInButton><Button size="small" variant="outlined" style={{ paddingRight: 8, paddingTop: 4, paddingBottom: 4, paddingLeft: 4 }}><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></SignedOut>
           </MentionsHeader>}
           {(view == "fav") && <MentionsHeader><span>Favorites:</span></MentionsHeader>}
@@ -434,13 +434,13 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
       </OuterContainer>
 
       <MobileMentionsOuterContainer>
-        {(view == 'mentions') && <MobileMentionsHeader> <FormControlLabel control={<Checkbox disabled={noUser} checked={localTrackerFilter == 1} onChange={
+        {(view == 'mentions') && <MobileMentionsHeader> <SignedIn><FormControlLabel control={<Checkbox checked={localTrackerFilter == 1} onChange={
           (event: React.ChangeEvent<HTMLInputElement>) => {
             setLocalTrackerFilter(event.target.checked);
             const params: SetTrackerFilterParams = { tracker_filter: event.target.checked ? 1 : 0 };
             setTrackerFilter(params);
 
-          }} />} label="My Team" />
+          }} />} label="My Team" /></SignedIn>
 
           <SignedOut><SignInButton><Button size="small" variant="outlined"><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></SignedOut>
           {!league && !noUser && <FormControlLabel control={<Checkbox disabled={noUser || (localTrackerFilter == 1)} checked={false} onChange={

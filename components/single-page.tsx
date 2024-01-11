@@ -114,7 +114,7 @@ const League = styled.div`
   width: 100px; 
   color: #fff;
   text-align: center;
-  font-size: 152px;
+  font-size: 24px;
   margin: 0px;
 `;
 
@@ -123,7 +123,7 @@ const SelectedLeague = styled.div`
   width: 100px;
   color: #ff8 !important;
   text-align: center;
-  font-size: 32px;
+  font-size: 24px;
   margin: 0px;
   a{
     color: #ff8 !important;
@@ -145,7 +145,7 @@ const Leagues = styled.div`
   background-color: #555;
   color: #aaa;
   text-align: center;
-  font-size: 75px;
+  font-size: 28px;
   margin: 0px;
   a{
     color: #ccc;
@@ -417,7 +417,22 @@ const PlayerName = styled.div`
  //margin-right:20px;
  text-align:left;
 `;
-
+const NewListForm = styled.div`
+padding-right:20px;
+  color: #fff;//${blueGrey[900]};
+  font-size:18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items:flex-start;
+  //background-color:#000;// ${blueGrey[800]};
+  &.MuiTextField-root{
+    color:#fff !important;
+  }
+  input{
+    color:#fff;
+  }
+`;
 interface Props {
   disable?: boolean;
   dark?: number;
@@ -579,7 +594,7 @@ const Landing: React.FC<Props> = (props) => {
   const MobileLeaguesNav = leagues?.map((l: string, i: number) => {
     return <Tab key={`league-${i}`} label={l} onClick={() => { onLeagueNavClick(l).then(()=>{}); router.replace(`/pub/league/${l}${params}`); }} />
   })
-  MobileLeaguesNav.unshift(<Tab key={`league-${leagues?.length}`} icon={<HomeIcon />} onClick={() => { onLeagueNavClick('').then(()=>{}); router.replace(`/pub${params}`); }} />)
+  MobileLeaguesNav.unshift(<Tab key={`league-${leagues?.length}`} icon={<HomeIcon />} onClick={() => { onLeagueNavClick('mentions').then(()=>{}); router.replace(`/pub${params}`); }} />)
   LeaguesNav.unshift(localLeague ? <League key={`league-${leagues?.length}`}><Link href={`/pub${params}`} onClick={() => { onLeagueNavClick('mentions').then(()=>{}) }}><HomeIcon sx={{ m: 0.3 }} /></Link></League> : <SelectedLeague key={`league-${leagues?.length}`}><Link href={`/pub${params}`} onClick={() => { onLeagueNavClick('mentions').then(()=>{}) }}><HomeIcon sx={{ m: 0.3 }} /></Link></SelectedLeague>)
   console.log("userId", userId);
   const selectedLeague = leagues?.findIndex((l: string) => l == localLeague) + 1;
@@ -812,7 +827,6 @@ const Landing: React.FC<Props> = (props) => {
                 scrollButtons={true}
                 allowScrollButtonsMobile
                 aria-label="scrollable auto tabs example"
-                
               >
                 {MobileLeaguesNav}
               </MuiTabs>
