@@ -36,12 +36,13 @@ interface Props {
     userId?: string;
     createdAt?: string;
     freeUser?: boolean;
-    t1:number;
+    t1: number;
 }
 export default function Home(props: Props) {
     const fallback = props.fallback;
     return <SWRConfig value={{ fallback }}><SinglePage  {...props} /></SWRConfig>
 }
+/*
 export async function getStaticProps() {
     const t1=Date.now();
     const res = await fetch('https://api.vercel.app/blog');
@@ -70,4 +71,8 @@ export async function getStaticProps() {
       revalidate: 60,
     };
   }
-   
+  */
+export const getServerSideProps =
+    async function getServerSideProps(context: GetServerSidePropsContext): Promise<any> {
+        return await ssr(context);
+    }

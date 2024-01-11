@@ -294,9 +294,9 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
   const router = useRouter();
   
   const fetchMentionsKey = (pageIndex: number, previousPageData: any): FetchedMentionsKey | null => {
-    console.log("getMentionsKey=", pageIndex, previousPageData)
+    //console.log("getMentionsKey=", pageIndex, previousPageData)
     let key: FetchedMentionsKey = { type: "FetchedMentions", teamid: "", name: "", noUser, page: pageIndex, league, myteam: localTrackerFilter ? 1 : 0,noLoad:view!="fav"&&view!="mentions"&&!noLoadOverride };
-    console.log("getMentionsKey=>>>", key)
+   // console.log("getMentionsKey=>>>", key)
 
     if (previousPageData && !previousPageData.length) return null // reached the end
     return key;
@@ -304,14 +304,14 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
   // now swrInfinite code:
   const { data, error: mentionsError, mutate, size, setSize, isValidating, isLoading } = useSWRInfinite(fetchMentionsKey, fetchMentions, { initialSize: 1, })
   let mentions = data ? [].concat(...data) : [];
-  console.log("LOADED MENTIONS FROM FALLBACK", { data })
+ // console.log("LOADED MENTIONS FROM FALLBACK", { data })
   const isLoadingMore =
     isLoading || (size > 0 && data && typeof data[size - 1] === "undefined");
   const isEmpty = data?.[0]?.length === 0;
   const isReachingEnd =
     isEmpty || (data && data[data.length - 1]?.length < 25);
   const isRefreshing = isValidating && data && data.length === size;
-  console.log("league-mentions noUser",noUser,"trackerFilter", localTrackerFilter )
+ // console.log("league-mentions noUser",noUser,"trackerFilter", localTrackerFilter )
   const favoritesKey: FavoritesKey = { type: "Favorites", noUser,noLoad:view!="fav" };
   const { data: favoritesMentions, mutate: mutateFavorites } = useSWR(favoritesKey, getFavorites);
   //console.log("favoritesMentions", favoritesMentions)
@@ -322,7 +322,7 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
   view="mentions";
   const trackerListMembersKey: TrackerListMembersKey = { type: "tracker_list_members", league, noUser,noLoad:view!="my team" };
   const { data: trackerListMembers, error: trackerListError, isLoading: trackerListLoading, mutate: trackerListMutate } = useSWR(trackerListMembersKey, getTrackerListMembers);
-  console.log("trackerListMembers", trackerListMembers)
+ // console.log("trackerListMembers", trackerListMembers)
   const Mentions = mentions && mentions.map((m: any, i: number) => {
     const { league, type, team, teamName, name, date, url, findex, summary, findexarxid, fav } = m;
     // console.log("XID:",league,name,xid)

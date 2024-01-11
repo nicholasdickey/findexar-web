@@ -206,17 +206,18 @@ const Team: React.FC<Props> = (props) => {
   }, [player, setLocalView]);
   const onViewNav = async (option: { name: string, access: string }) => {
     setLocalView(option.name.toLowerCase());
-    router.replace(`/pro/league/${league}/team/${team}?view=${encodeURIComponent(option.name.toLowerCase())}${params2}`);
+    router.replace(`/pro/league/${league}/team/${team}?view=${encodeURIComponent(option.name.toLowerCase())}${params2}`, undefined, { shallow: true });
     await recordEvent(sessionid as string || "",
       'team-view-nav',
       `{"params":"${params}","view":"${option.name}"}`
     );
   }
   const onPlayerNav = async (name: string) => {
+    console.log("onPlayerNav", name)
     setLocalPageType("player");
     setLocalPlayer(name);
     setLocalView("mentions");
-    setGlobalLoading(true);
+    //setGlobalLoading(true);
     await recordEvent(sessionid as string || "",
       'player-nav',
       `{"params":"${params}","player":"${name}"}`
@@ -226,13 +227,13 @@ const Team: React.FC<Props> = (props) => {
   const PlayersNav = players && players?.map((p: { name: string, findex: string, mentions: string, tracked: boolean }, i: number) => {
     return <SideGroup key={`ewfggvfn-${i}`}>{p.name == player ?
       <SelectedSidePlayer>
-        <Link onClick={async () => { onPlayerNav(p.name)}} href={`/pro/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}${params}`}>
+        <Link onClick={async () => { await onPlayerNav(p.name)}} href={`/pro/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}${params}`} shallow>
           {p.name} ({`${p.mentions}`})
         </Link>
       </SelectedSidePlayer>
       :
       <SidePlayer>
-        <Link onClick={() => { async () => { onPlayerNav(p.name)}}} href={`/pro/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}${params}`}>
+        <Link onClick={async () => { await onPlayerNav(p.name)}} href={`/pro/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}${params}`} shallow>
           {p.name} ({`${p.mentions || 0}`})
         </Link>
       </SidePlayer>}
@@ -304,7 +305,7 @@ const Team: React.FC<Props> = (props) => {
         {view == 'players' &&
           <MobilePlayersPanel>
             <MobileTeamName>{teamName}</MobileTeamName>
-            {globalLoading ? <div>Loading...</div> : PlayersNav}
+            {PlayersNav}
           </MobilePlayersPanel>}
       </MainMobilePanel>
     </div>

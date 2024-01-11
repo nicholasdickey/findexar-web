@@ -82,11 +82,11 @@ const TeamPlayerMentions: React.FC<Props> = (props) => {
    // const [localTeam, setLocalTeam] = React.useState(team);
    // const [localPlayer, setLocalPlayer] = React.useState(player);
 
-    console.log("teamPlayerMentions", team, teamName, noUser)
+    //console.log("teamPlayerMentions", team, teamName, noUser)
     const fetchMentionsKey = (pageIndex: number, previousPageData: any): FetchedMentionsKey | null => {
-        console.log("getMentionsKey=", pageIndex, previousPageData)
+       // console.log("getMentionsKey=", pageIndex, previousPageData)
         let key: FetchedMentionsKey = { type: "FetchedMentions", teamid: team || "", name: player || "", noUser, page: pageIndex, league, myteam: 0,noLoad:false };
-        console.log("getMentionsKey=>>>",key)
+      //  console.log("getMentionsKey=>>>",key)
         
         if (previousPageData && !previousPageData.length) return null // reached the end
         return key;
