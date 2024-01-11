@@ -293,8 +293,8 @@ return (
 
                         <br/><br/>Or browse leagues, teams and athletes to quickly scroll though their media mentions.
                         </MobileTextContainer></MobileContainerWrap> 
-                       <ButtonContainer><Button onClick={onClick} variant="outlined" color="primary" href={`/pub${params}`}><h2>Enter Findexar</h2></Button></ButtonContainer>
-                       <MobileButtonContainer><Button onClick={onClick}  variant="outlined" color="primary" href={`/pub${params}`}><h2>Enter Findexar</h2></Button></MobileButtonContainer>
+                       <ButtonContainer><Button onClick={onClick} variant="outlined" color="primary" href={`/pub${params}`}>Enter Findexar</Button></ButtonContainer>
+                       <MobileButtonContainer><Button onClick={onClick}  variant="outlined" color="primary" href={`/pub${params}`}><b>Enter Findexar</b></Button></MobileButtonContainer>
                        
                        <ContainerWrap><TextContainerCenter>
                        
