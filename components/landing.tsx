@@ -74,7 +74,8 @@ const TextContainer = styled.div`
 const MobileTextContainer = styled.div`
     display: flex;
     flex-direction: column;
-    height: 100%;
+  
+    //height: 100%;
     width: 250px;
     line-height: 1.5;
     font-family: 'Roboto', sans-serif;
@@ -119,9 +120,9 @@ const Title= styled.div`
 `;
 const MobileTitle= styled.div`
     font-size: 18px;
-    margin:10px;
+    //margin:10px;
     text-align:center;
-    padding-bottom:10px;
+   // padding-bottom:10px;
 `;
 
 const FLogo = styled.div`
@@ -158,7 +159,7 @@ const ButtonContainer=  styled.div`
     display:flex;
     flex-direction:row;
     justify-content:center;
-    
+    color: #2aa;
     @media screen and (max-width: 1199px) {
         display:none;
     }
@@ -169,6 +170,7 @@ const MobileButtonContainer=  styled.div`
     display:flex;
     flex-direction:row;
     justify-content:center;
+    color: #2aa;
    
     @media screen and (min-width: 1200px) {
         display:none;
@@ -278,31 +280,18 @@ return (
                         <GlobalStyle />
                         <ContainerWrap><TextContainer>
                         <Title><h3>Welcome to Findexar!</h3></Title><br/>
-
-                        Your indispensable Fantasy Sports
-                        and Major Leagues athletes
-                        media research and tracking tool.
-
-                        Finding and indexing
-                        mentions of pro athletes
-                        in the media.
-
-                        Powered by OpenAI.
+                        Effortlessly stays in touch with the news about your fantasy stars. Create &ldquo;My Team&ldquo; &#8212; a list of your Fantasy Team athletes, and Findexar will find and index mentions of them in the media, across more than a hundred different sources.
+                        Available minutes after the publication.<br/>
+                        <br/>Or browse leagues, teams and athletes to quickly scroll though their media mentions. 
+                       
                        
                         </TextContainer>
                         </ContainerWrap>
                         <MobileContainerWrap><MobileTextContainer>
                         <MobileTitle><h3>Welcome to Findexar!</h3></MobileTitle><br/>
+                        Create &ldquo; My Team&ldquo; &#8212; a list of your Fantasy Team athletes, and Findexar will find and index mentions of them in the media, across more than a hundred different sources. Available minutes after the publication.
 
-                            Your indispensable Fantasy Sports
-                            and Major Leagues athletes
-                            media research and tracking tool.
-
-                            Finding and indexing
-                            mentions of pro athletes
-                            in the media.
-
-                            Powered by OpenAI.
+                        <br/><br/>Or browse leagues, teams and athletes to quickly scroll though their media mentions.
                         </MobileTextContainer></MobileContainerWrap> 
                        <ButtonContainer><Button onClick={onClick} variant="outlined" color="primary" href={`/pub${params}`}><h2>Enter Findexar</h2></Button></ButtonContainer>
                        <MobileButtonContainer><Button onClick={onClick}  variant="outlined" color="primary" href={`/pub${params}`}><h2>Enter Findexar</h2></Button></MobileButtonContainer>
@@ -312,8 +301,7 @@ return (
                             <br /><br /><hr />Copyright &#169; 2024, Findexar, Inc.<br />Made in USA.
                         </TextContainerCenter></ContainerWrap>
                         <MobileContainerWrap><TextContainerCenter>
-                       
-                            <br /><br /><hr />Copyright &#169; 2024, Findexar, Inc.<br />Made in USA.
+                       <br /><hr />Copyright &#169; 2024, Findexar, Inc.<br />Made in USA.
                         </TextContainerCenter></MobileContainerWrap>
                     </ThemeProvider>
                 </main>
