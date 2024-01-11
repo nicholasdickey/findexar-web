@@ -596,7 +596,7 @@ const Landing: React.FC<Props> = (props) => {
 
   
   
-  const [localView, setLocalView] = useState(view);
+  const [localView, setLocalView] = useState(view.toLowerCase());
   useEffect(() => {
     console.log("view changed2", view, localView)
     setLocalView(view.toLowerCase());
@@ -625,13 +625,13 @@ const Landing: React.FC<Props> = (props) => {
   const selectedLeague = leagues?.findIndex((l: string) => l == localLeague) + 1;
   //console.log("selectedLeague", selectedLeague)
 
-  /*useEffect(() => {
-    const t2= new Date().getTime();
-    recordEvent(sessionid as string||"", 'load-time', `{"fbclid":"${fbclid}","isbot":"${isbot}","league":"${league}", "team":"${team}", "player":"${player}", "pagetype":"${pagetype}", "view":"${view}", "userId":"${userId}", "utm_content":"${utm_content}","time":"${t2-t1||0}"}`);
-
-  },[]);*/
   useEffect(() => {
-    if (!router.isReady) return;
+    const t2= new Date().getTime();
+    recordEvent(sessionid as string||"", 'load-time', `{"fbclid":"${fbclid}","isbot":"${isbot}","league":"${league}", "team":"${team}", "player":"${player}", "pagetype":"${pagetype}", "view":"${view}", "userId":"${userId}", "utm_content":"${utm_content}","time":"${t2-t1||0}"}`).then(()=>{});
+
+  },[]);
+  useEffect(() => {
+    //if (!router.isReady) return;
     try {
       recordEvent(sessionid as string || "", 'single-page-loaded', `{"fbclid":"${fbclid}","isbot":"${isbot}","league":"${league}", "team":"${team}", "player":"${player}", "pagetype":"${pagetype}", "view":"${view}", "userId":"${localUserId}", "utm_content":"${utm_content}"}`)
         .then((r: any) => {
@@ -640,7 +640,7 @@ const Landing: React.FC<Props> = (props) => {
     } catch (x) {
       console.log('recordEvent', x);
     }
-  }, [router.isReady, pagetype, league, team, player, view, fbclid, utm_content]);
+  }, [pagetype, league, team, player, view, fbclid, utm_content]);
   
   /* if (dark) {
      theme = createTheme({
