@@ -36,8 +36,6 @@ import SecondaryTabs from "./secondary-tabs";
 import PlayerPhoto from "./player-photo";
 import SubscriptionMenu from "./subscription-menu";
 import Readme from "./readme";
-var randomstring = () => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    
 const Header = styled.header`
   height: 80px;
   width: 100%;
@@ -627,7 +625,7 @@ const Landing: React.FC<Props> = (props) => {
 
   useEffect(() => {
     const t2= new Date().getTime();
-    recordEvent(sessionid as string||"", 'load-time', `{"fbclid":"${fbclid}","isbot":"${isbot}","league":"${league}", "team":"${team}", "player":"${player}", "pagetype":"${pagetype}", "view":"${view}", "userId":"${userId}", "utm_content":"${utm_content}","time":"${t2-t1||0}"}`).then(()=>{});
+    recordEvent(sessionid as string||"", 'load-time', `{"fbclid":"${fbclid}","time":"${t2-t1||0}"}`).then(()=>{});
 
   },[]);
   useEffect(() => {
