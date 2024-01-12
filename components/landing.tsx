@@ -314,6 +314,7 @@ const Landing = () => {
 
                         <ContainerWrap><TextContainerCenter>{loading && <LoadingContainer><RotatingLines
                             visible={true}
+                            //@ts-ignore
                             height="96"
                             width="96"
                             color="grey"
@@ -328,6 +329,7 @@ const Landing = () => {
                         </TextContainerCenter></ContainerWrap>
                         <MobileContainerWrap><TextContainerCenter> {loading && <LoadingContainer><RotatingLines
                             visible={true}
+                              //@ts-ignore
                             height="96"
                             width="96"
                             color="grey"
