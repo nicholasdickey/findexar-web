@@ -20,7 +20,7 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import LoginIcon from '@mui/icons-material/Login';
 import ContactSupportIcon from '@mui/icons-material/ContactSupport';
 import Avatar from '@mui/material/Avatar';
-import { CircularProgress } from '@mui/material';
+import { RotatingLines } from 'react-loader-spinner'
 import Button from '@mui/material/Button';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
@@ -126,13 +126,13 @@ const MobileContainerWrap = styled.div`
     }
 `;
 
-const Title= styled.div`
+const Title = styled.div`
     font-size: 28px;
     margin:10px;
     text-align:center;
     padding-bottom:10px;
 `;
-const MobileTitle= styled.div`
+const MobileTitle = styled.div`
     font-size: 18px;
     //margin:10px;
     text-align:center;
@@ -154,20 +154,20 @@ const FLogoMobile = styled.div`
     display:none;
   }
 `;
-const MobileLogoVContainer= styled.div`
+const MobileLogoVContainer = styled.div`
     min-height:100%;
     display:flex;
     flex-direction:column;
     justify-content:center;
 `;
-const MobileLogoContainer= styled.div`
+const MobileLogoContainer = styled.div`
     height:20px;
     display:flex;
     flex-direction:row;
     margin-top:20px;
     justify-content:flex-begin;
 `;
-const ButtonContainer=  styled.div`
+const ButtonContainer = styled.div`
     margin-top: 120px;
     width:100%;
     display:flex;
@@ -178,7 +178,7 @@ const ButtonContainer=  styled.div`
         display:none;
     }
 `;
-const MobileButtonContainer=  styled.div`
+const MobileButtonContainer = styled.div`
     margin-top: 20px;
     width:100%;
     display:flex;
@@ -207,48 +207,48 @@ const Landing = () => {
         const utm_content = query.utm_content as string || "";
         setUtm_content(utm_content);
         setFbclid(fbclid);
-    
+
         let params = ''
         let p: string[] = [];
-    
+
         console.log("parsed params", fbclid, utm_content);
         if (fbclid)
-        p.push(`fbclid=${fbclid}`);
+            p.push(`fbclid=${fbclid}`);
         if (utm_content)
-        p.push(`utm_content=${utm_content}`);
+            p.push(`utm_content=${utm_content}`);
         if (p.length > 0) {
-        params = `?${p.join('&')}`;
+            params = `?${p.join('&')}`;
         }
         setParams(params);
-    },[router.isReady,router.query]);
+    }, [router.isReady, router.query]);
     useEffect(() => {
         if (!router.isReady) return;
-    
+
         try {
-        recordEvent( "", `landing-loaded`, `{"fbclid":"${fbclid}", "utm_content":"${utm_content}"}`)
-            .then((r: any) => {
-            console.log("recordEvent", r);
-            });
+            recordEvent("", `landing-loaded`, `{"fbclid":"${fbclid}", "utm_content":"${utm_content}"}`)
+                .then((r: any) => {
+                    console.log("recordEvent", r);
+                });
         } catch (x) {
-        console.log('recordEvent', x);
+            console.log('recordEvent', x);
         }
-    
-    },[router.isReady,router.query,fbclid,utm_content]);
+
+    }, [router.isReady, router.query, fbclid, utm_content]);
 
     const theme = useTheme();
-    const onClick= ()=>{
+    const onClick = () => {
         try {
             setLoading(true);
-            recordEvent( "", `enter-clicked`, `{"fbclid":"${fbclid}", "utm_content":"${utm_content}"}`)
+            recordEvent("", `enter-clicked`, `{"fbclid":"${fbclid}", "utm_content":"${utm_content}"}`)
                 .then((r: any) => {
-                console.log("recordEvent", r);
+                    console.log("recordEvent", r);
                 });
-            } catch (x) {
+        } catch (x) {
             console.log('recordEvent', x);
-            }
+        }
 
     }
-return (
+    return (
         <>
             <Head>
                 <title>Findexar</title>
@@ -295,31 +295,51 @@ return (
                         theme={palette}>
                         <GlobalStyle />
                         <ContainerWrap><TextContainer>
-                        <Title><h3>Welcome to Findexar!</h3></Title><br/>
-                        Effortlessly stays in touch with the news about your fantasy stars. Create &ldquo;My Team&ldquo; &#8212; a list of your Fantasy Team athletes, and Findexar will find and index mentions of them in the media, across more than a hundred different sources.
-                        Available minutes after the publication.<br/>
-                        <br/>Or browse leagues, teams and athletes to quickly scroll though their media mentions. 
-                       
-                       
+                            <Title><h3>Welcome to Findexar!</h3></Title><br />
+                            Effortlessly stays in touch with the news about your fantasy stars. Create &ldquo;My Team&ldquo; &#8212; a list of your Fantasy Team athletes, and Findexar will find and index mentions of them in the media, across more than a hundred different sources.
+                            Available minutes after the publication.<br />
+                            <br />Or browse leagues, teams and athletes to quickly scroll though their media mentions.
+
+
                         </TextContainer>
                         </ContainerWrap>
                         <MobileContainerWrap><MobileTextContainer>
-                        <MobileTitle><h3>Welcome to Findexar!</h3></MobileTitle><br/>
-                        Create &ldquo; My Team&ldquo; &#8212; a list of your Fantasy Team athletes, and Findexar will find and index mentions of them in the media, across more than a hundred different sources. Available minutes after the publication.
+                            <MobileTitle><h3>Welcome to Findexar!</h3></MobileTitle><br />
+                            Create &ldquo; My Team&ldquo; &#8212; a list of your Fantasy Team athletes, and Findexar will find and index mentions of them in the media, across more than a hundred different sources. Available minutes after the publication.
 
-                        <br/><br/>Or browse leagues, teams and athletes to quickly scroll though their media mentions.
-                        </MobileTextContainer></MobileContainerWrap> 
-                       <ButtonContainer><Button onClick={onClick} variant="outlined" color="primary" href={`/pub${params}`}>Enter Findexar</Button></ButtonContainer>
-                       <MobileButtonContainer><Button onClick={onClick}  variant="outlined" color="primary" href={`/pub${params}`}><b>Enter Findexar</b></Button></MobileButtonContainer>
-                       
-                       <ContainerWrap><TextContainerCenter>{loading&&<LoadingContainer><CircularProgress /></LoadingContainer>}
-                       
+                            <br /><br />Or browse leagues, teams and athletes to quickly scroll though their media mentions.
+                        </MobileTextContainer></MobileContainerWrap>
+                        <ButtonContainer><Button onClick={onClick} variant="outlined" color="primary" href={`/pub${params}`}>Enter Findexar</Button></ButtonContainer>
+                        <MobileButtonContainer><Button onClick={onClick} variant="outlined" color="primary" href={`/pub${params}`}><b>Enter Findexar</b></Button></MobileButtonContainer>
+
+                        <ContainerWrap><TextContainerCenter>{loading && <LoadingContainer><RotatingLines
+                            visible={true}
+                            height="96"
+                            width="96"
+                            color="grey"
+                            strokeWidth="5"
+                            animationDuration="0.75"
+                            ariaLabel="rotating-lines-loading"
+                            wrapperStyle={{}}
+                            wrapperClass=""
+                        /></LoadingContainer>}
+
                             <br /><br /><hr />Copyright &#169; 2024, Findexar, Inc.<br />Made in USA.
                         </TextContainerCenter></ContainerWrap>
-                        <MobileContainerWrap><TextContainerCenter> {loading&&<LoadingContainer><CircularProgress /></LoadingContainer>}
-                       <br /><hr />Copyright &#169; 2024, Findexar, Inc.<br />Made in USA.
+                        <MobileContainerWrap><TextContainerCenter> {loading && <LoadingContainer><RotatingLines
+                            visible={true}
+                            height="96"
+                            width="96"
+                            color="grey"
+                            strokeWidth="5"
+                            animationDuration="0.75"
+                            ariaLabel="rotating-lines-loading"
+                            wrapperStyle={{}}
+                            wrapperClass=""
+                        /></LoadingContainer>}
+                            <br /><hr />Copyright &#169; 2024, Findexar, Inc.<br />Made in USA.
                         </TextContainerCenter></MobileContainerWrap>
-                       
+
                     </ThemeProvider>
                 </main>
             </MuiTP>
