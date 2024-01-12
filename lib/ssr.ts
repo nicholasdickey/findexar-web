@@ -217,7 +217,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
         fallback[unstable_serialize(trackerListMembersKey)] = trackerListMembers;
         fallback[us(page => {
             const keyFetchedMentions: FetchedMentionsKey = { type: "FetchedMentions", teamid: team || "", name: player || "", noUser: userId ? false : true, page: page, league: league || "", myteam: options && options.tracker_filter == 1 ? 1 : 0,noLoad: view != 'mentions'&&view!='fav' }
-            console.log("FETCHED MENTIONS KEY:", keyFetchedMentions);
+           // console.log("FETCHED MENTIONS KEY:", keyFetchedMentions);
             return keyFetchedMentions;
         }
         )] = fetchMentions;

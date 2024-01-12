@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import useSWR from 'swr';
 import Link from 'next/link';
+import { UserButton, SignInButton, SignedOut, SignedIn,RedirectToSignIn } from "@clerk/nextjs";
 import { useRouter } from 'next/router'
 import { styled } from "styled-components";
 import MentionIcon from '@mui/icons-material/AlternateEmailOutlined';
@@ -20,7 +21,12 @@ import SubscriptionMenu from "./subscription-menu";
 import { Add } from "@mui/icons-material";
 import TeamPlayerMentions from "./team-player-mentions";
 
-
+declare global {
+  interface Window {
+    Clerk: any;
+  }
+}
+ 
 const SidePlayer = styled.div`
   //height: 40px;
   width: 200px; 
@@ -182,7 +188,7 @@ const Team: React.FC<Props> = (props) => {
  /* const [selectedTeam, setSelectedTeam] = React.useState(team);
   const [selectedPlayer, setSelectedPlayer] = React.useState(player);
   const [globalLoading, setGlobalLoading] = React.useState(false);*/
-
+  const[signin,setSignin]=React.useState(false);
 
   const teamPlayersKey: TeamPlayersKey = { type: 'teamPlayers', league: league || "", teamid: team || "" };
   const { data: players, error, isLoading, mutate: mutatePlayers } = useSWR(teamPlayersKey, getTeamPlayers);
@@ -223,6 +229,7 @@ const Team: React.FC<Props> = (props) => {
       `{"params":"${params}","player":"${name}"}`
     );
   }
+ 
   console.log("TeamPage", { subscriptionPrompt, team,player, pagetype, view })
   const PlayersNav = players && players?.map((p: { name: string, findex: string, mentions: string, tracked: boolean }, i: number) => {
     return <SideGroup key={`ewfggvfn-${i}`}>{p.name == player ?
@@ -241,6 +248,17 @@ const Team: React.FC<Props> = (props) => {
         <IconButton
           onClick={async () => {
             setLocalPlayer(p.name);
+           
+            if(window&&window.Clerk){
+              const Clerk=window.Clerk;
+              const user=Clerk.user;
+              const id=Clerk.user?.id;
+              if(!id){
+                setSignin(true);
+                return;
+              }
+            }
+           
             if (p.tracked == true) {
               console.log("TRACKED", p.name)
               const removeTrackerListMemberParams: RemoveTrackerListMemberParams = { member: p.name, teamid: team || "" };
@@ -272,6 +290,7 @@ const Team: React.FC<Props> = (props) => {
           }} size="large" aria-label="Add new list">
           <SideIcon>
             {p.tracked ? <PlaylistRemoveIcon sx={{ color: "#afa" }} /> : <PlaylistAddIcon />}
+            {signin&&<RedirectToSignIn/>}
           </SideIcon>
         </IconButton>
       </SideButton>

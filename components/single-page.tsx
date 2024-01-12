@@ -810,7 +810,7 @@ const SinglePage: React.FC<Props> = (props) => {
                       else {
                         setLocalView("mentions")
                         //  setFavorites(false);
-                        router.push(`/pub${params2}`);
+                        router.push(`/pub${params}`);
 
                       }
 

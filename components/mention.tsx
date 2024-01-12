@@ -1,14 +1,20 @@
 import React, { useEffect } from "react";
 import useSWRImmutable from 'swr/immutable'
 import Link from 'next/link';
+import { SignInButton, RedirectToSignIn } from "@clerk/nextjs";
 import { styled } from "styled-components";
 import { MetaLinkKey, getMetaLink, addFavorite, removeFavorite, recordEvent } from '@/lib/api';
 import { convertToUTCDateString, convertToReadableLocalTime } from "@/lib/date-convert";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import StarIcon from '@mui/icons-material/Star';
-import { SignInButton } from "@clerk/nextjs";
 
+
+declare global {
+    interface Window {
+        Clerk: any;
+    }
+}
 
 
 interface MentionsProps {
@@ -256,8 +262,6 @@ interface Props {
     mutate: () => void;
     params: string;
     sessionid: string;
-
-
 }
 
 const Mention: React.FC<Props> = ({ sessionid, params, noUser, mentionType, league, type, team, teamName, name, date, url, findex, summary, findexarxid, fav, setLocalPageType, setLocalPlayer, setLocalLeague, setLocalTeam, mutate }) => {
@@ -265,6 +269,7 @@ const Mention: React.FC<Props> = ({ sessionid, params, noUser, mentionType, leag
     const [localDate, setLocalDate] = React.useState(convertToUTCDateString(date));
     const [localFav, setLocalFav] = React.useState(fav);
     const [hide, setHide] = React.useState(false);
+    const[signin,setSignin]=React.useState(false);
     useEffect(() => {
         setLocalFav(fav);
     }, [fav]);
@@ -304,7 +309,17 @@ const Mention: React.FC<Props> = ({ sessionid, params, noUser, mentionType, leag
             `{"params":"${params}","name":"${name}"}`
         );
     }
-
+    const enableRedirect = () => {
+        if (window && window.Clerk) {
+            const Clerk = window.Clerk;
+            const user = Clerk.user;
+            const id = Clerk.user?.id;
+            if (!id) {
+                setSignin(true);
+                return;
+            }
+        }
+    }
     return (
         <>
             <MentionWrap hide={hide}>
@@ -322,7 +337,7 @@ const Mention: React.FC<Props> = ({ sessionid, params, noUser, mentionType, leag
                 <MentionSummary>
 
                     <div>
-                        <Topline><LocalDate><i>{localDate}</i></LocalDate>{!localFav ? noUser ? <SignInButton><StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); addFavorite({ findexarxid }); mutate() }} style={{ color: "#888" }} /></SignInButton> : <StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); addFavorite({ findexarxid }); mutate(); }} style={{ color: "#888" }} /> : <StarIcon onClick={() => { if (noUser) return; setLocalFav(0); removeFavorite({ findexarxid }); mutate(); }} style={{ color: "FFA000" }} />}</Topline>
+                        <Topline><LocalDate><i>{localDate}</i></LocalDate>{!localFav ? noUser ? <SignInButton><StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); enableRedirect(); addFavorite({ findexarxid }); mutate() }} style={{ color: "#888" }} /></SignInButton> : <StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); enableRedirect(); addFavorite({ findexarxid }); mutate(); }} style={{ color: "#888" }} /> : <StarIcon onClick={() => { if (noUser) return; setLocalFav(0); removeFavorite({ findexarxid }); mutate(); }} style={{ color: "FFA000" }} />}</Topline>
 
                         <Link href={localUrl} onClick={async () => { await onMentionNav(name) }} shallow>
                             {summary}
@@ -356,7 +371,7 @@ const Mention: React.FC<Props> = ({ sessionid, params, noUser, mentionType, leag
                 <MentionSummary>
 
                     <div>
-                        <Topline><LocalDate><b><i>{localDate}</i></b></LocalDate>{!localFav ? noUser ? <SignInButton><StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); addFavorite({ findexarxid }); mutate(); }} style={{ color: "#888" }} /></SignInButton> : <StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); addFavorite({ findexarxid }); mutate(); }} style={{ color: "#888" }} /> : <StarIcon onClick={() => { if (noUser) return; setLocalFav(0); removeFavorite({ findexarxid }); mutate(); }} style={{ color: "FFA000" }} />}</Topline>
+                        <Topline><LocalDate><b><i>{localDate}</i></b></LocalDate>{!localFav ? noUser ? <SignInButton><StarOutlineIcon onClick={() => { if (noUser) return; enableRedirect(); setLocalFav(1); addFavorite({ findexarxid }); mutate(); }} style={{ color: "#888" }} /></SignInButton> : <StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); enableRedirect(); addFavorite({ findexarxid }); mutate(); }} style={{ color: "#888" }} /> : <StarIcon onClick={() => { if (noUser) return; setLocalFav(0); removeFavorite({ findexarxid }); mutate(); }} style={{ color: "FFA000" }} />}</Topline>
 
                         <Link href={localUrl} onClick={async () => { await onMentionNav(name) }}>
                             {summary}

@@ -94,7 +94,7 @@ const TeamPlayerMentions: React.FC<Props> = (props) => {
     // now swrInfinite code:
     const { data, error: mentionsError, mutate, size, setSize, isValidating, isLoading } = useSWRInfinite(fetchMentionsKey, fetchMentions, { initialSize: 1, })
     const mentions = data ? [].concat(...data) : [];
-    console.log("LOADED MENTIONS FROM FALLBACK",{isValidating,isLoading,mentions})
+    //console.log("LOADED MENTIONS FROM FALLBACK",{isValidating,isLoading,mentions})
     const isLoadingMore =
         isLoading || (size > 0 && data && typeof data[size - 1] === "undefined");
     const isEmpty = data?.[0]?.length === 0;
