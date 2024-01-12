@@ -288,20 +288,24 @@ const Landing = () => {
                         theme={palette}>
                         <GlobalStyle />
                         <ContainerWrap><TextContainer>
-                            <Title><h3>Welcome to Findexar!</h3></Title><br />
-                            Effortlessly stays in touch with the news about your fantasy stars. Create &ldquo;My Team&ldquo; &#8212; a list of your Fantasy Team athletes, and Findexar will find and index mentions of them in the media, across more than a hundred different sources.
-                            Available minutes after the publication.<br />
-                            <br />Or browse leagues, teams and athletes to quickly scroll though their media mentions.
-
+                        <Title><h3>Welcome to Findexar!</h3></Title><br />
+<p>Effortlessly stay in touch with the latest news about your fantasy sports stars. 
+    Create &ldquo;My Team&rdquo; &mdash; a custom list of your Fantasy Team athletes, 
+    and Findexar will track and index media mentions of them from over 
+    a hundred different sources. 
+    Expect updates available just minutes after publication.<br /><br />
+Alternatively, browse leagues, teams, and athletes to quickly scan through their media mentions.</p>
 
                         </TextContainer>
                         </ContainerWrap>
                         <MobileContainerWrap><MobileTextContainer>
-                            <MobileTitle><h3>Welcome to Findexar!</h3></MobileTitle><br />
-                            Create &ldquo; My Team&ldquo; &#8212; a list of your Fantasy Team athletes, and Findexar will find and index mentions of them in the media, across more than a hundred different sources. Available minutes after the publication.
-
-                            <br /><br />Or browse leagues, teams and athletes to quickly scroll though their media mentions.
-                        </MobileTextContainer></MobileContainerWrap>
+                        <MobileTitle><h3>Welcome to Findexar!</h3></MobileTitle><br />
+<p>Effortlessly stay in touch with the latest news about your fantasy sports stars. 
+    Create &ldquo;My Team&rdquo; &mdash; a custom list of your Fantasy Team athletes, 
+    and Findexar will track and index media mentions of them from many different sources.
+   <br /><br />
+Alternatively, browse leagues, teams, and athletes to quickly scan through their latest media mentions.</p>
+ </MobileTextContainer></MobileContainerWrap>
                         <ButtonContainer><Button onClick={onClick} variant="outlined" color="primary" href={`/pub${params}`}>Enter Findexar</Button></ButtonContainer>
                         <MobileButtonContainer><Button onClick={onClick} variant="outlined" color="primary" href={`/pub${params}`}><b>Enter Findexar</b></Button></MobileButtonContainer>
 
