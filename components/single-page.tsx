@@ -622,13 +622,13 @@ const SinglePage: React.FC<Props> = (props) => {
     );
   }
   const LeaguesNav = leagues?.map((l: string, i: number) => {
-    return l == localLeague ? <SelectedLeague key={`league-${i}`} ><Link href={`/pub/league/${l}?view=${params2}`} shallow onClick={async () => { await onLeagueNavClick(l) }} >{l}</Link></SelectedLeague> : <League key={`league-${i}`}><Link href={`/pub/league/${l}?view=${params2}`} shallow onClick={async () => { await onLeagueNavClick(l) }} >{l}</Link></League>
+    return l == localLeague ? <SelectedLeague key={`league-${i}`} ><Link href={`/pub/league/${l}${params}`} shallow onClick={async () => { await onLeagueNavClick(l) }} >{l}</Link></SelectedLeague> : <League key={`league-${i}`}><Link href={`/pub/league/${l}${params}`} shallow onClick={async () => { await onLeagueNavClick(l) }} >{l}</Link></League>
   });
   const MobileLeaguesNav = leagues?.map((l: string, i: number) => {
-    return <Tab key={`league-${i}`} label={l} onClick={() => { onLeagueNavClick(l).then(() => { }); router.replace(`/pub/league/${l}?view=${params2}`); }} />
+    return <Tab key={`league-${i}`} label={l} onClick={() => { onLeagueNavClick(l).then(() => { }); router.replace(`/pub/league/${l}${params}`); }} />
   })
-  MobileLeaguesNav.unshift(<Tab key={`league-${leagues?.length}`} icon={<HomeIcon />} onClick={() => { onLeagueNavClick('').then(() => { }); router.replace(`/pub?view=${params2}`); }} />)
-  LeaguesNav.unshift(localLeague ? <League key={`league-${leagues?.length}`}><Link href={`/pub?view=${params2}`} shallow onClick={() => { onLeagueNavClick('').then(() => { }) }}><HomeIcon sx={{ m: 0.3 }} /></Link></League> : <SelectedLeague key={`league-${leagues?.length}`}><Link href={`/pub?view=${params2}`} shallow onClick={() => { onLeagueNavClick('').then(() => { }) }}><HomeIcon sx={{ m: 0.3 }} /></Link></SelectedLeague>)
+  MobileLeaguesNav.unshift(<Tab key={`league-${leagues?.length}`} icon={<HomeIcon />} onClick={() => { onLeagueNavClick('').then(() => { }); router.replace(`/pub${params}`); }} />)
+  LeaguesNav.unshift(localLeague ? <League key={`league-${leagues?.length}`}><Link href={`/pub${params}`} shallow onClick={() => { onLeagueNavClick('').then(() => { }) }}><HomeIcon sx={{ m: 0.3 }} /></Link></League> : <SelectedLeague key={`league-${leagues?.length}`}><Link href={`/pub${params}`} shallow onClick={() => { onLeagueNavClick('').then(() => { }) }}><HomeIcon sx={{ m: 0.3 }} /></Link></SelectedLeague>)
   //console.log("userId", localUserId);
   const selectedLeague = leagues?.findIndex((l: string) => l == localLeague) + 1;
   //console.log("selectedLeague", selectedLeague)

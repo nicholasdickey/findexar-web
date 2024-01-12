@@ -18,7 +18,7 @@ declare global {
 
 
 interface MentionsProps {
-    hide: boolean;
+    hideit: boolean;
 }
 const MentionWrap = styled.div<MentionsProps>`
     width:100%;
@@ -40,7 +40,7 @@ const MentionWrap = styled.div<MentionsProps>`
           color: #111;
         }   
     }
-    display:${props => props.hide ? 'none' : 'flex'};
+    display:${props => props.hideit ? 'none' : 'flex'};
     @media screen and (max-width: 1199px) {
     display: none;
   }
@@ -48,7 +48,7 @@ const MentionWrap = styled.div<MentionsProps>`
 const MobileMentionWrap = styled.div<MentionsProps>`
     flex-grow:1;
     min-height:100px;
-    display:${props => props.hide ? 'none' : 'flex'};
+    display:${props => props.hideit ? 'none' : 'flex'};
     flex-direction: row;
     justify-content: flex-start;
     align-items:flex-start;
@@ -322,7 +322,7 @@ const Mention: React.FC<Props> = ({ sessionid, params, noUser, mentionType, leag
     }
     return (
         <>
-            <MentionWrap hide={hide}>
+            <MentionWrap hideit={hide}>
                 <MentionFindex>
 
                     {mentionType == "top1" && <span>{league}</span>}
@@ -365,7 +365,7 @@ const Mention: React.FC<Props> = ({ sessionid, params, noUser, mentionType, leag
 
                 </MentionSummary>
             </MentionWrap>
-            <MobileMentionWrap hide={hide}>
+            <MobileMentionWrap hideit={hide}>
 
 
                 <MentionSummary>
