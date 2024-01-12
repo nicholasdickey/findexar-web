@@ -81,7 +81,7 @@ const TextContainer = styled.div`
 const MobileTextContainer = styled.div`
     display: flex;
     flex-direction: column;
-  
+    justify-content: flex-start;
     //height: 100%;
     width: 250px;
     line-height: 1.5;
@@ -95,11 +95,17 @@ const TextContainerCenter = styled.div`
     text-align:center;
    
 `;
+const MobileVContainer=styled.div`
+    display: flex;
+    flex-direction: column;
+    @media screen and (min-width: 1200px) {
+        display: none;
+    }
+`;
 const MobileContainerWrap = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: center;
-   // height: 100%;
     //min-height:100%;
     line-height: 1.5;
     //width: 100%;
@@ -121,6 +127,7 @@ const MobileContainerWrap = styled.div`
 
 const Title = styled.div`
     font-size: 28px;
+    width:100%;
     margin:10px;
     text-align:center;
     padding-bottom:10px;
@@ -178,7 +185,7 @@ const MobileButtonContainer = styled.div`
     flex-direction:row;
     justify-content:center;
     color: #2aa;
-   
+    padding-bottom:30px;
     @media screen and (min-width: 1200px) {
         display:none;
     }
@@ -288,27 +295,41 @@ const Landing = () => {
                         theme={palette}>
                         <GlobalStyle />
                         <ContainerWrap><TextContainer>
-                        <Title><h3>Welcome to Findexar!</h3></Title><br />
-<p>Effortlessly stay in touch with the latest news about your fantasy sports stars. 
-    Create &ldquo;My Team&rdquo; &mdash; a custom list of your Fantasy Team athletes, 
-    and Findexar will track and index media mentions of them from over 
-    a hundred different sources. 
-    Expect updates available just minutes after publication.<br /><br />
-Alternatively, browse leagues, teams, and athletes to quickly scan through their media mentions.</p>
+                            <Title><h3>Welcome to Findexar!</h3></Title><br />
+                            <p>Effortlessly stay in touch with the latest news about your fantasy sports stars.
+                                Create &ldquo;My Team&rdquo; &mdash; a custom list of your Fantasy Team athletes,
+                                and Findexar will track and index media mentions of them from over
+                                a hundred different sources.
+                                Expect updates available just minutes after publication.<br /><br />
+                                Alternatively, browse leagues, teams, and athletes to quickly scan through their media mentions.</p>
 
                         </TextContainer>
                         </ContainerWrap>
-                        <MobileContainerWrap><MobileTextContainer>
-                        <MobileTitle><h3>Welcome to Findexar!</h3></MobileTitle><br />
-<p>Effortlessly stay in touch with the latest news about your fantasy sports stars. 
-    Create &ldquo;My Team&rdquo; &mdash; a custom list of your Fantasy Team athletes, 
-    and Findexar will track and index media mentions of them from many different sources.
-   <br /><br />
-Alternatively, browse leagues, teams, and athletes to quickly scan through their latest media mentions.</p>
- </MobileTextContainer></MobileContainerWrap>
-                        <ButtonContainer><Button onClick={onClick} variant="outlined" color="primary" href={`/pub${params}`}>Enter Findexar</Button></ButtonContainer>
-                        <MobileButtonContainer><Button onClick={onClick} variant="outlined" color="primary" href={`/pub${params}`}><b>Enter Findexar</b></Button></MobileButtonContainer>
+                        <MobileVContainer> <MobileTitle><h3>Welcome to Findexar!</h3></MobileTitle><MobileContainerWrap><br />
+                           <MobileTextContainer>
+                            <p>Effortlessly stay in touch with the latest news about your fantasy sports stars.
+                                Create &ldquo;My Team&rdquo; &mdash; a custom list of your Fantasy Team athletes,
+                                and Findexar will track and index media mentions of them from many different sources.
+                                <br /><br />
+                                Alternatively, browse leagues, teams, and athletes to quickly scan through their latest media mentions.</p>
+                        </MobileTextContainer></MobileContainerWrap>
+                            <MobileButtonContainer><Button onClick={onClick} variant="outlined" color="primary" href={`/pub${params}`}><b>Enter Findexar</b></Button></MobileButtonContainer>
+                            <MobileContainerWrap><TextContainerCenter> {loading && <LoadingContainer><Watch
+                                visible={true}
+                                height="80"
+                                width="80"
+                                radius="48"
+                                color="#4fa94d"
+                                ariaLabel="watch-loading"
+                                wrapperStyle={{}}
+                                wrapperClass=""
+                            /></LoadingContainer>}
+                                <br /><hr />Copyright &#169; 2024, Findexar, Inc.<br />Made in USA.
+                            </TextContainerCenter></MobileContainerWrap>
 
+                        </MobileVContainer>
+                        <ButtonContainer><Button onClick={onClick} variant="outlined" color="primary" href={`/pub${params}`}>Enter Findexar</Button></ButtonContainer>
+                        
                         <ContainerWrap><TextContainerCenter>{loading && <LoadingContainer><Watch
                             visible={true}
                             height="80"
@@ -322,18 +343,6 @@ Alternatively, browse leagues, teams, and athletes to quickly scan through their
 
                             <br /><br /><hr />Copyright &#169; 2024, Findexar, Inc.<br />Made in USA.
                         </TextContainerCenter></ContainerWrap>
-                        <MobileContainerWrap><TextContainerCenter> {loading && <LoadingContainer><Watch
-                            visible={true}
-                            height="80"
-                            width="80"
-                            radius="48"
-                            color="#4fa94d"
-                            ariaLabel="watch-loading"
-                            wrapperStyle={{}}
-                            wrapperClass=""
-                        /></LoadingContainer>}
-                            <br /><hr />Copyright &#169; 2024, Findexar, Inc.<br />Made in USA.
-                        </TextContainerCenter></MobileContainerWrap>
 
                     </ThemeProvider>
                 </main>
