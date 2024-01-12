@@ -18,6 +18,7 @@ import TeamIcon from '@mui/icons-material/PeopleAltOutlined';
 import ListIcon from '@mui/icons-material/ListOutlined';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import LoginIcon from '@mui/icons-material/Login';
 import ContactSupportIcon from '@mui/icons-material/ContactSupport';
 import Avatar from '@mui/material/Avatar';
@@ -836,7 +837,7 @@ const SinglePage: React.FC<Props> = (props) => {
 
                     }} style={{ padding: 10 }} variant="outlined">{v == "readme" ? <HomeIcon /> : <HelpOutlineIcon />}&nbsp;&nbsp;{v == "readme" ? <span>Back to Home</span> : <span>Read Me</span>}</Button></Favorites>
                     <br /><br />
-                    <LeftText><b>&ldquo;My Team&ldquo; tracker List:</b> Use &ldquo;add to list&ldquo; icons next to player name in team rosters to add or remove players to tracker list.<br /><br /><hr />Copyright &#169; 2024, Findexar, Inc.<br />Made in USA.</LeftText>
+                    <LeftText><b>&ldquo;My Team&ldquo; tracker List:</b> Use <PlaylistAddIcon/> icon next to player name in team rosters to add players to My Team tracker list.<br /><br /><hr />Copyright &#169; 2024, Findexar, Inc.<br />Made in USA.</LeftText>
                     {!localUserId && <LeftText>Needs to be a logged-in user to explore the teams and individual athletes&apos; mentions and use the tracker list or &ldquo;favorites&ldquo; functionality.<br /><br />Click here to sign-in or sign-up: <br /><br /><br /><SignInButton><Button style={{ padding: 10 }} size="small" variant="outlined"><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></LeftText>}
                   </>
                   }
