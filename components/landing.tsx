@@ -20,6 +20,7 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import LoginIcon from '@mui/icons-material/Login';
 import ContactSupportIcon from '@mui/icons-material/ContactSupport';
 import Avatar from '@mui/material/Avatar';
+import { CircularProgress } from '@mui/material';
 import Button from '@mui/material/Button';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
@@ -183,6 +184,7 @@ const Landing = () => {
     const [fbclid, setFbclid] = useState("");
     const [utm_content, setUtm_content] = useState("");
     const [params, setParams] = useState("");
+    const [loading, setLoading] = useState(false);
     const router = useRouter();
     useEffect(() => {
         if (!router.isReady) return;
@@ -223,6 +225,7 @@ const Landing = () => {
     const theme = useTheme();
     const onClick= ()=>{
         try {
+            setLoading(true);
             recordEvent( "", `enter-clicked`, `{"fbclid":"${fbclid}", "utm_content":"${utm_content}"}`)
                 .then((r: any) => {
                 console.log("recordEvent", r);
@@ -296,13 +299,14 @@ return (
                        <ButtonContainer><Button onClick={onClick} variant="outlined" color="primary" href={`/pub${params}`}>Enter Findexar</Button></ButtonContainer>
                        <MobileButtonContainer><Button onClick={onClick}  variant="outlined" color="primary" href={`/pub${params}`}><b>Enter Findexar</b></Button></MobileButtonContainer>
                        
-                       <ContainerWrap><TextContainerCenter>
+                       <ContainerWrap><TextContainerCenter>{loading&&<CircularProgress />}
                        
                             <br /><br /><hr />Copyright &#169; 2024, Findexar, Inc.<br />Made in USA.
                         </TextContainerCenter></ContainerWrap>
-                        <MobileContainerWrap><TextContainerCenter>
+                        <MobileContainerWrap><TextContainerCenter> {loading&&<CircularProgress />}
                        <br /><hr />Copyright &#169; 2024, Findexar, Inc.<br />Made in USA.
                         </TextContainerCenter></MobileContainerWrap>
+                       
                     </ThemeProvider>
                 </main>
             </MuiTP>
