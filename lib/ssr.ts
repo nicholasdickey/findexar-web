@@ -125,7 +125,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
         }
 
         const leagues = await getLeagues();
-        const keyLeagueTeams: LeagueTeamsKey = { func: "leagueTeams", league };
+        const keyLeagueTeams: LeagueTeamsKey = { func: "leagueTeams", league,noLoad:pagetype=="landing" };
         let leagueTeams = await getLeagueTeams(keyLeagueTeams);
 
         let teamPlayers = [];

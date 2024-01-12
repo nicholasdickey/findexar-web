@@ -600,7 +600,7 @@ const SinglePage: React.FC<Props> = (props) => {
   }, [fbclid,utm_content]);
 
 
-  const leagueTeamsKey: LeagueTeamsKey = { func: "leagueTeams", league: localLeague || "" };
+  const leagueTeamsKey: LeagueTeamsKey = { func: "leagueTeams", league: localLeague || "",noLoad:pagetype=="landing" };
   const { data: teams, error, isLoading } = useSWR(leagueTeamsKey, getLeagueTeams);
 
   

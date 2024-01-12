@@ -28,9 +28,10 @@ export const getLeagues = async () => {
 }
 
 // SWR get all teams for the League
-export type LeagueTeamsKey = { func: string, league: string };
-export const getLeagueTeams = async ({ league }: LeagueTeamsKey) => {
+export type LeagueTeamsKey = { func: string, league: string,noLoad:boolean };
+export const getLeagueTeams = async ({ league,noLoad }: LeagueTeamsKey) => {
   try {
+    if(noLoad) return [];
     const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-league-teams?league=${encodeURIComponent(league)}`;
     const res = await axios.get(url);
     return res.data.teams;

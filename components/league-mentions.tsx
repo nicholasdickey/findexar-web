@@ -401,7 +401,7 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
         {(view != "fav") && trackerListMembers && trackerListMembers.length > 0 && <RightPanel>
 
           <TeamName>My Team: </TeamName>
-          {(!trackerListMembers || trackerListMembers.length == 0) && <RightExplanation>Tracker list is empty {league ? `for ${league}` : ``}<br />Use &ldquo;add to list&ldquo; icons to the right of the<br /> player name in the team roster<br />to add to the &ldquo;My Team&ldquo; tracker list. </RightExplanation>}
+          {(!trackerListMembers || trackerListMembers.length == 0) &&  <RightExplanation>&ldquo;My Team&ldquo; is empty {league ? `for ${league}` : ``}<br />Use &ldquo;add to list&ldquo; icon to the right of the<br /> player name in the team roster<br />to add to the &ldquo;My Team&ldquo; tracking list. </RightExplanation>}
           {trackerListMembers && trackerListMembers.map(({ member, teamid, league }: { member: string, teamid: string, league: string }, i: number) => {
             console.log("TRACKER LIST MEMBER", member, teamid, league)
             //return <SidePlayer><Link onClick={() => { setLocalPageType("player"), setLocalPlayer(p.member); setV("mentions"); setGlobalLoading(true) }} href={`/pro/league/${p.league}/team/${p.teamid}/player/${encodeURIComponent(p.member)}`}>{p.member} </Link></SidePlayer>
@@ -490,7 +490,7 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
           </>}
           {(view == 'my team') && <MobilePlayersPanel>
             <MobileTeamName>My Team: </MobileTeamName>
-            {(!trackerListMembers || trackerListMembers.length == 0) && <RightExplanation>Tracker list empty {league ? `for ${league}` : ``}</RightExplanation>}
+            {(!trackerListMembers || trackerListMembers.length == 0) && <RightExplanation>&ldquo;My Team&ldquo; is empty {league ? `for ${league}` : ``}<br />Use &ldquo;add to list&ldquo; icon to the right of the<br /> player name in the team roster<br />to add to the &ldquo;My Team&ldquo; tracking list. </RightExplanation>}
             {trackerListMembers && trackerListMembers.map(({ member, teamid, league }: { member: string, teamid: string, league: string }, i: number) => {
               //return <SidePlayer><Link onClick={() => { setLocalPageType("player"), setLocalPlayer(p.member); setV("mentions"); setGlobalLoading(true) }} href={`/pro/league/${p.league}/team/${p.teamid}/player/${encodeURIComponent(p.member)}`}>{p.member} </Link></SidePlayer>
               return <MobileSideGroup key={`3fdsdvb-${i}`}>
