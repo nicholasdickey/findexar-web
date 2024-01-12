@@ -309,7 +309,7 @@ const Landing = () => {
                            <MobileTextContainer>
                             <p>Effortlessly stay in touch with the latest news about your fantasy sports stars.
                                 Create &ldquo;My Team&rdquo; &mdash; a custom list of your Fantasy Team athletes,
-                                and Findexar will track and index media mentions of them from many different sources.
+                                and Findexar will track and index all media mentions.
                                 <br /><br />
                                 Alternatively, browse leagues, teams, and athletes to quickly scan through their latest media mentions.</p>
                         </MobileTextContainer></MobileContainerWrap>
