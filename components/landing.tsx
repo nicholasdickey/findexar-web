@@ -311,7 +311,7 @@ const Landing = () => {
                                 Create &ldquo;My Team&rdquo; &mdash; a custom list of your Fantasy Team athletes,
                                 and Findexar will track and index all media mentions.
                                 <br /><br />
-                                Alternatively, browse leagues, teams, and athletes to quickly scan through their latest media mentions.</p>
+                                Alternatively, browse leagues, teams, and athletes to quickly scan through their media mentions.</p>
                         </MobileTextContainer></MobileContainerWrap>
                             <MobileButtonContainer><Button onClick={onClick} variant="outlined" color="primary" href={`/pub${params}`}><b>Enter Findexar</b></Button></MobileButtonContainer>
                             <MobileContainerWrap><TextContainerCenter> {loading && <LoadingContainer><Watch
