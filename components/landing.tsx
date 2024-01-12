@@ -37,7 +37,20 @@ import PlayerPhoto from "./player-photo";
 import SubscriptionMenu from "./subscription-menu";
 import Readme from "./readme";
 
-
+const LoadingContainer = styled.div`
+    position: fixed;
+    top:0px;
+    left:0px;
+    width:100%;
+    height:100%;
+    z-index: 1000;
+    background-color: #000;
+    opacity: 0.4;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+`;
 const ContainerWrap = styled.div`
     display: flex;
     flex-direction: row;
@@ -299,11 +312,11 @@ return (
                        <ButtonContainer><Button onClick={onClick} variant="outlined" color="primary" href={`/pub${params}`}>Enter Findexar</Button></ButtonContainer>
                        <MobileButtonContainer><Button onClick={onClick}  variant="outlined" color="primary" href={`/pub${params}`}><b>Enter Findexar</b></Button></MobileButtonContainer>
                        
-                       <ContainerWrap><TextContainerCenter>{loading&&<CircularProgress />}
+                       <ContainerWrap><TextContainerCenter>{loading&&<LoadingContainer><CircularProgress /></LoadingContainer>}
                        
                             <br /><br /><hr />Copyright &#169; 2024, Findexar, Inc.<br />Made in USA.
                         </TextContainerCenter></ContainerWrap>
-                        <MobileContainerWrap><TextContainerCenter> {loading&&<CircularProgress />}
+                        <MobileContainerWrap><TextContainerCenter> {loading&&<LoadingContainer><CircularProgress /></LoadingContainer>}
                        <br /><hr />Copyright &#169; 2024, Findexar, Inc.<br />Made in USA.
                         </TextContainerCenter></MobileContainerWrap>
                        
