@@ -241,6 +241,7 @@ const RightExplanation = styled.div`
   font-size: 13px;
   margin-top: 20px;
   margin-bottom:10px;
+  margin-left:20px;
 `;
 const LoadMore = styled.div`
     display: flex;
