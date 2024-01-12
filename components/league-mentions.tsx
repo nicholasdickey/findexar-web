@@ -326,7 +326,7 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
   view="mentions";
   const trackerListMembersKey: TrackerListMembersKey = { type: "tracker_list_members", league, noUser,noLoad:false };
   const { data: trackerListMembers, error: trackerListError, isLoading: trackerListLoading, mutate: trackerListMutate } = useSWR(trackerListMembersKey, getTrackerListMembers);
-   console.log("trackerListMembers", trackerListMembersKey,trackerListMembers)
+   //console.log("trackerListMembers", trackerListMembersKey,trackerListMembers)
   const Mentions = mentions && mentions.map((m: any, i: number) => {
     const { league, type, team, teamName, name, date, url, findex, summary, findexarxid, fav } = m;
     // console.log("XID:",league,name,xid)

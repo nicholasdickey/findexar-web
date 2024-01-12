@@ -173,7 +173,11 @@ const ssr = async (context: GetServerSidePropsContext) => {
                       */
                     if (view == 'mentions') {
                         console.log("FETCH MENTIONS SSR")
+                        console.log("========== ========= SSR CHECKPOINT 31:", new Date().getTime() - t1, "ms");
+      
                         const { data: dataMentions } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?api_key=${api_key}&userid=${userId}&teamid=${team}&name=${encodeURIComponent(player as string || "")}&page=0&league=${league}&myteam=0`);
+                        console.log("========== ========= SSR CHECKPOINT 32:", new Date().getTime() - t1, "ms");
+      
                         fetchMentions = dataMentions.mentions;
                     }
                 }

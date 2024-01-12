@@ -758,8 +758,8 @@ const SinglePage: React.FC<Props> = (props) => {
             <Header>
               <HeaderTopline>
                 <LeftContainer> <HeaderLeft>
-                  <FLogo><Link href={`/pub${params}`}><Avatar sx={{ bgcolor: cyan[800] }}>Fi</Avatar></Link></FLogo>
-                  <FLogoMobile ><Link href={`/pub${params}`}><Avatar sx={{ bgcolor: cyan[800] }}>Fi</Avatar></Link></FLogoMobile>
+                  <FLogo><Link href={`/${params}`}><Avatar sx={{ bgcolor: cyan[800] }}>Fi</Avatar></Link></FLogo>
+                  <FLogoMobile ><Link href={`/${params}`}><Avatar sx={{ bgcolor: cyan[800] }}>Fi</Avatar></Link></FLogoMobile>
                 </HeaderLeft>
                   <ContainerCenter>
 

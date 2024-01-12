@@ -238,7 +238,7 @@ const Landing = () => {
     const theme = useTheme();
     const onClick = () => {
         try {
-            setLoading(true);
+            //setLoading(true);
             recordEvent("", `enter-clicked`, `{"fbclid":"${fbclid}", "utm_content":"${utm_content}"}`)
                 .then((r: any) => {
                     console.log("recordEvent", r);
