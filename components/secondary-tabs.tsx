@@ -82,7 +82,7 @@ const AntTabs = styled(Tabs)({
     selected: boolean;
   }
   const STab = styled(Tab)<STabsProps>`
-    color:${({selected})=>`rgba(255, 255, 255, ${selected?0.8:0.6})`} !important;
+    color:${({selected})=>`rgba(255, 255, 255, ${selected?0.9:0.7})`} !important;
     font-size: 10px;
  `;
 
