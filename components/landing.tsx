@@ -324,7 +324,7 @@ const Landing = () => {
                                 wrapperStyle={{}}
                                 wrapperClass=""
                             /></LoadingContainer>}
-                                <br /><hr />Copyright &#169; 2024, Findexar, Inc.<br />Made in USA.
+                                <hr />Copyright &#169; 2024, Findexar, Inc.<br />Made in USA.
                             </TextContainerCenter></MobileContainerWrap>
 
                         </MobileVContainer>
