@@ -30,6 +30,7 @@ const Readme = () => {
 <p>Click on a star on a mention to add the mention to the Favorites collection.</p>
 <h4>My Team</h4>
 <p>When in the team area, click on the icon to the right of the athlete&apos;s name to add them to the My Team collection. Use the My Team checkbox to filter mentions by My Team when at the top or league levels.</p>
+<p>Both featues requires to sign-up and create an account on Findexar.</p>
 <h2>How does Findexar work?</h2>
 <p>Suffice it to say, we use AI to create digests for the article with athletes or teams mentions. Then, for every mention in the article, we create a short mention gist, to give you an idea of the nature and context of each mention, as much as possible. </p>
 <h2>Are there any social media accounts to follow Findexar on?</h2>

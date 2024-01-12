@@ -214,7 +214,7 @@ const LeftMobilePanel = styled.div`
   display:flex;
   flex-direction:column;
   //justify-content:center;
-  align-items:flex-stat; 
+  align-items:flex; 
   padding-top:18px;
   a{
     color: #fff;
@@ -322,6 +322,7 @@ margin-left:60px;
 display:flex;
 flex-direction:column;
 align-items: flex-start;
+text-align: left;
 @media screen and (max-width: 1199px) {
     margin-left:0px;
     width:120px;
