@@ -94,7 +94,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
         if(!sessionid){
             fresh=true;
             sessionid = randomstring();
-            setCookie('sessionid', sessionid, { req:context.req, res:context.res, maxAge: 60 * 6 * 24 });  
+            setCookie('sessionid', sessionid, { req:context.req, res:context.res, maxAge: 60 * 60 * 24 *365});  
         }
         if (!botInfo.bot) {
             try {
