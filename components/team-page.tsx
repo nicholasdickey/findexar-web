@@ -53,6 +53,8 @@ const MobileTeamName = styled.div`
   text-align: center;
   font-size: 24px;
   margin: 10px;
+  padding-left:20px;
+  padding-top:10px;
 `;
 const SideGroup = styled.div`
   display:flex;
@@ -124,7 +126,7 @@ const MobilePlayersPanel = styled.div`
   display:flex;
   flex-direction:column;
   justify-content:flex-start;
-  align-items:center; 
+  align-items:flex-start; 
   //font-family: roboto;
   a{
     color: #fff;
