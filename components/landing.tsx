@@ -20,7 +20,7 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import LoginIcon from '@mui/icons-material/Login';
 import ContactSupportIcon from '@mui/icons-material/ContactSupport';
 import Avatar from '@mui/material/Avatar';
-import { RotatingLines } from 'react-loader-spinner'
+import { Watch } from 'react-loader-spinner'
 import Button from '@mui/material/Button';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
@@ -29,13 +29,6 @@ import { palette } from '@/lib/palette';
 import { GlobalStyle } from '@/components/themes/globalStyle';
 
 import { LeagueTeamsKey, getLeagueTeams, recordEvent } from '@/lib/api';
-import Team from './team-page';
-
-import Mentions from './league-mentions';
-import SecondaryTabs from "./secondary-tabs";
-import PlayerPhoto from "./player-photo";
-import SubscriptionMenu from "./subscription-menu";
-import Readme from "./readme";
 
 const LoadingContainer = styled.div`
     position: fixed;
@@ -312,30 +305,26 @@ const Landing = () => {
                         <ButtonContainer><Button onClick={onClick} variant="outlined" color="primary" href={`/pub${params}`}>Enter Findexar</Button></ButtonContainer>
                         <MobileButtonContainer><Button onClick={onClick} variant="outlined" color="primary" href={`/pub${params}`}><b>Enter Findexar</b></Button></MobileButtonContainer>
 
-                        <ContainerWrap><TextContainerCenter>{loading && <LoadingContainer><RotatingLines
+                        <ContainerWrap><TextContainerCenter>{loading && <LoadingContainer><Watch
                             visible={true}
-                            //@ts-ignore
-                            height="96"
-                            width="96"
-                            color="grey"
-                            strokeWidth="5"
-                            animationDuration="0.75"
-                            ariaLabel="rotating-lines-loading"
+                            height="80"
+                            width="80"
+                            radius="48"
+                            color="#4fa94d"
+                            ariaLabel="watch-loading"
                             wrapperStyle={{}}
                             wrapperClass=""
                         /></LoadingContainer>}
 
                             <br /><br /><hr />Copyright &#169; 2024, Findexar, Inc.<br />Made in USA.
                         </TextContainerCenter></ContainerWrap>
-                        <MobileContainerWrap><TextContainerCenter> {loading && <LoadingContainer><RotatingLines
+                        <MobileContainerWrap><TextContainerCenter> {loading && <LoadingContainer><Watch
                             visible={true}
-                              //@ts-ignore
-                            height="96"
-                            width="96"
-                            color="grey"
-                            strokeWidth="5"
-                            animationDuration="0.75"
-                            ariaLabel="rotating-lines-loading"
+                            height="80"
+                            width="80"
+                            radius="48"
+                            color="#4fa94d"
+                            ariaLabel="watch-loading"
                             wrapperStyle={{}}
                             wrapperClass=""
                         /></LoadingContainer>}
