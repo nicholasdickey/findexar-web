@@ -117,7 +117,7 @@ const TeamName = styled.div`
   width: 100%; 
   color: #aea;
   //text-align: center;
- // padding-left:20px;
+  //padding-left:20px;
   font-size: 20px;
   padding-top:2px;
   padding-bottom:20px;
@@ -242,9 +242,9 @@ const RightExplanation = styled.div`
   line-height:1.5;
  // text-align: center;
   font-size: 14px;
-  margin-top: 20px;
+  //margin-top: 20px;
   margin-bottom:10px;
-  margin-left:20px;
+  //margin-left:20px;
 `;
 const LoadMore = styled.div`
     display: flex;

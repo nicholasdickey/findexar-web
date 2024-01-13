@@ -83,12 +83,14 @@ const AntTabs = styled(Tabs)({
   }
   const STab = styled(Tab)<STabsProps>`
     color:${({selected})=>`rgba(255, 255, 255, ${selected?0.9:0.7})`} !important;
-    font-size: 10px;
+    font-size: 9px;
+    height:16px;
  `;
 
   const STabs = styled(Tabs)`
    //background: #706e85 !important;
-  
+
+  //height:28px;
   `;
 interface Option {
     name: string;

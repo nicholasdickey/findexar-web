@@ -89,7 +89,7 @@ const SideTeam = styled.div`
   color: #aaa;
   
  // text-align: center;
-  font-size: 18px;
+  font-size: 16px;
   padding-left:20px;
   margin: 10px;
 `;
@@ -99,7 +99,7 @@ const SelectedSideTeam = styled.div`
   width: 300px;
   color: #ff8 !important;
   //text-align: center;
-  font-size: 18px;
+  font-size: 16px;
   padding-left:20px;
   margin: 10px;
   a{
@@ -111,21 +111,23 @@ const SelectedSideTeam = styled.div`
   }
 `;
 const League = styled.div`
-  height: 30px;
+  height: 24px;
   width: 100px; 
   color: #fff;
   text-align: center;
-  font-size: 24px;
+  //font-size: 18px;
   margin: 0px;
+  padding-top:3px;
 `;
 
 const SelectedLeague = styled.div`
-  height: 30px;
+  height: 24px;
   width: 100px;
   color: #ff8 !important;
   text-align: center;
-  font-size: 24px;
+  //font-size: 18px;
   margin: 0px;
+  padding-top:3px;
   a{
     color: #ff8 !important;
     text-decoration: none;
@@ -141,12 +143,12 @@ const Leagues = styled.div`
   flex-wrap: wrap;
   justify-content: space-evenly;
   align-items: center;
-  height: 38px;
+  height: 28px;
   width: 100%;
   background-color: #555;
   color: #aaa;
   text-align: center;
-  font-size: 28px;
+  font-size: 17px;
   margin: 0px;
   a{
     color: #ccc;
@@ -175,6 +177,14 @@ const LeftPanel = styled.div`
       color: #4f8;
     }
   }
+`;
+const LeagueIcon = styled.div`
+  padding-bottom:20px;
+  min-height:12px;
+  //display:flex;
+  margin-top:-2px;
+  //flex-direction:column;
+  //justify-content:center;
 `;
 const Favorites = styled.div`
   margin-top:28px;
@@ -630,7 +640,7 @@ const SinglePage: React.FC<Props> = (props) => {
     return <Tab key={`league-${i}`} label={l} onClick={() => { onLeagueNavClick(l).then(() => { }); router.replace(`/pub/league/${l}${params}`); }} />
   })
   MobileLeaguesNav.unshift(<Tab key={`league-${leagues?.length}`} icon={<HomeIcon />} onClick={() => { onLeagueNavClick('').then(() => { }); router.replace(`/pub${params}`); }} />)
-  LeaguesNav.unshift(localLeague ? <League key={`league-${leagues?.length}`}><Link href={`/pub${params}`} shallow onClick={() => { onLeagueNavClick('').then(() => { }) }}><HomeIcon sx={{ m: 0.3 }} /></Link></League> : <SelectedLeague key={`league-${leagues?.length}`}><Link href={`/pub${params}`} shallow onClick={() => { onLeagueNavClick('').then(() => { }) }}><HomeIcon sx={{ m: 0.3 }} /></Link></SelectedLeague>)
+  LeaguesNav.unshift(localLeague ? <League key={`league-${leagues?.length}`}><Link href={`/pub${params}`} shallow onClick={() => { onLeagueNavClick('').then(() => { }) }}><LeagueIcon><HomeIcon fontSize="small"  sx={{ m: 0.3 }} /></LeagueIcon></Link></League> : <SelectedLeague key={`league-${leagues?.length}`}><Link href={`/pub${params}`} shallow onClick={() => { onLeagueNavClick('').then(() => { }) }}><LeagueIcon><HomeIcon fontSize="small" sx={{ m: 0.3 }} /></LeagueIcon></Link></SelectedLeague>)
   //console.log("userId", localUserId);
   const selectedLeague = leagues?.findIndex((l: string) => l == localLeague) + 1;
   //console.log("selectedLeague", selectedLeague)
@@ -863,7 +873,7 @@ const SinglePage: React.FC<Props> = (props) => {
               </MuiTabs>
               {localPageType == 'league' && !localLeague &&
                 <div>
-                  <SecondaryTabs options={[{ name: "Mentions", icon: <MentionIcon />, access: "pub" }, { name: "My Team", icon: <ListIcon />, access: "pro" }, { name: "Readme", icon: <ContactSupportIcon />, access: "pub" }]} onChange={async (option: any) => { await onViewNav(option); }} selectedOptionName={v} />
+                  <SecondaryTabs options={[{ name: "Mentions", icon: <MentionIcon fontSize="small"/>, access: "pub" }, { name: "My Team", icon: <ListIcon fontSize="small"/>, access: "pro" }, { name: "Readme", icon: <ContactSupportIcon fontSize="small"/>, access: "pub" }]} onChange={async (option: any) => { await onViewNav(option); }} selectedOptionName={v} />
                   <CenterPanel>
                     {subscriptionPrompt && !dismiss && <SubscriptionMenu hardStop={hardStop} setDismiss={setDismiss} {...subscriptionObject} />}
 
