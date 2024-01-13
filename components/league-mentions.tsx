@@ -12,6 +12,7 @@ import LoginIcon from '@mui/icons-material/Login';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import IconButton from '@mui/material/IconButton';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
+import HomeIcon from '@mui/icons-material/HomeOutlined';
 import {
    getOptions, UserOptionsKey,
   SetTrackerFilterParams, setTrackerFilter, TrackerListMembersKey, getTrackerListMembers,
@@ -400,10 +401,12 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
             </LoadMore>
           </div>
         </MentionsOuterContainer>
-        {(view != "fav") && trackerListMembers && trackerListMembers.length > 0 && <RightPanel>
+        {(view != "fav")  && <RightPanel>
 
           <TeamName>My Team: </TeamName>
-          {(!trackerListMembers || trackerListMembers.length == 0) &&  <RightExplanation>Use  &nbsp;<PlaylistAddIcon sx={{ color: "#aea"}}/>&nbsp;  icon to the right of the<br /> player name in the team roster<br />to add to &ldquo;My Team&ldquo; tracking list. </RightExplanation>}
+          {(!trackerListMembers || trackerListMembers.length == 0) &&  <RightExplanation>Use  &nbsp;<PlaylistAddIcon sx={{ color: "#aea"}}/>&nbsp;  icon to the right of the<br /> player&apos;s name in the team roster<br />to add to &ldquo;My Team&ldquo; tracking list.<br/><br/><SignedOut>Note, My Team featue requires user to sign-up for Findexar account.<br/><br/><SignInButton><Button size="small" variant="outlined" style={{ paddingRight: 8, paddingTop: 4, paddingBottom: 4, paddingLeft: 4 }}><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></SignedOut>
+          <br/><br/>To view the My Team&apos;s mentions feed go to <br/>Home <HomeIcon/> or select a League.
+            </RightExplanation>}
           {trackerListMembers && trackerListMembers.map(({ member, teamid, league }: { member: string, teamid: string, league: string }, i: number) => {
             console.log("TRACKER LIST MEMBER", member, teamid, league)
             //return <SidePlayer><Link onClick={() => { setLocalPageType("player"), setLocalPlayer(p.member); setV("mentions"); setGlobalLoading(true) }} href={`/pro/league/${p.league}/team/${p.teamid}/player/${encodeURIComponent(p.member)}`}>{p.member} </Link></SidePlayer>
@@ -492,7 +495,9 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
           </>}
           {(view == 'my team') && <MobilePlayersPanel>
             <MobileTeamName>My Team: </MobileTeamName>
-            {(!trackerListMembers || trackerListMembers.length == 0) && <RightExplanation>Use  &nbsp;<PlaylistAddIcon sx={{color:"#aea"}}/>&nbsp;  icon to the right of the<br /> player name in the team roster<br />to add to &ldquo;My Team&ldquo; tracking list. </RightExplanation>}
+            {(!trackerListMembers || trackerListMembers.length == 0) &&<RightExplanation>Use  &nbsp;<PlaylistAddIcon sx={{ color: "#aea"}}/>&nbsp;  icon to the right of the<br /> player&apos;s name in the team roster<br />to add to &ldquo;My Team&ldquo; tracking list.<br/><br/><SignedOut>Note, My Team featue requires user to sign-up for Findexar account.<br/><br/><SignInButton><Button size="small" variant="outlined" style={{ paddingRight: 8, paddingTop: 4, paddingBottom: 4, paddingLeft: 4 }}><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></SignedOut>
+          <br/><br/>To view My Team&apos;s mentions feed go to <br/>Home <HomeIcon/> or select a League.
+            </RightExplanation>}
             {trackerListMembers && trackerListMembers.map(({ member, teamid, league }: { member: string, teamid: string, league: string }, i: number) => {
               //return <SidePlayer><Link onClick={() => { setLocalPageType("player"), setLocalPlayer(p.member); setV("mentions"); setGlobalLoading(true) }} href={`/pro/league/${p.league}/team/${p.teamid}/player/${encodeURIComponent(p.member)}`}>{p.member} </Link></SidePlayer>
               return <MobileSideGroup key={`3fdsdvb-${i}`}>
