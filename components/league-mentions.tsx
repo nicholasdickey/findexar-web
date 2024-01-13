@@ -248,7 +248,7 @@ const RightExplanation = styled.div`
 `;
 const MobileRightExplanation = styled.div`
   //height: 30px;
-  width: 300px; 
+  width: 280px; 
   color: #ccc;
   line-height:1.5;
  // text-align: center;
