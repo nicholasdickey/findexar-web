@@ -227,7 +227,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
         )] = fetchMentions;
        // console.log("fetchedMentions:", fetchMentions)
        console.log("========== ========= SSR TIME:", new Date().getTime() - t1, "ms");
-       console.log("SSR league:",league)
+       console.log("SSR league:",league,"user:",userId)
         return {
             props: {
                 sessionid,

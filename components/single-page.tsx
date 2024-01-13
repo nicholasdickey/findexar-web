@@ -85,7 +85,7 @@ const MobileContainerWrap = styled.div`
 
 const SideTeam = styled.div`
   height: 40px;
-  width: 300px; 
+  //width: 300px; 
   color: #aaa;
   
  // text-align: center;
@@ -96,7 +96,7 @@ const SideTeam = styled.div`
 
 const SelectedSideTeam = styled.div`
   height: 40px;
-  width: 300px;
+  //width: 300px;
   color: #ff8 !important;
   //text-align: center;
   font-size: 16px;
@@ -786,7 +786,7 @@ const SinglePage: React.FC<Props> = (props) => {
 
                 </LeftContainer>
 
-                <HeaderRight>  <SUserButton afterSignOutUrl="/" /></HeaderRight>
+                <HeaderRight>  <SUserButton afterSignOutUrl="/pub" /></HeaderRight>
               </HeaderTopline>
             </Header>
             {pagetype=="landing"&&<Landing/>}
