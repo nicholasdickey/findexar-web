@@ -23,6 +23,7 @@ interface MentionsProps {
 const MentionWrap = styled.div<MentionsProps>`
     width:100%;
     min-height:100px;
+    background-color: var(--mention-border);
     //display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -31,13 +32,21 @@ const MentionWrap = styled.div<MentionsProps>`
     border-radius: 5px;
     margin-left:8px;
     margin-top:20px;
+    color:var(--text);
     z-index:200;
+    font-size: 16px;
+    &:hover{
+           // background-color:var(--mention-high-bg);
+            color: var(--mention-text);
+        } 
+   
     a{
-        font-size: 16px;
-        color: #000;
+        //font-size: 16px;
+        color:var(--mention-text);
         text-decoration: none;
         &:hover{
-          color: #111;
+           // background-color:var(--mention-high-bg);
+           color: var(--mention-text);
         }   
     }
     display:${props => props.hideit ? 'none' : 'flex'};
@@ -46,7 +55,7 @@ const MentionWrap = styled.div<MentionsProps>`
   }
 `;
 const MobileMentionWrap = styled.div<MentionsProps>`
-    flex-grow:1;
+   // flex-grow:1;
     min-height:100px;
     display:${props => props.hideit ? 'none' : 'flex'};
     flex-direction: row;
@@ -56,14 +65,20 @@ const MobileMentionWrap = styled.div<MentionsProps>`
     border-radius: 5px;
     margin-top:2px;
     margin-bottom:10px;
-    margin-left:4px;
-    margin-right:4px;
+    margin-left:2px;
+    margin-right:2px;
+    color:var(--text);
+    &:hover{
+           // background-color:var(--mention-high-bg);
+            color: var(--mention-text);
+        } 
     a{
-        font-size: 18px;
-        color: #222;
+        //font-size: 16px;
+        color:var(--mention-text);
         text-decoration: none;
         &:hover{
-          color: #111;
+           // background-color:var(--mention-high-bg);
+           color: var(--mention-text);
         }   
     }
     @media screen and (min-width: 1200px) {
@@ -73,47 +88,64 @@ const MobileMentionWrap = styled.div<MentionsProps>`
 
 
 const MentionFindex = styled.div`
-    width:6px;
+    //width:100%;
+    width:20px;
+    height:100%;
+    padding-left:12px;
     //height:100%;
-    margin-right:20px;
-    margin-top:40px;
-    font-size: 18px;
-    padding-top:20px;
-    background-color: #fff;
+    //margin-right:20px;
+    //margin-top:40px;
+    font-size: 38px;
+    //padding-top:20px;
+    //background-color: #fff;
     border-radius: 30px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    @media screen and (max-width: 1199px) {
+        display: none;
+  }
 `;
 const MentionSummary = styled.div`
     width:100%;
     padding-right:20px;
-    margin-left:0px;
+    margin-left:20px;
     font-size: 18px;
     padding:20px;
-    background-color: #eee;
-    &:hover{
-            background-color: #ddd;
+   // background-color: #eee;
+    background-color: var(--mention-bg); 
+   &:hover{
+        background-color:var(--mention-high-bg);// #ddd;
+        //color:var(--highlight);
     } 
     border-radius: 0px 5px 5px 0px;
+    @media screen and (max-width: 1199px) {
+       margin:1px;
+  }
 `;
 
 
 
 const Icon = styled.span`
     color: #555;
-    font-size: 28px;
-    margin-top:10px;
+    font-size: 38px;
+    width:20px;
+    height:20px;
+   // margin-top:10px;
     cursor:pointer;
     &:hover{
             color: #F00;
     }
 `;
 const MobileIcon = styled.span`
-    color:#888;
+    color:var(mention-text);
     font-size: 38px;
    // margin-top:-20px;
    margin-bottom:-20px;
     cursor:pointer;
     &:hover{
-            color: #F00;
+            color: var(--highlight);
     }
 `;
 const MobileIconContainer = styled.div`
@@ -130,9 +162,9 @@ const ExtendedMention = styled.div`
     border-radius: 10px;
     font-size: 14px;
     padding:20px;
-    background-color: #eed;
+    background-color:var(--background);
     &:hover{
-            background-color: #bbc;
+            background-color: var(--background)
     } 
     display:flex;
     flex-direction:column;
@@ -143,10 +175,10 @@ const MobileExtendedMention = styled.div`
     border-radius: 20px;
     font-size: 14px;
     padding:20px;
-    background-color: #eed;
+    background-color:var(--background);
     &:hover{
-            background-color: #bbc;
-    } 
+            background-color: var(--background)
+    }
     display:flex;
     flex-direction:column;
 `;
@@ -262,9 +294,10 @@ interface Props {
     mutate: () => void;
     params: string;
     sessionid: string;
+    tp:string;
 }
 
-const Mention: React.FC<Props> = ({ sessionid, params, noUser, mentionType, league, type, team, teamName, name, date, url, findex, summary, findexarxid, fav, setLocalPageType, setLocalPlayer, setLocalLeague, setLocalTeam, mutate }) => {
+const Mention: React.FC<Props> = ({ tp,sessionid, params, noUser, mentionType, league, type, team, teamName, name, date, url, findex, summary, findexarxid, fav, setLocalPageType, setLocalPlayer, setLocalLeague, setLocalTeam, mutate }) => {
     const [expanded, setExpanded] = React.useState(false);
     const [localDate, setLocalDate] = React.useState(convertToUTCDateString(date));
     const [localFav, setLocalFav] = React.useState(fav);
@@ -283,7 +316,10 @@ const Mention: React.FC<Props> = ({ sessionid, params, noUser, mentionType, leag
         }
     }, [summary, mutate, date, url]);
     //console.log("mention params:",params)
-    let localUrl = /*mentionType == "top" ?*/ (type == 'person' ? `/pro/league/${league}/team/${team}/player/${name}${params}` : `/pub/league/${league}/team/${team}${params}`) /*: url*/;
+    //if(!params)
+    //    tp=tp.replace(/&/g,'?');
+    //console.log("tp=",tp    )
+    let localUrl = /*mentionType == "top" ?*/ (type == 'person' ? `/pub/league/${league}/team/${team}/player/${name}${params}${tp}` : `/pub/league/${league}/team/${team}${params}${tp}`) /*: url*/;
     const mentionsKey: MetaLinkKey = { func: "meta", findexarxid };
     const meta = useSWRImmutable(mentionsKey, getMetaLink).data;
     let digest = meta ? meta.digest.replace('<p>', '').replace('</p>', '') : "";
@@ -325,8 +361,6 @@ const Mention: React.FC<Props> = ({ sessionid, params, noUser, mentionType, leag
             <MentionWrap hideit={hide}>
                 <MentionFindex>
 
-                    {mentionType == "top1" && <span>{league}</span>}
-                    <br />
                     <Icon onClick={
                         async (e) => {
                             setExpanded(!expanded);

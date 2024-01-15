@@ -1,5 +1,5 @@
 
-import React, { use, useEffect, useState } from "react";
+import React, { use, useCallback, useEffect, useState } from "react";
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -7,6 +7,7 @@ import { Roboto } from 'next/font/google';
 import 'material-icons/iconfont/outlined.css';
 import Script from "next/script";
 import useSWR from 'swr';
+
 import { useSubscription } from "use-stripe-subscription";
 import { styled, ThemeProvider } from "styled-components";
 import { Tabs, Tab, Alert } from '@mui/material'
@@ -21,15 +22,17 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import LoginIcon from '@mui/icons-material/Login';
 import ContactSupportIcon from '@mui/icons-material/ContactSupport';
+import ModeNightTwoToneIcon from '@mui/icons-material/ModeNightOutlined';
+import LightModeTwoToneIcon from '@mui/icons-material/LightModeOutlined';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { UserButton, SignInButton, SignedOut, SignedIn } from "@clerk/nextjs";
 import { palette } from '@/lib/palette';
-import { GlobalStyle } from '@/components/themes/globalStyle';
+import GlobalStyle from '@/components/globalstyles';
 
-import { LeagueTeamsKey, getLeagueTeams, recordEvent } from '@/lib/api';
+import { LeagueTeamsKey, getLeagueTeams, recordEvent, setCookie } from '@/lib/api';
 import Team from './team-page';
 
 import Mentions from './league-mentions';
@@ -39,25 +42,30 @@ import SubscriptionMenu from "./subscription-menu";
 import Readme from "./readme";
 import Landing from "./landing";
 const Header = styled.header`
-  height: 80px;
+  height: 100px;
   width: 100%;
-  background-color: #333;
-  color: #fff;
+  //background-color: #333;
+  //color: #fff;
+ //background-color: #263238;
+  background-color:var(--header-bg);
   text-align: center;
   font-size: 40px;
   padding-top: 10px;
   padding-bottom:10px;
   font-family: 'Roboto', sans-serif;
-  
   a{
-      color: #fff;
+      color: var(--header-title-color);// #fff;
       text-decoration: none;
       &:hover{
-        color: #4f8;
+        color:var(--highlight);// #4f8;
       }  
   }
   @media screen and (max-width: 1199px) {
-    height: 64px;
+    height: 84px;
+    background-color:var(--mobile-header-bg);
+    a{
+      color: var(--mobile-header-title-color);// #fff;  
+    }
   }
 `;
 
@@ -67,6 +75,7 @@ const ContainerWrap = styled.div`
   height: 100%;
   width: 100%;
   font-family: 'Roboto', sans-serif;
+  color:var(--text);
   @media screen and (max-width: 1199px) {
     display: none;
   }
@@ -78,6 +87,8 @@ const MobileContainerWrap = styled.div`
   width: 100%;
   color: #111;
   font-family: 'Roboto', sans-serif;
+  border-top: 1px solid #ccc;
+  //margin-top: 10px;
   @media screen and (min-width: 1200px) {
     display: none;
   }
@@ -86,34 +97,49 @@ const MobileContainerWrap = styled.div`
 const SideTeam = styled.div`
   height: 40px;
   //width: 300px; 
-  color: #aaa;
+ // color: #aaa;
   
  // text-align: center;
   font-size: 16px;
   padding-left:20px;
-  margin: 10px;
+  //margin: 10px;
+  border-left: 1px solid #aaa;
+  padding-bottom:35px;
 `;
-
+const SideLeagueName = styled.div`
+  height: 40px;
+  width: 200px; 
+ // color: #aea;
+  //text-align: center;
+  //padding-left:20px;
+  color:var(--text);
+  font-size: 20px;
+  //margin: 10px;
+`;
 const SelectedSideTeam = styled.div`
   height: 40px;
   //width: 300px;
-  color: #ff8 !important;
+ // color: #ff8 !important;
   //text-align: center;
+  color:var(--selected);
   font-size: 16px;
   padding-left:20px;
-  margin: 10px;
+  //margin: 10px;
+  border-left: 1px solid #aaa;
   a{
-      color: #ff8 !important;
-      text-decoration: none;
-      &:hover{
-        color: #F8F;
-      }
+    color:var(--selected) !important;
+    text-decoration: none;
+    &:hover{
+      color: var(--highlight);//#F8F;
+    }
+  
   }
+  
 `;
 const League = styled.div`
   height: 24px;
   width: 100px; 
-  color: #fff;
+  color: var(--leagues-text);
   text-align: center;
   //font-size: 18px;
   margin: 0px;
@@ -123,16 +149,16 @@ const League = styled.div`
 const SelectedLeague = styled.div`
   height: 24px;
   width: 100px;
-  color: #ff8 !important;
+  color: var(--leagues-selected);
   text-align: center;
   //font-size: 18px;
   margin: 0px;
   padding-top:3px;
   a{
-    color: #ff8 !important;
+    color:var(--leagues-selected) !important;
     text-decoration: none;
     &:hover{
-      color: #F8F;
+      color:var(--leagues-highlight);// #4f8;
     }
   }
 `;
@@ -145,16 +171,16 @@ const Leagues = styled.div`
   align-items: center;
   height: 28px;
   width: 100%;
-  background-color: #555;
+  background-color:var(--leagues-bg);
   color: #aaa;
   text-align: center;
   font-size: 17px;
   margin: 0px;
   a{
-    color: #ccc;
+    color: var(--leagues-text);
     text-decoration: none;
     &:hover{
-      color: #4f8;
+      color:var(--leagues-highlight);// #4f8;
     } 
   }
 `;
@@ -164,25 +190,30 @@ const LeftPanel = styled.div`
   height:auto !important;
   height:100%;
   min-height: 200vw;
-  background-color:  #333;
+  //border-right: 1px solid #ccc;
+ // background-color:  #333;
+  background-color:var(--background);
   display:flex;
   flex-direction:column;
   justify-content:flex-start;
   align-items:flex-start; 
   padding-top:18px;
+  padding-left:20px;
   a{
-    color: #ccc;
+    color:var(--text);
+    //color: #ccc;
+
     text-decoration: none;
     &:hover{
-      color: #4f8;
+      color: var(--highlight);//#4f8;
     }
   }
 `;
 const LeagueIcon = styled.div`
-  padding-bottom:20px;
-  min-height:12px;
+  //padding-bottom:20px;
+  min-height:26px;
   //display:flex;
-  margin-top:-2px;
+  margin-top:-6px;
   //flex-direction:column;
   //justify-content:center;
 `;
@@ -191,11 +222,11 @@ const Favorites = styled.div`
   margin-left:22px;
   width:100%;
   height:40px;
-  color:#aaa;
+  //color:#aaa;
   //align-self:center;
   font-size:12px;
   a{
-    color: #fff;
+   // color: #fff;
     text-decoration: none;
     &:hover{
       color: #4f8;
@@ -204,45 +235,47 @@ const Favorites = styled.div`
 `;
 const LeftText = styled.div`
   padding-top:28px;
-  padding-left:22px;
+  //padding-left:22px;
   padding-right:20px;
+  line-height:1.5;
   //width:100%;
-  color:#bbb;
+ // color:#bbb;
   //align-self:center;
   font-size:12px;
   a{
-    color: #fff;
+   // color: #fff;
     text-decoration: none;
     &:hover{
-      color: #4f8;
+      color: var(--highlight);//#4f8;
     }
   }
 `;
 
 const LeftMobilePanel = styled.div`
   width:100%;
-  background-color:  #333;
+  //background-color:  #333;
   display:flex;
   flex-direction:column;
   //justify-content:center;
-  align-items:flex; 
+  padding-left:20px;
+  align-items:flex-start; 
   padding-top:18px;
   a{
-    color: #fff;
+    color: var(--text);
     text-decoration: none;
     &:hover{
-      color: #4f8;
+      color:var(--highlight);// #4f8;
     }
   }
 `;
 const Welcome = styled.div`
   padding-top:18px;
-  padding-left:22px;
-  color:#aaa;
+  //padding-left:22px;
+  //color:#aaa;
   //align-self:center;
   font-size:13px;
   a{
-    color: #fff;
+    //color: #fff;
     text-decoration: none;
     &:hover{
       color: #4f8;
@@ -268,12 +301,16 @@ const MuiTabs = styled(Tabs)`
   width:100%;
   padding:0px;
   margin:0px;
+  color: var(--mobile-leagues-text);
+  background-color:var(--mobile-leagues-bg);
+
 `;
 const Subhead = styled.div`
   font-size: 18x;
   margin-top:4px;
   text-align:left;
-  color: ${blueGrey[200]};
+  //color: ${blueGrey[200]};
+  color:var(--subheader-color);
   font-size:18px;
   @media screen and (max-width: 1199px ){
    display:none;
@@ -283,9 +320,11 @@ const SubheadMobile = styled.div`
   font-size: 17px;
   margin-top:4px;
   text-align:left;
-  color: ${blueGrey[200]};
+  color:var(--mobile-subheader-color);
+  
   font-size:14px;
-  width:200px;
+ // margin-bottom:10px;
+  //width:200px;
   @media screen and (min-width: 1200px ){
     display:none;
   }
@@ -296,14 +335,18 @@ const HeaderTopline = styled.div`
   flex-direction:row;
   justify-content:space-between;
   align-items:center;
+  color:var(--header-title-color);
  
   @media screen and (max-width: 1199px) {
     //padding-top:28px;
     font-size: 20px;
     margin-bottom:0px;
+    color:var(--mobile-header-title-color);
+ 
   }
 `;
 const LeftContainer = styled.div`
+  width:100%;
   display:flex;
   flex-direction:row;
   justify-content:flex-start;
@@ -311,10 +354,10 @@ const LeftContainer = styled.div`
 `;
 const HeaderLeft = styled.div`
   display:flex;
-  flex-direction:row;
-  justify-content:flex-start;
+  flex-direction:column;
+  justify-content:center;
   align-items:center;
-  height:56px;
+  //height:56px;
   margin-left:20px;
   //margin-right:20px;
   @media screen and (max-width: 1199px) {
@@ -329,33 +372,28 @@ const ContainerCenter = styled.div`
   align-items:center;
 `;
 const HeaderCenter = styled.div`
-margin-left:60px;
-display:flex;
-flex-direction:column;
-align-items: flex-start;
-text-align: left;
-@media screen and (max-width: 1199px) {
+  margin-left:60px;
+  display:flex;
+  flex-direction:column;
+  align-items: flex-start;
+  text-align: left;
+  @media screen and (max-width: 1199px) {
     margin-left:0px;
-    width:120px;
-   
   }
 `;
 const HeaderRight = styled.div`
+  //height:100%;
   display:flex;
   flex-direction:row;
-  justify-content:space-between;
+  justify-content:center;
   align-items:center;
-  margin-left:20px;
-  margin-top:0px;
-  //width:40px;
-  
-  font-family: 'Roboto', sans-serif;
   margin-right:30px;
+ //margin-top:10px;
   @media screen and (max-width: 1199px) {
-    margin-left:20px;
-    margin-right:20px;
+    margin-left:0px;
+    margin-right:8px;
   }
-  &.cl-avatarBox{
+  /*&.cl-avatarBox{
     width:40px !important;
     height:40px !important;
   }
@@ -365,7 +403,7 @@ const HeaderRight = styled.div`
   background-color: #611bbd;
   width:40px;
   height:40px;
-}
+}*/
 `;
 const Photo = styled.div`
   height:60px;
@@ -373,6 +411,7 @@ const Photo = styled.div`
   @media screen and (max-width: 1199px) {
     height:50px;
     width:50px;
+    margin-left:20px;
   }
 `;
 
@@ -394,15 +433,15 @@ const FLogoMobile = styled.div`
 
 const SUserButton = styled(UserButton)`
 //padding-top:30px;
-height:80px;
-width:80px;
+//height:80px;
+//width:80px;
   img{
-    width:80px !important;
-    height:80px !important;
+   // width:80px !important;
+   // height:80px !important;
   }
-  &.cl-avatarBox{
-    width:80px !important;
-    height:80px !important;
+ /* &.cl-avatarBox{
+    //width:80px !important;
+    //height:80px !important;
   }
   &.cl-formButtonPrimary {
     font-size: 14px;
@@ -410,7 +449,7 @@ width:80px;
     background-color: #611bbd;
     width:80px;
     height:80px;
-}
+}*/
 `;
 const PlayerNameGroup = styled.div`
   display:flex;
@@ -429,21 +468,15 @@ const PlayerName = styled.div`
  //margin-right:20px;
  text-align:left;
 `;
-const NewListForm = styled.div`
-padding-right:20px;
-  color: #fff;//${blueGrey[900]};
-  font-size:18px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items:flex-start;
-  //background-color:#000;// ${blueGrey[800]};
-  &.MuiTextField-root{
-    color:#fff !important;
-  }
-  input{
-    color:#fff;
-  }
+interface LeaguesNavProps {
+  selected:boolean;
+}
+const LeaguesTab = styled(Tab)<LeaguesNavProps>`
+   color:${({ selected }) => selected?'var(--mobile-leagues-selected)':'var(--mobile-leagues-text)'} !important;
+   :hover{
+      color:var(--mobile-leagues-highlight) !important;
+    
+   }
 `;
 interface Props {
   disable?: boolean;
@@ -464,6 +497,8 @@ interface Props {
   freeUser?: boolean;
   list?: string;
   t1: number;
+  tab: string;
+  mode: string;
 }
 
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
@@ -472,7 +507,7 @@ const SinglePage: React.FC<Props> = (props) => {
 
 
 
-  let { t1, fbclid = "", sessionid = "", isfb, isbot, list, freeUser, createdAt, userId, utm_content, dark, leagues, league = "", team = "", pagetype = "league", player = "", view = "" } = props;
+  let { mode, tab, t1, fbclid = "", sessionid = "", isfb, isbot, list, freeUser, createdAt, userId, utm_content, dark, leagues, league = "", team = "", pagetype = "league", player = "", view = "" } = props;
   const [localTeam, setLocalTeam] = useState(team);
   const [localPlayer, setLocalPlayer] = useState(player);
   const [localPageType, setLocalPageType] = useState(pagetype || 'league');
@@ -486,14 +521,23 @@ const SinglePage: React.FC<Props> = (props) => {
   const [params, setParams] = useState("");
   const [params2, setParams2] = useState("");
   const [localUserId, setLocalUserId] = useState(userId);
+  const [tp, setTp] = useState("");
+  const [tp2, setTp2] = useState("");
+  const [localTab, setLocalTab] = React.useState(tab);
+  const [localMode, setLocalMode] = React.useState(mode);
 
-  
+
   //console.log("pageType:", localPageType)
 
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
- 
- 
+  const theme: string = localMode;
+  const muiTheme = useTheme();
+  const fullScreen = useMediaQuery(muiTheme.breakpoints.down('md'));
+  useEffect(() => {
+    //if (theme != 'unknown') {
+    document.body.setAttribute("data-theme", localMode);
+    // }
+  }, [localMode]);
+
   /*if(pagetype=="landing"){
     return <Landing/>
   }*/
@@ -516,6 +560,12 @@ const SinglePage: React.FC<Props> = (props) => {
 
   view = view ? view.toLowerCase() : "";
   const subscriptionObject = useSubscription();
+  const updateMode = useCallback(async (mode: string) => {
+    console.log("updateMode", mode)
+    setLocalMode(mode);
+    await setCookie({ name: 'mode', value: mode });
+  }, []);
+
   //console.log("==============>", subscriptionObject)
   // if (subscriptionObject) {
   const {
@@ -525,7 +575,7 @@ const SinglePage: React.FC<Props> = (props) => {
     redirectToCheckout,
     redirectToCustomerPortal,
   } = subscriptionObject;
- // console.log("isLoaded", isLoaded, subscription, products)
+  // console.log("isLoaded", isLoaded, subscription, products)
   useEffect(() => {
     console.log("useEffect", isLoaded, subscription, products)
     if (isLoaded && !freeUser) {
@@ -552,77 +602,111 @@ const SinglePage: React.FC<Props> = (props) => {
   }, [isLoaded, subscription, products, userId, createdAt, freeUser]);
 
   //}
- /* const [localBreak, setLocalBreak] = useState("");
-  useEffect(() => {
+  /* const [localBreak, setLocalBreak] = useState("");
+   useEffect(() => {
+      //@ts-ignore
+     if (!window||!window.Clerk||!window.Clerk.user||!window.Clerk.user.id)  {
+       console.log("breaking local state")
+       setLocalBreak(randomstring());
+       return;
+     }
      //@ts-ignore
-    if (!window||!window.Clerk||!window.Clerk.user||!window.Clerk.user.id)  {
-      console.log("breaking local state")
-      setLocalBreak(randomstring());
-      return;
-    }
-    //@ts-ignore
-    const id = window.Clerk?.user.id;
-    console.log("id", id, localUserId);
-    if (id && id != localUserId) {
-      console.log('wc', id);
-      setLocalUserId(id);
-    }
-    //@ts-ignore
-  }, [userId, localBreak]);*/
+     const id = window.Clerk?.user.id;
+     console.log("id", id, localUserId);
+     if (id && id != localUserId) {
+       console.log('wc', id);
+       setLocalUserId(id);
+     }
+     //@ts-ignore
+   }, [userId, localBreak]);*/
   //console.log("localUserId", localUserId);
   const router = useRouter();
+  useEffect(() => {
+
+    const query = router.query;
+    console.log(`The page is now: ${router.pathname}`, query);
+    const { tab: qtab = "", view: qview = "", ssr = [] } = query as { tab: string | null, view: string | null, ssr: string[] };
+    let changed = false;
+
+    setLocalTab(qtab as string);
+
+    setLocalView(qview as string);
+
+
+    let [arg1, arg2, arg3, arg4, arg5, arg6, arg7] = ssr;
+    console.log("ARGS", arg1, arg2, arg3, arg4, arg5, arg6, arg7)
+    let qpagetype = 'league';
+    let qleague = '';
+    let qteam = '';//'buffalo-bills';
+    let qplayer = '';
+    qleague = arg2 || "";
+    //}
+    if (arg3 == 'team') {
+      qteam = arg4;
+      qpagetype = "team";
+      if (arg5 == 'player') {
+        qplayer = arg6;
+        qpagetype = "player";
+      }
+    }
+    else if (arg3 == 'player') {
+      qplayer = arg4;
+    }
+    console.log("qtypes:", { qpagetype, qleague, qteam, qplayer });
+    setLocalLeague(qleague);
+    setLocalTeam(qteam);
+    setLocalPlayer(qplayer);
+    setLocalPageType(qpagetype);
+
+  }, [router]);
 
   useEffect(() => {
-   /* if (!router.isReady) return;
-    const query = router.query;
-    console.log("query", query);
-    fbclid = query.fbclid as string || "";
-    utm_content = query.utm_content as string || "";
-    let view = query.view as string || "";
-    if(!view||view=='home')
-      view='mentions';
-    if (view != localView) {
-      console.log("view changed", view, localView)
-      setLocalView(view);
-    }*/
     let params = '';
     let params2 = ''
     let p: string[] = [];
     let p2: string[] = [];
-    console.log("parsed params", fbclid, utm_content, view);
+    console.log("parsed params", fbclid, utm_content, view, tab);
     if (fbclid)
       p.push(`fbclid=${fbclid}`);
     if (utm_content)
       p.push(`utm_content=${utm_content}`);
     p2 = [...p];
-    /*if (localView != `mentions` && view != '') {
-      p.push(`view=${localView}`);
-    }*/
+
     if (p.length > 0) {
       params = `?${p.join('&')}`;
     }
     if (p2.length > 0) {
       params2 = `&${p2.join('&')}`;
     }
+    let tp = localTab && localTab != 'all' ? `&tab=${localTab}` : '';
+    let tp2 = tp;
+    if (!params2)
+      tp2 = tp.replace(/&/g, '?');
+    if (!params)
+      tp = tp.replace(/&/g, '?');
+
 
     console.log("params:", utm_content, localView, params, params2);
     setParams(params);
-    setParams2(params2);
-  }, [fbclid,utm_content]);
+    setParams2(params2)
+    setTp(tp);
+    setTp2(tp2);
+  }, [fbclid, utm_content, localTab]);
 
 
-  const leagueTeamsKey: LeagueTeamsKey = { func: "leagueTeams", league: localLeague || "",noLoad:pagetype=="landing" };
+  const leagueTeamsKey: LeagueTeamsKey = { func: "leagueTeams", league: localLeague || "", noLoad: pagetype == "landing" };
   const { data: teams, error, isLoading } = useSWR(leagueTeamsKey, getLeagueTeams);
 
-  
-  
+
+
   const [localView, setLocalView] = useState(view.toLowerCase());
   useEffect(() => {
     console.log("view changed2", view, localView)
     setLocalView(view.toLowerCase());
   }, [view]);
-  let v=(!localView||localView=="home")?"mentions":localView;
-  v=v.toLowerCase();
+  let v = (!localView || localView == "home") ? "mentions" : localView;
+  v = v.toLowerCase();
+  
   const onLeagueNavClick = async (l: string) => {
     setLocalLeague(l);
     setLocalView('mentions');
@@ -633,56 +717,41 @@ const SinglePage: React.FC<Props> = (props) => {
       `{"fbclid":"${fbclid}","utm_content":"${utm_content}","league":"${l}"}`
     );
   }
+  console.log("League nav", params, tp)
   const LeaguesNav = leagues?.map((l: string, i: number) => {
-    return l == localLeague ? <SelectedLeague key={`league-${i}`} ><Link href={`/pub/league/${l}${params}`} shallow onClick={async () => { await onLeagueNavClick(l) }} >{l}</Link></SelectedLeague> : <League key={`league-${i}`}><Link href={`/pub/league/${l}${params}`} shallow onClick={async () => { await onLeagueNavClick(l) }} >{l}</Link></League>
+    return l == localLeague ? <SelectedLeague key={`league-${i}`} ><Link href={`/pub/league/${l}${params}${tp}`} shallow onClick={async () => { await onLeagueNavClick(l) }} >{l}</Link></SelectedLeague> : <League key={`league-${i}`}><Link href={`/pub/league/${l}${params}${tp}`} shallow onClick={async () => { await onLeagueNavClick(l) }} >{l}</Link></League>
   });
   const MobileLeaguesNav = leagues?.map((l: string, i: number) => {
-    return <Tab key={`league-${i}`} label={l} onClick={() => { onLeagueNavClick(l).then(() => { }); router.replace(`/pub/league/${l}${params}`); }} />
+    //@ts-ignore
+    return <LeaguesTab selected={l==localLeague} key={`league-${i}`} label={l} onClick={() => { onLeagueNavClick(l).then(() => { }); router.replace(`/pub/league/${l}${params}${tp}`); }} />
   })
-  MobileLeaguesNav.unshift(<Tab key={`league-${leagues?.length}`} icon={<HomeIcon />} onClick={() => { onLeagueNavClick('').then(() => { }); router.replace(`/pub${params}`); }} />)
-  LeaguesNav.unshift(localLeague ? <League key={`league-${leagues?.length}`}><Link href={`/pub${params}`} shallow onClick={() => { onLeagueNavClick('').then(() => { }) }}><LeagueIcon><HomeIcon fontSize="small"  sx={{ m: 0.3 }} /></LeagueIcon></Link></League> : <SelectedLeague key={`league-${leagues?.length}`}><Link href={`/pub${params}`} shallow onClick={() => { onLeagueNavClick('').then(() => { }) }}><LeagueIcon><HomeIcon fontSize="small" sx={{ m: 0.3 }} /></LeagueIcon></Link></SelectedLeague>)
+  //@ts-ignore
+  MobileLeaguesNav.unshift(<LeaguesTab selected={!localLeague} key={`league-${leagues?.length}`} icon={<HomeIcon />} onClick={() => { onLeagueNavClick('').then(() => { }); router.replace(`/pub${params}${tp}`); }} />)
+  LeaguesNav.unshift(localLeague ? <League key={`league-${leagues?.length}`}><Link href={`/pub${params}${tp}`} shallow onClick={() => { onLeagueNavClick('').then(() => { }) }}><LeagueIcon><HomeIcon fontSize="medium" sx={{ m: 0.3 }} /></LeagueIcon></Link></League> : <SelectedLeague key={`league-${leagues?.length}`}><Link href={`/pub${params}${tp}`} shallow onClick={() => { onLeagueNavClick('').then(() => { }) }}><LeagueIcon><HomeIcon fontSize="medium" sx={{ m: 0.3 }} /></LeagueIcon></Link></SelectedLeague>)
   //console.log("userId", localUserId);
   const selectedLeague = leagues?.findIndex((l: string) => l == localLeague) + 1;
   //console.log("selectedLeague", selectedLeague)
 
   useEffect(() => {
-    if(pagetype!='landing'){
-      const t2= new Date().getTime();
-      recordEvent(sessionid as string||"", `single-page-time`, `{"fbclid":"${fbclid}","time":"${t2-t1||0}"}`).then(()=>{});
+    if (pagetype != 'landing') {
+      const t2 = new Date().getTime();
+      recordEvent(sessionid as string || "", `single-page-time`, `{"fbclid":"${fbclid}","time":"${t2 - t1 || 0}"}`).then(() => { });
     }
-  },[fbclid,pagetype,sessionid,t1]);
+  }, [fbclid, pagetype, sessionid, t1]);
   useEffect(() => {
     //if (!router.isReady) return;
-    if(pagetype!='landing'){
-    try {
-      recordEvent(sessionid as string || "", `single-page-loaded`, `{"fbclid":"${fbclid}","isbot":"${isbot}","league":"${league}", "team":"${team}", "player":"${player}", "pagetype":"${pagetype}", "view":"${view}", "userId":"${localUserId}", "utm_content":"${utm_content}"}`)
-        .then((r: any) => {
-          console.log("recordEvent", r);
-        });
-    } catch (x) {
-      console.log('recordEvent', x);
+    if (pagetype != 'landing') {
+      try {
+        recordEvent(sessionid as string || "", `single-page-loaded`, `{"fbclid":"${fbclid}","isbot":"${isbot}","league":"${league}", "team":"${team}", "player":"${player}", "pagetype":"${pagetype}", "view":"${view}", "userId":"${localUserId}", "utm_content":"${utm_content}"}`)
+          .then((r: any) => {
+            console.log("recordEvent", r);
+          });
+      } catch (x) {
+        console.log('recordEvent', x);
+      }
     }
-  }
-  }, [pagetype, league, team, player, view, fbclid, utm_content,isbot,localUserId,sessionid]);
-  
-  /* if (dark) {
-     theme = createTheme({
-       palette: {
-         mode: 'dark',
-         background: {
-           default: '#2d2b38',//' blueGrey[900],
-           paper: blueGrey[600],
-         }
-       },
-     })
-   }
-   else {
-     theme = createTheme({
-       palette: {
-         mode: 'light',
-       },
-     })
-   }*/
+  }, [pagetype, league, team, player, view, fbclid, utm_content, isbot, localUserId, sessionid]);
+
   const onTeamNav = async (name: string) => {
     setLocalPageType("team");
     setLocalPlayer("");
@@ -701,22 +770,24 @@ const SinglePage: React.FC<Props> = (props) => {
       if (t.id == localTeam)
         teamName = t.name;
       return t.id == localTeam ? <SelectedSideTeam key={`sideteam-${i}`}>
-        <Link onClick={async () => { await onTeamNav(t.id); }} href={`/pub/league/${localLeague}/team/${t.id}${params}`} shallow>{t.name}</Link></SelectedSideTeam> : <SideTeam key={`sideteam-${i}`}><Link onClick={async () => { onTeamNav(t.id) }} href={`/pub/league/${localLeague}/team/${t.id}${params}`} shallow>{t.name}</Link></SideTeam>
+        <Link onClick={async () => { await onTeamNav(t.id); }} href={`/pub/league/${localLeague}/team/${t.id}${params}${tp}`} shallow>{t.name}</Link></SelectedSideTeam> : <SideTeam key={`sideteam-${i}`}><Link onClick={async () => { onTeamNav(t.id) }} href={`/pub/league/${localLeague}/team/${t.id}${params}${tp}`} shallow>{t.name}</Link></SideTeam>
     });
-    
 
- // console.log("view", v)
- // console.log("condition", localPageType == "league" && !localTeam)
+
+  // console.log("view", v)
+  // console.log("condition", localPageType == "league" && !localTeam)
   const onViewNav = async (option: { name: string, access: string }) => {
     console.log(option);
     setLocalView(option.name);
-    router.replace(localLeague||option.access=='pro' ? `/${option.access || "pub"}/league/${localLeague}?view=${encodeURIComponent(option.name.toLowerCase())}${params2}` : `/${option.access}?view=${encodeURIComponent(option.name.toLowerCase())}${params2}`, undefined, { shallow: true })
+
+    router.replace(localLeague ? `/pub/league/${localLeague}?view=${encodeURIComponent(option.name.toLowerCase())}${params2}${tp2}` : `/pub?view=${encodeURIComponent(option.name.toLowerCase())}${params2}${tp2}`, undefined, { shallow: true })
     await recordEvent(sessionid as string || "",
       'view-nav',
       `{"fbclid":"${fbclid}","utm_content":"${utm_content}","view":"${option.name}"}`
     );
   }
-  console.log("PAGE state:",{ localPageType, localLeague, localTeam, localPlayer, v, params, params2})
+  console.log("PAGE state:", { localUserId, v, localMode, localPageType, localLeague, localTeam, localPlayer, params, params2 })
+
   return (
     <>
       <Head>
@@ -736,7 +807,7 @@ const SinglePage: React.FC<Props> = (props) => {
 
         <meta name='viewport' content='width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no' />
         <link rel="apple-touch-icon" href="/apple-icon.png"></link>
-        <meta name="theme-color" content={dark ? palette.dark.colors.background : palette.light.colors.background} />
+        <meta name="theme-color" content={localMode == 'dark' ? palette.dark.colors.background : palette.light.colors.background} />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         {(pagetype != 'league' || league || team || player) && <meta name="robots" content="noindex,nofollow" />}
         <link
@@ -759,23 +830,24 @@ const SinglePage: React.FC<Props> = (props) => {
         `,
       }} />
 
-      <MuiTP theme={theme}>
+      <MuiTP theme={muiTheme}>
         <main className={roboto.className} >
           <ThemeProvider
             //@ts-ignore
             theme={palette}>
-            <GlobalStyle />
+            <GlobalStyle $light={localMode == "light"} />
             <Header>
               <HeaderTopline>
-                <LeftContainer> <HeaderLeft>
-                  <FLogo><Link href={`/${params}`}><Avatar sx={{ bgcolor: cyan[800] }}>Fi</Avatar></Link></FLogo>
-                  <FLogoMobile ><Link href={`/${params}`}><Avatar sx={{ bgcolor: cyan[800] }}>Fi</Avatar></Link></FLogoMobile>
-                </HeaderLeft>
+                <LeftContainer>
+                  <HeaderLeft>
+                    <FLogo><Link href={`/${params}`}><Avatar sx={{ bgcolor: cyan[800] }}>Fi</Avatar></Link></FLogo>
+                    <FLogoMobile ><Link href={`/${params}`}><Avatar sx={{ bgcolor: cyan[800] }}>Fi</Avatar></Link></FLogoMobile>
+                  </HeaderLeft>
                   <ContainerCenter>
 
                     <HeaderCenter>
-                      {(localPageType == "league"||localPageType == "landing") && !localLeague && !localTeam ? <Link href={`/pub${params}`}>FINDEXAR</Link> : !localTeam ? `${localLeague}` : localPlayer ? <PlayerNameGroup><PlayerName><Link href={`/pub/league/${localLeague}/team/${localTeam}${params}`}>{teamName}</Link></PlayerName> </PlayerNameGroup> : `${teamName}`}
-                      {(localPageType == "league"||localPageType=="landing") && !localLeague && !localTeam && <div><Subhead>Major Leagues and Fantasy Sports Professional Athletes and Teams Media Monitor</Subhead><SubheadMobile>Professional Athletes<br />Media Index And Monitor</SubheadMobile></div>}
+                      {(localPageType == "league" || localPageType == "landing") ? <Link href={`/pub${params}`}>FINDEXAR{localLeague ? ` : ${localLeague}` : ``}</Link> : !localTeam ? `${localLeague}` : localPlayer ? <PlayerNameGroup><PlayerName><Link href={`/pub/league/${localLeague}/team/${localTeam}${params}`}>{teamName}</Link></PlayerName> </PlayerNameGroup> : `${localLeague} : ${teamName}`}
+                      {(localPageType == "league" || localPageType == "landing") && <div><Subhead>Major Leagues and Fantasy Sports Professional Athletes and Teams Media Monitor</Subhead><SubheadMobile>Professional Athletes<br />Media Index And Monitor</SubheadMobile></div>}
 
                       {localPageType == "player" && localPlayer && <div><Subhead>{localPlayer ? localPlayer : ''}</Subhead><SubheadMobile>{localPlayer ? localPlayer : ''}</SubheadMobile></div>}
 
@@ -786,19 +858,28 @@ const SinglePage: React.FC<Props> = (props) => {
 
                 </LeftContainer>
 
-                <HeaderRight>  <SUserButton afterSignOutUrl="/pub" /></HeaderRight>
+                <HeaderRight>  <Button color={"inherit"} onClick={async () => {
+
+                  await updateMode(localMode == "light" ? "dark" : "light");
+                }}>
+                  {localMode == "dark" ? <LightModeTwoToneIcon /> : <ModeNightTwoToneIcon />}
+                </Button>
+                  <SUserButton afterSignOutUrl="/pub" />
+                  {!localUserId && <SignInButton><Button size="small" variant="outlined"><LoginIcon /></Button></SignInButton>}
+
+                </HeaderRight>
               </HeaderTopline>
             </Header>
-            {pagetype=="landing"&&<Landing/>}
-            {pagetype!=="landing"&&<ContainerWrap>
+            {pagetype == "landing" && <Landing />}
+            {pagetype !== "landing" && <ContainerWrap>
               <Leagues>
-                {pagetype!="landing"&&LeaguesNav}
+                {pagetype != "landing" && LeaguesNav}
               </Leagues>
 
               <MainPanel>
 
                 <LeftPanel>
-                  {localLeague ? TeamsNav : <> <Welcome>
+                  {localLeague ? <><SideLeagueName>{localLeague}:</SideLeagueName> {TeamsNav}</> : <> <Welcome>
                     Welcome to Findexar!<br /><hr /><br />
                     Your indispensable Fantasy Sports<br />
                     and Major Leagues athletes <br />
@@ -808,25 +889,6 @@ const SinglePage: React.FC<Props> = (props) => {
                     in the media.<br /><br /><hr />
                     Powered by OpenAI.</Welcome>
                     <br /><br />
-                    <Favorites><Button disabled={v == 'readme'} onClick={() => {
-
-
-                      if (v != 'fav') {
-                        setLocalView("fav")
-                        // setLocalPageType("Favorites");
-                        // setLocalLeague("");
-                        // setLocalTeam("");
-                        //  setFavorites(true);
-                        router.push(`/pro/league?view=fav${params2}`);
-                      }
-                      else {
-                        setLocalView("mentions")
-                        //  setFavorites(false);
-                        router.push(`/pub${params}`);
-
-                      }
-
-                    }} style={{ padding: 10 }} variant="outlined">{v == "fav" ? <HomeIcon /> : <StarOutlineIcon />}&nbsp;&nbsp;{v == "fav" ? <span>Back to Home</span> : <span>My Favorites</span>}</Button></Favorites>
 
                     <Favorites><Button disabled={view == 'fav'} onClick={() => {
 
@@ -836,31 +898,39 @@ const SinglePage: React.FC<Props> = (props) => {
                         // setLocalLeague("");
                         // setLocalTeam("");
                         // setReadme(true);
-                        router.push(`/pub?view=readme${params2}`);
+                        router.push(`/pub?view=readme${params2}${tp2}`);
                       }
                       else {
                         // setReadme(false);
                         setLocalView("mentions")
-                        router.push(`/pub${params2}`);
+                        router.push(`/pub${params2}${tp2}`);
                       }
 
 
                     }} style={{ padding: 10 }} variant="outlined">{v == "readme" ? <HomeIcon /> : <HelpOutlineIcon />}&nbsp;&nbsp;{v == "readme" ? <span>Back to Home</span> : <span>Read Me</span>}</Button></Favorites>
                     <br /><br />
-                    <LeftText><b>&ldquo;My Team&ldquo; tracker List:</b> Use <PlaylistAddIcon/> icon next to player name in team rosters to add players to My Team tracker list.<br /><br /><hr />Copyright &#169; 2024, Findexar, Inc.<br />Made in USA.</LeftText>
-                    {!localUserId && <LeftText>Needs to be a logged-in user to explore the teams and individual athletes&apos; mentions and use the tracker list or &ldquo;favorites&ldquo; functionality.<br /><br />Click here to sign-in or sign-up: <br /><br /><br /><SignInButton><Button style={{ padding: 10 }} size="small" variant="outlined"><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></LeftText>}
+                    <LeftText><hr />Copyright &#169; 2024, Findexar, Inc.<br />Made in Minnesota. L&apos;Étoile du Nord.</LeftText>
+                    {!localUserId && <LeftText>Click here to sign-in or sign-up: <br /><br /><br /><SignInButton><Button style={{ padding: 10 }} size="small" variant="outlined"><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></LeftText>}
+                    <LeftText><hr />Contact: @findexar on X (Twitter)</LeftText>
+
+                    <LeftText><br />League News Digests on X (Twitter):</LeftText>
+                    <LeftText><Link href="https://twitter.com/nflpress_digest">NFL Digest</Link></LeftText>
+                    <LeftText><Link href="https://twitter.com/nhl_digest">NHL Digest</Link></LeftText>
+                    <LeftText><Link href="https://twitter.com/mlbpressdigest">MLB Digest</Link></LeftText>
+                    <LeftText><Link href="https://twitter.com/nba_digest">NBA Digest</Link></LeftText>
+                    <LeftText><Link href="https://twitter.com/mls_digest">MLS Digest</Link></LeftText>
                   </>
                   }
                 </LeftPanel>
                 <CenterPanel>
                   {subscriptionPrompt && !dismiss && <SubscriptionMenu hardStop={hardStop} setDismiss={setDismiss} {...subscriptionObject} />}
-                  {v != "readme" && (localPageType == "team" || localPageType == "player") && <Team sessionid={sessionid} params={params} params2={params2} noUser={!localUserId} setDismiss={setDismiss} subscriptionPrompt={subscriptionPrompt && !dismiss} subscriptionObject={subscriptionObject} view={v} teams={null} team={localTeam} league={localLeague} teamName={teamName} pagetype={localPageType} player={localPlayer} setLocalPlayer={setLocalPlayer} setLocalPageType={setLocalPageType} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} />}
-                  {localPageType == "league" && !localTeam && <Mentions sessionid={sessionid} params={params} params2={params2} league={localLeague || ""} noUser={!localUserId} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} view={v} />}
+                  {v != "readme" && (localPageType == "team" || localPageType == "player") && <Team tp={tp} tp2={tp2} sessionid={sessionid} params={params} params2={params2} noUser={!localUserId} setDismiss={setDismiss} subscriptionPrompt={subscriptionPrompt && !dismiss} subscriptionObject={subscriptionObject} view={v} teams={null} team={localTeam} league={localLeague} teamName={teamName} pagetype={localPageType} player={localPlayer} setLocalPlayer={setLocalPlayer} setLocalPageType={setLocalPageType} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} />}
+                  {v != "readme" && localPageType == "league" && !localTeam && <Mentions tp={tp} tp2={tp2} tab={localTab} sessionid={sessionid} params={params} params2={params2} league={localLeague || ""} noUser={!localUserId} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} view={v} setLocalTab={setLocalTab} />}
                   {v == 'readme' && <Readme />}
                 </CenterPanel>
               </MainPanel>
             </ContainerWrap>}
-            {pagetype!="landing"&&<MobileContainerWrap>
+            {pagetype != "landing" && <MobileContainerWrap>
               <MuiTabs
                 value={selectedLeague}
                 // onChange={(event: React.SyntheticEvent, newValue: number) => { setLocalLeague(newValue ? leagues[newValue - 1] : '');setLocalView('mentions');router.replace(`/pub/league/${newValue ? leagues[newValue - 1] : ''}?view=Mentions`) }}
@@ -873,28 +943,28 @@ const SinglePage: React.FC<Props> = (props) => {
               </MuiTabs>
               {localPageType == 'league' && !localLeague &&
                 <div>
-                  <SecondaryTabs options={[{ name: "Mentions", icon: <MentionIcon fontSize="small"/>, access: "pub" }, { name: "My Team", icon: <ListIcon fontSize="small"/>, access: "pro" }, { name: "Readme", icon: <ContactSupportIcon fontSize="small"/>, access: "pub" }]} onChange={async (option: any) => { await onViewNav(option); }} selectedOptionName={v} />
+                  <SecondaryTabs options={[{ name: "Mentions", icon: <MentionIcon fontSize="small" />, access: "pub" }, { name: "My Team", icon: <ListIcon fontSize="small" />, access: "pub" }, { name: "Readme", icon: <ContactSupportIcon fontSize="small" />, access: "pub" }]} onChange={async (option: any) => { await onViewNav(option); }} selectedOptionName={v} />
                   <CenterPanel>
                     {subscriptionPrompt && !dismiss && <SubscriptionMenu hardStop={hardStop} setDismiss={setDismiss} {...subscriptionObject} />}
 
-                    <Mentions sessionid={sessionid} params={params} params2={params2} noUser={!localUserId} league={localLeague || ""} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} view={v} />
+                    <Mentions tp={tp} tp2={tp2} tab={localTab} sessionid={sessionid} params={params} params2={params2} noUser={!localUserId} league={localLeague || ""} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} view={v} setLocalTab={setLocalTab} />
                   </CenterPanel>
                 </div>}
               {localPageType == 'league' && localLeague &&
                 <div>
-                  <SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> }, { name: "Mentions", icon: <MentionIcon /> }, { name: "My Team", icon: <ListIcon />, access: "pro" }]} onChange={async (option: any) => { await onViewNav(option) }} selectedOptionName={v} />
+                  <SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> }, { name: "Mentions", icon: <MentionIcon /> }, { name: "My Team", icon: <ListIcon />, access: "pub" }]} onChange={async (option: any) => { await onViewNav(option) }} selectedOptionName={v} />
                   {v != "readme" && v == 'teams' &&
-                    <LeftMobilePanel>{TeamsNav}</LeftMobilePanel>}
+                    <LeftMobilePanel><SideLeagueName>{localLeague}:</SideLeagueName>{TeamsNav}</LeftMobilePanel>}
 
                   <CenterPanel>
                     {subscriptionPrompt && !dismiss && <SubscriptionMenu hardStop={hardStop} setDismiss={setDismiss} {...subscriptionObject} />}
 
-                    <Mentions sessionid={sessionid} params={params} params2={params2} noUser={!localUserId} league={localLeague || ""} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} view={v} />
+                    <Mentions tp={tp} tp2={tp2} tab={localTab} sessionid={sessionid} params={params} params2={params2} noUser={!localUserId} league={localLeague || ""} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} view={v} setLocalTab={setLocalTab} />
                   </CenterPanel>
                 </div>}
               {v != "readme" && (localPageType == 'team' || localPageType == 'player') &&
                 <div>
-                  <Team sessionid={sessionid} params={params} params2={params2} noUser={!localUserId} setDismiss={setDismiss} subscriptionPrompt={subscriptionPrompt && !dismiss} subscriptionObject={subscriptionObject} view={v} teams={<LeftMobilePanel>{TeamsNav}</LeftMobilePanel>} team={localTeam} league={localLeague} teamName={teamName} pagetype={localPageType} player={localPlayer} setLocalPlayer={setLocalPlayer} setLocalPageType={setLocalPageType} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} />
+                  <Team tp={tp} tp2={tp2} sessionid={sessionid} params={params} params2={params2} noUser={!localUserId} setDismiss={setDismiss} subscriptionPrompt={subscriptionPrompt && !dismiss} subscriptionObject={subscriptionObject} view={v} teams={<LeftMobilePanel>{TeamsNav}</LeftMobilePanel>} team={localTeam} league={localLeague} teamName={teamName} pagetype={localPageType} player={localPlayer} setLocalPlayer={setLocalPlayer} setLocalPageType={setLocalPageType} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} />
                 </div>
               }
               {v == 'readme' && <Readme />}

@@ -361,6 +361,8 @@ export const fetchMentions = async ({ type, league, noUser,page,teamid,name,myte
       url =  `${process.env.NEXT_PUBLIC_SERVER}/api/user/fetch-mentions?league=${encodeURIComponent(league||"")}&page=${page||0}&teamid=${encodeURIComponent(teamid||"")}&name=${encodeURIComponent(name||"")}&myteam=${encodeURIComponent(myteam||"")}`;
     }
     else {
+      if(myteam==1)
+        return [];
       url =  `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?league=${encodeURIComponent(league ||"")}&page=${page||0}&teamid=${encodeURIComponent(teamid||"")}&name=${encodeURIComponent(name||"")}&myteam=${encodeURIComponent(myteam||"")}`;
     }
     console.log("fetchMentions-url",url)
@@ -369,6 +371,22 @@ export const fetchMentions = async ({ type, league, noUser,page,teamid,name,myte
   }
   catch (e) {
     console.log("getPageMentions", e);
+    return false;
+  }
+}
+interface SetCookieParams {
+  name: string;
+  value:string;
+}
+export const setCookie = async ({ name,value }: SetCookieParams) => {
+  try {
+ 
+    const url =  `${process.env.NEXT_PUBLIC_SERVER}/api/set-cookie?name=${encodeURIComponent(name)}&value=${value}`;
+    const res = await axios.get(url);
+    return res.data.success;
+  }
+  catch (e) {
+    console.log("setCookie", e);
     return false;
   }
 }

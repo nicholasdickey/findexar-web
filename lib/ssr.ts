@@ -20,11 +20,13 @@ const api_key = process.env.LAKE_API_KEY
 const ssr = async (context: GetServerSidePropsContext) => {
     try {
         const t1=new Date().getTime();
-        let { fbclid, utm_content, dark, view = "mentions" }:
-            { fbclid: string, utm_content: string, dark: number, view: string } = context.query as any;
+        let { tab,fbclid, utm_content, dark, view = "mentions" }:
+            { fbclid: string, utm_content: string, dark: number, view: string,tab:string } = context.query as any;
         let { userId }: { userId: string | null } = getAuth(context.req);
         if(userId=="null")
             userId=null;
+        tab=tab||'all';
+        
         console.log("SSR userid:", userId   )
         const user = userId ? await clerkClient.users.getUser(userId) : null;
         console.log("========== ========= SSR CHECKPOINT 0:", new Date().getTime() - t1, "ms");
@@ -65,30 +67,31 @@ const ssr = async (context: GetServerSidePropsContext) => {
             ssr = [''];
 
         let [arg1, arg2, arg3, arg4, arg5, arg6, arg7] = ssr;
-        console.log(arg1, arg2, arg3, arg4, arg5, arg6, arg7)
+        console.log("ARGS",arg1, arg2, arg3, arg4, arg5, arg6, arg7)
         let league = '';
         let team = '';//'buffalo-bills';
         let player = '';
         let list = '';
-        let access = arg1;
+        //let access = arg1;
        // if (arg1 == 'league') {
-            league = arg1|| "";
+            league = arg2|| "";
         //}
-        if (arg2 == 'team') {
-            team = arg3;
+        if (arg3 == 'team') {
+            team = arg4;
             pagetype = "team";
-            if (arg4 == 'player') {
-                player = arg5;
+            if (arg5 == 'player') {
+                player = arg6;
                 pagetype = "player";
             }
         }
-        else if (arg2 == 'player') {
-            player = arg3;
+        else if (arg3 == 'player') {
+            player = arg4;
         }
         
-        console.log({ pagetype, league, team, player })
+        console.log('ssss:',{ pagetype, league, team, player })
         var randomstring = () => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
         let sessionid=getCookie('sessionid', { req:context.req, res:context.res });
+        let mode=getCookie('mode', { req:context.req, res:context.res })||"light";
         console.log("========== ========= SSR CHECKPOINT 1:", new Date().getTime() - t1, "ms");
         let fresh = false;
         if(!sessionid){
@@ -112,10 +115,10 @@ const ssr = async (context: GetServerSidePropsContext) => {
         }
         console.log("========== ========= SSR CHECKPOINT 2:", new Date().getTime() - t1, "ms");
       
-        let trackerListMembersKey: TrackerListMembersKey = { type: "tracker_list_members", league, noUser: userId ? false : true, noLoad: view != 'my team' };
+        let trackerListMembersKey: TrackerListMembersKey = { type: "tracker_list_members", league, noUser: userId ? false : true, noLoad: pagetype != 'league' };
         let trackerListMembers = [];
        //console.log("view==>", view, view == 'my team');
-        if (userId && view == 'my team') {
+        if (userId && pagetype=='league') {
             // create milliseconds timestamp
             console.log("TRACKER LIST MEMBERS START")
             const timestamp = new Date().getTime();
@@ -191,9 +194,9 @@ const ssr = async (context: GetServerSidePropsContext) => {
             }
 
         }
-        let favoritesKey: FavoritesKey = { type: "Favorites", noUser: userId ? false : true, noLoad: view != 'fav' };
+        let favoritesKey: FavoritesKey = { type: "Favorites", noUser: userId ? false : true, noLoad: tab != 'fav' };
         let favorites: any[] = [];
-        if (view == 'fav' && userId) {
+        if (tab == 'fav' && userId) {
             const { data } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/favorites/get?api_key=${api_key}&userid=${userId}`);
             favorites = data.favorites;
             console.log("FAVORITES:========================>", `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/favorites/get?api_key=${api_key}&userid=${userId}`, favorites);
@@ -220,7 +223,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
         fallback[unstable_serialize({ type: "options", noUser: userId ? false : true })] = options;
         fallback[unstable_serialize(trackerListMembersKey)] = trackerListMembers;
         fallback[us(page => {
-            const keyFetchedMentions: FetchedMentionsKey = { type: "FetchedMentions", teamid: team || "", name: player || "", noUser: userId ? false : true, page: page, league: league || "", myteam: options && options.tracker_filter == 1 ? 1 : 0,noLoad: view != 'mentions'&&view!='fav' }
+            const keyFetchedMentions: FetchedMentionsKey = { type: "FetchedMentions", teamid: team || "", name: player || "", noUser: userId ? false : true, page: page, league: league || "", myteam: tab=='myteam' ? 1 : 0,noLoad: view != 'mentions'&&tab!='fav' }
            // console.log("FETCHED MENTIONS KEY:", keyFetchedMentions);
             return keyFetchedMentions;
         }
@@ -247,7 +250,9 @@ const ssr = async (context: GetServerSidePropsContext) => {
                 createdAt: createdAt || "",
                 freeUser,
                 list,
-                t1
+                t1,
+                tab,
+                mode
 
             }
         }

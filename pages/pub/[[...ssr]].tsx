@@ -36,43 +36,15 @@ interface Props {
     userId?: string;
     createdAt?: string;
     freeUser?: boolean;
-    t1: number;
+    t1:number;
+    tab:string;
+    mode:string;
 }
 export default function Home(props: Props) {
     const fallback = props.fallback;
     return <SWRConfig value={{ fallback }}><SinglePage  {...props} /></SWRConfig>
 }
-/*
-export async function getStaticProps() {
-    const t1=Date.now();
-    const res = await fetch('https://api.vercel.app/blog');
-    const posts = await res.json();
-    const { data: dataMentions } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?api_key=${api_key}&userid=&teamid=&name=&page=0&league=&myteam=0`);
-    const fetchMentions = dataMentions.mentions;
-    const keyLeagueTeams: LeagueTeamsKey = { func: "leagueTeams", league:"" };
-    let leagueTeams = ["NFL","NHL","MLB","NBA"];
-    let fallback = {
-        [unstable_serialize(keyLeagueTeams)]: leagueTeams,
-    };
-    fallback[us(page => {
-        const keyFetchedMentions: FetchedMentionsKey = { type: "FetchedMentions", teamid: "", name: "", noUser: true, page: 0, league:  "", myteam:  0,noLoad: false }
-        console.log("STATIC FETCHED MENTIONS KEY:", keyFetchedMentions);
-        return keyFetchedMentions;
-    }
-    )] = fetchMentions;
-    console.log("ISR!!!");    
-    return {
-      props: {
-        leagues: ["NFL","NHL","MLB","NBA"],
-        fallback,
-        view:"mentions",
-        t1
-      },
-      revalidate: 60,
-    };
-  }
-  */
 export const getServerSideProps =
     async function getServerSideProps(context: GetServerSidePropsContext): Promise<any> {
-        return await ssr(context);
+    return await ssr(context);
     }

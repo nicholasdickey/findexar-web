@@ -27,6 +27,8 @@ interface Props {
     createdAt?: string;
     freeUser?: boolean;
     t1: number;
+    tab:string;
+    mode:string;
 }
 export default function Home(props: Props) {
    // const fallback = props.fallback;
@@ -121,6 +123,8 @@ export async function getStaticProps() {
         fallback,
         pagetype: "landing",
         view:"landing",
+        tab:"all",
+        mode:"light",
         t1
       },
       

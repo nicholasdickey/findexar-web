@@ -3,8 +3,8 @@ import useSWRInfinite from 'swr/infinite'
 import useSWR from 'swr';
 import Link from 'next/link';
 import { useRouter } from 'next/router'
-import { SignInButton ,SignedOut,SignedIn} from "@clerk/nextjs";
-import { styled } from "styled-components";
+import { SignInButton, SignedOut, SignedIn } from "@clerk/nextjs";
+import { styled, useTheme } from "styled-components";
 import Button from '@mui/material/Button';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
@@ -14,13 +14,15 @@ import IconButton from '@mui/material/IconButton';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import HomeIcon from '@mui/icons-material/HomeOutlined';
 import {
-   getOptions, UserOptionsKey,
+  getOptions, UserOptionsKey,
   SetTrackerFilterParams, setTrackerFilter, TrackerListMembersKey, getTrackerListMembers,
   removeTrackerListMember, RemoveTrackerListMemberParams, getFavorites,
   FavoritesKey, FetchedMentionsKey, fetchMentions
 } from '@/lib/api';
 
 import Mention from "./mention";
+import TertiaryTabs from "./tertiary-tabs";
+import EmptyExplanation from "./empty-explanation";
 
 const MentionsOuterContainer = styled.div`
     display:flex;
@@ -32,14 +34,14 @@ const MentionsOuterContainer = styled.div`
     font-family: 'Roboto', sans-serif;
    // padding-left:20px;
     padding-right:20px;
-    a{
+  /*  a{
         font-size: 15px;
         color: #000;
         text-decoration: none;
         &:hover{
           color: #222;
         }   
-    }
+    }*/
     @media screen and (max-width: 1199px) {
     display: none;
   }
@@ -59,7 +61,7 @@ const MobileMentionsOuterContainer = styled.div`
       
         text-decoration: none;
         &:hover{
-          color: #222;
+          color: var(--highlight);
         }   
     }
     @media screen and (min-width: 1200px) {
@@ -115,19 +117,21 @@ const OuterContainer = styled.div`
 const TeamName = styled.div`
   height: 30px;
   width: 100%; 
-  color: #aea;
+  //color: #aea;
+  //color:#333;
   //text-align: center;
   //padding-left:20px;
   font-size: 20px;
   padding-top:2px;
-  padding-bottom:20px;
+  padding-bottom:35px;
   //margin: 10px;
 `;
 const MobileTeamName = styled.div`
   height: 30px;
   margin-left:20px;
+  color:var(--text);
   //width: 200px; 
-  color: #aea;
+ // color: #aea;
   //text-align: center;
  // padding-left:20px;
  padding-top:12px;
@@ -143,17 +147,25 @@ const RightPanel = styled.div`
   width:300px;
   padding-left:20px;
   min-height: 1000vh;
-  background-color:  #668;
+  
+ // background-color:  #668;
+  //background-color:#263238;
+  //background-color:#333;
+  //background-color://#fff;
+ // color:#333;
   display:flex;
   flex-direction:column;
   justify-content:flex-start;
   align-items:flex-start; 
   padding-top:18px;
+ // border-left: 1px solid #aaa;
   a{
-    color: #eee;
+    //color: #eee;
+    color: var(---text);
     text-decoration: none;
     &:hover{
-      color: #4f8;
+      //color: #4f8;
+      color: var(--highlight)// #33C;
     }
   }
 `;
@@ -162,7 +174,8 @@ const MobilePlayersPanel = styled.div`
   height:100%;
   width:100%;
   min-height:180vw;
-  background-color:  #668;
+  color:var(--text);
+ //background-color:  #668;
   display:flex;
   //padding-left:20px;
   //padding-right:20px;
@@ -171,10 +184,11 @@ const MobilePlayersPanel = styled.div`
   justify-content:flex-start;
   align-items:flex-start; 
   a{
-    color: #fff;
+    //color: #fff;
+    color:var(--text);
     text-decoration: none;
     &:hover{
-      color: #4f8;
+      color: var(--highlight);
     }
   }
   @media screen and (min-width: 1200px) {
@@ -189,6 +203,8 @@ const SideGroup = styled.div`
   justify-content:space-between;
   padding-right:20px;
   align-items:center;
+  padding-left:20px;
+  border-left: 1px solid #aaa;
  
 `;
 const MobileSideGroup = styled.div`
@@ -202,11 +218,12 @@ const MobileSideGroup = styled.div`
   justify-content:space-around;
  // padding-right:20px;
   align-items:center;
+
  
 `;
 const SideIcon = styled.div`
  // margin-top:-8px;
-  color:#aaa;
+ // color:#aaa;
   width:20px;
   height:40px;
 
@@ -214,22 +231,24 @@ const SideIcon = styled.div`
 const SideButton = styled.div`
   //margin-top:-8px;
   width:45px;
-  color:#aaa;
+ // color:#aaa;
 
 `;
 const MobileSidePlayer = styled.div`
   ///height: 40px;
   width:240px; 
-  color: #fff;
+  //color: #fff;
   //text-align: center;
   font-size: 16px;
   //margin-top: 10px;
  // margin-bottom:10px;
+ 
 `;
 const SidePlayer = styled.div`
   height: 30px;
   width: 140px; 
-  color: #ccc;
+  //color: #ccc;
+  //color:#333;
   //text-align: center;
   font-size: 16px;
   //margin-top: 10px;
@@ -238,7 +257,7 @@ const SidePlayer = styled.div`
 const RightExplanation = styled.div`
   //height: 30px;
   width: 270px; 
-  color: #ccc;
+ // color: #ccc;
   line-height:1.5;
  // text-align: center;
   font-size: 14px;
@@ -249,7 +268,7 @@ const RightExplanation = styled.div`
 const MobileRightExplanation = styled.div`
   //height: 30px;
   width: 280px; 
-  color: #ccc;
+ // color: #ccc;
   line-height:1.5;
  // text-align: center;
   font-size: 14px;
@@ -264,6 +283,7 @@ const LoadMore = styled.div`
     align-items:center;
     font-size:18px;
     padding-bottom:140px;
+    color:var(--text);
 `;
 const MobileLoadMore = styled.div`
     width:100%;
@@ -283,21 +303,26 @@ interface Props {
   setLocalTeam: (team: string) => void;
   setLocalView: (view: string) => void;
   view: string;
-  params2:string;
-  params:string
-  sessionid:string
+  params2: string;
+  params: string
+  sessionid: string;
+  tab: string;
+  tp: string;
+  tp2: string;
+  setLocalTab: (tab: string) => void;
 }
 
-const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, setLocalPlayer, setLocalLeague, setLocalTeam, setLocalView, view,params,params2,sessionid }) => {
+const LeagueMentions: React.FC<Props> = ({ tp, tp2, tab, league, noUser, setLocalPageType, setLocalPlayer, setLocalLeague, setLocalTeam, setLocalView, view, params, params2, sessionid, setLocalTab }) => {
   console.log("league-mentions:", { league, noUser, view })
   const optionsKey: UserOptionsKey = { type: "options", noUser };
   const { data: options, error: optionsError, isLoading: optionsLoading, mutate: optionsMutate } = useSWR(optionsKey, getOptions);
   const [localTrackerFilter, setLocalTrackerFilter] = React.useState(options?.tracker_filter);
   const [noLoadOverride, setNoLoadOverride] = React.useState(false);
+  console.log("LeagueMentions league=", league)
   //const u=clerkClient.g
   useEffect(() => {
     setNoLoadOverride(true);
-  },[]);
+  }, []);
 
   // const [v, setV] = React.useState((!view || view.toLowerCase() == "home") ? "mentions" : view.toLowerCase());
   useEffect(() => {
@@ -308,11 +333,14 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
     setV((!view || view.toLowerCase() == "home") ? "mentions" : view.toLowerCase());
   }, [view]);*/
   const router = useRouter();
-  
+  const theme = useTheme();
+  //@ts-ignore
+  const mode = theme.palette.mode;
+  const palette = theme[mode].colors
   const fetchMentionsKey = (pageIndex: number, previousPageData: any): FetchedMentionsKey | null => {
     //console.log("getMentionsKey=", pageIndex, previousPageData)
-    let key: FetchedMentionsKey = { type: "FetchedMentions", teamid: "", name: "", noUser, page: pageIndex, league, myteam: localTrackerFilter ? 1 : 0,noLoad:view!="fav"&&view!="mentions"&&!noLoadOverride };
-   // console.log("getMentionsKey=>>>", key)
+    let key: FetchedMentionsKey = { type: "FetchedMentions", teamid: "", name: "", noUser, page: pageIndex, league, myteam: tab == 'myteam' ? 1 : 0, noLoad: tab == "fav" && view != "mentions" && !noLoadOverride };
+    console.log("getMentionsKey=>>>", key)
 
     if (previousPageData && !previousPageData.length) return null // reached the end
     return key;
@@ -320,31 +348,37 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
   // now swrInfinite code:
   const { data, error: mentionsError, mutate, size, setSize, isValidating, isLoading } = useSWRInfinite(fetchMentionsKey, fetchMentions, { initialSize: 1, })
   let mentions = data ? [].concat(...data) : [];
- // console.log("LOADED MENTIONS FROM FALLBACK", { data })
+  // console.log("LOADED MENTIONS FROM FALLBACK", { data })
   const isLoadingMore =
     isLoading || (size > 0 && data && typeof data[size - 1] === "undefined");
-  const isEmpty = data?.[0]?.length === 0;
-  const isReachingEnd =
+  let isEmpty = data?.[0]?.length === 0;
+  let isReachingEnd =
     isEmpty || (data && data[data.length - 1]?.length < 25);
   const isRefreshing = isValidating && data && data.length === size;
- // console.log("league-mentions noUser",noUser,"trackerFilter", localTrackerFilter )
-  const favoritesKey: FavoritesKey = { type: "Favorites", noUser,noLoad:view!="fav" };
+  console.log("league-mentions ", { isEmpty, data, fetchMentionsKey })
+  const favoritesKey: FavoritesKey = { type: "Favorites", noUser, noLoad: tab != "fav" };
   const { data: favoritesMentions, mutate: mutateFavorites } = useSWR(favoritesKey, getFavorites);
   //console.log("favoritesMentions", favoritesMentions)
-  if (view == "fav") {
+  if (tab == "fav") {
+
     mentions = favoritesMentions;
+    if (!favoritesMentions || favoritesMentions.length == 0) {
+      isReachingEnd = true;
+      isEmpty = true;
+    }
+
   }
-  if(!view)
-  view="mentions";
-  const trackerListMembersKey: TrackerListMembersKey = { type: "tracker_list_members", league, noUser,noLoad:false };
+  if (!view)
+    view = "mentions";
+  const trackerListMembersKey: TrackerListMembersKey = { type: "tracker_list_members", league, noUser, noLoad: false };
   const { data: trackerListMembers, error: trackerListError, isLoading: trackerListLoading, mutate: trackerListMutate } = useSWR(trackerListMembersKey, getTrackerListMembers);
-   //console.log("trackerListMembers", trackerListMembersKey,trackerListMembers)
+  //console.log("trackerListMembers", trackerListMembersKey,trackerListMembers)
   const Mentions = mentions && mentions.map((m: any, i: number) => {
     const { league, type, team, teamName, name, date, url, findex, summary, findexarxid, fav } = m;
     // console.log("XID:",league,name,xid)
-   // console.log("rendering mention",teamName)
-  
-  
+    // console.log("rendering mention",teamName)
+
+
     return (<Mention
       noUser={noUser}
       mentionType="top"
@@ -367,6 +401,7 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
       mutate={() => { mutate() }}
       params={params}
       sessionid={sessionid}
+      tp={tp}
 
     />)
   });
@@ -378,28 +413,35 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
        <Skeleton variant="rounded" animation="pulse" height={160} />
    </Stack>)*/
   //console.log("mentions view=", view, "localTrackerFilter=", localTrackerFilter)
- /* if(view!="fav"&&view!="mentions"&&view!='my team'){
-    return <></>
-  }*/
+  /* if(view!="fav"&&view!="mentions"&&view!='my team'){
+     return <></>
+   }*/
+  const onTabNav = async (option: any) => {
+    const tab = option.tab;
+    setLocalTab(tab);
+    setLocalView("mentions");
+    let tp = tab != 'all' ? params ? `&tab=${tab}` : `?tab=${tab}` : ``;
+    router.push(league ? `/pub/league/${league}${params}${tp}` : params ? `/pub${params}${tp}` : `/pub?tab=${tab}`)
+  }
   return (
     <>
       <OuterContainer>
         <MentionsOuterContainer>
-          {(view != "fav") && <MentionsHeader>{!noUser&&<FormControlLabel control={<Checkbox size="small" checked={localTrackerFilter == 1} onChange={
+          {(false && view != "fav") && <MentionsHeader>{!noUser && <FormControlLabel control={<Checkbox size="small" checked={localTrackerFilter == 1} onChange={
             (event: React.ChangeEvent<HTMLInputElement>) => {
               setLocalTrackerFilter(event.target.checked);
               const params: SetTrackerFilterParams = { tracker_filter: event.target.checked ? 1 : 0 };
               setTrackerFilter(params);
 
             }} />} label="My Team Filter" />}
-           {noUser&&<SignInButton><Button size="small" variant="outlined" style={{ paddingRight: 8, paddingTop: 4, paddingBottom: 4, paddingLeft: 4 }}><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton>}
+            {noUser && <SignInButton><Button size="small" variant="outlined" style={{ paddingRight: 8, paddingTop: 4, paddingBottom: 4, paddingLeft: 4 }}><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton>}
           </MentionsHeader>}
-          {(view == "fav") && <MentionsHeader><span>Favorites:</span></MentionsHeader>}
+          {view == 'mentions' && <TertiaryTabs options={[{ name: `${league ? league : 'Full'} Feed`, tab: 'all' }, { name: "My Feed", tab: "myteam" }, { name: "Favorites", tab: "fav" }]} onChange={async (option: any) => { await onTabNav(option); }} selectedOptionName={tab} />}
+
           <MentionsBody>
             {Mentions}
           </MentionsBody>
-          <div style={{ fontFamily: "sans-serif" }}>
-            <LoadMore
+          {tab=='myteam'&&isReachingEnd?<EmptyExplanation type='myfeed' noUser={noUser}/>:tab=='fav'&&isReachingEnd?<EmptyExplanation type="fav" noUser={noUser}/>:<LoadMore
             // disabled={isLoadingMore || isReachingEnd}
 
             ><Button style={{ padding: 4, marginTop: 20 }} onClick={() => setSize(size + 1)} variant="outlined">
@@ -409,21 +451,20 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
                     ? "no more mentions"
                     : "load more"}
               </Button>
-            </LoadMore>
-          </div>
+            </LoadMore>}
+       
         </MentionsOuterContainer>
-        {(view != "fav")  && <RightPanel>
+        <RightPanel>
 
-          <TeamName>My Team: </TeamName>
-          {(!trackerListMembers || trackerListMembers.length == 0) &&  <RightExplanation>Use  &nbsp;<PlaylistAddIcon sx={{ color: "#aea"}}/>&nbsp;  icon to the right of the<br /> player&apos;s name in the team roster<br />(click on the league and the team name)<br/>to add to &ldquo;My Team&ldquo; tracking list.<br/><br/><SignedOut>Note, My Team featue requires the user to be signed into their Findexar account.<br/><br/><SignInButton><Button size="small" variant="outlined" style={{ paddingRight: 8, paddingTop: 4, paddingBottom: 4, paddingLeft: 4 }}><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></SignedOut>
-          <br/><br/>To view the My Team&apos;s mentions feed<br/> go to Home <HomeIcon/> or select a League.
-            </RightExplanation>}
+          <TeamName>My Team{league ? ` for ${league}` : ``}: </TeamName>
+          {(!trackerListMembers || trackerListMembers.length == 0) && <RightExplanation>Use  &nbsp;<PlaylistAddIcon sx={{/* color: "#aea" */ }} />&nbsp;  icon to the right of the<br /> player&apos;s name in the team roster<br />(click on the league and the team name)<br />to add to &ldquo;My Team&ldquo; tracking list.<br /><br /><SignedOut>Note, My Team featue requires the user to be signed into their Findexar account.<br /><br /><SignInButton><Button size="small" variant="outlined" style={{ paddingRight: 8, paddingTop: 4, paddingBottom: 4, paddingLeft: 4 }}><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></SignedOut>
+            <br /><br />To view the My Team&apos;s mentions feed<br /> go to Home <HomeIcon /> or select a League. Then select a &ldquo;My Feed&ldquo; tab.
+          </RightExplanation>}
           {trackerListMembers && trackerListMembers.map(({ member, teamid, league }: { member: string, teamid: string, league: string }, i: number) => {
-            console.log("TRACKER LIST MEMBER", member, teamid, league)
-            //return <SidePlayer><Link onClick={() => { setLocalPageType("player"), setLocalPlayer(p.member); setV("mentions"); setGlobalLoading(true) }} href={`/pro/league/${p.league}/team/${p.teamid}/player/${encodeURIComponent(p.member)}`}>{p.member} </Link></SidePlayer>
+            //console.log("TRACKER LIST MEMBER", member, teamid, league)
             return <SideGroup key={`3fdsdvb-${i}`}>
               <SidePlayer>
-                <Link onClick={() => { setLocalPlayer(member); setLocalView("mentions"); }} href={`/pro/league/${league}/team/${teamid}/player/${encodeURIComponent(member)}`}>
+                <Link onClick={() => { setLocalPlayer(member); setLocalView("mentions"); }} href={`/pub/league/${league}/team/${teamid}/player/${encodeURIComponent(member)}`}>
                   {member}
                 </Link>
               </SidePlayer>
@@ -442,7 +483,7 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
 
                   }} size="large" aria-label="Add new list">
                   <SideIcon>
-                    <PlaylistRemoveIcon sx={{ color: "#afa" }} />
+                    <PlaylistRemoveIcon sx={{ color: palette.selected }} />
                   </SideIcon>
                 </IconButton>
               </SideButton>
@@ -452,68 +493,42 @@ const LeagueMentions: React.FC<Props> = ({ league, noUser, setLocalPageType, set
           }
 
 
-        </RightPanel>}
+        </RightPanel>
       </OuterContainer>
 
       <MobileMentionsOuterContainer>
-        {(view == 'mentions') && <MobileMentionsHeader> {!noUser&&<FormControlLabel control={<Checkbox checked={localTrackerFilter == 1} onChange={
-          (event: React.ChangeEvent<HTMLInputElement>) => {
-            setLocalTrackerFilter(event.target.checked);
-            const params: SetTrackerFilterParams = { tracker_filter: event.target.checked ? 1 : 0 };
-            setTrackerFilter(params);
 
-          }} />} label="My Team" />}
 
-          {noUser&&<SignInButton><Button size="small" variant="outlined"><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton>}
-          {!league  && !noUser&&<FormControlLabel control={<Checkbox disabled={ localTrackerFilter == 1} checked={false} onChange={
-            (event: React.ChangeEvent<HTMLInputElement>) => {
-              setLocalView("fav");
-              router.push(league ? `/pro/league/${league}?view=fav${params2}` : `/pro/league?view=fav${params2}`)
-            }} />} label="Favorites" />}
-        </MobileMentionsHeader>}
+        {view == 'mentions' && <TertiaryTabs options={[{ name: `${league ? league : 'Full'} Feed`, tab: 'all' }, { name: "My Feed", tab: "myteam" }, { name: "Favorites", tab: "fav" }]} onChange={async (option: any) => { await onTabNav(option); }} selectedOptionName={tab} />}
 
-        {(view == "fav" && !league) && <MobileMentionsHeader><FormControlLabel control={<Checkbox disabled={true} checked={localTrackerFilter == 1} onChange={
-          (event: React.ChangeEvent<HTMLInputElement>) => {
-            setLocalTrackerFilter(event.target.checked);
-            const params: SetTrackerFilterParams = { tracker_filter: event.target.checked ? 1 : 0 };
-            setTrackerFilter(params);
-
-          }} />} label="My Team" />
-          {!noUser && (localTrackerFilter != 1) && <FormControlLabel control={<Checkbox disabled={noUser} checked={true} onChange={
-            (event: React.ChangeEvent<HTMLInputElement>) => {
-              setLocalView("mentions");
-              router.push(league ? `/pro/league/${league}${params}` : `/pro/league${params}`)
-            }} />} label="Favorites" />}</MobileMentionsHeader>}
 
         <MentionsBody>
-         
-          {(view == 'mentions' || view == 'fav') && 
-          <>
-            {Mentions}
-            <MobileLoadMore >
-            <LoadMore
-            // disabled={isLoadingMore || isReachingEnd}
 
-            ><Button style={{ padding: 4, marginTop: 20 }} onClick={() => setSize(size + 1)} variant="outlined">
-                {isLoadingMore
-                  ? "loading..."
-                  : isReachingEnd
-                    ? "no more mentions"
-                    : "load more"}
-              </Button>
-            </LoadMore>
-          </MobileLoadMore>
-          </>}
+          {(view == 'mentions' || view == 'fav') &&
+            <>
+              {Mentions}
+              <MobileLoadMore >
+              {tab=='myteam'&&isReachingEnd?<EmptyExplanation type="myfeed" noUser={noUser}/>:tab=='fav'&&isReachingEnd?<EmptyExplanation type="fav" noUser={noUser}/>:<LoadMore
+                // disabled={isLoadingMore || isReachingEnd}
+                ><Button style={{ padding: 4, marginTop: 20 }} onClick={() => setSize(size + 1)} variant="outlined">
+                    {isLoadingMore
+                      ? "loading..."
+                      : isReachingEnd
+                        ? "no more mentions"
+                        : "load more"}
+                  </Button>
+                </LoadMore>}
+              </MobileLoadMore>
+            </>}
           {(view == 'my team') && <MobilePlayersPanel>
             <MobileTeamName>My Team: </MobileTeamName>
-            {(!trackerListMembers || trackerListMembers.length == 0) &&<MobileRightExplanation>Use  &nbsp;<PlaylistAddIcon sx={{ color: "#aea"}}/>&nbsp;  icon to the right of the player&apos;s name in the team roster to add to &ldquo;My Team&ldquo; tracking list.<br/><br/><SignedOut>Note, My Team featue requires the user to be signed into their Findexar account.<br/><br/><SignInButton><Button size="small" variant="outlined" style={{ paddingRight: 8, paddingTop: 4, paddingBottom: 4, paddingLeft: 4 }}><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></SignedOut>
-          <br/><br/>To view My Team&apos;s mentions feed go to <br/>Home <HomeIcon/> or select a League.
+            {(!trackerListMembers || trackerListMembers.length == 0) && <MobileRightExplanation>Use  &nbsp;<PlaylistAddIcon />&nbsp;  icon to the right of the player&apos;s name in the team roster (&ldquo;players&ldquo; tab) to add to &ldquo;My Team&ldquo; tracking list.<br /><br /><SignedOut>Note, My Team featue requires the user to be signed into their Findexar account.<br /><br /><SignInButton><Button size="small" variant="outlined" style={{ paddingRight: 8, paddingTop: 4, paddingBottom: 4, paddingLeft: 4 }}><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></SignedOut>
+              <br /><br />To view My Team&apos;s mentions feed go to <br />Home <HomeIcon /> or select a League. Then select a &ldquo;My Feed&ldquo; tab.
             </MobileRightExplanation>}
             {trackerListMembers && trackerListMembers.map(({ member, teamid, league }: { member: string, teamid: string, league: string }, i: number) => {
-              //return <SidePlayer><Link onClick={() => { setLocalPageType("player"), setLocalPlayer(p.member); setV("mentions"); setGlobalLoading(true) }} href={`/pro/league/${p.league}/team/${p.teamid}/player/${encodeURIComponent(p.member)}`}>{p.member} </Link></SidePlayer>
               return <MobileSideGroup key={`3fdsdvb-${i}`}>
                 <MobileSidePlayer>
-                  <Link onClick={() => { setLocalPlayer(member); setLocalView("mentions"); }} href={`/pro/league/${league}/team/${teamid}/player/${encodeURIComponent(member)}${params}`}>
+                  <Link onClick={() => { setLocalPlayer(member); setLocalView("mentions"); }} href={`/pub/league/${league}/team/${teamid}/player/${encodeURIComponent(member)}${params}`}>
                     {member}
                   </Link>
                 </MobileSidePlayer>

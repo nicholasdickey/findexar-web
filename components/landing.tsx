@@ -5,31 +5,21 @@ import { useRouter } from 'next/router'
 import { Roboto } from 'next/font/google';
 import 'material-icons/iconfont/outlined.css';
 import Script from "next/script";
-import useSWR from 'swr';
-import { useSubscription } from "use-stripe-subscription";
 import { styled, ThemeProvider } from "styled-components";
-import { Tabs, Tab, Alert } from '@mui/material'
 import { ThemeProvider as MuiTP, createTheme } from '@mui/material/styles';
-import { blueGrey, cyan, teal } from '@mui/material/colors'
-import HomeIcon from '@mui/icons-material/HomeOutlined';
-import MentionIcon from '@mui/icons-material/AlternateEmailOutlined';
-import TeamIcon from '@mui/icons-material/PeopleAltOutlined';
-import ListIcon from '@mui/icons-material/ListOutlined';
-import StarOutlineIcon from '@mui/icons-material/StarOutline';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import LoginIcon from '@mui/icons-material/Login';
-import ContactSupportIcon from '@mui/icons-material/ContactSupport';
-import Avatar from '@mui/material/Avatar';
+
+import { getCookie,setCookie } from 'cookies-next';
 import { Watch } from 'react-loader-spinner'
 import Button from '@mui/material/Button';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import { UserButton, SignInButton, SignedOut, SignedIn } from "@clerk/nextjs";
 import { palette } from '@/lib/palette';
-import { GlobalStyle } from '@/components/themes/globalStyle';
+import GlobalStyle from '@/components/globalstyles';
 
-import { LeagueTeamsKey, getLeagueTeams, recordEvent } from '@/lib/api';
-
+import { recordEvent } from '@/lib/api';
+const OuterContainer = styled.div`
+    background-color:var(--highBackground);
+    padding-bottom:200px;
+`;
 const LoadingContainer = styled.div`
     position: fixed;
     top:0px;
@@ -51,17 +41,19 @@ const ContainerWrap = styled.div`
     height: 100%;
     width: 100%;
     font-family: 'Roboto', sans-serif;
-    color:#444;
+    color:var(--text);
+   // background-color: var(--background);
+  //  color:#444;
     @media screen and (max-width: 1199px) {
         display: none;
     }
     //background-color: #666;
     //color:#fff;
     a{
-        color: #fff;
+        color:var(--text);
         text-decoration: none;
         &:hover{
-        color: #4f8;
+        color:var(--highlight);
         }
     }
 `;
@@ -111,16 +103,17 @@ const MobileContainerWrap = styled.div`
     //width: 100%;
    // padding:40px;
    // background-color: #666;
-    color:#444;
+    //olor:#444;
+
     font-family: 'Roboto', sans-serif;
     @media screen and (min-width: 1200px) {
         display: none;
     }
     a{
-        color: #fff;
+        color: var(--text);
         text-decoration: none;
         &:hover{
-        color: #4f8;
+        color: var(--highlight);
         }
     }
 `;
@@ -173,7 +166,8 @@ const ButtonContainer = styled.div`
     display:flex;
     flex-direction:row;
     justify-content:center;
-    color: #2aa;
+    //color: #2aa;
+    color:var(--text);
     @media screen and (max-width: 1199px) {
         display:none;
     }
@@ -184,7 +178,7 @@ const MobileButtonContainer = styled.div`
     display:flex;
     flex-direction:row;
     justify-content:center;
-    color: #2aa;
+    color:var(--text);
     padding-bottom:30px;
     @media screen and (min-width: 1200px) {
         display:none;
@@ -198,6 +192,7 @@ const Landing = () => {
     const [utm_content, setUtm_content] = useState("");
     const [params, setParams] = useState("");
     const [loading, setLoading] = useState(false);
+    const [localMode, setLocalMode] = useState("");
     const router = useRouter();
     useEffect(() => {
         if (!router.isReady) return;
@@ -234,7 +229,20 @@ const Landing = () => {
         }
 
     }, [router.isReady, router.query, fbclid, utm_content]);
-
+    useEffect(() => {
+        
+        let mode=getCookie('mode');
+        if(!mode){
+            const matchMedia = window.matchMedia("(prefers-color-scheme: dark)");
+            document.body.setAttribute("data-theme", matchMedia.matches ? 'dark' : 'light');
+            setLocalMode(matchMedia.matches ? 'dark' : 'light');
+            console.log("Landing mode:",mode,matchMedia)
+        
+        }
+        else {
+            console.log("Landing mode cookie found:",mode)
+        }
+    },[]);
     const theme = useTheme();
     const onClick = () => {
         try {
@@ -293,8 +301,8 @@ const Landing = () => {
                     <ThemeProvider
                         //@ts-ignore
                         theme={palette}>
-                        <GlobalStyle />
-                        <ContainerWrap><TextContainer>
+                        <GlobalStyle $light={localMode == "light"} />
+                        <OuterContainer><ContainerWrap><TextContainer>
                             <Title><h3>Welcome to Findexar!</h3></Title><br />
                             <p>Effortlessly stay in touch with the latest news about your fantasy sports stars.
                                 Create &ldquo;My Team&rdquo; &mdash; a custom list of your Fantasy Team athletes,
@@ -313,7 +321,7 @@ const Landing = () => {
                                 <br /><br />
                                 Alternatively, browse leagues, teams, and athletes to quickly scan through their media mentions.</p>
                         </MobileTextContainer></MobileContainerWrap>
-                            <MobileButtonContainer><Button onClick={onClick} variant="outlined" color="primary" href={`/pub${params}`}><b>Enter Findexar</b></Button></MobileButtonContainer>
+                            <MobileButtonContainer><Button onClick={onClick} variant="outlined" sx={{color:'0xFF0000'}} href={`/pub${params}`}><b>Enter Findexar</b></Button></MobileButtonContainer>
                             <MobileContainerWrap><TextContainerCenter> {loading && <LoadingContainer><Watch
                                 visible={true}
                                 height="80"
@@ -328,7 +336,7 @@ const Landing = () => {
                             </TextContainerCenter></MobileContainerWrap>
 
                         </MobileVContainer>
-                        <ButtonContainer><Button onClick={onClick} variant="outlined" color="primary" href={`/pub${params}`}>Enter Findexar</Button></ButtonContainer>
+                        <ButtonContainer><Button onClick={onClick} size="large" variant="outlined"  href={`/pub${params}`}>Enter Findexar</Button></ButtonContainer>
                         
                         <ContainerWrap><TextContainerCenter>{loading && <LoadingContainer><Watch
                             visible={true}
@@ -343,6 +351,7 @@ const Landing = () => {
 
                             <br /><br /><hr />Copyright &#169; 2024, Findexar, Inc.<br />Made in USA.
                         </TextContainerCenter></ContainerWrap>
+                        </OuterContainer>
 
                     </ThemeProvider>
                 </main>

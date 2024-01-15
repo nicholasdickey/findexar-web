@@ -3,7 +3,7 @@ import useSWR from 'swr';
 import Link from 'next/link';
 import { UserButton, SignInButton, SignedOut, SignedIn,RedirectToSignIn } from "@clerk/nextjs";
 import { useRouter } from 'next/router'
-import { styled } from "styled-components";
+import { styled,useTheme } from "styled-components";
 import MentionIcon from '@mui/icons-material/AlternateEmailOutlined';
 import TeamIcon from '@mui/icons-material/PeopleAltOutlined';
 import PlayerIcon from '@mui/icons-material/PersonPinOutlined';
@@ -27,70 +27,95 @@ declare global {
   }
 }
  
-const SidePlayer = styled.div`
+const SidePlayer = styled.div<SideProps>`
   //height: 40px;
-  width: 200px; 
-  color: #eee;
+  //width: 200px; 
+ // color: #eee;
   //text-align: center;
+  color:${props => props.highlight ?'var(--myteam)' : 'var(--text)'};
   font-size: 16px;
   padding-left:20px;
+  &:hover{
+      color:var(--highlight);
+    }
+
   margin: 10px;
+  a{
+    color:${props => props.highlight ?'var(--myteam)' : 'var(--text)'} !important;//#ff8 !important;
+    text-decoration: none;
+    background-color:${props => props.highlight ?'var(--myteam-bg)' : 'var(--background)'} !important;
+    &:hover{
+      color:var(--highlight) !important;
+    }
+  }
 `;
 
 const TeamName = styled.div`
-  height: 40px;
-  width: 200px; 
-  color: #aea;
+  height: 30px;
+  width: 100%; 
+ // color: #aea;
   //text-align: center;
-  padding-left:20px;
+  //padding-left:20px;
   font-size: 20px;
-  margin: 10px;
+  //margin: 10px;
+  padding-top:2px;
+  padding-bottom:35px;
 `;
 
 const MobileTeamName = styled.div`
   height: 40px;
-  color: #aea;
+  color:var(--text); 
+ // color: #aea;
   text-align: center;
   font-size: 24px;
-  margin: 10px;
-  padding-left:20px;
+  //margin: 10px;
+  //padding-left:20px;
   padding-top:10px;
+  padding-bottom:35px;
 `;
 const SideGroup = styled.div`
   display:flex;
-  width:280px;
+ // width:280px;
+ width: 260px;
   flex-direction:row;
   justify-content:space-between;
   padding-right:20px;
   align-items:center;
- 
+  border-left: 1px solid #aaa;
+
 `;
-const SideIcon = styled.div`
+interface SideProps {
+  highlight?: boolean;
+}
+const SideIcon = styled.div<SideProps>`
  // margin-top:-8px;
-  color:#aaa;
+  //color:#aaa;
   width:20px;
   height:20px;
+  color:${props => props.highlight ?'var(--selected))' : 'var(--link)'};
 
 `;
 const SideButton = styled.div`
   //margin-top:-8px;
   width:40px;
-  color:#aaa;
+ //color:#aaa;
 
 `;
-const SelectedSidePlayer = styled.div`
+const SelectedSidePlayer = styled.div<SideProps>`
  // height: 40px;
-  width: 200px;
-  color: #ff8;
+ // width: 200px;
+ // color:var(--selected);// #ff8;
+ color:${props => props.highlight ?'var(--selected)' : 'var(--selected)'};
  // text-align: center;
   font-size: 16px;
   padding-left:20px;
   margin: 10px;
   a{
-    color: #ff8 !important;
+    color:${props => props.highlight ?'var(--selected)' : 'var(--selected)'} !important;//#ff8 !important;
     text-decoration: none;
+    background-color:${props => props.highlight ?'var(--myteam-bg)' : 'var(--background)'} !important;
     &:hover{
-      color: #F8F;
+      color:var(--highlight);
     }
   }
 `;
@@ -99,46 +124,49 @@ const RightPanel = styled.div`
  // height:100%;
   //min-height: 1000vh;
   min-width:300px;
-
+  padding-left:20px;
   
   height:auto !important;
   height:100%;
   min-height: 200vw;
-
-  background-color:  #668;
+  //background-color:#263238;
+  //background-color:#333;
+  //background-color:  #668;
   display:flex;
   flex-direction:column;
   justify-content:flex-start;
   align-items:flex-start; 
   padding-top:18px;
   a{
-    color: #eee;
+    color:var(--text); // #eee;
     text-decoration: none;
     &:hover{
-      color: #4f8;
+      color: var(--highlight);//#4f8;
     }
   }
 `;
 
 const MobilePlayersPanel = styled.div`
   height:100%;
-  background-color:  #668;
+ // background-color:  #668;
   display:flex;
   flex-direction:column;
   justify-content:flex-start;
   align-items:flex-start; 
+  padding-left:20px;
   //font-family: roboto;
   a{
-    color: #fff;
+    color:var(--text); // #eee;
     text-decoration: none;
     &:hover{
-      color: #4f8;
+      color: var(--highlight);//#4f8;
     }
   }
 `;
 
 const CenterPanel = styled.div`
   height:100%;
+  width:100%;
 `;
 
 const MainPanel = styled.div`
@@ -181,11 +209,13 @@ interface Props {
   params: string;
   params2: string;
   sessionid: string
+  tp:string;
+  tp2:string;
 
 }
 
 const Team: React.FC<Props> = (props) => {
-  let { sessionid, noUser, setDismiss, subscriptionPrompt, subscriptionObject, view, teams, dark, league, team, player, pagetype, teamName, setLocalPlayer, setLocalPageType, setLocalView, setLocalTeam,params, params2 } = props;
+  let { tp,tp2,sessionid, noUser, setDismiss, subscriptionPrompt, subscriptionObject, view, teams, dark, league, team, player, pagetype, teamName, setLocalPlayer, setLocalPageType, setLocalView, setLocalTeam,params, params2 } = props;
   // const [v, setV] = React.useState((!view || view.toLowerCase() == "home") ? "mentions" : view.toLowerCase());
  /* const [selectedTeam, setSelectedTeam] = React.useState(team);
   const [selectedPlayer, setSelectedPlayer] = React.useState(player);
@@ -196,6 +226,7 @@ const Team: React.FC<Props> = (props) => {
   const { data: players, error, isLoading, mutate: mutatePlayers } = useSWR(teamPlayersKey, getTeamPlayers);
   //console.log("players", players);
   const router = useRouter();
+  const theme = useTheme();
  /* useEffect(() => {
     if (!view || view == "home")
       setLocalView("mentions");
@@ -214,7 +245,7 @@ const Team: React.FC<Props> = (props) => {
   }, [player, setLocalView]);*/
   const onViewNav = async (option: { name: string, access: string }) => {
     setLocalView(option.name.toLowerCase());
-    router.replace(`/pro/league/${league}/team/${team}?view=${encodeURIComponent(option.name.toLowerCase())}${params2}`, undefined, { shallow: true });
+    router.replace(`/pub/league/${league}/team/${team}?view=${encodeURIComponent(option.name.toLowerCase())}${params2}${tp2}`, undefined, { shallow: true });
     await recordEvent(sessionid as string || "",
       'team-view-nav',
       `{"params":"${params}","view":"${option.name}"}`
@@ -231,18 +262,22 @@ const Team: React.FC<Props> = (props) => {
       `{"params":"${params}","player":"${name}"}`
     );
   }
- 
+  //console.log("styled theme:",theme)
+  //@ts-ignore
+  const mode=theme.palette.mode;
+  const palette=theme[mode].colors;
+  //console.log("styled palette:",palette );
   console.log("TeamPage", { subscriptionPrompt, team,player, pagetype, view })
   const PlayersNav = players && players?.map((p: { name: string, findex: string, mentions: string, tracked: boolean }, i: number) => {
     return <SideGroup key={`ewfggvfn-${i}`}>{p.name == player ?
-      <SelectedSidePlayer>
-        <Link onClick={async () => { await onPlayerNav(p.name)}} href={`/pro/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}${params}`} shallow>
+      <SelectedSidePlayer highlight={p.tracked}>
+        <Link onClick={async () => { await onPlayerNav(p.name)}} href={`/pub/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}${params}${tp}`} shallow>
           {p.name} ({`${p.mentions}`})
         </Link>
       </SelectedSidePlayer>
       :
-      <SidePlayer>
-        <Link onClick={async () => { await onPlayerNav(p.name)}} href={`/pro/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}${params}`} shallow>
+      <SidePlayer  highlight={p.tracked}>
+        <Link onClick={async () => { await onPlayerNav(p.name)}} href={`/pub/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}${params}${tp}`} shallow>
           {p.name} ({`${p.mentions || 0}`})
         </Link>
       </SidePlayer>}
@@ -290,8 +325,8 @@ const Team: React.FC<Props> = (props) => {
               await addTrackerListMember(addTrackerListMemberParams);
             }
           }} size="large" aria-label="Add new list">
-          <SideIcon>
-            {p.tracked ? <PlaylistRemoveIcon sx={{ color: "#afa" }} /> : <PlaylistAddIcon />}
+          <SideIcon highlight={p.tracked}>
+            {p.tracked ? <PlaylistRemoveIcon sx={{ color: palette.selected }} /> : <PlaylistAddIcon />}
             {signin&&<RedirectToSignIn/>}
           </SideIcon>
         </IconButton>
@@ -310,7 +345,8 @@ const Team: React.FC<Props> = (props) => {
 
         </CenterPanel>
         <RightPanel>
-          <TeamName>{teamName}</TeamName>
+          <TeamName>{teamName}:</TeamName>
+         
           {PlayersNav}
         </RightPanel>
       </MainPanel>

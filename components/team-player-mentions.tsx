@@ -9,6 +9,7 @@ import { DetailsKey, getDetails, FetchedMentionsKey, fetchMentions } from '@/lib
 import Mention from "./mention";
 
 const LoadMore = styled.div`
+    width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -21,7 +22,8 @@ const MainPanel = styled.div`
   flex-direction:column;
   justify-content:flex-start;
   height:100%;
-  padding-left:20px;
+  min-width:100%;
+  //padding-left:20px;
   @media screen and (max-width: 1199px ){
     padding-left:1px;
   } 
@@ -55,8 +57,10 @@ const TeamDetailsBody = styled.div`
   justify-content: flex-start;
   align-items:flex-start;
   padding-right:30px;
+  padding-left:30px;
   @media screen and (max-width: 1199px ){
-    padding-right:1px;
+    padding-right:0px;
+    padding-left:0px;
   }
 `;
 
@@ -74,11 +78,13 @@ interface Props {
     setLocalTeam: (team: string) => void;
     params:string;
     sessionid:string;
+    tp:string;//tab &params
+    tp2:string; //tab &params2
    
 }
 
 const TeamPlayerMentions: React.FC<Props> = (props) => {
-    const { league, team, teamName, noUser, player, ...rest } = props;
+    const { tp,league, team, teamName, noUser, player, ...rest } = props;
    // const [localTeam, setLocalTeam] = React.useState(team);
    // const [localPlayer, setLocalPlayer] = React.useState(player);
 
@@ -119,7 +125,7 @@ const TeamPlayerMentions: React.FC<Props> = (props) => {
     const Mentions = mentions?.map((m: any, i: number) => {
         const { league, type, team, teamName, name, date, url, findex, summary, findexarxid, fav } = m;
        // console.log("rendering mention", m,i)
-        return (<Mention noUser={noUser} mentionType="final" league={league} type={type} team={team} teamName={teamName} name={name} date={date} url={url} findex={findex} summary={summary} findexarxid={findexarxid} fav={fav} key={`team-mention${i}`} mutate={() => mutate()} {...rest} />)
+        return (<Mention tp={tp} noUser={noUser} mentionType="final" league={league} type={type} team={team} teamName={teamName} name={name} date={date} url={url} findex={findex} summary={summary} findexarxid={findexarxid} fav={fav} key={`team-mention${i}`} mutate={() => mutate()} {...rest} />)
     })
 
     return (
@@ -132,7 +138,7 @@ const TeamPlayerMentions: React.FC<Props> = (props) => {
                     <TeamDetailsBody>
                         {Mentions}
                     </TeamDetailsBody>
-                    <div style={{ fontFamily: "sans-serif" }}>
+                   
                         <LoadMore
                         // disabled={isLoadingMore || isReachingEnd}
 
@@ -144,7 +150,7 @@ const TeamPlayerMentions: React.FC<Props> = (props) => {
                                         : "load more"}
                             </Button>
                         </LoadMore>
-                    </div>
+                    
                 </MainPanel>
             </div>
         </div>
