@@ -785,13 +785,16 @@ const SinglePage: React.FC<Props> = (props) => {
     let mode = getCookie('mode');
     if (!mode) {
         const matchMedia = window.matchMedia("(prefers-color-scheme: dark)");
+        const matches=matchMedia.matches;
         document.body.setAttribute("data-theme", matchMedia.matches ? 'dark' : 'light');
         setLocalMode(matchMedia.matches ? 'dark' : 'light');
-        console.log("Landing mode:", mode, matchMedia)
+        console.log("Landing mode:", {mode, matches})
 
     }
     else {
         console.log("Landing mode cookie found:", mode)
+      if(mode!=localMode)
+        setLocalMode(mode);
     }
 }, []);
   return (
@@ -871,7 +874,7 @@ const SinglePage: React.FC<Props> = (props) => {
                   {localMode == "dark" ? <LightModeTwoToneIcon fontSize="small" /> : <ModeNightTwoToneIcon fontSize="small" />}
                 </IconButton>
                   <SUserButton afterSignOutUrl="/pub" />
-                  {!localUserId && <SignInButton><IconButton color={"inherit"}size="small" ><LoginIcon fontSize="small" /></IconButton></SignInButton>}
+                  {pagetype!='landing'&&!localUserId && <SignInButton><IconButton color={"inherit"}size="small" ><LoginIcon fontSize="small" /></IconButton></SignInButton>}
 
                 </HeaderRight>
               </HeaderTopline>
