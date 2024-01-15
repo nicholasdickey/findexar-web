@@ -9,11 +9,16 @@ const Photo = styled.div`
     height:60px;
     width:60px;
     @media screen and (max-width: 1199px ){
-        height:50px;
-        width:50px;
+        display:none
     }
-
-   `;
+`;
+const MobilePhoto = styled.div`
+    height:40px;
+    width:40px;
+    @media screen and (min-width: 1200px ){
+        display:none;
+    }
+`;
 interface Props {
    name:string;
    teamid:string;
@@ -31,8 +36,10 @@ const PlayerPhoto: React.FC<Props> = (props) => {
    
 
   
-    return (
-       <Photo><Avatar sx={{width:50,height:50}} src={photo} alt={name}></Avatar></Photo>
+    return (<>
+       <Photo><Avatar sx={{width:60,height:60}} src={photo} alt={name}></Avatar></Photo>
+       <MobilePhoto><Avatar sx={{width:40,height:40}} src={photo} alt={name}></Avatar></MobilePhoto>
+       </>
     );
 };
 export default PlayerPhoto;

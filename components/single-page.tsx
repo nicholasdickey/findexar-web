@@ -370,7 +370,7 @@ const HeaderLeft = styled.div`
 const ContainerCenter = styled.div`
   display:flex;
   flex-direction:row;
-  justify-content:flex-start;
+  justify-content:space-around;
   align-items:center;
 `;
 const HeaderCenter = styled.div`
@@ -419,9 +419,9 @@ const Photo = styled.div`
   height:60px;
   width:60px;
   @media screen and (max-width: 1199px) {
-    height:50px;
-    width:50px;
-    margin-left:20px;
+    height:40px;
+    width:40px;
+    margin-left:10px;
   }
 `;
 
