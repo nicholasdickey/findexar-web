@@ -58,8 +58,11 @@ const ssr = async (context: GetServerSidePropsContext) => {
         let pagetype = "league";
         utm_content = utm_content || '';
         fbclid = fbclid || '';
-        const ua = context.req.headers['user-agent'];
+        const ua = context.req.headers['user-agent']||"";
         const botInfo = isbot({ ua });
+        let isMobile = Boolean(ua.match(
+            /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i
+          ))
         let host = context.req.headers.host || "";
         let ssr = context.params?.ssr as string[];
         console.log("SSR:", ssr)
@@ -101,7 +104,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
         }
         if (!botInfo.bot) {
             try {
-                recordEvent(sessionid, `ssr-pub${fresh?'-init':''}`, `{"fbclid":"${fbclid}","ua":"${ua}","utm_content":"${utm_content}"}`);
+                recordEvent(sessionid, `ssr-pub${fresh?'-init':''}`, `{"fbclid":"${fbclid}","ua":"${ua}","isMobile":"${isMobile}","utm_content":"${utm_content}"}`);
             } catch (x) {
                 console.log('ssr-landing-init-error', x);
             }
