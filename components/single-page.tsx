@@ -26,6 +26,7 @@ import ModeNightTwoToneIcon from '@mui/icons-material/ModeNightOutlined';
 import LightModeTwoToneIcon from '@mui/icons-material/LightModeOutlined';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { UserButton, SignInButton, SignedOut, SignedIn } from "@clerk/nextjs";
@@ -391,7 +392,9 @@ const HeaderRight = styled.div`
  //margin-top:10px;
   @media screen and (max-width: 1199px) {
     margin-left:0px;
-    margin-right:8px;
+    margin-right:12px;
+    width:100px;
+    
   }
   /*&.cl-avatarBox{
     width:40px !important;
@@ -405,6 +408,11 @@ const HeaderRight = styled.div`
   height:40px;
 }*/
 `;
+const SmallButton=styled(Button)`
+  max-width:12px !important;
+  padding:0px;
+`;
+
 const Photo = styled.div`
   height:60px;
   width:60px;
@@ -432,24 +440,7 @@ const FLogoMobile = styled.div`
 `;
 
 const SUserButton = styled(UserButton)`
-//padding-top:30px;
-//height:80px;
-//width:80px;
-  img{
-   // width:80px !important;
-   // height:80px !important;
-  }
- /* &.cl-avatarBox{
-    //width:80px !important;
-    //height:80px !important;
-  }
-  &.cl-formButtonPrimary {
-    font-size: 14px;
-    text-transform: none;
-    background-color: #611bbd;
-    width:80px;
-    height:80px;
-}*/
+
 `;
 const PlayerNameGroup = styled.div`
   display:flex;
@@ -847,7 +838,7 @@ const SinglePage: React.FC<Props> = (props) => {
 
                     <HeaderCenter>
                       {(localPageType == "league" || localPageType == "landing") ? <Link href={`/pub${params}`}>FINDEXAR{localLeague ? ` : ${localLeague}` : ``}</Link> : !localTeam ? `${localLeague}` : localPlayer ? <PlayerNameGroup><PlayerName><Link href={`/pub/league/${localLeague}/team/${localTeam}${params}`}>{teamName}</Link></PlayerName> </PlayerNameGroup> : `${localLeague} : ${teamName}`}
-                      {(localPageType == "league" || localPageType == "landing") && <div><Subhead>Major Leagues and Fantasy Sports Professional Athletes and Teams Media Monitor</Subhead><SubheadMobile>Professional Athletes<br />Media Index And Monitor</SubheadMobile></div>}
+                      {(localPageType == "league" || localPageType == "landing") && <div><Subhead>Major Leagues and Fantasy Sports Professional Athletes and Teams Media Monitor</Subhead><SubheadMobile>Sports Media Index</SubheadMobile></div>}
 
                       {localPageType == "player" && localPlayer && <div><Subhead>{localPlayer ? localPlayer : ''}</Subhead><SubheadMobile>{localPlayer ? localPlayer : ''}</SubheadMobile></div>}
 
@@ -858,14 +849,14 @@ const SinglePage: React.FC<Props> = (props) => {
 
                 </LeftContainer>
 
-                <HeaderRight>  <Button color={"inherit"} onClick={async () => {
+                <HeaderRight>  <IconButton color={"inherit"} size="small"  onClick={async () => {
 
                   await updateMode(localMode == "light" ? "dark" : "light");
                 }}>
-                  {localMode == "dark" ? <LightModeTwoToneIcon /> : <ModeNightTwoToneIcon />}
-                </Button>
+                  {localMode == "dark" ? <LightModeTwoToneIcon fontSize="small" /> : <ModeNightTwoToneIcon fontSize="small" />}
+                </IconButton>
                   <SUserButton afterSignOutUrl="/pub" />
-                  {!localUserId && <SignInButton><Button size="small" variant="outlined"><LoginIcon /></Button></SignInButton>}
+                  {!localUserId && <SignInButton><IconButton color={"inherit"}size="small" ><LoginIcon fontSize="small" /></IconButton></SignInButton>}
 
                 </HeaderRight>
               </HeaderTopline>
