@@ -873,7 +873,7 @@ const SinglePage: React.FC<Props> = (props) => {
                 }}>
                   {localMode == "dark" ? <LightModeTwoToneIcon fontSize="small" /> : <ModeNightTwoToneIcon fontSize="small" />}
                 </IconButton>
-                  <SUserButton afterSignOutUrl="/pub" />
+                  <SUserButton afterSignOutUrl="/" />
                   {pagetype!='landing'&&!localUserId && <SignInButton><IconButton color={"inherit"}size="small" ><LoginIcon fontSize="small" /></IconButton></SignInButton>}
 
                 </HeaderRight>
