@@ -338,7 +338,7 @@ const Subhead = styled.div`
   text-align:left;
   //color: ${blueGrey[200]};
   color:var(--subheader-color);
- // font-size:18px;
+  font-size:18px;
   @media screen and (max-width: 1199px ){
    display:none;
   }
