@@ -128,15 +128,16 @@ const TeamName = styled.div`
 `;
 const MobileTeamName = styled.div`
   height: 30px;
-  margin-left:20px;
+  //margin-left:20px;
   color:var(--text);
   //width: 200px; 
  // color: #aea;
   //text-align: center;
- // padding-left:20px;
- padding-top:12px;
- margin-bottom:20px;
-  font-size: 24px;
+ padding-left:20px;
+ padding-top:2px;
+ padding-bottom:35px;
+
+  font-size: 20px;
   //margin: 10px;
 `;
 
@@ -209,6 +210,7 @@ const SideGroup = styled.div`
 `;
 const MobileSideGroup = styled.div`
   display:flex;
+  width: 260px;
   //width: 100%;
   //padding-right:20px;
   //weight:240px;
@@ -218,6 +220,9 @@ const MobileSideGroup = styled.div`
   justify-content:space-around;
  // padding-right:20px;
   align-items:center;
+  padding-left:20px;
+  padding-right:20px;
+  border-left: 1px solid #aaa;
 
  
 `;
@@ -547,7 +552,7 @@ const LeagueMentions: React.FC<Props> = ({ tp, tp2, tab, league, noUser, setLoca
 
                     }} size="large" aria-label="Add new list">
                     <SideIcon>
-                      <PlaylistRemoveIcon sx={{ color: "#afa" }} />
+                      <PlaylistRemoveIcon sx={{ color: "var(--selected)" }} />
                     </SideIcon>
                   </IconButton>
                 </SideButton>

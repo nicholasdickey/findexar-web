@@ -67,10 +67,10 @@ const MobileTeamName = styled.div`
   color:var(--text); 
  // color: #aea;
   text-align: center;
-  font-size: 24px;
+  font-size: 20px;
   //margin: 10px;
   //padding-left:20px;
-  padding-top:10px;
+  padding-top:12px;
   padding-bottom:35px;
 `;
 const SideGroup = styled.div`
