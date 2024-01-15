@@ -8,7 +8,6 @@ import Script from "next/script";
 import { styled, ThemeProvider } from "styled-components";
 import { ThemeProvider as MuiTP, createTheme } from '@mui/material/styles';
 
-import { getCookie,setCookie } from 'cookies-next';
 import { Watch } from 'react-loader-spinner'
 import Button from '@mui/material/Button';
 import { useTheme } from '@mui/material/styles';
@@ -87,7 +86,7 @@ const TextContainerCenter = styled.div`
     text-align:center;
    
 `;
-const MobileVContainer=styled.div`
+const MobileVContainer = styled.div`
     display: flex;
     flex-direction: column;
     @media screen and (min-width: 1200px) {
@@ -229,20 +228,7 @@ const Landing = () => {
         }
 
     }, [router.isReady, router.query, fbclid, utm_content]);
-    useEffect(() => {
-        
-        let mode=getCookie('mode');
-        if(!mode){
-            const matchMedia = window.matchMedia("(prefers-color-scheme: dark)");
-            document.body.setAttribute("data-theme", matchMedia.matches ? 'dark' : 'light');
-            setLocalMode(matchMedia.matches ? 'dark' : 'light');
-            console.log("Landing mode:",mode,matchMedia)
-        
-        }
-        else {
-            console.log("Landing mode cookie found:",mode)
-        }
-    },[]);
+   
     const theme = useTheme();
     const onClick = () => {
         try {
@@ -257,106 +243,58 @@ const Landing = () => {
 
     }
     return (
-        <>
-            <Head>
-                <title>Findexar</title>
-                <link rel="canonical" href="https://www.findexar.com/" />
-                <meta property="og:description" content="Fantasy Sports Mentions Monitor for Major League Teams and athletes" />
-                <meta name="title" content="Findexar" />
-                <meta property="og:title" content="Findexar" />
-                <meta name="description" content="Fantasy Sports Mentions Monitor for Major League Teams and athletes" />
-                <meta property="og:type" content="website" />
-                <meta property="fb:appid" content="358234474670240" />
-                <meta property="og:site_name" content="Findexar.com" />
-                <meta property="og:url" content={process.env.NEXT_PUBLIC_SERVER} />
-                <meta property="og:image" content="https://findexar.com/image" />
-                <meta property="findexar:verify" content="findexar" />
-                <meta httpEquiv='X-UA-Compatible' content='IE=edge' />
 
-                <meta name='viewport' content='width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no' />
-                <link rel="apple-touch-icon" href="/apple-icon.png"></link>
-                <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-                <link
-                    rel="shortcut icon"
-                    type="image/png"
-                    href={"/blue-bell.png"}
-                />
-                <meta name="viewport" content="width=device-width, initial-scale=1" />
-            </Head>
+        <OuterContainer><ContainerWrap><TextContainer>
+            <Title><h3>Welcome to Findexar!</h3></Title><br />
+            <p>Effortlessly stay in touch with the latest news about your fantasy sports stars.
+                Create &ldquo;My Team&rdquo; &mdash; a custom list of your Fantasy Team athletes,
+                and Findexar will track and index media mentions of them from over
+                a hundred different sources.
+                Expect updates available just minutes after publication.<br /><br />
+                Alternatively, browse leagues, teams, and athletes to quickly scan through their media mentions.</p>
 
-            <Script src={`https://www.googletagmanager.com/gtag/js?id=G-LWYQDGSGWQ`} strategy="afterInteractive"></Script>
-            <Script id="google-analytics" strategy="afterInteractive" dangerouslySetInnerHTML={{
-                __html: `
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-LWYQDGSGWQ', {
-          page_path: window.location.pathname,
-        });
-      `,
-            }} />
+        </TextContainer>
+        </ContainerWrap>
+            <MobileVContainer> <MobileTitle><h3>Welcome to Findexar!</h3></MobileTitle><MobileContainerWrap><br />
+                <MobileTextContainer>
+                    <p>Effortlessly stay in touch with the latest news about your fantasy sports stars.
+                        Create &ldquo;My Team&rdquo; &mdash; a custom list of your Fantasy Team athletes,
+                        and Findexar will track and index all media mentions.
+                        <br /><br />
+                        Alternatively, browse leagues, teams, and athletes to quickly scan through their media mentions.</p>
+                </MobileTextContainer></MobileContainerWrap>
+                <MobileButtonContainer><Button onClick={onClick} variant="outlined" sx={{ color: '0xFF0000' }} href={`/pub${params}`}><b>Enter Findexar</b></Button></MobileButtonContainer>
+                <MobileContainerWrap><TextContainerCenter> {loading && <LoadingContainer><Watch
+                    visible={true}
+                    height="80"
+                    width="80"
+                    radius="48"
+                    color="#4fa94d"
+                    ariaLabel="watch-loading"
+                    wrapperStyle={{}}
+                    wrapperClass=""
+                /></LoadingContainer>}
+                    <hr />Copyright &#169; 2024, Findexar, Inc.<br />Made in USA.
+                </TextContainerCenter></MobileContainerWrap>
 
-            <MuiTP theme={theme}>
-                <main className={roboto.className} >
-                    <ThemeProvider
-                        //@ts-ignore
-                        theme={palette}>
-                        <GlobalStyle $light={localMode == "light"} />
-                        <OuterContainer><ContainerWrap><TextContainer>
-                            <Title><h3>Welcome to Findexar!</h3></Title><br />
-                            <p>Effortlessly stay in touch with the latest news about your fantasy sports stars.
-                                Create &ldquo;My Team&rdquo; &mdash; a custom list of your Fantasy Team athletes,
-                                and Findexar will track and index media mentions of them from over
-                                a hundred different sources.
-                                Expect updates available just minutes after publication.<br /><br />
-                                Alternatively, browse leagues, teams, and athletes to quickly scan through their media mentions.</p>
+            </MobileVContainer>
+            <ButtonContainer><Button onClick={onClick} size="large" variant="outlined" href={`/pub${params}`}>Enter Findexar</Button></ButtonContainer>
 
-                        </TextContainer>
-                        </ContainerWrap>
-                        <MobileVContainer> <MobileTitle><h3>Welcome to Findexar!</h3></MobileTitle><MobileContainerWrap><br />
-                           <MobileTextContainer>
-                            <p>Effortlessly stay in touch with the latest news about your fantasy sports stars.
-                                Create &ldquo;My Team&rdquo; &mdash; a custom list of your Fantasy Team athletes,
-                                and Findexar will track and index all media mentions.
-                                <br /><br />
-                                Alternatively, browse leagues, teams, and athletes to quickly scan through their media mentions.</p>
-                        </MobileTextContainer></MobileContainerWrap>
-                            <MobileButtonContainer><Button onClick={onClick} variant="outlined" sx={{color:'0xFF0000'}} href={`/pub${params}`}><b>Enter Findexar</b></Button></MobileButtonContainer>
-                            <MobileContainerWrap><TextContainerCenter> {loading && <LoadingContainer><Watch
-                                visible={true}
-                                height="80"
-                                width="80"
-                                radius="48"
-                                color="#4fa94d"
-                                ariaLabel="watch-loading"
-                                wrapperStyle={{}}
-                                wrapperClass=""
-                            /></LoadingContainer>}
-                                <hr />Copyright &#169; 2024, Findexar, Inc.<br />Made in USA.
-                            </TextContainerCenter></MobileContainerWrap>
+            <ContainerWrap><TextContainerCenter>{loading && <LoadingContainer><Watch
+                visible={true}
+                height="80"
+                width="80"
+                radius="48"
+                color="#4fa94d"
+                ariaLabel="watch-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+            /></LoadingContainer>}
 
-                        </MobileVContainer>
-                        <ButtonContainer><Button onClick={onClick} size="large" variant="outlined"  href={`/pub${params}`}>Enter Findexar</Button></ButtonContainer>
-                        
-                        <ContainerWrap><TextContainerCenter>{loading && <LoadingContainer><Watch
-                            visible={true}
-                            height="80"
-                            width="80"
-                            radius="48"
-                            color="#4fa94d"
-                            ariaLabel="watch-loading"
-                            wrapperStyle={{}}
-                            wrapperClass=""
-                        /></LoadingContainer>}
+                <br /><br /><hr />Copyright &#169; 2024, Findexar, Inc.<br />Made in USA.
+            </TextContainerCenter></ContainerWrap>
+        </OuterContainer>
 
-                            <br /><br /><hr />Copyright &#169; 2024, Findexar, Inc.<br />Made in USA.
-                        </TextContainerCenter></ContainerWrap>
-                        </OuterContainer>
-
-                    </ThemeProvider>
-                </main>
-            </MuiTP>
-        </>
 
     )
 

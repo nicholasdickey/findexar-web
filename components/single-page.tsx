@@ -8,6 +8,7 @@ import 'material-icons/iconfont/outlined.css';
 import Script from "next/script";
 import useSWR from 'swr';
 
+import { getCookie } from 'cookies-next';
 import { useSubscription } from "use-stripe-subscription";
 import { styled, ThemeProvider } from "styled-components";
 import { Tabs, Tab, Alert } from '@mui/material'
@@ -386,14 +387,15 @@ const HeaderRight = styled.div`
   //height:100%;
   display:flex;
   flex-direction:row;
-  justify-content:center;
+  justify-content:space-between;
   align-items:center;
   margin-right:30px;
+  width:80px;
  //margin-top:10px;
   @media screen and (max-width: 1199px) {
     margin-left:0px;
-    margin-right:12px;
-    width:100px;
+    margin-right:16px;
+    width:80px;
     
   }
   /*&.cl-avatarBox{
@@ -778,7 +780,20 @@ const SinglePage: React.FC<Props> = (props) => {
     );
   }
   console.log("PAGE state:", { localUserId, v, localMode, localPageType, localLeague, localTeam, localPlayer, params, params2 })
+  useEffect(() => {
 
+    let mode = getCookie('mode');
+    if (!mode) {
+        const matchMedia = window.matchMedia("(prefers-color-scheme: dark)");
+        document.body.setAttribute("data-theme", matchMedia.matches ? 'dark' : 'light');
+        setLocalMode(matchMedia.matches ? 'dark' : 'light');
+        console.log("Landing mode:", mode, matchMedia)
+
+    }
+    else {
+        console.log("Landing mode cookie found:", mode)
+    }
+}, []);
   return (
     <>
       <Head>
