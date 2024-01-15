@@ -307,19 +307,44 @@ const MuiTabs = styled(Tabs)`
   background-color:var(--mobile-leagues-bg);
 
 `;
+const Superhead = styled.div`
+  font-size: 18x;
+  margin-top:4px;
+  text-align:left;
+  //color: ${blueGrey[200]};
+  color:var(--header-title-color);
+  font-size:18px;
+  @media screen and (max-width: 1199px ){
+   display:none;
+  }
+`;
+const SuperheadMobile = styled.div`
+  font-size: 17px;
+  margin-top:4px;
+  text-align:left;
+  color:var(--mobile-header-title-color);
+  
+ // font-size:14px;
+ // margin-bottom:10px;
+  //width:200px;
+  @media screen and (min-width: 1200px ){
+    display:none;
+  }
+`;
+
 const Subhead = styled.div`
   font-size: 18x;
   margin-top:4px;
   text-align:left;
   //color: ${blueGrey[200]};
   color:var(--subheader-color);
-  font-size:18px;
+ // font-size:18px;
   @media screen and (max-width: 1199px ){
    display:none;
   }
 `;
 const SubheadMobile = styled.div`
-  font-size: 17px;
+ // font-size: 17px;
   margin-top:4px;
   text-align:left;
   color:var(--mobile-subheader-color);
@@ -334,6 +359,7 @@ const SubheadMobile = styled.div`
 
 const HeaderTopline = styled.div`
   display:flex;
+  height:100%;
   flex-direction:row;
   justify-content:space-between;
   align-items:center;
@@ -855,7 +881,9 @@ const SinglePage: React.FC<Props> = (props) => {
                   <ContainerCenter>
 
                     <HeaderCenter>
-                      {(localPageType == "league" || localPageType == "landing") ? <Link href={`/pub${params}`}>FINDEXAR{localLeague ? ` : ${localLeague}` : ``}</Link> : !localTeam ? `${localLeague}` : localPlayer ? <PlayerNameGroup><PlayerName><Link href={`/pub/league/${localLeague}/team/${localTeam}${params}`}>{teamName}</Link></PlayerName> </PlayerNameGroup> : `${localLeague} : ${teamName}`}
+                    <Superhead>{(localPageType == "league" || localPageType == "landing") ? <Link href={`/pub${params}`}>FINDEXAR{localLeague ? ` : ${localLeague}` : ``}</Link>: !localTeam ? `${localLeague}` : localPlayer ? <PlayerNameGroup><PlayerName><Link href={`/pub/league/${localLeague}/team/${localTeam}${params}`}>{teamName}</Link></PlayerName> </PlayerNameGroup> : `${localLeague} : ${teamName}`}</Superhead> 
+                    <SuperheadMobile>{(localPageType == "league" || localPageType == "landing") ? <Link href={`/pub${params}`}>{localLeague ? ` ${localLeague}` : `FINDEXAR`}</Link>: !localTeam ? `${localLeague}` : localPlayer ? <PlayerNameGroup><PlayerName><Link href={`/pub/league/${localLeague}/team/${localTeam}${params}`}>{teamName}</Link></PlayerName> </PlayerNameGroup> : `${teamName}`}</SuperheadMobile> 
+                   
                       {(localPageType == "league" || localPageType == "landing") && <div><Subhead>Major Leagues and Fantasy Sports Professional Athletes and Teams Media Monitor</Subhead><SubheadMobile>Sports Media Index</SubheadMobile></div>}
 
                       {localPageType == "player" && localPlayer && <div><Subhead>{localPlayer ? localPlayer : ''}</Subhead><SubheadMobile>{localPlayer ? localPlayer : ''}</SubheadMobile></div>}
