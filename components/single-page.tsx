@@ -819,8 +819,8 @@ const SinglePage: React.FC<Props> = (props) => {
     }
     else {
         console.log("Landing mode cookie found:", mode)
-      if(mode!=localMode)
-        setLocalMode(mode);
+     /* if(mode!=localMode)
+        setLocalMode(mode); */
     }
 }, []);
   return (
