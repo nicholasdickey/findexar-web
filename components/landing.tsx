@@ -228,12 +228,13 @@ const InnerButton = styled.div`
 `;
 const NegativeAnswer = styled.div`
     margin-bottom:10px;
+   
     color:var(--text);
-    height:50px;
+    height:60px;
     width:600px;
     border:1px solid red;
     border-radius:15px;
-    padding:10px;
+    padding:20px;
     text-align: center;
     &:hover{
         color:var(--highlight);
@@ -256,7 +257,7 @@ const PositiveAnswer = styled.div`
     margin-bottom:50px;
     color:var(--text);
     text-decoration:none;
-    height:50px;
+    height:60px;
     width:600px;
     border:1px solid var(--qwiket-border-new);
     border-radius:15px;
@@ -388,7 +389,7 @@ const Landing = () => {
                         </NegativeAnswer>
                         <PositiveAnswer>
 
-                            Yes,<Button onClick={onClick} variant="outlined" href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
+                            Yes,&nbsp;<Button onClick={onClick} variant="outlined" href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
 
                         </PositiveAnswer>
                     </ul>
@@ -399,7 +400,7 @@ const Landing = () => {
                             No, I am definitely in the wrong place. <a href="https://www.thefarside.com/">Take me to the Far Side.</a>
                         </NegativeAnswer>
                         <PositiveAnswer>
-                            Yes,<Button onClick={onClick} variant="outlined" href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
+                            Yes,&nbsp;<Button onClick={onClick} variant="outlined" href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
 
                         </PositiveAnswer>
                     </ul>
@@ -412,7 +413,7 @@ const Landing = () => {
                         </NegativeAnswer>
 
                         <PositiveAnswer>
-                            Yes,<Button onClick={onClick} variant="outlined" href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
+                            Yes,&nbsp;<Button onClick={onClick} variant="outlined" href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
 
                         </PositiveAnswer>
                     </ul>
