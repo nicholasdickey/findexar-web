@@ -810,17 +810,17 @@ const SinglePage: React.FC<Props> = (props) => {
 
     let mode = getCookie('mode');
     if (!mode) {
-       /* const matchMedia = window.matchMedia("(prefers-color-scheme: dark)");
+       const matchMedia = window.matchMedia("(prefers-color-scheme: dark)");
         const matches=matchMedia.matches;
         document.body.setAttribute("data-theme", matchMedia.matches ? 'dark' : 'light');
         setLocalMode(matchMedia.matches ? 'dark' : 'light');
-        console.log("Landing mode:", {mode, matches})*/
+        console.log("Landing mode:", {mode, matches})
 
     }
     else {
         console.log("Landing mode cookie found:", mode)
-     /* if(mode!=localMode)
-        setLocalMode(mode); */
+      if(mode!=localMode)
+        setLocalMode(mode); 
     }
 }, []);
   return (
