@@ -16,7 +16,7 @@ import GlobalStyle from '@/components/globalstyles';
 
 import { recordEvent } from '@/lib/api';
 const OuterContainer = styled.div`
-    background-color:var(--highBackground);
+    background-color:var(--background);
     padding-bottom:200px;
 `;
 const LoadingContainer = styled.div`
@@ -70,6 +70,7 @@ const TextContainer = styled.div`
    
 `;
 const MobileTextContainer = styled.div`
+    margin-top:0px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -89,11 +90,13 @@ const TextContainerCenter = styled.div`
 const MobileVContainer = styled.div`
     display: flex;
     flex-direction: column;
+    align-items: center;
     @media screen and (min-width: 1200px) {
         display: none;
     }
 `;
 const MobileContainerWrap = styled.div`
+  
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -160,28 +163,152 @@ const MobileLogoContainer = styled.div`
     justify-content:flex-begin;
 `;
 const ButtonContainer = styled.div`
-    margin-top: 120px;
+   // margin-top: 120px;
     width:100%;
     display:flex;
     flex-direction:row;
     justify-content:center;
     //color: #2aa;
     color:var(--text);
+   
     @media screen and (max-width: 1199px) {
         display:none;
     }
 `;
 const MobileButtonContainer = styled.div`
-    margin-top: 20px;
     width:100%;
     display:flex;
     flex-direction:row;
     justify-content:center;
     color:var(--text);
-    padding-bottom:30px;
+    position: -webkit-sticky; /* Safari */
+	position: sticky;
+	top: 100;
+    z-index:100;
     @media screen and (min-width: 1200px) {
         display:none;
     }
+`;
+const StickyDiv = styled.div`
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    top: 0;
+    z-index:100;
+    height:100px;
+    padding:20px;
+    width:100%;
+    text-align:center;
+    background-color:var(--background);
+    color:var(--text);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+   
+`;
+const InnerButton = styled.div`
+    margin-top:0px;
+    margin-bottom:3px;
+    color:var(--text);
+    padding-left: 20px;
+    padding-right:20px;
+    &:hover{
+        color:var(--highlight);
+        background-color:var(--highBackground) ;
+       
+    }
+    a{
+        &:hover{
+            color:var(--highlight);
+            background-color:var(--highBackground) ;
+            
+        }
+    }
+
+`;
+const NegativeAnswer = styled.div`
+    margin-bottom:10px;
+    color:var(--text);
+    height:50px;
+    width:600px;
+    border:1px solid red;
+    border-radius:15px;
+    padding:10px;
+    text-align: center;
+    &:hover{
+        color:var(--highlight);
+        background-color:var(--highBackground) ;
+       
+    }
+    a{
+        &:hover{
+            color:var(--highlight);
+            background-color:var(--highBackground) ;
+            
+        }
+    }
+
+
+
+`;
+const PositiveAnswer = styled.div`
+    margin-top:10px;
+    margin-bottom:50px;
+    color:var(--text);
+    text-decoration:none;
+    height:50px;
+    width:600px;
+    border:1px solid var(--qwiket-border-new);
+    border-radius:15px;
+    padding:10px;
+    text-align: center;
+    &:hover{
+        color:var(--highlight);
+        background-color:var(--highBackground) ;
+       
+    }
+    a{
+        &:hover{
+            color:var(--highlight);
+            background-color:var(--highBackground) ;
+            
+        }
+    }
+`;
+const MobileNegativeAnswer = styled.div`
+    margin-bottom:10px;
+    color:var(--text);
+    height:60px;
+    width:300px;
+    border:1px solid red;
+    border-radius:15px;
+    padding:10px;
+    text-align: center;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+ 
+`;
+const MobilePositiveAnswer = styled.div`
+    margin-top:10px;
+    margin-bottom:40px;
+    color:var(--text);
+    text-decoration:none;
+    height:60px;
+    width:300px;
+    border:1px solid var(--qwiket-border-new);
+    border-radius:15px;
+    padding:10px;
+  
+    
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    
+`;
+const MobileAnswerText = styled.div`
+    width:300px;
+    text-align: center;
 `;
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 
@@ -228,7 +355,7 @@ const Landing = () => {
         }
 
     }, [router.isReady, router.query, fbclid, utm_content]);
-   
+
     const theme = useTheme();
     const onClick = () => {
         try {
@@ -244,52 +371,128 @@ const Landing = () => {
     }
     return (
 
-        <OuterContainer><ContainerWrap><TextContainer>
-            <Title><h3>Welcome to Findexar!</h3></Title><br />
-            <p>Effortlessly stay in touch with the latest news about your fantasy sports stars.
-                Create &ldquo;My Team&rdquo; &mdash; a custom list of your Fantasy Team athletes,
-                and Findexar will track and index media mentions of them from over
-                a hundred different sources.
-                Expect updates available just minutes after publication.<br /><br />
-                Alternatively, browse leagues, teams, and athletes to quickly scan through their media mentions.</p>
-
-        </TextContainer>
-        </ContainerWrap>
-            <MobileVContainer> <MobileTitle><h3>Welcome to Findexar!</h3></MobileTitle><MobileContainerWrap><br />
-                <MobileTextContainer>
-                    <p>Effortlessly stay in touch with the latest news about your fantasy sports stars.
-                        Create &ldquo;My Team&rdquo; &mdash; a custom list of your Fantasy Team athletes,
-                        and Findexar will track and index all media mentions.
-                        <br /><br />
-                        Alternatively, browse leagues, teams, and athletes to quickly scan through their media mentions.</p>
-                </MobileTextContainer></MobileContainerWrap>
+        <OuterContainer>
+            <StickyDiv>
+                <ButtonContainer><Button onClick={onClick} size="large" variant="outlined" href={`/pub${params}`}><InnerButton><h2>Enter Findexar</h2></InnerButton></Button></ButtonContainer>
                 <MobileButtonContainer><Button onClick={onClick} variant="outlined" sx={{ color: '0xFF0000' }} href={`/pub${params}`}><b>Enter Findexar</b></Button></MobileButtonContainer>
-                <MobileContainerWrap><TextContainerCenter> {loading && <LoadingContainer><Watch
-                    visible={true}
-                    height="80"
-                    width="80"
-                    radius="48"
-                    color="#4fa94d"
-                    ariaLabel="watch-loading"
-                    wrapperStyle={{}}
-                    wrapperClass=""
-                /></LoadingContainer>}
-                    <hr />Copyright &#169; 2024, Findexar, Inc.<br />Made in USA.
-                </TextContainerCenter></MobileContainerWrap>
 
+
+
+            </StickyDiv>
+
+            <ContainerWrap><TextContainer>
+                <h4>Do you want to know when your favorite athletes or teams are mentioned in the media?</h4>
+                    <ul>
+                        <NegativeAnswer>
+                            No, I am in the wrong place.
+                        </NegativeAnswer>
+                        <PositiveAnswer>
+
+                            Yes,<Button onClick={onClick} variant="outlined" href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
+
+                        </PositiveAnswer>
+                    </ul>
+                
+             <h4>Do you want to peruse an annotated real-time index of media mentions for NFL, NHL, MLB and NBA athletes and teams?</h4>
+                    <ul>
+                        <NegativeAnswer>
+                            No, I am definitely in the wrong place. <a href="https://www.thefarside.com/">Take me to the Far Side.</a>
+                        </NegativeAnswer>
+                        <PositiveAnswer>
+                            Yes,<Button onClick={onClick} variant="outlined" href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
+
+                        </PositiveAnswer>
+                    </ul>
+                
+                <h4>Do you need the ability to track all the media stories mentioning the athletes from my fantasy team?</h4>
+                    <ul>
+                        <NegativeAnswer>
+
+                            What&apos;s a &ldquo;fantasy team&ldquo;?
+                        </NegativeAnswer>
+
+                        <PositiveAnswer>
+                            Yes,<Button onClick={onClick} variant="outlined" href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
+
+                        </PositiveAnswer>
+                    </ul>
+                <p>
+                    Effortlessly stay in touch with the latest news about your fantasy sports stars.
+                    Create &ldquo;My Team&rdquo; &mdash; a custom list of your Fantasy Team athletes,
+                    and Findexar will track and index media mentions of them from over
+                    a hundred different sources.<br /><br />
+                    Alternatively, browse leagues, teams, and athletes to quickly scroll through their media mentions.</p>
+
+            </TextContainer>
+            </ContainerWrap>
+            <MobileVContainer>
+                <MobileContainerWrap>
+                    <MobileTextContainer>
+                        <h4>Do you want to know when your favorite athletes or teams are mentioned in the media?</h4>
+                    </MobileTextContainer>
+                </MobileContainerWrap>
+                <MobileNegativeAnswer>
+                    <MobileAnswerText>
+                        No, I am in the wrong place.
+                    </MobileAnswerText>
+                </MobileNegativeAnswer>
+                <MobilePositiveAnswer>
+                    <MobileAnswerText>
+                        Yes,<Button onClick={onClick} variant="outlined" href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
+                    </MobileAnswerText>
+                </MobilePositiveAnswer>
+
+                <MobileContainerWrap>
+                    <MobileTextContainer>
+                        <h4>Do you want to peruse an annotated real-time index of media mentions for NFL, NHL, MLB and NBA athletes and teams?</h4>
+                    </MobileTextContainer>
+                </MobileContainerWrap>
+                <MobileNegativeAnswer>
+                    <MobileAnswerText>
+                        No, I am definitely in the wrong place. <a href="https://www.thefarside.com/">Take me to the Far Side.</a>
+                    </MobileAnswerText>
+                </MobileNegativeAnswer>
+                <MobilePositiveAnswer>
+                    <MobileAnswerText>
+                        Yes,<Button onClick={onClick} variant="outlined" href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
+                    </MobileAnswerText>
+                </MobilePositiveAnswer>
+                <MobileContainerWrap>
+                    <MobileTextContainer>
+                        <h4>Do you need the ability to track all the media stories mentioning the athletes from my fantasy team?</h4>
+                    </MobileTextContainer></MobileContainerWrap>
+                <MobileNegativeAnswer>
+                    <MobileAnswerText>
+                        What&apos;s a &ldquo;fantasy team&ldquo;?
+                    </MobileAnswerText>
+                </MobileNegativeAnswer>
+
+                <MobilePositiveAnswer>
+                    <MobileAnswerText>
+                        Yes,<Button onClick={onClick} variant="outlined" href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
+                    </MobileAnswerText>
+                </MobilePositiveAnswer>
+                <MobileContainerWrap>
+                    <MobileTextContainer>
+                        <p>
+                            Effortlessly stay in touch with the latest news about your fantasy sports stars.
+                            Create &ldquo;My Team&rdquo; &mdash; a custom list of your Fantasy Team athletes,
+                            and Findexar will track and index media mentions of them from over
+                            a hundred different sources.<br /><br />
+                            Alternatively, browse leagues, teams, and athletes to quickly scroll through their media mentions.</p>
+
+                    </MobileTextContainer>
+                </MobileContainerWrap>
+                <MobileContainerWrap>
+                    <TextContainerCenter>
+                    <br /><br /><hr /> Copyright &#169; 2024, Findexar, Inc.<br />Made in Minnesota, USA.
+                    </TextContainerCenter>
+                </MobileContainerWrap>
             </MobileVContainer>
-            <ButtonContainer><Button onClick={onClick} size="large" variant="outlined" href={`/pub${params}`}>Enter Findexar</Button></ButtonContainer>
 
-            <ContainerWrap><TextContainerCenter>{loading && <LoadingContainer><Watch
-                visible={true}
-                height="80"
-                width="80"
-                radius="48"
-                color="#4fa94d"
-                ariaLabel="watch-loading"
-                wrapperStyle={{}}
-                wrapperClass=""
-            /></LoadingContainer>}
+
+
+            <ContainerWrap><TextContainerCenter>
 
                 <br /><br /><hr />Copyright &#169; 2024, Findexar, Inc.<br />Made in USA.
             </TextContainerCenter></ContainerWrap>
