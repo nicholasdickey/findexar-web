@@ -261,7 +261,7 @@ const PositiveAnswer = styled.div`
     width:600px;
     border:1px solid var(--qwiket-border-new);
     border-radius:15px;
-    padding:10px;
+    padding:20px;
     text-align: center;
     &:hover{
         color:var(--highlight);
@@ -373,13 +373,13 @@ const Landing = () => {
     return (
 
         <OuterContainer>
-            <StickyDiv>
+           {false&& <StickyDiv>
                 <ButtonContainer><Button onClick={onClick} size="large" variant="outlined" href={`/pub${params}`}><InnerButton><h2>Enter Findexar</h2></InnerButton></Button></ButtonContainer>
                 <MobileButtonContainer><Button onClick={onClick} variant="outlined" sx={{ color: '0xFF0000' }} href={`/pub${params}`}><b>Enter Findexar</b></Button></MobileButtonContainer>
 
 
 
-            </StickyDiv>
+            </StickyDiv>}
 
             <ContainerWrap><TextContainer>
                 <h4>Do you want to know when your favorite athletes or teams are mentioned in the media?</h4>
@@ -405,7 +405,7 @@ const Landing = () => {
                         </PositiveAnswer>
                     </ul>
                 
-                <h4>Do you need the ability to track all the media stories mentioning the athletes from my fantasy team?</h4>
+                <h4>Do you need the ability to track all the media stories mentioning the athletes from your fantasy team?</h4>
                     <ul>
                         <NegativeAnswer>
 
@@ -460,7 +460,7 @@ const Landing = () => {
                 </MobilePositiveAnswer>
                 <MobileContainerWrap>
                     <MobileTextContainer>
-                        <h4>Do you need the ability to track all the media stories mentioning the athletes from my fantasy team?</h4>
+                        <h4>Do you need the ability to track all the media stories mentioning the athletes from your fantasy team?</h4>
                     </MobileTextContainer></MobileContainerWrap>
                 <MobileNegativeAnswer>
                     <MobileAnswerText>
