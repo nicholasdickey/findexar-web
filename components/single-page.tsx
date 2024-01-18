@@ -754,7 +754,7 @@ const SinglePage: React.FC<Props> = (props) => {
   useEffect(() => {
     if (pagetype != 'landing') {
       const t2 = new Date().getTime();
-      recordEvent(sessionid as string || "", `single-page-time`, `{"fbclid":"${fbclid}","time":"${t2 - t1 || 0}"}`).then(() => { });
+      recordEvent(sessionid as string || "", `single-page-time`, `{"fbclid":"${fbclid}","utm_content":"${utm_content}","time":"${t2 - t1 || 0}"}`).then(() => { });
     }
   }, [fbclid, pagetype, sessionid, t1]);
   useEffect(() => {
