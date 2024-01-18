@@ -400,6 +400,18 @@ const Landing = () => {
         }
 
     }
+    const onFarSide = () => {
+        try {
+            //setLoading(true);
+            recordEvent("", `far-side`, `{"fbclid":"${fbclid}", "utm_content":"${utm_content}"}`)
+                .then((r: any) => {
+                    console.log("recordEvent", r);
+                });
+        } catch (x) {
+            console.log('recordEvent', x);
+        }
+
+    }
     const onHover = (label:string) => {
         try {
             //setLoading(true);
@@ -441,7 +453,7 @@ const Landing = () => {
 
                 <h4>Do you want to peruse an annotated real-time index of media mentions for NFL, NHL, MLB and NBA athletes and teams?</h4>
                 <ul>
-                    <NegativeAnswer onMouseEnter={() => onHover('D-N2')}>
+                    <NegativeAnswer onClick={()=>onFarSide()}onMouseEnter={() => onHover('D-N2')}>
                         No, I am definitely in the wrong place. <a href="https://www.thefarside.com/">Take me to the Far Side.</a>
                     </NegativeAnswer>
                     <PositiveAnswer onMouseEnter={() => onHover('D-P2')}>
