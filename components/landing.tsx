@@ -372,9 +372,10 @@ const Landing = () => {
         }
         setParams(params);
     }, [router.isReady, router.query]);
+    
     useEffect(() => {
-        if (!router.isReady) return;
-
+        if (!router.isReady||!params) return;
+     
         try {
             recordEvent("", `landing-loaded`, `{"fbclid":"${fbclid}", "utm_content":"${utm_content}"}`)
                 .then((r: any) => {
@@ -384,7 +385,7 @@ const Landing = () => {
             console.log('recordEvent', x);
         }
 
-    }, [router.isReady, router.query, fbclid, utm_content]);
+    }, [params,router.isReady]);
 
     const theme = useTheme();
     const onClick = () => {
