@@ -828,10 +828,10 @@ const SinglePage: React.FC<Props> = (props) => {
       <Head>
         <title>Findexar</title>
         <link rel="canonical" href="https://www.findexar.com/" />
-        <meta property="og:description" content="Fantasy Sports Mentions Monitor for Major League Teams and athletes" />
+        <meta property="og:description" content="Real-time annotated media mentions index for Fantasy Sports." />
         <meta name="title" content="Findexar" />
         <meta property="og:title" content="Findexar" />
-        <meta name="description" content="Fantasy Sports Mentions Monitor for Major League Teams and athletes" />
+        <meta name="description" content="Real-time annotated media mentions index for Fantasy Sports." />
         <meta property="og:type" content="website" />
         <meta property="fb:appid" content="358234474670240" />
         <meta property="og:site_name" content="Findexar.com" />
