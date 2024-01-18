@@ -208,11 +208,12 @@ const StickyDiv = styled.div`
 `;
 const InnerButton = styled.div`
     margin-top:0px;
-    margin-bottom:3px;
+    margin-bottom:2px;
     color:var(--text);
-    padding-top:2px;
+   // padding-top:2px;
     padding-left: 5px;
     padding-right:2px;
+    font-size:18px;
     &:hover{
         color:var(--highlight);
         background-color:var(--highBackground) ;
@@ -262,7 +263,7 @@ const PositiveAnswer = styled.div`
     width:600px;
     border:1px solid var(--qwiket-border-new);
     border-radius:15px;
-    padding:16px;
+    padding:8px;
     text-align: center;
     &:hover{
         color:var(--highlight);
