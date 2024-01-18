@@ -315,6 +315,7 @@ const MobileAnswerText = styled.div`
 `;
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 
+let s=false;
 
 const Landing = () => {
     const [fbclid, setFbclid] = useState("");
@@ -323,6 +324,32 @@ const Landing = () => {
     const [loading, setLoading] = useState(false);
     const [localMode, setLocalMode] = useState("");
     const router = useRouter();
+
+    const [scrolled, setScrolled] = useState(false);
+
+    useEffect(() => {
+        const listener = () => {
+            if (window.scrollY > 0) {
+                if (!scrolled&&!s) {
+                    try {
+                        s=true;
+                        setScrolled(true);
+                        recordEvent("", `landing-scrolled`, `{"fbclid":"${fbclid}", "utm_content":"${utm_content}"}`)
+                            .then((r: any) => {
+                                console.log("recordEvent", r);
+                            });
+                    } catch (x) {
+                        console.log('recordEvent', x);
+                    }
+                }
+                setScrolled(true);
+            }
+        }
+        window.addEventListener('scroll',listener );
+        return () => window.removeEventListener("scroll", listener);
+    }, [fbclid,utm_content,scrolled]);
+
+
     useEffect(() => {
         if (!router.isReady) return;
         const query = router.query;
@@ -372,11 +399,25 @@ const Landing = () => {
         }
 
     }
+    const onHover = (label:string) => {
+        try {
+            //setLoading(true);
+            recordEvent("", `hover`, `{"label","${label}","fbclid":"${fbclid}", "utm_content":"${utm_content}"}`)
+                .then((r: any) => {
+                    console.log("recordEvent", r);
+                });
+        } catch (x) {
+            console.log('recordEvent', x);
+        }
+
+
+
+    }
     return (
 
         <OuterContainer>
-            <br/><br/><br/>
-           {false&& <StickyDiv>
+            <br /><br /><br />
+            {false && <StickyDiv>
                 <ButtonContainer><Button onClick={onClick} size="large" variant="outlined" href={`/pub${params}`}><InnerButton><h2>Enter Findexar</h2></InnerButton></Button></ButtonContainer>
                 <MobileButtonContainer><Button onClick={onClick} variant="outlined" sx={{ color: '0xFF0000' }} href={`/pub${params}`}><b>Enter Findexar</b></Button></MobileButtonContainer>
 
@@ -386,40 +427,40 @@ const Landing = () => {
 
             <ContainerWrap><TextContainer>
                 <h4>Do you want to know when your favorite athletes or teams are mentioned in the media?</h4>
-                    <ul>
-                        <NegativeAnswer>
-                            No, I am in the wrong place.
-                        </NegativeAnswer>
-                        <PositiveAnswer>
+                <ul>
+                    <NegativeAnswer  onMouseEnter={() => onHover('D-N1')}>
+                        No, I am in the wrong place.
+                    </NegativeAnswer>
+                    <PositiveAnswer  onMouseEnter={() => onHover('D-P1')}>
 
-                            Yes,&nbsp;<Button onClick={onClick}  href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
+                        Yes,&nbsp;<Button onClick={onClick} href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
 
-                        </PositiveAnswer>
-                    </ul>
-                
-             <h4>Do you want to peruse an annotated real-time index of media mentions for NFL, NHL, MLB and NBA athletes and teams?</h4>
-                    <ul>
-                        <NegativeAnswer>
-                            No, I am definitely in the wrong place. <a href="https://www.thefarside.com/">Take me to the Far Side.</a>
-                        </NegativeAnswer>
-                        <PositiveAnswer>
-                            Yes,&nbsp;<Button onClick={onClick}  href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
+                    </PositiveAnswer>
+                </ul>
 
-                        </PositiveAnswer>
-                    </ul>
-                
+                <h4>Do you want to peruse an annotated real-time index of media mentions for NFL, NHL, MLB and NBA athletes and teams?</h4>
+                <ul>
+                    <NegativeAnswer onMouseEnter={() => onHover('D-N2')}>
+                        No, I am definitely in the wrong place. <a href="https://www.thefarside.com/">Take me to the Far Side.</a>
+                    </NegativeAnswer>
+                    <PositiveAnswer onMouseEnter={() => onHover('D-P2')}>
+                        Yes,&nbsp;<Button onClick={onClick} href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
+
+                    </PositiveAnswer>
+                </ul>
+
                 <h4>Need the capability to monitor all media stories mentioning the athletes from your fantasy team?</h4>
-                    <ul>
-                        <NegativeAnswer>
+                <ul>
+                    <NegativeAnswer onMouseEnter={() => onHover('D-N3')}>
 
-                            What&apos;s a &ldquo;fantasy team&ldquo;?
-                        </NegativeAnswer>
+                        What&apos;s a &ldquo;fantasy team&ldquo;?
+                    </NegativeAnswer>
 
-                        <PositiveAnswer>
-                            Yes,&nbsp;<Button onClick={onClick} href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
+                    <PositiveAnswer onMouseEnter={() => onHover('D-P31')}>
+                        Yes,&nbsp;<Button onClick={onClick} href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
 
-                        </PositiveAnswer>
-                    </ul>
+                    </PositiveAnswer>
+                </ul>
                 <p>
                     Effortlessly stay in touch with the latest news about your fantasy sports stars.
                     Create &ldquo;My Team&rdquo; &mdash; a custom list of your Fantasy Team athletes,
@@ -435,14 +476,14 @@ const Landing = () => {
                         <h4>Do you want to know when your favorite athletes or teams are mentioned in the media?</h4>
                     </MobileTextContainer>
                 </MobileContainerWrap>
-                <MobileNegativeAnswer>
+                <MobileNegativeAnswer onMouseEnter={() => onHover('M-N1')}>
                     <MobileAnswerText>
                         No, I am in the wrong place.
                     </MobileAnswerText>
                 </MobileNegativeAnswer>
-                <MobilePositiveAnswer>
+                <MobilePositiveAnswer onMouseEnter={() => onHover('M-P1')}>
                     <MobileAnswerText>
-                        Yes,<Button onClick={onClick}  href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
+                        Yes,<Button onClick={onClick} href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
                     </MobileAnswerText>
                 </MobilePositiveAnswer>
 
@@ -451,12 +492,12 @@ const Landing = () => {
                         <h4>Do you want to peruse an annotated real-time index of media mentions for NFL, NHL, MLB and NBA athletes and teams?</h4>
                     </MobileTextContainer>
                 </MobileContainerWrap>
-                <MobileNegativeAnswer>
+                <MobileNegativeAnswer onMouseEnter={() => onHover('M-N2')}>
                     <MobileAnswerText>
                         No, I am definitely in the wrong place. <a href="https://www.thefarside.com/">Take me to the Far Side.</a>
                     </MobileAnswerText>
                 </MobileNegativeAnswer>
-                <MobilePositiveAnswer>
+                <MobilePositiveAnswer onMouseEnter={() => onHover('M-P2')}>
                     <MobileAnswerText>
                         Yes,<Button onClick={onClick} href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
                     </MobileAnswerText>
@@ -465,13 +506,13 @@ const Landing = () => {
                     <MobileTextContainer>
                         <h4>Need the capability to monitor all media stories mentioning the athletes from your fantasy team?</h4>
                     </MobileTextContainer></MobileContainerWrap>
-                <MobileNegativeAnswer>
+                <MobileNegativeAnswer  onMouseEnter={() => onHover('M-N3')}>
                     <MobileAnswerText>
                         What&apos;s a &ldquo;fantasy team&ldquo;?
                     </MobileAnswerText>
                 </MobileNegativeAnswer>
 
-                <MobilePositiveAnswer>
+                <MobilePositiveAnswer  onMouseEnter={() => onHover('M-P3')}>
                     <MobileAnswerText>
                         Yes,<Button onClick={onClick} href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
                     </MobileAnswerText>
@@ -489,7 +530,7 @@ const Landing = () => {
                 </MobileContainerWrap>
                 <MobileContainerWrap>
                     <TextContainerCenter>
-                    <br /><br /><hr /> Copyright &#169; 2024, Findexar, Inc.<br />Made in Minnesota, USA.
+                        <br /><br /><hr /> Copyright &#169; 2024, Findexar, Inc.<br />Made in Minnesota, USA.
                     </TextContainerCenter>
                 </MobileContainerWrap>
             </MobileVContainer>
