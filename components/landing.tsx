@@ -210,8 +210,9 @@ const InnerButton = styled.div`
     margin-top:0px;
     margin-bottom:3px;
     color:var(--text);
-    padding-left: 20px;
-    padding-right:20px;
+    padding-top:2px;
+    padding-left: 5px;
+    padding-right:2px;
     &:hover{
         color:var(--highlight);
         background-color:var(--highBackground) ;
@@ -234,7 +235,7 @@ const NegativeAnswer = styled.div`
     width:600px;
     border:1px solid red;
     border-radius:15px;
-    padding:20px;
+    padding:17px;
     text-align: center;
     &:hover{
         color:var(--highlight);
@@ -261,7 +262,7 @@ const PositiveAnswer = styled.div`
     width:600px;
     border:1px solid var(--qwiket-border-new);
     border-radius:15px;
-    padding:10px;
+    padding:16px;
     text-align: center;
     &:hover{
         color:var(--highlight);
@@ -390,7 +391,7 @@ const Landing = () => {
                         </NegativeAnswer>
                         <PositiveAnswer>
 
-                            Yes,&nbsp;<Button onClick={onClick} variant="outlined" href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
+                            Yes,&nbsp;<Button onClick={onClick}  href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
 
                         </PositiveAnswer>
                     </ul>
@@ -401,7 +402,7 @@ const Landing = () => {
                             No, I am definitely in the wrong place. <a href="https://www.thefarside.com/">Take me to the Far Side.</a>
                         </NegativeAnswer>
                         <PositiveAnswer>
-                            Yes,&nbsp;<Button onClick={onClick} variant="outlined" href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
+                            Yes,&nbsp;<Button onClick={onClick}  href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
 
                         </PositiveAnswer>
                     </ul>
@@ -414,7 +415,7 @@ const Landing = () => {
                         </NegativeAnswer>
 
                         <PositiveAnswer>
-                            Yes,&nbsp;<Button onClick={onClick} variant="outlined" href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
+                            Yes,&nbsp;<Button onClick={onClick} href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
 
                         </PositiveAnswer>
                     </ul>
@@ -440,7 +441,7 @@ const Landing = () => {
                 </MobileNegativeAnswer>
                 <MobilePositiveAnswer>
                     <MobileAnswerText>
-                        Yes,<Button onClick={onClick} variant="outlined" href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
+                        Yes,<Button onClick={onClick}  href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
                     </MobileAnswerText>
                 </MobilePositiveAnswer>
 
@@ -456,7 +457,7 @@ const Landing = () => {
                 </MobileNegativeAnswer>
                 <MobilePositiveAnswer>
                     <MobileAnswerText>
-                        Yes,<Button onClick={onClick} variant="outlined" href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
+                        Yes,<Button onClick={onClick} href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
                     </MobileAnswerText>
                 </MobilePositiveAnswer>
                 <MobileContainerWrap>
@@ -471,7 +472,7 @@ const Landing = () => {
 
                 <MobilePositiveAnswer>
                     <MobileAnswerText>
-                        Yes,<Button onClick={onClick} variant="outlined" href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
+                        Yes,<Button onClick={onClick} href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
                     </MobileAnswerText>
                 </MobilePositiveAnswer>
                 <MobileContainerWrap>
