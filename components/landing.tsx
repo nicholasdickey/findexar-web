@@ -406,7 +406,7 @@ const Landing = () => {
                         </PositiveAnswer>
                     </ul>
                 
-                <h4>Do you need the ability to track all the media stories mentioning the athletes from your fantasy team?</h4>
+                <h4>Need the capability to monitor all media stories mentioning the athletes from your fantasy team?</h4>
                     <ul>
                         <NegativeAnswer>
 
@@ -461,7 +461,7 @@ const Landing = () => {
                 </MobilePositiveAnswer>
                 <MobileContainerWrap>
                     <MobileTextContainer>
-                        <h4>Do you need the ability to track all the media stories mentioning the athletes from your fantasy team?</h4>
+                        <h4>Need the capability to monitor all media stories mentioning the athletes from your fantasy team?</h4>
                     </MobileTextContainer></MobileContainerWrap>
                 <MobileNegativeAnswer>
                     <MobileAnswerText>
