@@ -128,19 +128,23 @@ const MentionSummary = styled.div`
 
 
 const Icon = styled.span`
-    color: #555;
-    font-size: 38px;
-    width:20px;
-    height:20px;
+    color:var(--mention-text);
+    font-size: 48px !important;
+    opacity:0.6;
+   // width:20px;
+   // height:20px;
    // margin-top:10px;
+    margin-bottom:-20px;
     cursor:pointer;
     &:hover{
-            color: #F00;
+        opacity:0.9;
+        color: var(--highlight);
     }
 `;
 const MobileIcon = styled.span`
-    color:var(mention-text);
-    font-size: 38px;
+    color:var(--mention-text);
+    font-size: 48px;
+    opacity:0.7;
    // margin-top:-20px;
    margin-bottom:-20px;
     cursor:pointer;
@@ -359,14 +363,7 @@ const Mention: React.FC<Props> = ({ tp,sessionid, params, noUser, mentionType, l
     return (
         <>
             <MentionWrap hideit={hide}>
-                <MentionFindex>
-
-                    <Icon onClick={
-                        async (e) => {
-                            setExpanded(!expanded);
-                        }}
-                    ><ExpandMoreIcon /></Icon>
-                </MentionFindex>
+             
 
                 <MentionSummary>
 
@@ -380,6 +377,13 @@ const Mention: React.FC<Props> = ({ tp,sessionid, params, noUser, mentionType, l
                         <Atmention><b>{(type == "person") && '@'}{name}</b> | {type == "person" ? `${teamName} |` : ""} {league} </Atmention>
                         <Atmention2>{meta?.site_name}</Atmention2>
                     </div>
+                    <MobileIconContainer>
+                    <Icon onClick={
+                        async (e) => {
+                            setExpanded(!expanded);
+                        }}
+                        className="material-icons-outlined">{!expanded ? "expand_more" : "expand_less"}</Icon></MobileIconContainer>
+                    
                     {expanded && meta && <Link href={url}><ExtendedMention>
                         <Title>{meta.title}</Title>
                         <Byline>
