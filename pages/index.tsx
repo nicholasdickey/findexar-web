@@ -29,6 +29,7 @@ interface Props {
     t1: number;
     tab:string;
     mode:string;
+    findexarxid:string;
 }
 export default function Home(props: Props) {
    // const fallback = props.fallback;
@@ -125,7 +126,8 @@ export async function getStaticProps() {
         view:"landing",
         tab:"all",
         mode:"light",
-        t1
+        t1,
+        findexarxid:""
       },
       
     };
