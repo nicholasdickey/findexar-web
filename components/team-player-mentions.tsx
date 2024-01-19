@@ -1,11 +1,8 @@
 import React, { useEffect } from "react";
-import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite'
 import { styled } from "styled-components";
-import Skeleton from '@mui/material/Skeleton';
-import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { DetailsKey, getDetails, FetchedMentionsKey, fetchMentions } from '@/lib/api';
+import { FetchedMentionsKey, fetchMentions } from '@/lib/api';
 import Mention from "./mention";
 
 const LoadMore = styled.div`
@@ -102,6 +99,8 @@ const TeamPlayerMentions: React.FC<Props> = (props) => {
     const { data, error: mentionsError, mutate, size, setSize, isValidating, isLoading } = useSWRInfinite(fetchMentionsKey, fetchMentions, { initialSize: 1, })
     const mentions = data ? [].concat(...data) : [];
     //console.log("LOADED MENTIONS FROM FALLBACK",{isValidating,isLoading,mentions})
+ 
+
     const isLoadingMore =
         isLoading || (size > 0 && data && typeof data[size - 1] === "undefined");
     const isEmpty = data?.[0]?.length === 0;

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router'
 import { SignInButton, SignedOut, SignedIn } from "@clerk/nextjs";
 import { styled, useTheme } from "styled-components";
+import useMediaQuery from '@mui/material/useMediaQuery';
 import Button from '@mui/material/Button';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
@@ -322,10 +323,12 @@ interface Props {
 const LeagueMentions: React.FC<Props> = ({ findexarxid,tp, tp2, tab, league, noUser, setLocalPageType, setLocalPlayer, setLocalLeague, setLocalTeam, setLocalView, view, params, params2, sessionid, setLocalTab }) => {
   console.log("league-mentions:", { league, noUser, view })
   const optionsKey: UserOptionsKey = { type: "options", noUser };
+
   const { data: options, error: optionsError, isLoading: optionsLoading, mutate: optionsMutate } = useSWR(optionsKey, getOptions);
   const [localTrackerFilter, setLocalTrackerFilter] = React.useState(options?.tracker_filter);
   const [noLoadOverride, setNoLoadOverride] = React.useState(false);
   console.log("LeagueMentions league=", league)
+  const isMobile= useMediaQuery('(max-width:1199px)');
   //const u=clerkClient.g
   useEffect(() => {
     console.log("LeagueMentions useEffect")
@@ -432,7 +435,7 @@ const LeagueMentions: React.FC<Props> = ({ findexarxid,tp, tp2, tab, league, noU
   }
   return (
     <>
-      <OuterContainer>
+     {!isMobile&&<OuterContainer>
         <MentionsOuterContainer>
           {(false && view != "fav") && <MentionsHeader>{!noUser && <FormControlLabel control={<Checkbox size="small" checked={localTrackerFilter == 1} onChange={
             (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -503,9 +506,9 @@ const LeagueMentions: React.FC<Props> = ({ findexarxid,tp, tp2, tab, league, noU
 
 
         </RightPanel>
-      </OuterContainer>
+      </OuterContainer>}
 
-      <MobileMentionsOuterContainer>
+      {isMobile&&<MobileMentionsOuterContainer>
 
 
         {view == 'mentions' && <TertiaryTabs options={[{ name: `${league ? league : 'Full'} Feed`, tab: 'all' }, { name: "My Feed", tab: "myteam" }, { name: "Favorites", tab: "fav" }]} onChange={async (option: any) => { await onTabNav(option); }} selectedOptionName={tab} />}
@@ -569,7 +572,7 @@ const LeagueMentions: React.FC<Props> = ({ findexarxid,tp, tp2, tab, league, noU
           </MobilePlayersPanel>}
         </MentionsBody>
 
-      </MobileMentionsOuterContainer>
+      </MobileMentionsOuterContainer>}
     </>
   );
 };

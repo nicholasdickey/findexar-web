@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { UserButton, SignInButton, SignedOut, SignedIn,RedirectToSignIn } from "@clerk/nextjs";
 import { useRouter } from 'next/router'
 import { styled,useTheme } from "styled-components";
+import useMediaQuery from '@mui/material/useMediaQuery';
 import MentionIcon from '@mui/icons-material/AlternateEmailOutlined';
 import TeamIcon from '@mui/icons-material/PeopleAltOutlined';
 import PlayerIcon from '@mui/icons-material/PersonPinOutlined';
@@ -228,6 +229,7 @@ const Team: React.FC<Props> = (props) => {
   //console.log("players", players);
   const router = useRouter();
   const theme = useTheme();
+  const isMobile= useMediaQuery('(max-width:1199px)');
  /* useEffect(() => {
     if (!view || view == "home")
       setLocalView("mentions");
@@ -340,7 +342,7 @@ const Team: React.FC<Props> = (props) => {
    }*/
   return (
     <div className="team">
-      <MainPanel>
+      {!isMobile&&<MainPanel>
         <CenterPanel>
           {pagetype == "team" ? <TeamPlayerMentions {...props} /> : <TeamPlayerMentions {...props} />}
 
@@ -350,8 +352,8 @@ const Team: React.FC<Props> = (props) => {
          
           {PlayersNav}
         </RightPanel>
-      </MainPanel>
-      <MainMobilePanel>
+      </MainPanel>}
+      {isMobile&&<MainMobilePanel>
 
         {pagetype == "team" && <SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> }, { name: "Mentions", icon: <MentionIcon /> }, { name: "Players", icon: <PlayerIcon /> }]} onChange={async (option: any) => { console.log(option); await onViewNav(option) }} selectedOptionName={view} />}
         {pagetype == "player" && <SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> }, { name: "Mentions", icon: <MentionIcon /> }, { name: "Players", icon: <PlayerIcon /> }]} onChange={async (option: any) => { console.log(option); await onViewNav(option); }} selectedOptionName={view} />}
@@ -365,7 +367,7 @@ const Team: React.FC<Props> = (props) => {
             <MobileTeamName>{teamName}</MobileTeamName>
             {PlayersNav}
           </MobilePlayersPanel>}
-      </MainMobilePanel>
+      </MainMobilePanel>}
     </div>
   );
 };
