@@ -809,7 +809,7 @@ const SinglePage: React.FC<Props> = (props) => {
                       }
                       else {
                         setLocalView("mentions")
-                        router.push(`/pub${params2}${tp2}`);
+                        router.push(`/pub${params}${tp2}`);
                       }
                     }} style={{ padding: 10 }} variant="outlined">{v == "readme" ? <HomeIcon /> : <HelpOutlineIcon />}&nbsp;&nbsp;{v == "readme" ? <span>Back to Home</span> : <span>Read Me</span>}</Button></Favorites>
                     <br /><br />
