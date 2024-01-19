@@ -321,6 +321,7 @@ const MobileAnswerText = styled.div`
     flex-direction:row;
     justify-content:center;
     align-items:center;
+    flex-wrap: wrap;
 
 `;
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
@@ -440,13 +441,7 @@ const Landing = () => {
 
         <OuterContainer>
             
-            {false && <StickyDiv>
-                <ButtonContainer><Button onClick={onClick} size="large" variant="outlined" href={`/pub${params}`}><InnerButton><h2>Enter Findexar</h2></InnerButton></Button></ButtonContainer>
-                <MobileButtonContainer><Button onClick={onClick} variant="outlined" sx={{ color: '0xFF0000' }} href={`/pub${params}`}><b>Enter Findexar</b></Button></MobileButtonContainer>
-
-
-
-            </StickyDiv>}
+   
 
             <ContainerWrap><TextContainer>
                 <h4>Do you want to know when your favorite athletes or teams are mentioned in the media?</h4>
@@ -454,11 +449,11 @@ const Landing = () => {
                     <NegativeAnswer  onMouseEnter={() => onHover('D-N1')}>
                         No, I am in the wrong place.
                     </NegativeAnswer>
-                    <PositiveAnswer  onClick={onClick} onMouseEnter={() => onHover('D-P1')}>
+                    <Link href={`/pub${params}`} onClick={onClick}><PositiveAnswer   onMouseEnter={() => onHover('D-P1')}>
 
-                        Yes,&nbsp;<Link  href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Link>
+                        Yes, &nbsp;<b>Enter Findexar</b>
 
-                    </PositiveAnswer>
+                    </PositiveAnswer></Link>
                 </ul>
 
                 <h4>Do you want to peruse an annotated real-time index of media mentions for NFL, NHL, MLB and NBA athletes and teams?</h4>
@@ -466,10 +461,12 @@ const Landing = () => {
                     <NegativeAnswer onClick={()=>onFarSide()}onMouseEnter={() => onHover('D-N2')}>
                         No, I am definitely in the wrong place. <a href="https://www.thefarside.com/">Take me to the Far Side.</a>
                     </NegativeAnswer>
-                    <PositiveAnswer  onClick={onClick} onMouseEnter={() => onHover('D-P2')}>
-                        Yes,&nbsp;<Link href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Link>
+                    <Link href={`/pub${params}`} onClick={onClick}>
+                        <PositiveAnswer  onClick={()=>onClick()} onMouseEnter={() => onHover('D-P2')}>
+                        Yes,&nbsp;<b>Enter Findexar</b>
 
                     </PositiveAnswer>
+                    </Link>
                 </ul>
 
                 <h4>Need the capability to monitor all media stories mentioning the athletes from your fantasy team?</h4>
@@ -479,10 +476,11 @@ const Landing = () => {
                         What&apos;s a &ldquo;fantasy team&ldquo;?
                     </NegativeAnswer>
 
+                    <Link href={`/pub${params}`} onClick={onClick}> 
                     <PositiveAnswer onClick={onClick} onMouseEnter={() => onHover('D-P31')}>
-                        Yes,&nbsp;<Link  href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Link>
+                        Yes,&nbsp;<b>Enter Findexar</b>
 
-                    </PositiveAnswer>
+                    </PositiveAnswer></Link>
                 </ul>
                 <p>
                     Effortlessly stay in touch with the latest news about your fantasy sports stars.
@@ -504,11 +502,11 @@ const Landing = () => {
                         No, I am in the wrong place.
                     </MobileAnswerText>
                 </MobileNegativeAnswer>
-                <MobilePositiveAnswer onClick={onClick} onMouseEnter={() => onHover('M-P1')}>
+                <Link href={`/pub${params}`} onClick={onClick}><MobilePositiveAnswer onClick={onClick} onMouseEnter={() => onHover('M-P1')}>
                     <MobileAnswerText>
-                        Yes, <Link  href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Link>
+                        Yes, <b>Enter Findexar</b>
                     </MobileAnswerText>
-                </MobilePositiveAnswer>
+                </MobilePositiveAnswer></Link>
 
                 <MobileContainerWrap>
                     <MobileTextContainer>
@@ -520,11 +518,11 @@ const Landing = () => {
                         No, I am definitely in the wrong place. <a href="https://www.thefarside.com/">Take me to the Far Side.</a>
                     </MobileAnswerText>
                 </MobileNegativeAnswer>
-                <MobilePositiveAnswer onClick={onClick} onMouseEnter={() => onHover('M-P2')}>
+                <Link href={`/pub${params}`} onClick={onClick}><MobilePositiveAnswer onClick={onClick} onMouseEnter={() => onHover('M-P2')}>
                     <MobileAnswerText>
-                        Yes, <Link href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Link>
+                        Yes, &nbsp;<b>Enter Findexar</b>
                     </MobileAnswerText>
-                </MobilePositiveAnswer>
+                </MobilePositiveAnswer></Link>
                 <MobileContainerWrap>
                     <MobileTextContainer>
                         <h4>Need the capability to monitor all media stories mentioning the athletes from your fantasy team?</h4>
@@ -535,11 +533,11 @@ const Landing = () => {
                     </MobileAnswerText>
                 </MobileNegativeAnswer>
 
-                <MobilePositiveAnswer onClick={onClick}  onMouseEnter={() => onHover('M-P3')}>
+                <Link href={`/pub${params}`} onClick={onClick}><MobilePositiveAnswer onClick={onClick}  onMouseEnter={() => onHover('M-P3')}>
                     <MobileAnswerText>
-                        Yes, <Link href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Link>
+                        Yes, &nbsp;<b>Enter Findexar</b>
                     </MobileAnswerText>
-                </MobilePositiveAnswer>
+                </MobilePositiveAnswer></Link>
                 <MobileContainerWrap>
                     <MobileTextContainer>
                         <p>
