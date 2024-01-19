@@ -1,54 +1,55 @@
-
 import React, { use, useCallback, useEffect, useState } from "react";
+//next
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Roboto } from 'next/font/google';
-import 'material-icons/iconfont/outlined.css';
 import Script from "next/script";
 import useSWR from 'swr';
-
-import { getCookie } from 'cookies-next';
-import { useSubscription } from "use-stripe-subscription";
+//styled-components
 import { styled, ThemeProvider } from "styled-components";
-import { Tabs, Tab, Alert } from '@mui/material'
+//mui
+import { Tabs, Tab, } from '@mui/material'
 import { ThemeProvider as MuiTP, createTheme } from '@mui/material/styles';
 import { blueGrey, cyan, teal } from '@mui/material/colors'
-import HomeIcon from '@mui/icons-material/HomeOutlined';
-import MentionIcon from '@mui/icons-material/AlternateEmailOutlined';
-import TeamIcon from '@mui/icons-material/PeopleAltOutlined';
-import ListIcon from '@mui/icons-material/ListOutlined';
-import StarOutlineIcon from '@mui/icons-material/StarOutline';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
-import LoginIcon from '@mui/icons-material/Login';
-import ContactSupportIcon from '@mui/icons-material/ContactSupport';
-import ModeNightTwoToneIcon from '@mui/icons-material/ModeNightOutlined';
-import LightModeTwoToneIcon from '@mui/icons-material/LightModeOutlined';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
+//mui icons
+import HomeIcon from '@mui/icons-material/HomeOutlined';
+import MentionIcon from '@mui/icons-material/AlternateEmailOutlined';
+import TeamIcon from '@mui/icons-material/PeopleAltOutlined';
+import ListIcon from '@mui/icons-material/ListOutlined';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import LoginIcon from '@mui/icons-material/Login';
+import ContactSupportIcon from '@mui/icons-material/ContactSupport';
+import ModeNightTwoToneIcon from '@mui/icons-material/ModeNightOutlined';
+import LightModeTwoToneIcon from '@mui/icons-material/LightModeOutlined';
+//clerk
 import { UserButton, SignInButton, SignedOut, SignedIn } from "@clerk/nextjs";
+//stripe
+import { useSubscription } from "use-stripe-subscription";
+//other
+import 'material-icons/iconfont/outlined.css';
+import { getCookie } from 'cookies-next';
+//local
 import { palette } from '@/lib/palette';
 import GlobalStyle from '@/components/globalstyles';
-
 import { LeagueTeamsKey, getLeagueTeams, recordEvent, setCookie } from '@/lib/api';
 import Team from './team-page';
-
 import Mentions from './league-mentions';
 import SecondaryTabs from "./secondary-tabs";
 import PlayerPhoto from "./player-photo";
 import SubscriptionMenu from "./subscription-menu";
 import Readme from "./readme";
 import Landing from "./landing";
+
+//styles
 const Header = styled.header`
   height: 100px;
   width: 100%;
-  //background-color: #333;
-  //color: #fff;
- //background-color: #263238;
   background-color:var(--header-bg);
   text-align: center;
   font-size: 40px;
@@ -56,447 +57,392 @@ const Header = styled.header`
   padding-bottom:10px;
   font-family: 'Roboto', sans-serif;
   a{
-      color: var(--header-title-color);// #fff;
+      color: var(--header-title-color);
       text-decoration: none;
       &:hover{
-        color:var(--highlight);// #4f8;
+        color:var(--highlight);
       }  
   }
   @media screen and (max-width: 1199px) {
-    height: 84px;
-    background-color:var(--mobile-header-bg);
-    a{
-      color: var(--mobile-header-title-color);// #fff;  
-    }
+      height: 84px;
+      background-color:var(--mobile-header-bg);
+      a{
+          color: var(--mobile-header-title-color);  
+      }
   }
 `;
 
 const ContainerWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
-  font-family: 'Roboto', sans-serif;
-  color:var(--text);
-  @media screen and (max-width: 1199px) {
-    display: none;
-  }
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    font-family: 'Roboto', sans-serif;
+    color:var(--text);
+    @media screen and (max-width: 1199px) {
+        display: none;
+    }
 `;
+
 const MobileContainerWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
-  color: #111;
-  font-family: 'Roboto', sans-serif;
-  border-top: 1px solid #ccc;
-  //margin-top: 10px;
-  @media screen and (min-width: 1200px) {
-    display: none;
-  }
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    color: #111;
+    font-family: 'Roboto', sans-serif;
+    border-top: 1px solid #ccc;
+    @media screen and (min-width: 1200px) {
+      display: none;
+    }
 `;
 
 const SideTeam = styled.div`
-  height: 40px;
-  //width: 300px; 
- // color: #aaa;
-  
- // text-align: center;
-  font-size: 16px;
-  padding-left:20px;
-  //margin: 10px;
-  border-left: 1px solid #aaa;
-  padding-bottom:35px;
+    height: 40px;
+    font-size: 16px;
+    padding-left:20px;
+    border-left: 1px solid #aaa;
+    padding-bottom:35px;
 `;
+
 const SideLeagueName = styled.div`
-  height: 40px;
-  width: 200px; 
- // color: #aea;
-  //text-align: center;
-  //padding-left:20px;
-  color:var(--text);
-  font-size: 20px;
-  //margin: 10px;
+    height: 40px;
+    width: 200px; 
+    color:var(--text);
+    font-size: 20px;
 `;
+
 const SelectedSideTeam = styled.div`
-  height: 40px;
-  //width: 300px;
- // color: #ff8 !important;
-  //text-align: center;
-  color:var(--selected);
-  font-size: 16px;
-  padding-left:20px;
-  //margin: 10px;
-  border-left: 1px solid #aaa;
-  a{
-    color:var(--selected) !important;
-    text-decoration: none;
-    &:hover{
-      color: var(--highlight);//#F8F;
+    height: 40px;
+    color:var(--selected);
+    font-size: 16px;
+    padding-left:20px;
+    border-left: 1px solid #aaa;
+    a{
+        color:var(--selected) !important;
+        text-decoration: none;
+        &:hover{
+            color: var(--highlight);
+        }
     }
-  
-  }
-  
 `;
+
 const League = styled.div`
-  height: 24px;
-  width: 100px; 
-  color: var(--leagues-text);
-  text-align: center;
-  //font-size: 18px;
-  margin: 0px;
-  padding-top:3px;
+    height: 24px;
+    width: 100px; 
+    color: var(--leagues-text);
+    text-align: center;
+    margin: 0px;
+    padding-top:3px;
 `;
 
 const SelectedLeague = styled.div`
-  height: 24px;
-  width: 100px;
-  color: var(--leagues-selected);
-  text-align: center;
-  //font-size: 18px;
-  margin: 0px;
-  padding-top:3px;
-  a{
-    color:var(--leagues-selected) !important;
-    text-decoration: none;
-    &:hover{
-      color:var(--leagues-highlight);// #4f8;
+    height: 24px;
+    width: 100px;
+    color: var(--leagues-selected);
+    text-align: center;
+    margin: 0px;
+    padding-top:3px;
+    a{
+        color:var(--leagues-selected) !important;
+        text-decoration: none;
+        &:hover{
+          color:var(--leagues-highlight);
+        }
     }
-  }
 `;
 
 const Leagues = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  align-items: center;
-  height: 28px;
-  width: 100%;
-  background-color:var(--leagues-bg);
-  color: #aaa;
-  text-align: center;
-  font-size: 17px;
-  margin: 0px;
-  a{
-    color: var(--leagues-text);
-    text-decoration: none;
-    &:hover{
-      color:var(--leagues-highlight);// #4f8;
-    } 
-  }
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 28px;
+    width: 100%;
+    background-color:var(--leagues-bg);
+    color: #aaa;
+    text-align: center;
+    font-size: 17px;
+    margin: 0px;
+    a{
+        color: var(--leagues-text);
+        text-decoration: none;
+        &:hover{
+            color:var(--leagues-highlight);
+        } 
+    }
 `;
 
 const LeftPanel = styled.div`
-  width:300px;
-  height:auto !important;
-  height:100%;
-  min-height: 200vw;
-  //border-right: 1px solid #ccc;
- // background-color:  #333;
-  background-color:var(--background);
-  display:flex;
-  flex-direction:column;
-  justify-content:flex-start;
-  align-items:flex-start; 
-  padding-top:18px;
-  padding-left:20px;
-  a{
-    color:var(--text);
-    //color: #ccc;
-
-    text-decoration: none;
-    &:hover{
-      color: var(--highlight);//#4f8;
+    width:300px;
+    height:auto !important;
+    height:100%;
+    min-height: 200vw;
+    background-color:var(--background);
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    align-items:flex-start; 
+    padding-top:18px;
+    padding-left:20px;
+    a{
+        color:var(--text);
+        text-decoration: none;
+        &:hover{
+            color: var(--highlight);
+        }
     }
-  }
 `;
+
 const LeagueIcon = styled.div`
-  //padding-bottom:20px;
-  min-height:26px;
-  //display:flex;
-  margin-top:-6px;
-  //flex-direction:column;
-  //justify-content:center;
+    min-height:26px;
+    margin-top:-6px;
+  
 `;
 const Favorites = styled.div`
-  margin-top:28px;
-  margin-left:22px;
-  width:100%;
-  height:40px;
-  //color:#aaa;
-  //align-self:center;
-  font-size:12px;
-  a{
-   // color: #fff;
-    text-decoration: none;
-    &:hover{
-      color: #4f8;
+    margin-top:28px;
+    margin-left:22px;
+    width:100%;
+    height:40px;
+    font-size:12px;
+    a{
+        text-decoration: none;
+        &:hover{
+          color: var(--highlight);
+        }
     }
-  }
 `;
+
 const LeftText = styled.div`
-  padding-top:28px;
-  //padding-left:22px;
-  padding-right:20px;
-  line-height:1.5;
-  //width:100%;
- // color:#bbb;
-  //align-self:center;
-  font-size:12px;
-  a{
-   // color: #fff;
-    text-decoration: none;
-    &:hover{
-      color: var(--highlight);//#4f8;
+    padding-top:28px;
+    padding-right:20px;
+    line-height:1.5;
+    font-size:12px;
+    a{
+        text-decoration: none;
+        &:hover{
+            color: var(--highlight);
+        }
     }
-  }
 `;
 
 const LeftMobilePanel = styled.div`
-  width:100%;
-  //background-color:  #333;
-  display:flex;
-  flex-direction:column;
-  //justify-content:center;
-  padding-left:20px;
-  align-items:flex-start; 
-  padding-top:18px;
-  a{
-    color: var(--text);
-    text-decoration: none;
-    &:hover{
-      color:var(--highlight);// #4f8;
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    padding-left:20px;
+    align-items:flex-start; 
+    padding-top:18px;
+    a{
+        color: var(--text);
+        text-decoration: none;
+        &:hover{
+            color:var(--highlight);
+        }
     }
-  }
 `;
+
 const Welcome = styled.div`
-  padding-top:18px;
-  //padding-left:22px;
-  //color:#aaa;
-  //align-self:center;
-  font-size:13px;
-  a{
-    //color: #fff;
-    text-decoration: none;
-    &:hover{
-      color: #4f8;
+    padding-top:18px;
+    font-size:13px;
+    a{
+      text-decoration: none;
+      &:hover{
+        color:var(--highlight);
+      }
     }
-  }
 `;
 
 const CenterPanel = styled.div`
-  position:relative;
-  width:100%;
-  height:100%;
+    position:relative;
+    width:100%;
+    height:100%;
 `;
 
 const MainPanel = styled.div`
-  display:flex;
-  position:relative;
-  flex-direction:row;
-  justify-content:flex-start;
- // width:100%;
-  height:100%;
+    display:flex;
+    position:relative;
+    flex-direction:row;
+    justify-content:flex-start;
+    height:100%;
 `;
-const MuiTabs = styled(Tabs)`
-  width:100%;
-  padding:0px;
-  margin:0px;
-  color: var(--mobile-leagues-text);
-  background-color:var(--mobile-leagues-bg);
 
+const MuiTabs = styled(Tabs)`
+    width:100%;
+    padding:0px;
+    margin:0px;
+    color: var(--mobile-leagues-text);
+    background-color:var(--mobile-leagues-bg);
 `;
+
 const Superhead = styled.div`
-  font-size: 18x;
-  margin-top:4px;
-  text-align:left;
-  //color: ${blueGrey[200]};
-  color:var(--header-title-color);
-  font-size:18px;
-  @media screen and (max-width: 1199px ){
-   display:none;
-  }
+    font-size: 18x;
+    margin-top:4px;
+    text-align:left;
+    color:var(--header-title-color);
+    font-size:18px;
+    @media screen and (max-width: 1199px ){
+        display:none;
+    }
 `;
+
 const SuperheadMobile = styled.div`
-  font-size: 17px;
-  margin-top:4px;
-  text-align:left;
-  color:var(--mobile-header-title-color);
-  
- // font-size:14px;
- // margin-bottom:10px;
-  //width:200px;
-  @media screen and (min-width: 1200px ){
-    display:none;
-  }
+    font-size: 17px;
+    margin-top:4px;
+    text-align:left;
+    color:var(--mobile-header-title-color); 
+    @media screen and (min-width: 1200px ){
+        display:none;
+    }
 `;
 
 const Subhead = styled.div`
-  font-size: 18x;
-  margin-top:4px;
-  text-align:left;
-  //color: ${blueGrey[200]};
-  color:var(--subheader-color);
-  font-size:18px;
-  @media screen and (max-width: 1199px ){
-   display:none;
-  }
+    font-size: 18x;
+    margin-top:4px;
+    text-align:left;
+    color:var(--subheader-color);
+    font-size:18px;
+    @media screen and (max-width: 1199px ){
+        display:none;
+    }
 `;
+
 const SubheadMobile = styled.div`
- // font-size: 17px;
-  margin-top:4px;
-  text-align:left;
-  color:var(--mobile-subheader-color);
-  
-  font-size:14px;
- // margin-bottom:10px;
-  //width:200px;
-  @media screen and (min-width: 1200px ){
-    display:none;
-  }
+    margin-top:4px;
+    text-align:left;
+    color:var(--mobile-subheader-color);    
+    font-size:14px;
+    @media screen and (min-width: 1200px ){
+        display:none;
+    }
 `;
 
 const HeaderTopline = styled.div`
-  display:flex;
-  height:100%;
-  flex-direction:row;
-  justify-content:space-between;
-  align-items:center;
-  color:var(--header-title-color);
- 
-  @media screen and (max-width: 1199px) {
-    //padding-top:28px;
-    font-size: 20px;
-    margin-bottom:0px;
-    color:var(--mobile-header-title-color);
- 
-  }
+    display:flex;
+    height:100%;
+    flex-direction:row;
+    justify-content:space-between;
+    align-items:center;
+    color:var(--header-title-color);
+    @media screen and (max-width: 1199px) {
+        font-size: 20px;
+        margin-bottom:0px;
+        color:var(--mobile-header-title-color); 
+    }
 `;
+
 const LeftContainer = styled.div`
-  width:100%;
-  display:flex;
-  flex-direction:row;
-  justify-content:flex-start;
-  //align-items:center;
+    width:100%;
+    display:flex;
+    flex-direction:row;
+    justify-content:flex-start;
 `;
+
 const HeaderLeft = styled.div`
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  //height:56px;
-  margin-left:20px;
-  //margin-right:20px;
-  @media screen and (max-width: 1199px) {
-    margin-left:0px;
-    margin-right:0px;
-  }
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    margin-left:20px;
+    @media screen and (max-width: 1199px) {
+        margin-left:0px;
+        margin-right:0px;
+    }
 `;
+
 const ContainerCenter = styled.div`
-  display:flex;
-  flex-direction:row;
-  justify-content:space-around;
-  align-items:center;
+    display:flex;
+    flex-direction:row;
+    justify-content:space-around;
+    align-items:center;
 `;
+
 const HeaderCenter = styled.div`
-  margin-left:60px;
-  display:flex;
-  flex-direction:column;
-  align-items: flex-start;
-  text-align: left;
-  @media screen and (max-width: 1199px) {
-    margin-left:0px;
-  }
+    margin-left:60px;
+    display:flex;
+    flex-direction:column;
+    align-items: flex-start;
+    text-align: left;
+    @media screen and (max-width: 1199px) {
+        margin-left:0px;
+    }
 `;
 const HeaderRight = styled.div`
-  //height:100%;
-  display:flex;
-  flex-direction:row;
-  justify-content:space-between;
-  align-items:center;
-  margin-right:30px;
-  width:80px;
- //margin-top:10px;
-  @media screen and (max-width: 1199px) {
-    margin-left:0px;
-    margin-right:16px;
+    display:flex;
+    flex-direction:row;
+    justify-content:space-between;
+    align-items:center;
+    margin-right:30px;
     width:80px;
-    
-  }
-  /*&.cl-avatarBox{
-    width:40px !important;
-    height:40px !important;
-  }
-  &.cl-formButtonPrimary {
-  font-size: 14px;
-  text-transform: none;
-  background-color: #611bbd;
-  width:40px;
-  height:40px;
-}*/
+    @media screen and (max-width: 1199px) {
+        margin-left:0px;
+        margin-right:16px;
+        width:80px;   
+    }
 `;
-const SmallButton=styled(Button)`
-  max-width:12px !important;
-  padding:0px;
+
+const SmallButton = styled(Button)`
+    max-width:12px !important;
+    padding:0px;
 `;
 
 const Photo = styled.div`
-  height:60px;
-  width:60px;
-  @media screen and (max-width: 1199px) {
-    height:40px;
-    width:40px;
-    margin-left:10px;
-  }
+    height:60px;
+    width:60px;
+    @media screen and (max-width: 1199px) {
+        height:40px;
+        width:40px;
+        margin-left:10px;
+    }
 `;
 
 const FLogo = styled.div`
-  margin-left:20px;
-  margin-right:20px;
-  @media screen and (max-width: 1199px) {
-    display:none;
-  }
+    margin-left:20px;
+    margin-right:20px;
+    @media screen and (max-width: 1199px) {
+        display:none;
+    }
 `;
 
 const FLogoMobile = styled.div`
-  margin-left:20px;
-  margin-right:20px;
-  @media screen and (min-width: 1200px) {
-    display:none;
-  }
+    margin-left:20px;
+    margin-right:20px;
+    @media screen and (min-width: 1200px) {
+        display:none;
+    }
 `;
 
 const SUserButton = styled(UserButton)`
 
 `;
 const PlayerNameGroup = styled.div`
-  display:flex;
-  flex-direction:row;
-  justify-content:flex-start;
-  align-items:center;
-  font-size: 28px;
-  //margin-left:20px;
-  margin-right:20px;
-  @media screen and (max-width: 1199px) {
-    font-size: 14px;
-    margin-right:0px;
-  }
+    display:flex;
+    flex-direction:row;
+    justify-content:flex-start;
+    align-items:center;
+    font-size: 28px;
+    margin-right:20px;
+    @media screen and (max-width: 1199px) {
+        font-size: 14px;
+        margin-right:0px;
+    }
 `;
 const PlayerName = styled.div`
- //margin-right:20px;
- text-align:left;
+    text-align:left;
 `;
+/*==========================================*/
 interface LeaguesNavProps {
-  selected:boolean;
+  selected: boolean;
 }
-const LeaguesTab = styled(Tab)<LeaguesNavProps>`
-   color:${({ selected }) => selected?'var(--mobile-leagues-selected)':'var(--mobile-leagues-text)'} !important;
+const LeaguesTab = styled(Tab) <LeaguesNavProps>`
+   color:${({ selected }) => selected ? 'var(--mobile-leagues-selected)' : 'var(--mobile-leagues-text)'} !important;
    :hover{
       color:var(--mobile-leagues-highlight) !important;
     
    }
 `;
+/*==========================================*/
 interface Props {
   disable?: boolean;
   dark?: number;
@@ -534,9 +480,6 @@ const SinglePage: React.FC<Props> = (props) => {
   const [subscriptionPrompt, setSubscriptionPrompt] = useState(false);
   const [dismiss, setDismiss] = useState(false);
   const [hardStop, setHardStop] = useState(false);
-  const [addList, setAddList] = useState(false);
-  const [favorites, setFavorites] = useState(false);
-  const [readme, setReadme] = useState(false);
   const [params, setParams] = useState("");
   const [params2, setParams2] = useState("");
   const [localUserId, setLocalUserId] = useState(userId);
@@ -545,26 +488,17 @@ const SinglePage: React.FC<Props> = (props) => {
   const [localTab, setLocalTab] = React.useState(tab);
   const [localMode, setLocalMode] = React.useState(mode);
 
-
-  //console.log("pageType:", localPageType)
-
-  const theme: string = localMode;
   const muiTheme = useTheme();
   const fullScreen = useMediaQuery(muiTheme.breakpoints.down('md'));
+
   useEffect(() => {
-    //if (theme != 'unknown') {
     document.body.setAttribute("data-theme", localMode);
-    // }
   }, [localMode]);
 
-  /*if(pagetype=="landing"){
-    return <Landing/>
-  }*/
-  // console.log("localLeague=", localLeague, "league=", league);
-  //const [redirect:(args: redirectToCheckoutArgs) => Promise<void>, setRedirect] = useState(null);
   useEffect(() => {
     setLocalTeam(team);
   }, [team]);
+
   useEffect(() => {
     setLocalPlayer(player);
   }, [player]);
@@ -585,8 +519,6 @@ const SinglePage: React.FC<Props> = (props) => {
     await setCookie({ name: 'mode', value: mode });
   }, []);
 
-  //console.log("==============>", subscriptionObject)
-  // if (subscriptionObject) {
   const {
     isLoaded,
     products,
@@ -594,13 +526,11 @@ const SinglePage: React.FC<Props> = (props) => {
     redirectToCheckout,
     redirectToCustomerPortal,
   } = subscriptionObject;
-  // console.log("isLoaded", isLoaded, subscription, products)
+
   useEffect(() => {
     console.log("useEffect", isLoaded, subscription, products)
     if (isLoaded && !freeUser) {
       if (!subscription && userId) {
-        //setRedirect(redirectToCheckout);
-        //time now in milliseconds:
         const now = new Date().getTime();
         const diff: number = (now - (+(createdAt || 0))) / 1000;
         console.log("no subscription", diff)
@@ -610,56 +540,30 @@ const SinglePage: React.FC<Props> = (props) => {
           setHardStop(true);
         }
         else if (diff > 24 * 3600) {
-          // axios.get(`${process.env.NEXT_PUBLIC_SERVER}/api/subscription/update-ping`);
           setSubscriptionPrompt(true);
-          //setHardStop(true);
         }
-        //redirectToCheckout({ price: products[0] }); // Fix: Pass the required argument
       }
-      //return null;
     }
   }, [isLoaded, subscription, products, userId, createdAt, freeUser]);
 
-  //}
-  /* const [localBreak, setLocalBreak] = useState("");
-   useEffect(() => {
-      //@ts-ignore
-     if (!window||!window.Clerk||!window.Clerk.user||!window.Clerk.user.id)  {
-       console.log("breaking local state")
-       setLocalBreak(randomstring());
-       return;
-     }
-     //@ts-ignore
-     const id = window.Clerk?.user.id;
-     console.log("id", id, localUserId);
-     if (id && id != localUserId) {
-       console.log('wc', id);
-       setLocalUserId(id);
-     }
-     //@ts-ignore
-   }, [userId, localBreak]);*/
-  //console.log("localUserId", localUserId);
   const router = useRouter();
-  useEffect(() => {
 
+  useEffect(() => {
     const query = router.query;
     console.log(`The page is now: ${router.pathname}`, query);
     const { tab: qtab = "", view: qview = "", ssr = [] } = query as { tab: string | null, view: string | null, ssr: string[] };
     let changed = false;
-
     setLocalTab(qtab as string);
-
     setLocalView(qview as string);
-
 
     let [arg1, arg2, arg3, arg4, arg5, arg6, arg7] = ssr;
     console.log("ARGS", arg1, arg2, arg3, arg4, arg5, arg6, arg7)
     let qpagetype = 'league';
     let qleague = '';
-    let qteam = '';//'buffalo-bills';
+    let qteam = '';
     let qplayer = '';
     qleague = arg2 || "";
-    //}
+
     if (arg3 == 'team') {
       qteam = arg4;
       qpagetype = "team";
@@ -671,7 +575,6 @@ const SinglePage: React.FC<Props> = (props) => {
     else if (arg3 == 'player') {
       qplayer = arg4;
     }
-    console.log("qtypes:", { qpagetype, qleague, qteam, qplayer });
     setLocalLeague(qleague);
     setLocalTeam(qteam);
     setLocalPlayer(qplayer);
@@ -684,7 +587,7 @@ const SinglePage: React.FC<Props> = (props) => {
     let params2 = ''
     let p: string[] = [];
     let p2: string[] = [];
-    console.log("parsed params", fbclid, utm_content, view, tab);
+
     if (fbclid)
       p.push(`fbclid=${fbclid}`);
     if (utm_content)
@@ -704,28 +607,22 @@ const SinglePage: React.FC<Props> = (props) => {
     if (!params)
       tp = tp.replace(/&/g, '?');
 
-
-    console.log("params:", utm_content, localView, params, params2);
     setParams(params);
     setParams2(params2)
     setTp(tp);
     setTp2(tp2);
   }, [fbclid, utm_content, localTab]);
 
-
   const leagueTeamsKey: LeagueTeamsKey = { func: "leagueTeams", league: localLeague || "", noLoad: pagetype == "landing" };
   const { data: teams, error, isLoading } = useSWR(leagueTeamsKey, getLeagueTeams);
-
-
-
   const [localView, setLocalView] = useState(view.toLowerCase());
+
   useEffect(() => {
-    console.log("view changed2", view, localView)
     setLocalView(view.toLowerCase());
   }, [view]);
+
   let v = (!localView || localView == "home") ? "mentions" : localView;
   v = v.toLowerCase();
-  
   const onLeagueNavClick = async (l: string) => {
     setLocalLeague(l);
     setLocalView('mentions');
@@ -736,20 +633,17 @@ const SinglePage: React.FC<Props> = (props) => {
       `{"fbclid":"${fbclid}","utm_content":"${utm_content}","league":"${l}"}`
     );
   }
-  console.log("League nav", params, tp)
   const LeaguesNav = leagues?.map((l: string, i: number) => {
     return l == localLeague ? <SelectedLeague key={`league-${i}`} ><Link href={`/pub/league/${l}${params}${tp}`} shallow onClick={async () => { await onLeagueNavClick(l) }} >{l}</Link></SelectedLeague> : <League key={`league-${i}`}><Link href={`/pub/league/${l}${params}${tp}`} shallow onClick={async () => { await onLeagueNavClick(l) }} >{l}</Link></League>
   });
   const MobileLeaguesNav = leagues?.map((l: string, i: number) => {
     //@ts-ignore
-    return <LeaguesTab selected={l==localLeague} key={`league-${i}`} label={l} onClick={() => { onLeagueNavClick(l).then(() => { }); router.replace(`/pub/league/${l}${params}${tp}`); }} />
+    return <LeaguesTab selected={l == localLeague} key={`league-${i}`} label={l} onClick={() => { onLeagueNavClick(l).then(() => { }); router.replace(`/pub/league/${l}${params}${tp}`); }} />
   })
   //@ts-ignore
   MobileLeaguesNav.unshift(<LeaguesTab selected={!localLeague} key={`league-${leagues?.length}`} icon={<HomeIcon />} onClick={() => { onLeagueNavClick('').then(() => { }); router.replace(`/pub${params}${tp}`); }} />)
   LeaguesNav.unshift(localLeague ? <League key={`league-${leagues?.length}`}><Link href={`/pub${params}${tp}`} shallow onClick={() => { onLeagueNavClick('').then(() => { }) }}><LeagueIcon><HomeIcon fontSize="medium" sx={{ m: 0.3 }} /></LeagueIcon></Link></League> : <SelectedLeague key={`league-${leagues?.length}`}><Link href={`/pub${params}${tp}`} shallow onClick={() => { onLeagueNavClick('').then(() => { }) }}><LeagueIcon><HomeIcon fontSize="medium" sx={{ m: 0.3 }} /></LeagueIcon></Link></SelectedLeague>)
-  //console.log("userId", localUserId);
   const selectedLeague = leagues?.findIndex((l: string) => l == localLeague) + 1;
-  //console.log("selectedLeague", selectedLeague)
 
   useEffect(() => {
     if (pagetype != 'landing') {
@@ -757,8 +651,8 @@ const SinglePage: React.FC<Props> = (props) => {
       recordEvent(sessionid as string || "", `single-page-time`, `{"fbclid":"${fbclid}","utm_content":"${utm_content}","time":"${t2 - t1 || 0}"}`).then(() => { });
     }
   }, [fbclid, pagetype, sessionid, t1]);
+
   useEffect(() => {
-    //if (!router.isReady) return;
     if (pagetype != 'landing') {
       try {
         recordEvent(sessionid as string || "", `single-page-loaded`, `{"fbclid":"${fbclid}","isbot":"${isbot}","league":"${league}", "team":"${team}", "player":"${player}", "pagetype":"${pagetype}", "view":"${view}", "userId":"${localUserId}", "utm_content":"${utm_content}"}`)
@@ -791,14 +685,9 @@ const SinglePage: React.FC<Props> = (props) => {
       return t.id == localTeam ? <SelectedSideTeam key={`sideteam-${i}`}>
         <Link onClick={async () => { await onTeamNav(t.id); }} href={`/pub/league/${localLeague}/team/${t.id}${params}${tp}`} shallow>{t.name}</Link></SelectedSideTeam> : <SideTeam key={`sideteam-${i}`}><Link onClick={async () => { onTeamNav(t.id) }} href={`/pub/league/${localLeague}/team/${t.id}${params}${tp}`} shallow>{t.name}</Link></SideTeam>
     });
-
-
-  // console.log("view", v)
-  // console.log("condition", localPageType == "league" && !localTeam)
   const onViewNav = async (option: { name: string, access: string }) => {
     console.log(option);
     setLocalView(option.name);
-
     router.replace(localLeague ? `/pub/league/${localLeague}?view=${encodeURIComponent(option.name.toLowerCase())}${params2}${tp2}` : `/pub?view=${encodeURIComponent(option.name.toLowerCase())}${params2}${tp2}`, undefined, { shallow: true })
     await recordEvent(sessionid as string || "",
       'view-nav',
@@ -806,23 +695,21 @@ const SinglePage: React.FC<Props> = (props) => {
     );
   }
   console.log("PAGE state:", { localUserId, v, localMode, localPageType, localLeague, localTeam, localPlayer, params, params2 })
-  useEffect(() => {
 
+  useEffect(() => {
     let mode = getCookie('mode');
     if (!mode) {
-       const matchMedia = window.matchMedia("(prefers-color-scheme: dark)");
-        const matches=matchMedia.matches;
-        document.body.setAttribute("data-theme", matchMedia.matches ? 'dark' : 'light');
-        setLocalMode(matchMedia.matches ? 'dark' : 'light');
-        console.log("Landing mode:", {mode, matches})
-
+      const matchMedia = window.matchMedia("(prefers-color-scheme: dark)");
+      const matches = matchMedia.matches;
+      document.body.setAttribute("data-theme", matchMedia.matches ? 'dark' : 'light');
+      setLocalMode(matchMedia.matches ? 'dark' : 'light');
     }
     else {
-        console.log("Landing mode cookie found:", mode)
-      if(mode!=localMode)
-        setLocalMode(mode); 
+      if (mode != localMode)
+        setLocalMode(mode);
     }
-}, []);
+  }, []);
+
   return (
     <>
       <Head>
@@ -839,7 +726,6 @@ const SinglePage: React.FC<Props> = (props) => {
         <meta property="og:image" content="https://findexar.com/image" />
         <meta property="findexar:verify" content="findexar" />
         <meta httpEquiv='X-UA-Compatible' content='IE=edge' />
-
         <meta name='viewport' content='width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no' />
         <link rel="apple-touch-icon" href="/apple-icon.png"></link>
         <meta name="theme-color" content={localMode == 'dark' ? palette.dark.colors.background : palette.light.colors.background} />
@@ -879,42 +765,32 @@ const SinglePage: React.FC<Props> = (props) => {
                     <FLogoMobile ><Link href={`/${params}`}><Avatar sx={{ bgcolor: cyan[800] }}>Fi</Avatar></Link></FLogoMobile>
                   </HeaderLeft>
                   <ContainerCenter>
-
                     <HeaderCenter>
-                    <Superhead>{(localPageType == "league" || localPageType == "landing") ? <Link href={`/pub${params}`}>FINDEXAR{localLeague ? ` : ${localLeague}` : ``}</Link>: !localTeam ? `${localLeague}` : localPlayer ? <PlayerNameGroup><PlayerName><Link href={`/pub/league/${localLeague}/team/${localTeam}${params}`}>{teamName}</Link></PlayerName> </PlayerNameGroup> : `${localLeague} : ${teamName}`}</Superhead> 
-                    <SuperheadMobile>{(localPageType == "league" || localPageType == "landing") ? <Link href={`/pub${params}`}>{localLeague ? ` ${localLeague}` : `FINDEXAR`}</Link>: !localTeam ? `${localLeague}` : localPlayer ? <PlayerNameGroup><PlayerName><Link href={`/pub/league/${localLeague}/team/${localTeam}${params}`}>{teamName}</Link></PlayerName> </PlayerNameGroup> : `${teamName}`}</SuperheadMobile> 
-                   
+                      <Superhead>{(localPageType == "league" || localPageType == "landing") ? <Link href={`/pub${params}`}>FINDEXAR{localLeague ? ` : ${localLeague}` : ``}</Link> : !localTeam ? `${localLeague}` : localPlayer ? <PlayerNameGroup><PlayerName><Link href={`/pub/league/${localLeague}/team/${localTeam}${params}`}>{teamName}</Link></PlayerName> </PlayerNameGroup> : `${localLeague} : ${teamName}`}</Superhead>
+                      <SuperheadMobile>{(localPageType == "league" || localPageType == "landing") ? <Link href={`/pub${params}`}>{localLeague ? ` ${localLeague}` : `FINDEXAR`}</Link> : !localTeam ? `${localLeague}` : localPlayer ? <PlayerNameGroup><PlayerName><Link href={`/pub/league/${localLeague}/team/${localTeam}${params}`}>{teamName}</Link></PlayerName> </PlayerNameGroup> : `${teamName}`}</SuperheadMobile>
                       {(localPageType == "league" || localPageType == "landing") && <div><Subhead>Annotated real-time index of media mentions for Fantasy Sports.</Subhead><SubheadMobile>Fantasy Sports Media Index</SubheadMobile></div>}
-
                       {localPageType == "player" && localPlayer && <div><Subhead>{localPlayer ? localPlayer : ''}</Subhead><SubheadMobile>{localPlayer ? localPlayer : ''}</SubheadMobile></div>}
-
                     </HeaderCenter>
                     {localPageType == "player" && localPlayer && <Photo><PlayerPhoto teamid={localTeam || ""} name={localPlayer || ""} /></Photo>}
-
                   </ContainerCenter>
-
                 </LeftContainer>
-
-                <HeaderRight>  <IconButton color={"inherit"} size="small"  onClick={async () => {
-
+                <HeaderRight>  <IconButton color={"inherit"} size="small" onClick={async () => {
                   await updateMode(localMode == "light" ? "dark" : "light");
                 }}>
                   {localMode == "dark" ? <LightModeTwoToneIcon fontSize="small" /> : <ModeNightTwoToneIcon fontSize="small" />}
                 </IconButton>
                   <SUserButton afterSignOutUrl="/" />
-                  {pagetype!='landing'&&!localUserId && <SignInButton><IconButton color={"inherit"}size="small" ><LoginIcon fontSize="small" /></IconButton></SignInButton>}
-
+                  {pagetype != 'landing' && !localUserId && <SignInButton><IconButton color={"inherit"} size="small" ><LoginIcon fontSize="small" /></IconButton></SignInButton>}
                 </HeaderRight>
               </HeaderTopline>
             </Header>
-            {pagetype == "landing" && <Landing />}
-            {pagetype !== "landing" && <ContainerWrap>
+           
+            <ContainerWrap>
               <Leagues>
-                {pagetype != "landing" && LeaguesNav}
+               {LeaguesNav}
               </Leagues>
-
-              <MainPanel>
-
+              {pagetype == "landing" && <Landing />}
+              {pagetype !== "landing" &&<MainPanel>
                 <LeftPanel>
                   {localLeague ? <><SideLeagueName>{localLeague}:</SideLeagueName> {TeamsNav}</> : <> <Welcome>
                     Welcome to Findexar!<br /><hr /><br />
@@ -926,30 +802,20 @@ const SinglePage: React.FC<Props> = (props) => {
                     in the media.<br /><br /><hr />
                     Powered by OpenAI.</Welcome>
                     <br /><br />
-
                     <Favorites><Button disabled={view == 'fav'} onClick={() => {
-
                       if (v != 'readme') {
                         setLocalView("readme")
-                        // setLocalPageType("Favorites");
-                        // setLocalLeague("");
-                        // setLocalTeam("");
-                        // setReadme(true);
                         router.push(`/pub?view=readme${params2}${tp2}`);
                       }
                       else {
-                        // setReadme(false);
                         setLocalView("mentions")
                         router.push(`/pub${params2}${tp2}`);
                       }
-
-
                     }} style={{ padding: 10 }} variant="outlined">{v == "readme" ? <HomeIcon /> : <HelpOutlineIcon />}&nbsp;&nbsp;{v == "readme" ? <span>Back to Home</span> : <span>Read Me</span>}</Button></Favorites>
                     <br /><br />
                     <LeftText><hr />Copyright &#169; 2024, Findexar, Inc.<br />Made in Minnesota. L&apos;Étoile du Nord.</LeftText>
                     {!localUserId && <LeftText>Click here to sign-in or sign-up: <br /><br /><br /><SignInButton><Button style={{ padding: 10 }} size="small" variant="outlined"><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></LeftText>}
                     <LeftText><hr />Contact: @findexar on X (Twitter)</LeftText>
-
                     <LeftText><br />League News Digests on X (Twitter):</LeftText>
                     <LeftText><Link href="https://twitter.com/nflpress_digest">NFL Digest</Link></LeftText>
                     <LeftText><Link href="https://twitter.com/nhl_digest">NHL Digest</Link></LeftText>
@@ -965,12 +831,11 @@ const SinglePage: React.FC<Props> = (props) => {
                   {v != "readme" && localPageType == "league" && !localTeam && <Mentions tp={tp} tp2={tp2} tab={localTab} sessionid={sessionid} params={params} params2={params2} league={localLeague || ""} noUser={!localUserId} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} view={v} setLocalTab={setLocalTab} />}
                   {v == 'readme' && <Readme />}
                 </CenterPanel>
-              </MainPanel>
-            </ContainerWrap>}
-            {pagetype != "landing" && <MobileContainerWrap>
+              </MainPanel>}
+            </ContainerWrap>
+            <MobileContainerWrap>
               <MuiTabs
                 value={selectedLeague}
-                // onChange={(event: React.SyntheticEvent, newValue: number) => { setLocalLeague(newValue ? leagues[newValue - 1] : '');setLocalView('mentions');router.replace(`/pub/league/${newValue ? leagues[newValue - 1] : ''}?view=Mentions`) }}
                 variant="scrollable"
                 scrollButtons={true}
                 allowScrollButtonsMobile
@@ -978,6 +843,8 @@ const SinglePage: React.FC<Props> = (props) => {
               >
                 {MobileLeaguesNav}
               </MuiTabs>
+              {pagetype == "landing" && <Landing />}
+              {pagetype !== "landing" &&<div>
               {localPageType == 'league' && !localLeague &&
                 <div>
                   <SecondaryTabs options={[{ name: "Mentions", icon: <MentionIcon fontSize="small" />, access: "pub" }, { name: "My Team", icon: <ListIcon fontSize="small" />, access: "pub" }, { name: "Readme", icon: <ContactSupportIcon fontSize="small" />, access: "pub" }]} onChange={async (option: any) => { await onViewNav(option); }} selectedOptionName={v} />
@@ -991,11 +858,11 @@ const SinglePage: React.FC<Props> = (props) => {
                 <div>
                   <SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> }, { name: "Mentions", icon: <MentionIcon /> }, { name: "My Team", icon: <ListIcon />, access: "pub" }]} onChange={async (option: any) => { await onViewNav(option) }} selectedOptionName={v} />
                   {v != "readme" && v == 'teams' &&
-                    <LeftMobilePanel><SideLeagueName>{localLeague}:</SideLeagueName>{TeamsNav}</LeftMobilePanel>}
-
+                    <LeftMobilePanel>
+                      <SideLeagueName>{localLeague}:</SideLeagueName>{TeamsNav}
+                    </LeftMobilePanel>}
                   <CenterPanel>
                     {subscriptionPrompt && !dismiss && <SubscriptionMenu hardStop={hardStop} setDismiss={setDismiss} {...subscriptionObject} />}
-
                     <Mentions tp={tp} tp2={tp2} tab={localTab} sessionid={sessionid} params={params} params2={params2} noUser={!localUserId} league={localLeague || ""} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} view={v} setLocalTab={setLocalTab} />
                   </CenterPanel>
                 </div>}
@@ -1005,7 +872,8 @@ const SinglePage: React.FC<Props> = (props) => {
                 </div>
               }
               {v == 'readme' && <Readme />}
-            </MobileContainerWrap>}
+              </div>}
+            </MobileContainerWrap>
           </ThemeProvider>
         </main>
       </MuiTP>
