@@ -504,7 +504,7 @@ const Landing = () => {
                 </MobileNegativeAnswer>
                 <Link href={`/pub${params}`} onClick={onClick}><MobilePositiveAnswer onClick={onClick} onMouseEnter={() => onHover('M-P1')}>
                     <MobileAnswerText>
-                        Yes, <b>Enter Findexar</b>
+                        Yes, &nbsp;<b>Enter Findexar</b>
                     </MobileAnswerText>
                 </MobilePositiveAnswer></Link>
 
