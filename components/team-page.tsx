@@ -211,11 +211,12 @@ interface Props {
   sessionid: string
   tp:string;
   tp2:string;
+  findexarxid:string;
 
 }
 
 const Team: React.FC<Props> = (props) => {
-  let { tp,tp2,sessionid, noUser, setDismiss, subscriptionPrompt, subscriptionObject, view, teams, dark, league, team, player, pagetype, teamName, setLocalPlayer, setLocalPageType, setLocalView, setLocalTeam,params, params2 } = props;
+  let { findexarxid,tp,tp2,sessionid, noUser, setDismiss, subscriptionPrompt, subscriptionObject, view, teams, dark, league, team, player, pagetype, teamName, setLocalPlayer, setLocalPageType, setLocalView, setLocalTeam,params, params2 } = props;
   // const [v, setV] = React.useState((!view || view.toLowerCase() == "home") ? "mentions" : view.toLowerCase());
  /* const [selectedTeam, setSelectedTeam] = React.useState(team);
   const [selectedPlayer, setSelectedPlayer] = React.useState(player);

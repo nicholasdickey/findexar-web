@@ -464,15 +464,14 @@ interface Props {
   t1: number;
   tab: string;
   mode: string;
+  findexarxid:string;
 }
 
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 
 const SinglePage: React.FC<Props> = (props) => {
+  let { findexarxid,mode, tab, t1, fbclid = "", sessionid = "", isfb, isbot, list, freeUser, createdAt, userId, utm_content, dark, leagues, league = "", team = "", pagetype = "league", player = "", view = "" } = props;
 
-
-
-  let { mode, tab, t1, fbclid = "", sessionid = "", isfb, isbot, list, freeUser, createdAt, userId, utm_content, dark, leagues, league = "", team = "", pagetype = "league", player = "", view = "" } = props;
   const [localTeam, setLocalTeam] = useState(team);
   const [localPlayer, setLocalPlayer] = useState(player);
   const [localPageType, setLocalPageType] = useState(pagetype || 'league');
@@ -490,7 +489,8 @@ const SinglePage: React.FC<Props> = (props) => {
 
   const muiTheme = useTheme();
   const fullScreen = useMediaQuery(muiTheme.breakpoints.down('md'));
-
+  const isMobile= useMediaQuery('(max-width:1199px)');
+  console.log("isMobile",isMobile);
   useEffect(() => {
     document.body.setAttribute("data-theme", localMode);
   }, [localMode]);
@@ -786,7 +786,7 @@ const SinglePage: React.FC<Props> = (props) => {
               </HeaderTopline>
             </Header>
            
-            <ContainerWrap>
+            {!isMobile&&<ContainerWrap>
               <Leagues>
                {LeaguesNav}
               </Leagues>
@@ -828,13 +828,13 @@ const SinglePage: React.FC<Props> = (props) => {
                 </LeftPanel>
                 <CenterPanel>
                   {subscriptionPrompt && !dismiss && <SubscriptionMenu hardStop={hardStop} setDismiss={setDismiss} {...subscriptionObject} />}
-                  {v != "readme" && (localPageType == "team" || localPageType == "player") && <Team tp={tp} tp2={tp2} sessionid={sessionid} params={params} params2={params2} noUser={!localUserId} setDismiss={setDismiss} subscriptionPrompt={subscriptionPrompt && !dismiss} subscriptionObject={subscriptionObject} view={v} teams={null} team={localTeam} league={localLeague} teamName={teamName} pagetype={localPageType} player={localPlayer} setLocalPlayer={setLocalPlayer} setLocalPageType={setLocalPageType} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} />}
-                  {v != "readme" && localPageType == "league" && !localTeam && <Mentions tp={tp} tp2={tp2} tab={localTab} sessionid={sessionid} params={params} params2={params2} league={localLeague || ""} noUser={!localUserId} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} view={v} setLocalTab={setLocalTab} />}
+                  {v != "readme" && (localPageType == "team" || localPageType == "player") && <Team  findexarxid={findexarxid} tp={tp} tp2={tp2} sessionid={sessionid} params={params} params2={params2} noUser={!localUserId} setDismiss={setDismiss} subscriptionPrompt={subscriptionPrompt && !dismiss} subscriptionObject={subscriptionObject} view={v} teams={null} team={localTeam} league={localLeague} teamName={teamName} pagetype={localPageType} player={localPlayer} setLocalPlayer={setLocalPlayer} setLocalPageType={setLocalPageType} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} />}
+                  {v != "readme" && localPageType == "league" && !localTeam && <Mentions findexarxid={findexarxid} tp={tp} tp2={tp2} tab={localTab} sessionid={sessionid} params={params} params2={params2} league={localLeague || ""} noUser={!localUserId} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} view={v} setLocalTab={setLocalTab} />}
                   {v == 'readme' && <Readme />}
                 </CenterPanel>
               </MainPanel>}
-            </ContainerWrap>
-            <MobileContainerWrap>
+            </ContainerWrap>}
+            {isMobile&&<MobileContainerWrap>
               <MuiTabs
                 value={selectedLeague}
                 variant="scrollable"
@@ -852,7 +852,7 @@ const SinglePage: React.FC<Props> = (props) => {
                   <CenterPanel>
                     {subscriptionPrompt && !dismiss && <SubscriptionMenu hardStop={hardStop} setDismiss={setDismiss} {...subscriptionObject} />}
 
-                    <Mentions tp={tp} tp2={tp2} tab={localTab} sessionid={sessionid} params={params} params2={params2} noUser={!localUserId} league={localLeague || ""} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} view={v} setLocalTab={setLocalTab} />
+                    <Mentions findexarxid={findexarxid} tp={tp} tp2={tp2} tab={localTab} sessionid={sessionid} params={params} params2={params2} noUser={!localUserId} league={localLeague || ""} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} view={v} setLocalTab={setLocalTab} />
                   </CenterPanel>
                 </div>}
               {localPageType == 'league' && localLeague &&
@@ -864,17 +864,17 @@ const SinglePage: React.FC<Props> = (props) => {
                     </LeftMobilePanel>}
                   <CenterPanel>
                     {subscriptionPrompt && !dismiss && <SubscriptionMenu hardStop={hardStop} setDismiss={setDismiss} {...subscriptionObject} />}
-                    <Mentions tp={tp} tp2={tp2} tab={localTab} sessionid={sessionid} params={params} params2={params2} noUser={!localUserId} league={localLeague || ""} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} view={v} setLocalTab={setLocalTab} />
+                    <Mentions findexarxid={findexarxid} tp={tp} tp2={tp2} tab={localTab} sessionid={sessionid} params={params} params2={params2} noUser={!localUserId} league={localLeague || ""} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} view={v} setLocalTab={setLocalTab} />
                   </CenterPanel>
                 </div>}
               {v != "readme" && (localPageType == 'team' || localPageType == 'player') &&
                 <div>
-                  <Team tp={tp} tp2={tp2} sessionid={sessionid} params={params} params2={params2} noUser={!localUserId} setDismiss={setDismiss} subscriptionPrompt={subscriptionPrompt && !dismiss} subscriptionObject={subscriptionObject} view={v} teams={<LeftMobilePanel>{TeamsNav}</LeftMobilePanel>} team={localTeam} league={localLeague} teamName={teamName} pagetype={localPageType} player={localPlayer} setLocalPlayer={setLocalPlayer} setLocalPageType={setLocalPageType} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} />
+                  <Team findexarxid={findexarxid} tp={tp} tp2={tp2} sessionid={sessionid} params={params} params2={params2} noUser={!localUserId} setDismiss={setDismiss} subscriptionPrompt={subscriptionPrompt && !dismiss} subscriptionObject={subscriptionObject} view={v} teams={<LeftMobilePanel>{TeamsNav}</LeftMobilePanel>} team={localTeam} league={localLeague} teamName={teamName} pagetype={localPageType} player={localPlayer} setLocalPlayer={setLocalPlayer} setLocalPageType={setLocalPageType} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} />
                 </div>
               }
               {v == 'readme' && <Readme />}
               </div>}
-            </MobileContainerWrap>
+            </MobileContainerWrap>}
           </ThemeProvider>
         </main>
       </MuiTP>

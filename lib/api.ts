@@ -390,3 +390,21 @@ export const setCookie = async ({ name,value }: SetCookieParams) => {
     return false;
   }
 }
+
+// SWR get a mentions
+export type GetAMentionKey = { type: string, findexarxid: string,noLoad:boolean };
+export const getAMention = async ({ type, findexarxid,noLoad }: GetAMentionKey) => {
+  try {
+    if(noLoad) return null;
+    console.log("api: fetchAMention",type,findexarxid)
+    let url = '';
+    url =  `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-mention?findexarxid=${findexarxid}`;
+    console.log("fetchAMention-url",url)
+    const res = await axios.get(url);
+    return res.data.mention;
+  }
+  catch (e) {
+    console.log("fetchAMention", e);
+    return false;
+  }
+}

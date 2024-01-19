@@ -80,11 +80,12 @@ interface Props {
     sessionid:string;
     tp:string;//tab &params
     tp2:string; //tab &params2
+    findexarxid:string;
    
 }
 
 const TeamPlayerMentions: React.FC<Props> = (props) => {
-    const { tp,league, team, teamName, noUser, player, ...rest } = props;
+    const { findexarxid,tp,league, team, teamName, noUser, player, ...rest } = props;
    // const [localTeam, setLocalTeam] = React.useState(team);
    // const [localPlayer, setLocalPlayer] = React.useState(player);
 
@@ -125,7 +126,7 @@ const TeamPlayerMentions: React.FC<Props> = (props) => {
     const Mentions = mentions?.map((m: any, i: number) => {
         const { league, type, team, teamName, name, date, url, findex, summary, findexarxid, fav } = m;
        // console.log("rendering mention", m,i)
-        return (<Mention tp={tp} noUser={noUser} mentionType="final" league={league} type={type} team={team} teamName={teamName} name={name} date={date} url={url} findex={findex} summary={summary} findexarxid={findexarxid} fav={fav} key={`team-mention${i}`} mutate={() => mutate()} {...rest} />)
+        return (<Mention tp={tp} noUser={noUser} league={league} type={type} team={team} teamName={teamName} name={name} date={date} url={url} findex={findex} summary={summary} findexarxid={findexarxid} fav={fav} key={`team-mention${i}`} mutate={() => mutate()} {...rest} />)
     })
 
     return (

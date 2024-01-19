@@ -278,7 +278,6 @@ const LocalDate = styled.div`
     font-size: 12px;
 `;
 interface Props {
-    mentionType: string;
     league: string;
     type: string;
     team: string;
@@ -286,7 +285,7 @@ interface Props {
     name: string;
     date: string;
     url: string;
-    findex: string;
+    findex?: string;
     summary: string;
     findexarxid: string;
     fav: number;
@@ -301,7 +300,7 @@ interface Props {
     tp:string;
 }
 
-const Mention: React.FC<Props> = ({ tp,sessionid, params, noUser, mentionType, league, type, team, teamName, name, date, url, findex, summary, findexarxid, fav, setLocalPageType, setLocalPlayer, setLocalLeague, setLocalTeam, mutate }) => {
+const Mention: React.FC<Props> = ({ tp,sessionid, params, noUser,  league, type, team, teamName, name, date, url, findex, summary, findexarxid, fav, setLocalPageType, setLocalPlayer, setLocalLeague, setLocalTeam, mutate }) => {
     const [expanded, setExpanded] = React.useState(false);
     const [localDate, setLocalDate] = React.useState(convertToUTCDateString(date));
     const [localFav, setLocalFav] = React.useState(fav);
@@ -323,7 +322,7 @@ const Mention: React.FC<Props> = ({ tp,sessionid, params, noUser, mentionType, l
     //if(!params)
     //    tp=tp.replace(/&/g,'?');
     //console.log("tp=",tp    )
-    let localUrl = /*mentionType == "top" ?*/ (type == 'person' ? `/pub/league/${league}/team/${team}/player/${name}${params}${tp}` : `/pub/league/${league}/team/${team}${params}${tp}`) /*: url*/;
+    let localUrl = (type == 'person' ? `/pub/league/${league}/team/${team}/player/${name}${params}${tp}` : `/pub/league/${league}/team/${team}${params}${tp}`) /*: url*/;
     const mentionsKey: MetaLinkKey = { func: "meta", findexarxid };
     const meta = useSWRImmutable(mentionsKey, getMetaLink).data;
     let digest = meta ? meta.digest.replace('<p>', '').replace('</p>', '') : "";

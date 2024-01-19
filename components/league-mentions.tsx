@@ -23,6 +23,7 @@ import {
 import Mention from "./mention";
 import TertiaryTabs from "./tertiary-tabs";
 import EmptyExplanation from "./empty-explanation";
+import MentionOverlay from "./mention-overlay";
 
 const MentionsOuterContainer = styled.div`
     display:flex;
@@ -315,9 +316,10 @@ interface Props {
   tp: string;
   tp2: string;
   setLocalTab: (tab: string) => void;
+  findexarxid: string;
 }
 
-const LeagueMentions: React.FC<Props> = ({ tp, tp2, tab, league, noUser, setLocalPageType, setLocalPlayer, setLocalLeague, setLocalTeam, setLocalView, view, params, params2, sessionid, setLocalTab }) => {
+const LeagueMentions: React.FC<Props> = ({ findexarxid,tp, tp2, tab, league, noUser, setLocalPageType, setLocalPlayer, setLocalLeague, setLocalTeam, setLocalView, view, params, params2, sessionid, setLocalTab }) => {
   console.log("league-mentions:", { league, noUser, view })
   const optionsKey: UserOptionsKey = { type: "options", noUser };
   const { data: options, error: optionsError, isLoading: optionsLoading, mutate: optionsMutate } = useSWR(optionsKey, getOptions);
@@ -326,6 +328,7 @@ const LeagueMentions: React.FC<Props> = ({ tp, tp2, tab, league, noUser, setLoca
   console.log("LeagueMentions league=", league)
   //const u=clerkClient.g
   useEffect(() => {
+    console.log("LeagueMentions useEffect")
     setNoLoadOverride(true);
   }, []);
 
@@ -386,7 +389,6 @@ const LeagueMentions: React.FC<Props> = ({ tp, tp2, tab, league, noUser, setLoca
 
     return (<Mention
       noUser={noUser}
-      mentionType="top"
       league={league}
       type={type}
       team={team}
@@ -444,6 +446,8 @@ const LeagueMentions: React.FC<Props> = ({ tp, tp2, tab, league, noUser, setLoca
           {view == 'mentions' && <TertiaryTabs options={[{ name: `${league ? league : 'Full'} Feed`, tab: 'all' }, { name: "My Feed", tab: "myteam" }, { name: "Favorites", tab: "fav" }]} onChange={async (option: any) => { await onTabNav(option); }} selectedOptionName={tab} />}
 
           <MentionsBody>
+          <MentionOverlay findexarxid={findexarxid} setDismiss={(dismiss:boolean)=>{setLocalView("mentions");}} tp={tp} league={league} type="mention" team="" teamName="" name="" fav={0} noUser={noUser} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} mutate={() => mutate()} params={params} sessionid={sessionid} />
+   
             {Mentions}
           </MentionsBody>
           {tab=='myteam'&&isReachingEnd?<EmptyExplanation type='myfeed' noUser={noUser}/>:tab=='fav'&&isReachingEnd?<EmptyExplanation type="fav" noUser={noUser}/>:<LoadMore
