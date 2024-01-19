@@ -86,6 +86,7 @@ const MobileTextContainer = styled.div`
 `
 const TextContainerCenter = styled.div`
     text-align:center;
+    color:var(--text);
    
 `;
 const MobileVContainer = styled.div`
