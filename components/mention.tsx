@@ -340,14 +340,14 @@ const Mention: React.FC<Props> = ({ tp, sessionid, params, noUser, league, type,
     //console.log("mention params:",params)
     //if(!params)
     //    tp=tp.replace(/&/g,'?');
-    //console.log("tp=",tp    )
-    const shareUrl = "https://findexar.com" + (type == 'person' ? `/pub/league/${league}/team/${team}/player/${name}${params}${tp}${tp.includes('?')?'&':'?'}id=${findexarxid}` : `/pub/league/${league}/team/${team}${params}${tp}${tp.includes('?')?'&':'?'}id=${findexarxid}`);
+    console.log("tp=",tp    )
+    const shareUrl = "https://findexar.com" + (type == 'person' ? `/pub/league/${league}/team/${team}/player/${name}${params}${tp}${params.includes('?')?'&':'?'}id=${findexarxid}` : `/pub/league/${league}/team/${team}${params}${tp}${params.includes('?')?'&':'?'}id=${findexarxid}`);
     let localUrl = (type == 'person' ? `/pub/league/${league}/team/${team}/player/${name}${params}${tp}` : `/pub/league/${league}/team/${team}${params}${tp}`) /*: url*/;
     const mentionsKey: MetaLinkKey = { func: "meta", findexarxid };
     const meta = useSWRImmutable(mentionsKey, getMetaLink).data;
     let digest = meta ? meta.digest.replace('<p>', '').replace('</p>', '') : "";
     // console.log("expanded:", {findexarxid,expanded, meta,fav});
-    console.log("MENTION", { url, localUrl, shareUrl })
+    //console.log("MENTION", { url, localUrl, shareUrl })
     useEffect(() => {
         try {
             setLocalDate(convertToReadableLocalTime(date));

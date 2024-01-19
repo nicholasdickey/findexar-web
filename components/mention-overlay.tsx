@@ -123,7 +123,7 @@ const MentionOverlay = ({findexarxid,setDismiss,...props}:Props) => {
       <DialogActions>
       <ContentWrap>
           <div autoFocus onClick={()=>{console.log("closeDialog");setOpen(false);}}>
-           <XContainer><XElement>X</XElement></XContainer> 
+           <XContainer><XElement>x</XElement></XContainer> 
           </div>  
           </ContentWrap>  
         </DialogActions>
