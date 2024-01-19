@@ -341,7 +341,7 @@ const Mention: React.FC<Props> = ({ tp, sessionid, params, noUser, league, type,
     //if(!params)
     //    tp=tp.replace(/&/g,'?');
     //console.log("tp=",tp    )
-    const shareUrl = "https://findexar.com" + (type == 'person' ? `/pub/league/${league}/team/${team}/player/${name}${params}${tp}?id=${findexarxid}` : `/pub/league/${league}/team/${team}${params}${tp}?id=${findexarxid}`);
+    const shareUrl = "https://findexar.com" + (type == 'person' ? `/pub/league/${league}/team/${team}/player/${name}${params}${tp}${tp.includes('?')?'&':'?'}id=${findexarxid}` : `/pub/league/${league}/team/${team}${params}${tp}${tp.includes('?')?'&':'?'}id=${findexarxid}`);
     let localUrl = (type == 'person' ? `/pub/league/${league}/team/${team}/player/${name}${params}${tp}` : `/pub/league/${league}/team/${team}${params}${tp}`) /*: url*/;
     const mentionsKey: MetaLinkKey = { func: "meta", findexarxid };
     const meta = useSWRImmutable(mentionsKey, getMetaLink).data;
