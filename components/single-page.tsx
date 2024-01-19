@@ -688,7 +688,7 @@ const SinglePage: React.FC<Props> = (props) => {
   const onViewNav = async (option: { name: string, access: string }) => {
     console.log(option);
     setLocalView(option.name);
-    router.replace(localLeague ? `/pub/league/${localLeague}?view=${encodeURIComponent(option.name.toLowerCase())}${params2}${tp2}` : `/pub?view=${encodeURIComponent(option.name.toLowerCase())}${params2}${tp2}`, undefined, { shallow: true })
+    router.replace(localLeague ? `/pub/league/${localLeague}?view=${encodeURIComponent(option.name.toLowerCase())}${params2}${tp2.replace('?','&')}` : `/pub?view=${encodeURIComponent(option.name.toLowerCase())}${params2}${tp2.replace('?','&')}`, undefined, { shallow: true })
     await recordEvent(sessionid as string || "",
       'view-nav',
       `{"fbclid":"${fbclid}","utm_content":"${utm_content}","view":"${option.name}"}`
@@ -806,11 +806,11 @@ const SinglePage: React.FC<Props> = (props) => {
                     <Favorites><Button disabled={view == 'fav'} onClick={() => {
                       if (v != 'readme') {
                         setLocalView("readme")
-                        router.push(`/pub?view=readme${params2}${tp2}`);
+                        router.push(`/pub?view=readme${params2}${tp2.replace('?','&')}`);
                       }
                       else {
                         setLocalView("mentions")
-                        router.push(`/pub${params}${tp2}`);
+                        router.push(`/pub${params}${tp2.replace('?','&')}`);
                       }
                     }} style={{ padding: 10 }} variant="outlined">{v == "readme" ? <HomeIcon /> : <HelpOutlineIcon />}&nbsp;&nbsp;{v == "readme" ? <span>Back to Home</span> : <span>Read Me</span>}</Button></Favorites>
                     <br /><br />

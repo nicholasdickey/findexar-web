@@ -248,7 +248,7 @@ const Team: React.FC<Props> = (props) => {
   }, [player, setLocalView]);*/
   const onViewNav = async (option: { name: string, access: string }) => {
     setLocalView(option.name.toLowerCase());
-    router.replace(`/pub/league/${league}/team/${team}?view=${encodeURIComponent(option.name.toLowerCase())}${params2}${tp2}`, undefined, { shallow: true });
+    router.replace(`/pub/league/${league}/team/${team}?view=${encodeURIComponent(option.name.toLowerCase())}${params2}${tp2.replace('?','&')}`, undefined, { shallow: true });
     await recordEvent(sessionid as string || "",
       'team-view-nav',
       `{"params":"${params}","view":"${option.name}"}`
