@@ -4,6 +4,7 @@ import { styled } from "styled-components";
 import Button from '@mui/material/Button';
 import { FetchedMentionsKey, fetchMentions } from '@/lib/api';
 import Mention from "./mention";
+import MentionOverlay from "./mention-overlay";
 
 const LoadMore = styled.div`
     width: 100%;
@@ -73,25 +74,27 @@ interface Props {
     setLocalPlayer: (player: string) => void;
     setLocalLeague: (league: string) => void;
     setLocalTeam: (team: string) => void;
-    params:string;
-    sessionid:string;
-    tp:string;//tab &params
-    tp2:string; //tab &params2
-    findexarxid:string;
-   
+    setLocalView: (view: string) => void;
+
+    params: string;
+    sessionid: string;
+    tp: string;//tab &params
+    tp2: string; //tab &params2
+    findexarxid: string;
+
 }
 
 const TeamPlayerMentions: React.FC<Props> = (props) => {
-    const { findexarxid,tp,league, team, teamName, noUser, player, ...rest } = props;
-   // const [localTeam, setLocalTeam] = React.useState(team);
-   // const [localPlayer, setLocalPlayer] = React.useState(player);
+    const { setLocalPageType, setLocalView, setLocalLeague, setLocalTeam, setLocalPlayer, params, sessionid, findexarxid, tp, league, team, teamName, noUser, player, ...rest } = props;
+    // const [localTeam, setLocalTeam] = React.useState(team);
+    // const [localPlayer, setLocalPlayer] = React.useState(player);
 
-    console.log("teamPlayerMentions", {team, teamName, player,noUser})
+    console.log("teamPlayerMentions", { team, teamName, player, noUser })
     const fetchMentionsKey = (pageIndex: number, previousPageData: any): FetchedMentionsKey | null => {
-       // console.log("getMentionsKey=", pageIndex, previousPageData)
-        let key: FetchedMentionsKey = { type: "FetchedMentions", teamid: team || "", name: player || "", noUser, page: pageIndex, league, myteam: 0,noLoad:false };
-         console.log("getTeamPlayerMentionsKey=>>>",key)
-        
+        // console.log("getMentionsKey=", pageIndex, previousPageData)
+        let key: FetchedMentionsKey = { type: "FetchedMentions", teamid: team || "", name: player || "", noUser, page: pageIndex, league, myteam: 0, noLoad: false };
+        console.log("getTeamPlayerMentionsKey=>>>", key)
+
         if (previousPageData && !previousPageData.length) return null // reached the end
         return key;
     }
@@ -99,7 +102,7 @@ const TeamPlayerMentions: React.FC<Props> = (props) => {
     const { data, error: mentionsError, mutate, size, setSize, isValidating, isLoading } = useSWRInfinite(fetchMentionsKey, fetchMentions, { initialSize: 1, })
     const mentions = data ? [].concat(...data) : [];
     //console.log("LOADED MENTIONS FROM FALLBACK",{isValidating,isLoading,mentions})
- 
+
 
     const isLoadingMore =
         isLoading || (size > 0 && data && typeof data[size - 1] === "undefined");
@@ -108,24 +111,24 @@ const TeamPlayerMentions: React.FC<Props> = (props) => {
         isEmpty || (data && data[data.length - 1]?.length < 25);
     const isRefreshing = isValidating && data && data.length === size;
 
-   /* useEffect(() => {
-        if (team != localTeam) {
-            setLocalTeam(team);
-           // setSize(0);
-        }
-        
-    },[team]);
-    useEffect(() => {
-        if (player != localPlayer) {
-            setLocalPlayer(player);
-           // setSize(0);
-        }
-    },[player]);*/
-    
+    /* useEffect(() => {
+         if (team != localTeam) {
+             setLocalTeam(team);
+            // setSize(0);
+         }
+         
+     },[team]);
+     useEffect(() => {
+         if (player != localPlayer) {
+             setLocalPlayer(player);
+            // setSize(0);
+         }
+     },[player]);*/
+
     const Mentions = mentions?.map((m: any, i: number) => {
         const { league, type, team, teamName, name, date, url, findex, summary, findexarxid, fav } = m;
-       // console.log("rendering mention", m,i)
-        return (<Mention tp={tp} noUser={noUser} league={league} type={type} team={team} teamName={teamName} name={name} date={date} url={url} findex={findex} summary={summary} findexarxid={findexarxid} fav={fav} key={`team-mention${i}`} mutate={() => mutate()} {...rest} />)
+        // console.log("rendering mention", m,i)
+        return (<Mention sessionid={sessionid} params={params} setLocalLeague={setLocalLeague} setLocalPlayer={setLocalPlayer} setLocalTeam={setLocalTeam} setLocalPageType={setLocalPageType} tp={tp} noUser={noUser} league={league} type={type} team={team} teamName={teamName} name={name} date={date} url={url} findex={findex} summary={summary} findexarxid={findexarxid} fav={fav} key={`team-mention${i}`} mutate={() => mutate()} {...rest} />)
     })
 
     return (
@@ -135,22 +138,33 @@ const TeamPlayerMentions: React.FC<Props> = (props) => {
                     <TeamName>{teamName}  </TeamName>
                 </TeamHeader>}
                 <MainPanel>
+                    <MentionOverlay
+                        findexarxid={findexarxid}
+                        setDismiss={(dismiss: boolean) => { setLocalView("mentions"); }}
+                        tp={tp} fav={0} noUser={noUser}
+                        setLocalPageType={setLocalPageType}
+                        setLocalPlayer={setLocalPlayer}
+                        setLocalLeague={setLocalLeague}
+                        setLocalTeam={setLocalTeam}
+                        mutate={() => mutate()}
+                        params={params}
+                        sessionid={sessionid} />
                     <TeamDetailsBody>
                         {Mentions}
                     </TeamDetailsBody>
-                   
-                        <LoadMore
-                        // disabled={isLoadingMore || isReachingEnd}
 
-                        ><Button style={{ padding: 4, marginTop: 20 }} onClick={() => setSize(size + 1)} variant="outlined">
-                                {isLoadingMore
-                                    ? "loading..."
-                                    : isReachingEnd
-                                        ? "no more mentions"
-                                        : "load more"}
-                            </Button>
-                        </LoadMore>
-                    
+                    <LoadMore
+                    // disabled={isLoadingMore || isReachingEnd}
+
+                    ><Button style={{ padding: 4, marginTop: 20 }} onClick={() => setSize(size + 1)} variant="outlined">
+                            {isLoadingMore
+                                ? "loading..."
+                                : isReachingEnd
+                                    ? "no more mentions"
+                                    : "load more"}
+                        </Button>
+                    </LoadMore>
+
                 </MainPanel>
             </div>
         </div>

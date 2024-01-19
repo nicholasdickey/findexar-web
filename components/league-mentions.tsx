@@ -449,7 +449,7 @@ const LeagueMentions: React.FC<Props> = ({ findexarxid,tp, tp2, tab, league, noU
           {view == 'mentions' && <TertiaryTabs options={[{ name: `${league ? league : 'Full'} Feed`, tab: 'all' }, { name: "My Feed", tab: "myteam" }, { name: "Favorites", tab: "fav" }]} onChange={async (option: any) => { await onTabNav(option); }} selectedOptionName={tab} />}
 
           <MentionsBody>
-          <MentionOverlay findexarxid={findexarxid} setDismiss={(dismiss:boolean)=>{setLocalView("mentions");}} tp={tp} league={league} type="mention" team="" teamName="" name="" fav={0} noUser={noUser} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} mutate={() => mutate()} params={params} sessionid={sessionid} />
+          <MentionOverlay findexarxid={findexarxid} setDismiss={(dismiss:boolean)=>{setLocalView("mentions");}} tp={tp}  fav={0} noUser={noUser} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} mutate={() => mutate()} params={params} sessionid={sessionid} />
    
             {Mentions}
           </MentionsBody>
@@ -518,6 +518,8 @@ const LeagueMentions: React.FC<Props> = ({ findexarxid,tp, tp2, tab, league, noU
 
           {(view == 'mentions' || view == 'fav') &&
             <>
+             <MentionOverlay findexarxid={findexarxid} setDismiss={(dismiss:boolean)=>{setLocalView("mentions");}} tp={tp} fav={0} noUser={noUser} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} mutate={() => mutate()} params={params} sessionid={sessionid} />
+   
               {Mentions}
               <MobileLoadMore >
               {tab=='myteam'&&isReachingEnd?<EmptyExplanation type="myfeed" noUser={noUser}/>:tab=='fav'&&isReachingEnd?<EmptyExplanation type="fav" noUser={noUser}/>:<LoadMore

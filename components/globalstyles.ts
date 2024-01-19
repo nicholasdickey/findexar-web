@@ -42,6 +42,7 @@ const lightValues = css`
     --mobile-leagues-text:${({ theme }) => theme.light.colors.mobileLeaguesText};
     --mobile-leagues-selected:${({ theme }) => theme.light.colors.mobileLeaguesSelected};
     --mobile-leagues-highlight:${({ theme }) => theme.light.colors.mobileLeaguesHighlight};
+    --xColor:${({ theme }) => theme.light.colors.xColor};
 
 `;
 const darkValues = css`
@@ -87,6 +88,7 @@ const darkValues = css`
     --mobile-leagues-text:${({ theme }) => theme.dark.colors.mobileLeaguesText};
     --mobile-leagues-selected:${({ theme }) => theme.dark.colors.mobileLeaguesSelected};
     --mobile-leagues-highlight:${({ theme }) => theme.dark.colors.mobileLeaguesHighlight};
+    --xColor:${({ theme }) => theme.dark.colors.xColor};
     
 `;
 

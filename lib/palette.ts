@@ -47,6 +47,7 @@ export const palette = {
             mobileLeaguesText:blueGrey[900],
             mobileLeaguesSelected:yellow[900],
             mobileLeaguesHighlight:amber[900], 
+            xColor:yellow[200],
         }
 
     },
@@ -95,6 +96,7 @@ export const palette = {
             mobileLeaguesText:blueGrey[50],
             mobileLeaguesSelected:yellow[300],
             mobileLeaguesHighlight:amber[600], 
+            xColor:yellow[200],
         }
     },
 }
