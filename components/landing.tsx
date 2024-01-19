@@ -269,7 +269,7 @@ const PositiveAnswer = styled.div`
     width:600px;
     border:1px solid var(--qwiket-border-new);
     border-radius:15px;
-    padding:8px;
+    //padding:8px;
     text-align: center;
     &:hover{
         color:var(--highlight);
@@ -307,7 +307,7 @@ const MobilePositiveAnswer = styled.div`
     width:300px;
     border:1px solid var(--qwiket-border-new);
     border-radius:15px;
-    padding:10px;
+  //  padding:10px;
   
     
     display:flex;
@@ -452,7 +452,7 @@ const Landing = () => {
                     </NegativeAnswer>
                     <Link href={`/pub${params}`} onClick={onClick}><PositiveAnswer   onMouseEnter={() => onHover('D-P1')}>
 
-                        Yes, &nbsp;<b>Enter Findexar</b>
+                        Yes, &nbsp;<b>Enter Findexar.</b>
 
                     </PositiveAnswer></Link>
                 </ul>
@@ -464,7 +464,7 @@ const Landing = () => {
                     </NegativeAnswer>
                     <Link href={`/pub${params}`} onClick={onClick}>
                         <PositiveAnswer  onClick={()=>onClick()} onMouseEnter={() => onHover('D-P2')}>
-                        Yes,&nbsp;<b>Enter Findexar</b>
+                        Yes,&nbsp;<b>Enter Findexar.</b>
 
                     </PositiveAnswer>
                     </Link>
@@ -479,7 +479,7 @@ const Landing = () => {
 
                     <Link href={`/pub${params}`} onClick={onClick}> 
                     <PositiveAnswer onClick={onClick} onMouseEnter={() => onHover('D-P31')}>
-                        Yes,&nbsp;<b>Enter Findexar</b>
+                        Yes,&nbsp;<b>Enter Findexar.</b>
 
                     </PositiveAnswer></Link>
                 </ul>
@@ -505,7 +505,7 @@ const Landing = () => {
                 </MobileNegativeAnswer>
                 <Link href={`/pub${params}`} onClick={onClick}><MobilePositiveAnswer onClick={onClick} onMouseEnter={() => onHover('M-P1')}>
                     <MobileAnswerText>
-                        Yes, &nbsp;<b>Enter Findexar</b>
+                        Yes, &nbsp;<b>Enter Findexar.</b>
                     </MobileAnswerText>
                 </MobilePositiveAnswer></Link>
 
@@ -521,7 +521,7 @@ const Landing = () => {
                 </MobileNegativeAnswer>
                 <Link href={`/pub${params}`} onClick={onClick}><MobilePositiveAnswer onClick={onClick} onMouseEnter={() => onHover('M-P2')}>
                     <MobileAnswerText>
-                        Yes, &nbsp;<b>Enter Findexar</b>
+                        Yes, &nbsp;<b>Enter Findexar.</b>
                     </MobileAnswerText>
                 </MobilePositiveAnswer></Link>
                 <MobileContainerWrap>
@@ -536,7 +536,7 @@ const Landing = () => {
 
                 <Link href={`/pub${params}`} onClick={onClick}><MobilePositiveAnswer onClick={onClick}  onMouseEnter={() => onHover('M-P3')}>
                     <MobileAnswerText>
-                        Yes, &nbsp;<b>Enter Findexar</b>
+                        Yes, &nbsp;<b>Enter Findexar.</b>
                     </MobileAnswerText>
                 </MobilePositiveAnswer></Link>
                 <MobileContainerWrap>
