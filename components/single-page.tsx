@@ -715,6 +715,7 @@ const SinglePage: React.FC<Props> = (props) => {
       <Head>
         <title>Findexar</title>
         <link rel="canonical" href="https://www.findexar.com/" />
+        {pagetype!='landing'&&<meta name="robots" content="noindex,nofollow" />}
         <meta property="og:description" content="Real-time annotated media mentions index for Fantasy Sports." />
         <meta name="title" content="Findexar" />
         <meta property="og:title" content="Findexar" />
