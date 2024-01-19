@@ -78,6 +78,7 @@ const MobileTextContainer = styled.div`
     width: 250px;
     line-height: 1.5;
     font-family: 'Roboto', sans-serif;
+    color:var(--text);
     @media screen and (min-width: 1200px) {
         display: none;
     }
@@ -207,13 +208,13 @@ const StickyDiv = styled.div`
    
 `;
 const InnerButton = styled.div`
-    margin-top:0px;
-    margin-bottom:2px;
+  //  margin-top:0px;
+   // margin-bottom:2px;
     color:var(--text);
    // padding-top:2px;
-    padding-left: 5px;
-    padding-right:2px;
-    font-size:18px;
+    //padding-left: 5px;
+    //padding-right:2px;
+    //font-size:18px;
     &:hover{
         color:var(--highlight);
         background-color:var(--highBackground) ;
@@ -255,6 +256,10 @@ const NegativeAnswer = styled.div`
 
 `;
 const PositiveAnswer = styled.div`
+    display:flex;
+    flex-direction:row;
+    justify-content:center;
+    align-items:center;
     margin-top:10px;
     margin-bottom:50px;
     color:var(--text);
@@ -312,6 +317,11 @@ const MobilePositiveAnswer = styled.div`
 const MobileAnswerText = styled.div`
     width:300px;
     text-align: center;
+    display:flex;
+    flex-direction:row;
+    justify-content:center;
+    align-items:center;
+
 `;
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 
@@ -444,9 +454,9 @@ const Landing = () => {
                     <NegativeAnswer  onMouseEnter={() => onHover('D-N1')}>
                         No, I am in the wrong place.
                     </NegativeAnswer>
-                    <PositiveAnswer  onMouseEnter={() => onHover('D-P1')}>
+                    <PositiveAnswer  onClick={onClick} onMouseEnter={() => onHover('D-P1')}>
 
-                        Yes,&nbsp;<Button onClick={onClick} href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
+                        Yes,&nbsp;<Link  href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Link>
 
                     </PositiveAnswer>
                 </ul>
@@ -456,8 +466,8 @@ const Landing = () => {
                     <NegativeAnswer onClick={()=>onFarSide()}onMouseEnter={() => onHover('D-N2')}>
                         No, I am definitely in the wrong place. <a href="https://www.thefarside.com/">Take me to the Far Side.</a>
                     </NegativeAnswer>
-                    <PositiveAnswer onMouseEnter={() => onHover('D-P2')}>
-                        Yes,&nbsp;<Button onClick={onClick} href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
+                    <PositiveAnswer  onClick={onClick} onMouseEnter={() => onHover('D-P2')}>
+                        Yes,&nbsp;<Link href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Link>
 
                     </PositiveAnswer>
                 </ul>
@@ -469,8 +479,8 @@ const Landing = () => {
                         What&apos;s a &ldquo;fantasy team&ldquo;?
                     </NegativeAnswer>
 
-                    <PositiveAnswer onMouseEnter={() => onHover('D-P31')}>
-                        Yes,&nbsp;<Button onClick={onClick} href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
+                    <PositiveAnswer onClick={onClick} onMouseEnter={() => onHover('D-P31')}>
+                        Yes,&nbsp;<Link  href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Link>
 
                     </PositiveAnswer>
                 </ul>
@@ -494,9 +504,9 @@ const Landing = () => {
                         No, I am in the wrong place.
                     </MobileAnswerText>
                 </MobileNegativeAnswer>
-                <MobilePositiveAnswer onMouseEnter={() => onHover('M-P1')}>
+                <MobilePositiveAnswer onClick={onClick} onMouseEnter={() => onHover('M-P1')}>
                     <MobileAnswerText>
-                        Yes,<Button onClick={onClick} href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
+                        Yes, <Link  href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Link>
                     </MobileAnswerText>
                 </MobilePositiveAnswer>
 
@@ -510,9 +520,9 @@ const Landing = () => {
                         No, I am definitely in the wrong place. <a href="https://www.thefarside.com/">Take me to the Far Side.</a>
                     </MobileAnswerText>
                 </MobileNegativeAnswer>
-                <MobilePositiveAnswer onMouseEnter={() => onHover('M-P2')}>
+                <MobilePositiveAnswer onClick={onClick} onMouseEnter={() => onHover('M-P2')}>
                     <MobileAnswerText>
-                        Yes,<Button onClick={onClick} href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
+                        Yes, <Link href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Link>
                     </MobileAnswerText>
                 </MobilePositiveAnswer>
                 <MobileContainerWrap>
@@ -525,9 +535,9 @@ const Landing = () => {
                     </MobileAnswerText>
                 </MobileNegativeAnswer>
 
-                <MobilePositiveAnswer  onMouseEnter={() => onHover('M-P3')}>
+                <MobilePositiveAnswer onClick={onClick}  onMouseEnter={() => onHover('M-P3')}>
                     <MobileAnswerText>
-                        Yes,<Button onClick={onClick} href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Button>
+                        Yes, <Link href={`/pub${params}`}><InnerButton><b>Enter Findexar</b></InnerButton></Link>
                     </MobileAnswerText>
                 </MobilePositiveAnswer>
                 <MobileContainerWrap>
