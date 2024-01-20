@@ -434,9 +434,6 @@ const Landing = () => {
         } catch (x) {
             console.log('recordEvent', x);
         }
-
-
-
     }
     return (
         <OuterContainer>

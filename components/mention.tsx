@@ -366,7 +366,7 @@ const Mention: React.FC<Props> = ({ tp, sessionid, params, noUser, league, type,
             setLocalPageType('team');
         await recordEvent(sessionid as string || "",
             'mention-nav',
-            `{"params":"${params}","name":"${name}"}`
+            `{"params":"${params}","name":"${name}","sessionid":"${sessionid}"}`
         );
     }
     const enableRedirect = () => {
@@ -380,9 +380,27 @@ const Mention: React.FC<Props> = ({ tp, sessionid, params, noUser, league, type,
             }
         }
     }
+    const onExtended = async (on:boolean) => {
+     
+        await recordEvent(sessionid as string || "",
+            'mention-extended',
+            `{"on":"${on}","params":"${params}"}`
+        );
+    }
+    const onHover = (label: string) => {
+        try {
+            //setLoading(true);
+            recordEvent(sessionid as string || "", `mention-hover`, `{"label","${label}","params":"${params}"}`)
+                .then((r: any) => {
+                    console.log("recordEvent", r);
+                });
+        } catch (x) {
+            console.log('recordEvent', x);
+        }
+    }
     return (
         <>
-            <MentionWrap hideit={hide}>
+            <MentionWrap hideit={hide}  onMouseEnter={() => onHover('desktop')}>
 
 
                 <MentionSummary>
@@ -413,7 +431,9 @@ const Mention: React.FC<Props> = ({ tp, sessionid, params, noUser, league, type,
 
                         <Icon onClick={
                             async (e) => {
-                                setExpanded(!expanded);
+                                const ne=!expanded
+                                setExpanded(ne);
+                                await onExtended(ne);
                             }}
                             className="material-icons-outlined">{!expanded ? "expand_more" : "expand_less"}</Icon>
 
@@ -437,7 +457,7 @@ const Mention: React.FC<Props> = ({ tp, sessionid, params, noUser, league, type,
 
                 </MentionSummary>
             </MentionWrap>
-            <MobileMentionWrap hideit={hide}>
+            <MobileMentionWrap hideit={hide}  onMouseEnter={() => onHover('mobile')}>
 
 
                 <MentionSummary>
@@ -469,7 +489,9 @@ const Mention: React.FC<Props> = ({ tp, sessionid, params, noUser, league, type,
 
                         <Icon onClick={
                             async (e) => {
-                                setExpanded(!expanded);
+                                const ne=!expanded;
+                                setExpanded(ne);
+                                await onExtended(ne);
                             }}
                             className="material-icons-outlined">{!expanded ? "expand_more" : "expand_less"}</Icon>
 
