@@ -327,7 +327,7 @@ const MobileAnswerText = styled.div`
 `;
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 
-let s=false;
+let s = false;
 
 const Landing = () => {
     const [fbclid, setFbclid] = useState("");
@@ -342,9 +342,9 @@ const Landing = () => {
     useEffect(() => {
         const listener = () => {
             if (window.scrollY > 0) {
-                if (!scrolled&&!s) {
+                if (!scrolled && !s) {
                     try {
-                        s=true;
+                        s = true;
                         setScrolled(true);
                         recordEvent("", `landing-scrolled`, `{"fbclid":"${fbclid}", "utm_content":"${utm_content}"}`)
                             .then((r: any) => {
@@ -357,9 +357,9 @@ const Landing = () => {
                 setScrolled(true);
             }
         }
-        window.addEventListener('scroll',listener );
+        window.addEventListener('scroll', listener);
         return () => window.removeEventListener("scroll", listener);
-    }, [fbclid,utm_content,scrolled]);
+    }, [fbclid, utm_content, scrolled]);
 
 
     useEffect(() => {
@@ -384,10 +384,10 @@ const Landing = () => {
         }
         setParams(params);
     }, [router.isReady, router.query]);
-    
+
     useEffect(() => {
-        if (!router.isReady||!params) return;
-     
+        if (!router.isReady || !params) return;
+
         try {
             recordEvent("", `landing-loaded`, `{"fbclid":"${fbclid}", "utm_content":"${utm_content}"}`)
                 .then((r: any) => {
@@ -397,7 +397,7 @@ const Landing = () => {
             console.log('recordEvent', x);
         }
 
-    }, [params,router.isReady]);
+    }, [params, router.isReady]);
 
     const theme = useTheme();
     const onClick = () => {
@@ -424,7 +424,7 @@ const Landing = () => {
         }
 
     }
-    const onHover = (label:string) => {
+    const onHover = (label: string) => {
         try {
             //setLoading(true);
             recordEvent("", `hover`, `{"label","${label}","fbclid":"${fbclid}", "utm_content":"${utm_content}"}`)
@@ -439,58 +439,55 @@ const Landing = () => {
 
     }
     return (
-
         <OuterContainer>
-            
-   
+            <ContainerWrap>
+                <TextContainer>
+                    <h4>Do you want to know when your favorite athletes or teams are mentioned in the media?</h4>
+                    <ul>
+                        <NegativeAnswer onMouseEnter={() => onHover('D-N1')}>
+                            No, I am in the wrong place.
+                        </NegativeAnswer>
+                        <Link href={`/pub${params}`} onClick={onClick}><PositiveAnswer onMouseEnter={() => onHover('D-P1')}>
 
-            <ContainerWrap><TextContainer>
-                <h4>Do you want to know when your favorite athletes or teams are mentioned in the media?</h4>
-                <ul>
-                    <NegativeAnswer  onMouseEnter={() => onHover('D-N1')}>
-                        No, I am in the wrong place.
-                    </NegativeAnswer>
-                    <Link href={`/pub${params}`} onClick={onClick}><PositiveAnswer   onMouseEnter={() => onHover('D-P1')}>
+                            Yes, &nbsp;<b>Enter Findexar.</b>
 
-                        Yes, &nbsp;<b>Enter Findexar.</b>
+                        </PositiveAnswer></Link>
+                    </ul>
 
-                    </PositiveAnswer></Link>
-                </ul>
+                    <h4>Do you want to peruse an annotated real-time index of media mentions for NFL, NHL, MLB and NBA athletes and teams?</h4>
+                    <ul>
+                        <NegativeAnswer onClick={() => onFarSide()} onMouseEnter={() => onHover('D-N2')}>
+                            No, I am definitely in the wrong place. <a href="https://www.thefarside.com/">Take me to the Far Side.</a>
+                        </NegativeAnswer>
+                        <Link href={`/pub${params}`} onClick={onClick}>
+                            <PositiveAnswer onClick={() => onClick()} onMouseEnter={() => onHover('D-P2')}>
+                                Yes,&nbsp;<b>Enter Findexar.</b>
 
-                <h4>Do you want to peruse an annotated real-time index of media mentions for NFL, NHL, MLB and NBA athletes and teams?</h4>
-                <ul>
-                    <NegativeAnswer onClick={()=>onFarSide()}onMouseEnter={() => onHover('D-N2')}>
-                        No, I am definitely in the wrong place. <a href="https://www.thefarside.com/">Take me to the Far Side.</a>
-                    </NegativeAnswer>
-                    <Link href={`/pub${params}`} onClick={onClick}>
-                        <PositiveAnswer  onClick={()=>onClick()} onMouseEnter={() => onHover('D-P2')}>
-                        Yes,&nbsp;<b>Enter Findexar.</b>
+                            </PositiveAnswer>
+                        </Link>
+                    </ul>
 
-                    </PositiveAnswer>
-                    </Link>
-                </ul>
+                    <h4>Need the capability to monitor all media stories mentioning the athletes from your fantasy team?</h4>
+                    <ul>
+                        <NegativeAnswer onMouseEnter={() => onHover('D-N3')}>
 
-                <h4>Need the capability to monitor all media stories mentioning the athletes from your fantasy team?</h4>
-                <ul>
-                    <NegativeAnswer onMouseEnter={() => onHover('D-N3')}>
+                            What&apos;s a &ldquo;fantasy team&ldquo;?
+                        </NegativeAnswer>
 
-                        What&apos;s a &ldquo;fantasy team&ldquo;?
-                    </NegativeAnswer>
+                        <Link href={`/pub${params}`} onClick={onClick}>
+                            <PositiveAnswer onClick={onClick} onMouseEnter={() => onHover('D-P31')}>
+                                Yes,&nbsp;<b>Enter Findexar.</b>
 
-                    <Link href={`/pub${params}`} onClick={onClick}> 
-                    <PositiveAnswer onClick={onClick} onMouseEnter={() => onHover('D-P31')}>
-                        Yes,&nbsp;<b>Enter Findexar.</b>
+                            </PositiveAnswer></Link>
+                    </ul>
+                    <p>
+                        Effortlessly stay in touch with the latest news about your fantasy sports stars.
+                        Create &ldquo;My Team&rdquo; &mdash; a custom list of your Fantasy Team athletes,
+                        and Findexar will track and index media mentions of them from over
+                        a hundred different sources.<br /><br />
+                        Alternatively, browse leagues, teams, and athletes to quickly scroll through their media mentions.</p>
 
-                    </PositiveAnswer></Link>
-                </ul>
-                <p>
-                    Effortlessly stay in touch with the latest news about your fantasy sports stars.
-                    Create &ldquo;My Team&rdquo; &mdash; a custom list of your Fantasy Team athletes,
-                    and Findexar will track and index media mentions of them from over
-                    a hundred different sources.<br /><br />
-                    Alternatively, browse leagues, teams, and athletes to quickly scroll through their media mentions.</p>
-
-            </TextContainer>
+                </TextContainer>
             </ContainerWrap>
             <MobileVContainer>
                 <MobileContainerWrap>
@@ -528,13 +525,13 @@ const Landing = () => {
                     <MobileTextContainer>
                         <h4>Need the capability to monitor all media stories mentioning the athletes from your fantasy team?</h4>
                     </MobileTextContainer></MobileContainerWrap>
-                <MobileNegativeAnswer  onMouseEnter={() => onHover('M-N3')}>
+                <MobileNegativeAnswer onMouseEnter={() => onHover('M-N3')}>
                     <MobileAnswerText>
                         What&apos;s a &ldquo;fantasy team&ldquo;?
                     </MobileAnswerText>
                 </MobileNegativeAnswer>
 
-                <Link href={`/pub${params}`} onClick={onClick}><MobilePositiveAnswer onClick={onClick}  onMouseEnter={() => onHover('M-P3')}>
+                <Link href={`/pub${params}`} onClick={onClick}><MobilePositiveAnswer onClick={onClick} onMouseEnter={() => onHover('M-P3')}>
                     <MobileAnswerText>
                         Yes, &nbsp;<b>Enter Findexar.</b>
                     </MobileAnswerText>

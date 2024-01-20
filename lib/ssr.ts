@@ -11,8 +11,9 @@ import {
 
 import {
     recordEvent, getLeagues,
-    LeagueTeamsKey, getLeagueTeams, TeamPlayersKey, getTeamPlayers, DetailsKey, getDetails,
-    MentionsKey, getMentions, TrackerListMembersKey, FavoritesKey, FetchedMentionsKey
+    LeagueTeamsKey, getLeagueTeams, TeamPlayersKey, getTeamPlayers, DetailsKey, 
+    MentionsKey,  TrackerListMembersKey, FavoritesKey, FetchedMentionsKey,
+    GetAMentionKey, getAMention
 } from '@/lib/api'
 const api_key = process.env.LAKE_API_KEY
 
@@ -70,10 +71,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
         let player = '';
         let list = '';
         let findexarxid=id||"";
-        //let access = arg1;
-       // if (arg1 == 'league') {
-            league = arg2|| "";
-        //}
+        league = arg2|| "";
         if (arg3 == 'team') {
             team = arg4;
             pagetype = "team";
@@ -138,7 +136,11 @@ const ssr = async (context: GetServerSidePropsContext) => {
         let fetchMentions = [];
        
         console.log("========== ========= SSR CHECKPOINT 3:", new Date().getTime() - t1, "ms");
-      
+        const getAMentionKey:GetAMentionKey={type:"GetAMention",findexarxid:findexarxid,noLoad:findexarxid!==""?false:true};
+        let amention=null;
+        if(findexarxid){
+            amention=await getAMention(getAMentionKey);
+        }
         console.log("VIEW:", view,"team:",team,"player:",player,"league:",league,"userId",userId,"options:",options,"keyMentions:",keyMentions)
         if (team) {
             console.log("in team")
@@ -195,6 +197,8 @@ const ssr = async (context: GetServerSidePropsContext) => {
         fallback[unstable_serialize(favoritesKey)] = favorites;
         fallback[unstable_serialize({ type: "options", noUser: userId ? false : true })] = options;
         fallback[unstable_serialize(trackerListMembersKey)] = trackerListMembers;
+        fallback[unstable_serialize(getAMentionKey)] = amention;
+        
         fallback[us(page => {
             const keyFetchedMentions: FetchedMentionsKey = { type: "FetchedMentions", teamid: team || "", name: player || "", noUser: userId ? false : true, page: page, league: league || "", myteam: tab=='myteam' ? 1 : 0,noLoad: view != 'mentions'&&tab!='fav' }
            // console.log("FETCHED MENTIONS KEY:", keyFetchedMentions);

@@ -37,7 +37,7 @@ import { getCookie } from 'cookies-next';
 //local
 import { palette } from '@/lib/palette';
 import GlobalStyle from '@/components/globalstyles';
-import { LeagueTeamsKey, getLeagueTeams, recordEvent, setCookie } from '@/lib/api';
+import { LeagueTeamsKey, getLeagueTeams, recordEvent, setCookie,GetAMentionKey,getAMention } from '@/lib/api';
 import Team from './team-page';
 import Mentions from './league-mentions';
 import SecondaryTabs from "./secondary-tabs";
@@ -709,33 +709,51 @@ const SinglePage: React.FC<Props> = (props) => {
         setLocalMode(mode);
     }
   }, []);
-
+  console.log("==>",findexarxid)
+  const key:GetAMentionKey={type:"GetAMention",findexarxid:findexarxid,noLoad:findexarxid!==""?false:true};
+  const{ data: amention }= useSWR(key, getAMention)
+  const {summary:amentionSummary="",league:amentionLeague="",team:amentionTeam="",name:amentionPlayer="",image:amentionImage="",date:amentionDate=""} =amention?amention:{};
+  let ogUrl='';
+  if(amention&&amentionLeague&&amentionTeam&&amentionPlayer)
+    ogUrl=`${process.env.NEXT_PUBLIC_SERVER}pub/league/${amentionLeague}/team/${amentionTeam}/player/${amentionPlayer}?id=${findexarxid}`;
+  else if(amention&&amentionLeague&&amentionTeam)
+    ogUrl=`${process.env.NEXT_PUBLIC_SERVER}pub/league/${amentionLeague}/team/${amentionTeam}?id=${findexarxid}`;
+  else if(amention&&amentionLeague)
+    ogUrl=`${process.env.NEXT_PUBLIC_SERVER}pub/league/${amentionLeague}?id=${findexarxid}`;
+  else if(amention)
+    ogUrl=`${process.env.NEXT_PUBLIC_SERVER}pub?id=${findexarxid}`;
+  else
+    ogUrl=`${process.env.NEXT_PUBLIC_SERVER}`;
+  let ogDescription=amentionSummary?amentionSummary:"Real-time annotated media mentions index for Fantasy Sports.";
+  let ogImage=amentionImage?amentionImage:"https://findexar.com/FiLogo.png";
+  
+  console.log("==>",{findexarxid,ogUrl,ogDescription,ogImage})
   return (
     <>
       <Head>
         <title>Findexar</title>
-        <link rel="canonical" href="https://www.findexar.com/" />
+        <link rel="canonical" href={ogUrl} />
         {pagetype!='landing'&&<meta name="robots" content="noindex,nofollow" />}
-        <meta property="og:description" content="Real-time annotated media mentions index for Fantasy Sports." />
+        <meta property="og:description" content={ogDescription} />
         <meta name="title" content="Findexar" />
         <meta property="og:title" content="Findexar" />
-        <meta name="description" content="Real-time annotated media mentions index for Fantasy Sports." />
+        <meta name="description" content={ogDescription} />
         <meta property="og:type" content="website" />
         <meta property="fb:appid" content="358234474670240" />
         <meta property="og:site_name" content="Findexar.com" />
-        <meta property="og:url" content={process.env.NEXT_PUBLIC_SERVER} />
-        <meta property="og:image" content="https://findexar.com/image" />
+        <meta property="og:url" content={ogUrl} />
+        <meta property="og:image" content={ogImage} />
         <meta property="findexar:verify" content="findexar" />
         <meta httpEquiv='X-UA-Compatible' content='IE=edge' />
         <meta name='viewport' content='width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no' />
-        <link rel="apple-touch-icon" href="/apple-icon.png"></link>
+        <link rel="apple-touch-icon" href="/FiLogo.png"></link>
         <meta name="theme-color" content={localMode == 'dark' ? palette.dark.colors.background : palette.light.colors.background} />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         {(pagetype != 'league' || league || team || player) && <meta name="robots" content="noindex,nofollow" />}
         <link
           rel="shortcut icon"
           type="image/png"
-          href={"/blue-bell.png"}
+          href={"/FiLogo.png"}
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
