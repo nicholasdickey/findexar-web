@@ -725,7 +725,7 @@ const SinglePage: React.FC<Props> = (props) => {
   else
     ogUrl=`${process.env.NEXT_PUBLIC_SERVER}`;
   let ogDescription=amentionSummary?amentionSummary:"Real-time annotated media mentions index for Fantasy Sports.";
-  let ogImage=amentionImage?amentionImage:"https://findexar.com/FiLogo.png";
+  let ogImage=amentionImage?amentionImage:"https://findexar.com/findexar-logo.png";
   
   console.log("==>",{findexarxid,amention,ogUrl,ogDescription,ogImage})
   return (
