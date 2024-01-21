@@ -37,7 +37,7 @@ import { getCookie, hasCookie } from 'cookies-next';
 //local
 import { palette } from '@/lib/palette';
 import GlobalStyle from '@/components/globalstyles';
-import { LeagueTeamsKey, getLeagueTeams, recordEvent, setCookie, GetAMentionKey, getAMention } from '@/lib/api';
+import { LeagueTeamsKey, getLeagueTeams, recordEvent, setCookie, AMentionKey, getAMention } from '@/lib/api';
 import Team from './team-page';
 import Mentions from './league-mentions';
 import SecondaryTabs from "./secondary-tabs";
@@ -717,7 +717,7 @@ const SinglePage: React.FC<Props> = (props) => {
     }
   }, []);
   console.log("==>", localFindexarxid)
-  const key: GetAMentionKey = { type: "GetAMention", findexarxid: localFindexarxid, noLoad: localFindexarxid !== "" ? false : true };
+  const key: AMentionKey = { type: "AMention", findexarxid: localFindexarxid, noLoad: localFindexarxid !== "" ? false : true };
   const { data: amention } = useSWR(key, getAMention)
   const { summary: amentionSummary = "", league: amentionLeague = "", type="",team: amentionTeam = "", teamName:amentionTeamName="",name: amentionPlayer = "", image: amentionImage = "", date: amentionDate = "" } = amention ? amention : {};
   let ogUrl = '';
@@ -804,7 +804,7 @@ const SinglePage: React.FC<Props> = (props) => {
                     <HeaderCenter>
                       <Superhead>{(localPageType == "league" || localPageType == "landing") ? <Link href={`/pub${params}`}>FINDEXAR{localLeague ? ` : ${localLeague}` : ``}</Link> : !localTeam ? `${localLeague}` : localPlayer ? <PlayerNameGroup><PlayerName><Link href={`/pub/league/${localLeague}/team/${localTeam}${params}`}>{teamName}</Link></PlayerName> </PlayerNameGroup> : `${localLeague} : ${teamName}`}</Superhead>
                       <SuperheadMobile>{(localPageType == "league" || localPageType == "landing") ? <Link href={`/pub${params}`}>{localLeague ? ` ${localLeague}` : `FINDEXAR`}</Link> : !localTeam ? `${localLeague}` : localPlayer ? <PlayerNameGroup><PlayerName><Link href={`/pub/league/${localLeague}/team/${localTeam}${params}`}>{teamName}</Link></PlayerName> </PlayerNameGroup> : `${teamName}`}</SuperheadMobile>
-                      {(localPageType == "league" || localPageType == "landing") && <div><Subhead>Sports Media Tracker</Subhead><SubheadMobile>Sports Media Tracker</SubheadMobile></div>}
+                      {(localPageType == "league" || localPageType == "landing") && <div><Subhead>Sports News Index</Subhead><SubheadMobile>Sports News Index</SubheadMobile></div>}
                       {localPageType == "player" && localPlayer && <div><Subhead>{localPlayer ? localPlayer : ''}</Subhead><SubheadMobile>{localPlayer ? localPlayer : ''}</SubheadMobile></div>}
                     </HeaderCenter>
                     {localPageType == "player" && localPlayer && <Photo><PlayerPhoto teamid={localTeam || ""} name={localPlayer || ""} /></Photo>}

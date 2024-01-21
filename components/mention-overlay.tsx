@@ -11,7 +11,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import { GetAMentionKey,getAMention, recordEvent } from '@/lib/api';
+import { AMentionKey,getAMention, recordEvent,removeAMention } from '@/lib/api';
 import Mention from './mention';
 
 const ContentWrap = styled.div`
@@ -83,6 +83,17 @@ const XElement = styled.div`
     color:#fff;
   
 `;
+const RElement = styled.div`
+    width: 20px;
+    height:20px;
+    display: flex;
+    flex-direction: row;
+    justify-content:flex-end;
+    align-items:center;
+    font-size:28px;
+   // background-color:#444;
+    color:#f44;
+`;
 const TitleWrap = styled.div`
     color:#fff !important;
 `;
@@ -115,11 +126,12 @@ interface Props {
 const MentionOverlay = ({findexarxid,setDismiss,...props}:Props) => {
     const [open, setOpen] = React.useState(false);
     const [xid, setXid] = React.useState<string>(findexarxid||"");
-    const key:GetAMentionKey={type:"GetAMention",findexarxid:xid,noLoad:xid!==""?false:true};
+    const key:AMentionKey={type:"AMention",findexarxid:xid,noLoad:xid!==""?false:true};
     const{ data: amention, error, isLoading }= useSWR(key, getAMention)
     const {date,url,summary,fav,type,league,team,teamName,name}=amention||{};
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const admin=props.params&&props.params.includes('x17nz')?true:false;
     console.log("dialog render, open=",{open,findexarxid,type,league,team,teamName,name});
     const router = useRouter();
     const linkType=team?'final':'top';
@@ -167,7 +179,13 @@ const MentionOverlay = ({findexarxid,setDismiss,...props}:Props) => {
       window.removeEventListener('keydown', keyDownHandler);
     };
   }, []);
-
+  const remove=async ()=>{
+    if(admin){
+      await removeAMention(key);
+      setOpen(false);
+      setDismiss(true);
+    }
+  }
 
     return <Dialog disableEscapeKeyDown={true} open={open} fullScreen={fullScreen} PaperProps={{
         style: {
@@ -182,6 +200,9 @@ const MentionOverlay = ({findexarxid,setDismiss,...props}:Props) => {
           <div autoFocus onClick={()=>{handleClose();}}>
            <XContainer><XElement>x</XElement></XContainer> 
           </div>  
+          {admin&&<div autoFocus onClick={()=>{remove();}}>
+           <XContainer><RElement>R</RElement></XContainer> 
+          </div>} 
           </ContentWrap>  
         </DialogActions>
       <ContentWrap>

@@ -218,7 +218,7 @@ const ArticleDigest = styled.div`
 const ImageWrapper = styled.div`
   margin-top:20px;
   flex: 1 1 auto;
-  max-width: 66%;
+  max-width: 100%;
 `;
 const Topline = styled.div`
     display:flex;

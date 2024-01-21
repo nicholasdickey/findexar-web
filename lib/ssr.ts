@@ -13,7 +13,7 @@ import {
     recordEvent, getLeagues,
     LeagueTeamsKey, getLeagueTeams, TeamPlayersKey, getTeamPlayers, DetailsKey, 
     MentionsKey,  TrackerListMembersKey, FavoritesKey, FetchedMentionsKey,
-    GetAMentionKey, getAMention, MetaLinkKey, getMetaLink
+    AMentionKey, getAMention, MetaLinkKey, getMetaLink
 } from '@/lib/api'
 const api_key = process.env.LAKE_API_KEY
 
@@ -136,7 +136,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
         let fetchMentions = [];
        
         console.log("========== ========= SSR CHECKPOINT 3:", new Date().getTime() - t1, "ms");
-        const getAMentionKey:GetAMentionKey={type:"GetAMention",findexarxid:findexarxid,noLoad:findexarxid!==""?false:true};
+        const getAMentionKey:AMentionKey={type:"AMention",findexarxid:findexarxid,noLoad:findexarxid!==""?false:true};
         let amention=null;
         const metalinkKey: MetaLinkKey = { func: "meta", findexarxid,long:1 };
         let metaLink=null;

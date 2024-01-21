@@ -392,19 +392,34 @@ export const setCookie = async ({ name,value }: SetCookieParams) => {
 }
 
 // SWR get a mentions
-export type GetAMentionKey = { type: string, findexarxid: string,noLoad:boolean };
-export const getAMention = async ({ type, findexarxid,noLoad }: GetAMentionKey) => {
+export type AMentionKey = { type: string, findexarxid: string,noLoad:boolean };
+export const getAMention = async ({ type, findexarxid,noLoad }: AMentionKey) => {
   try {
     if(noLoad) return null;
-    console.log("api: fetchAMention",type,findexarxid)
+    console.log("api: getAMention",type,findexarxid)
     let url = '';
     url =  `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-mention?findexarxid=${findexarxid}`;
-    console.log("fetchAMention-url",url)
+    console.log("getMention-url",url)
     const res = await axios.get(url);
     return res.data.mention;
   }
   catch (e) {
-    console.log("fetchAMention", e);
+    console.log("getAMention", e);
+    return false;
+  }
+}
+export const removeAMention = async ({ type, findexarxid,noLoad }: AMentionKey) => {
+  try {
+    if(noLoad) return null;
+    console.log("api: removeAMention",type,findexarxid)
+    let url = '';
+    url =  `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/remove-mention?findexarxid=${findexarxid}`;
+    console.log("removeAMention-url",url)
+    const res = await axios.get(url);
+    return res.data.mention;
+  }
+  catch (e) {
+    console.log("removeAMention", e);
     return false;
   }
 }
