@@ -729,7 +729,7 @@ const SinglePage: React.FC<Props> = (props) => {
     ogUrl=`${process.env.NEXT_PUBLIC_SERVER}`;
   let ogTarget='';
   if(amention&&amentionLeague&&amentionTeam&&amentionPlayer)
-    ogTarget=`${amentionPlayer} Media Mentions`;
+    ogTarget=`${amentionPlayer} of ${amentionTeam}`;
   else if(amention&&amentionLeague&&amentionTeam)
     ogTarget=`${amentionTeam} Media Mentions`;
   
