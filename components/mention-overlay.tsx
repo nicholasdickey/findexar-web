@@ -119,6 +119,11 @@ const MentionOverlay = ({findexarxid,setDismiss,...props}:Props) => {
           console.log("openDialog")
           setOpen(true);
       }
+      else {
+          setXid("");
+          console.log("closeDialog")
+          setOpen(false);
+      }
   },[findexarxid]);
   const handleClose = () => {
     setOpen(false);
