@@ -128,7 +128,7 @@ const TeamPlayerMentions: React.FC<Props> = (props) => {
     const Mentions = mentions?.map((m: any, i: number) => {
         const { league, type, team, teamName, name, date, url, findex, summary, findexarxid, fav } = m;
         // console.log("rendering mention", m,i)
-        return (<Mention sessionid={sessionid} params={params} setLocalLeague={setLocalLeague} setLocalPlayer={setLocalPlayer} setLocalTeam={setLocalTeam} setLocalPageType={setLocalPageType} tp={tp} noUser={noUser} league={league} type={type} team={team} teamName={teamName} name={name} date={date} url={url} findex={findex} summary={summary} findexarxid={findexarxid} fav={fav} key={`team-mention${i}`} mutate={() => mutate()} {...rest} />)
+        return (<Mention linkType={"final"} sessionid={sessionid} params={params} setLocalLeague={setLocalLeague} setLocalPlayer={setLocalPlayer} setLocalTeam={setLocalTeam} setLocalPageType={setLocalPageType} tp={tp} noUser={noUser} league={league} type={type} team={team} teamName={teamName} name={name} date={date} url={url} findex={findex} summary={summary} findexarxid={findexarxid} fav={fav} key={`team-mention${i}`} mutate={() => mutate()} {...rest} />)
     })
 
     return (

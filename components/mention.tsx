@@ -130,7 +130,7 @@ const MentionSummary = styled.div`
 
 const Icon = styled.span`
     color:var(--mention-text);
-    font-size: 48px !important;
+    font-size: 38px !important;
     opacity:0.6;
    // width:20px;
     height:48px;
@@ -316,17 +316,32 @@ interface Props {
     params: string;
     sessionid: string;
     tp: string;
+    linkType:string;
+    startExtended?: boolean;
 }
 
-const Mention: React.FC<Props> = ({ tp, sessionid, params, noUser, league, type, team, teamName, name, date, url, findex, summary, findexarxid, fav, setLocalPageType, setLocalPlayer, setLocalLeague, setLocalTeam, mutate }) => {
-    const [expanded, setExpanded] = React.useState(false);
+const Mention: React.FC<Props> = ({ startExtended,linkType,tp, sessionid, params, noUser, league, type, team, teamName, name, date, url, findex, summary, findexarxid, fav, setLocalPageType, setLocalPlayer, setLocalLeague, setLocalTeam, mutate }) => {
+    const [expanded, setExpanded] = React.useState(startExtended);
     const [localDate, setLocalDate] = React.useState(convertToUTCDateString(date));
     const [localFav, setLocalFav] = React.useState(fav);
     const [hide, setHide] = React.useState(false);
     const [signin, setSignin] = React.useState(false);
+    
+    console.log("Mention, extended:", { startExtended, expanded })
+    
+    useEffect(() => {
+        console.log("Mention, extended:", "useEffect",startExtended,expanded)
+        setExpanded(startExtended );
+    },[startExtended]);
+
+    /*useEffect(() => {
+        setExpanded(false);
+    }, [summary]);
+*/
     useEffect(() => {
         setLocalFav(fav);
     }, [fav]);
+
     useEffect(() => {
         if (!summary || summary.length < 6 || !date || !url) {
             setHide(true);
@@ -336,13 +351,19 @@ const Mention: React.FC<Props> = ({ tp, sessionid, params, noUser, league, type,
             setHide(false);
         }
     }, [summary, mutate, date, url]);
-    console.log("mention:", { findexarxid, name, teamName, league, fav });
+
+    //console.log("mention:", { findexarxid, name, teamName, league, fav });
     //console.log("mention params:",params)
     //if(!params)
     //    tp=tp.replace(/&/g,'?');
-    console.log("tp=",tp    )
-    const shareUrl = "https://findexar.com" + (type == 'person' ? `/pub/league/${league}/team/${team}/player/${name}${params}${tp}${params.includes('?')?'&':'?'}id=${findexarxid}` : `/pub/league/${league}/team/${team}${params}${tp}${params.includes('?')?'&':'?'}id=${findexarxid}`);
+    console.log("tp=", tp)
+    const shareUrl = "https://findexar.com" + (type == 'person' ? `/pub/league/${league}/team/${team}/player/${name}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}` : `/pub/league/${league}/team/${team}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}`);
     let localUrl = (type == 'person' ? `/pub/league/${league}/team/${team}/player/${name}${params}${tp}` : `/pub/league/${league}/team/${team}${params}${tp}`) /*: url*/;
+    if(linkType=="final"){
+        localUrl=(type == 'person' ? `/pub/league/${league}/team/${team}/player/${name}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}` : `/pub/league/${league}/team/${team}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}`)
+       // localUrl.replace("https://findexar.com/","/");
+    } 
+    console.log("localUrl=", localUrl)
     const mentionsKey: MetaLinkKey = { func: "meta", findexarxid };
     const meta = useSWRImmutable(mentionsKey, getMetaLink).data;
     let digest = meta ? meta.digest.replace('<p>', '').replace('</p>', '') : "";
@@ -380,8 +401,8 @@ const Mention: React.FC<Props> = ({ tp, sessionid, params, noUser, league, type,
             }
         }
     }
-    const onExtended = async (on:boolean) => {
-     
+    const onExtended = async (on: boolean) => {
+
         await recordEvent(sessionid as string || "",
             'mention-extended',
             `{"on":"${on}","params":"${params}"}`
@@ -398,19 +419,26 @@ const Mention: React.FC<Props> = ({ tp, sessionid, params, noUser, league, type,
             console.log('recordEvent', x);
         }
     }
+    const onShare = (url: string) => {
+        try {
+            //setLoading(true);
+            recordEvent(sessionid as string || "", `mention-share`, `{"url","${url}","params":"${params}"}`)
+                .then((r: any) => {
+                    console.log("recordEvent", r);
+                });
+        } catch (x) {
+            console.log('recordEvent', x);
+        }
+    }
     return (
         <>
-            <MentionWrap hideit={hide}  onMouseEnter={() => onHover('desktop')}>
-
-
+            <MentionWrap hideit={hide} onMouseEnter={() => onHover('desktop')}>
                 <MentionSummary>
-
                     <div>
                         <Topline><LocalDate><i>{localDate}</i></LocalDate>
-
                             {!localFav ? noUser ? <SignInButton><StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); enableRedirect(); addFavorite({ findexarxid }); mutate() }} style={{ color: "#888" }} /></SignInButton> : <StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); enableRedirect(); addFavorite({ findexarxid }); mutate(); }} style={{ color: "#888" }} /> : <StarIcon onClick={() => { if (noUser) return; setLocalFav(0); removeFavorite({ findexarxid }); mutate(); }} style={{ color: "FFA000" }} />}</Topline>
 
-                        <Link href={localUrl} onClick={async () => { await onMentionNav(name) }} shallow>
+                        <Link scroll={linkType=='final'?false:true} href={localUrl} onClick={async () => { await onMentionNav(name) }} shallow>
                             {summary}
                         </Link>
                         <hr />
@@ -424,19 +452,17 @@ const Mention: React.FC<Props> = ({ tp, sessionid, params, noUser, league, type,
                                 url: shareUrl,
                                 title: "Findexar",
                             }}
-                            onClick={() => console.log("shared successfully!")}
+                            onClick={async () => await onShare(url)}
                         >
                             <ShareContainer><IosShareIcon /></ShareContainer>
                         </RWebShare>
-
                         <Icon onClick={
                             async (e) => {
-                                const ne=!expanded
+                                const ne = !expanded
                                 setExpanded(ne);
                                 await onExtended(ne);
                             }}
                             className="material-icons-outlined">{!expanded ? "expand_more" : "expand_less"}</Icon>
-
                     </BottomLine>
                     {expanded && meta && <Link href={url}><ExtendedMention>
                         <Title>{meta.title}</Title>
@@ -454,10 +480,9 @@ const Mention: React.FC<Props> = ({ tp, sessionid, params, noUser, league, type,
                         </HorizontalContainer>
                         {meta.url.substring(0, 50)}...
                     </ExtendedMention></Link>}
-
                 </MentionSummary>
             </MentionWrap>
-            <MobileMentionWrap hideit={hide}  onMouseEnter={() => onHover('mobile')}>
+            <MobileMentionWrap hideit={hide} onMouseEnter={() => onHover('mobile')}>
 
 
                 <MentionSummary>
@@ -465,16 +490,13 @@ const Mention: React.FC<Props> = ({ tp, sessionid, params, noUser, league, type,
                     <div>
                         <Topline><LocalDate><b><i>{localDate}</i></b></LocalDate>{!localFav ? noUser ? <SignInButton><StarOutlineIcon onClick={() => { if (noUser) return; enableRedirect(); setLocalFav(1); addFavorite({ findexarxid }); mutate(); }} style={{ color: "#888" }} /></SignInButton> : <StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); enableRedirect(); addFavorite({ findexarxid }); mutate(); }} style={{ color: "#888" }} /> : <StarIcon onClick={() => { if (noUser) return; setLocalFav(0); removeFavorite({ findexarxid }); mutate(); }} style={{ color: "FFA000" }} />}</Topline>
 
-                        <Link href={localUrl} onClick={async () => { await onMentionNav(name) }}>
+                        <Link  scroll={linkType=='final'?false:true} href={localUrl} onClick={async () => { await onMentionNav(name) }}>
                             {summary}
                         </Link>
                         <hr />
                         <Atmention><b>{(type == "person") && '@'}{name}</b> | {type == "person" ? `${teamName} |` : ""}  {league}</Atmention>
                         <MobileAtmention2>{meta?.site_name}</MobileAtmention2>
-
                     </div>
-
-
                     <BottomLine>
                         <RWebShare
                             data={{
@@ -482,19 +504,17 @@ const Mention: React.FC<Props> = ({ tp, sessionid, params, noUser, league, type,
                                 url: shareUrl,
                                 title: "Findexar",
                             }}
-                            onClick={() => console.log("shared successfully!")}
+                            onClick={async () => onShare(url)}
                         >
                             <ShareContainer><IosShareIcon /></ShareContainer>
                         </RWebShare>
-
                         <Icon onClick={
                             async (e) => {
-                                const ne=!expanded;
+                                const ne = !expanded;
                                 setExpanded(ne);
                                 await onExtended(ne);
                             }}
                             className="material-icons-outlined">{!expanded ? "expand_more" : "expand_less"}</Icon>
-
                     </BottomLine>
                     {expanded && meta && <Link href={url}><MobileExtendedMention>
                         <Title>{meta.title}</Title>
@@ -511,8 +531,8 @@ const Mention: React.FC<Props> = ({ tp, sessionid, params, noUser, league, type,
                             </Body>
                         </HorizontalContainer>
                         {meta.url.substring(0, 30)}...
-                    </MobileExtendedMention></Link>}
-
+                    </MobileExtendedMention>
+                    </Link>}
                 </MentionSummary>
             </MobileMentionWrap>
         </>

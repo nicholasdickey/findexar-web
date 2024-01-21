@@ -412,6 +412,7 @@ const LeagueMentions: React.FC<Props> = ({ findexarxid,tp, tp2, tab, league, noU
       params={params}
       sessionid={sessionid}
       tp={tp}
+      linkType="top"
 
     />)
   });

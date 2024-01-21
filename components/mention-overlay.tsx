@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import useSWR from 'swr';
 import styled from 'styled-components';
+import { useRouter } from 'next/router'
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import Dialog from '@mui/material/Dialog';
@@ -82,8 +83,6 @@ const XElement = styled.div`
   
 `;
 interface Props {
-  
-    
     fav: number;
     noUser: boolean;
     setLocalPageType: (pageType: string) => void;
@@ -105,14 +104,29 @@ const MentionOverlay = ({findexarxid,setDismiss,...props}:Props) => {
     const {date,url,summary,fav,type,league,team,teamName,name}=amention||{};
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-    console.log("dialog render, open=",open)
+    console.log("dialog render, open=",{open,findexarxid});
+    const router = useRouter();
     useEffect(() => {
         if(amention){
             console.log("openDialog")
             setOpen(true);
         }
     },[amention]);
-    return <Dialog open={open} fullScreen={fullScreen}PaperProps={{
+    useEffect(() => {
+      if(findexarxid){
+          setXid(findexarxid);
+          console.log("openDialog")
+          setOpen(true);
+      }
+  },[findexarxid]);
+  const handleClose = () => {
+    setOpen(false);
+    console.log("closeDialog xid=",findexarxid)
+    let localUrl=router.asPath.replace('&id='+findexarxid,'').replace('?id='+findexarxid,'');
+    router.replace(localUrl,undefined,{shallow:true});
+    //(type == 'person' ? `/pub/league/${league}/team/${team}/player/${name}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}` : `/pub/league/${league}/team/${team}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}`)
+  }
+    return <Dialog open={open} fullScreen={fullScreen} PaperProps={{
         style: {
           backgroundColor: 'transparent',
          // boxShadow: 'none',
@@ -122,20 +136,20 @@ const MentionOverlay = ({findexarxid,setDismiss,...props}:Props) => {
       <DialogContent>
       <DialogActions>
       <ContentWrap>
-          <div autoFocus onClick={()=>{console.log("closeDialog");setOpen(false);}}>
+          <div autoFocus onClick={()=>{handleClose();}}>
            <XContainer><XElement>x</XElement></XContainer> 
           </div>  
           </ContentWrap>  
         </DialogActions>
       <ContentWrap>
         <MentionWrap>
-      <Mention {...props} findexarxid={findexarxid} date={date} url={url} summary={summary} fav={fav} type={type} team={team} teamName={teamName} league={league} name={name} mutate={()=>{}}/>
-      </MentionWrap>
+      <Mention startExtended={true} linkType="final" {...props} findexarxid={findexarxid} date={date} url={url} summary={summary} fav={fav} type={type} team={team} teamName={teamName} league={league} name={name} mutate={()=>{}}/>
+      </MentionWrap>  
       </ContentWrap>
       </DialogContent>
       <DialogActions>
       <ContentWrap>
-          <DismissContainer autoFocus onClick={()=>{console.log("closeDialog");setOpen(false);}}>
+          <DismissContainer autoFocus onClick={()=>{handleClose();}}>
             <span>Dismiss</span>
           </DismissContainer>    
           </ContentWrap>
