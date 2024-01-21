@@ -190,7 +190,7 @@ const MobileExtendedMention = styled.div`
 
 const Body = styled.div`
     font-size: 18px;
-    margin-bottom: 20px;
+    margin-bottom: 14px;
     //display: flex;
     //flex-direction: row;
     flex: 2 1 auto;
@@ -208,6 +208,7 @@ const Digest = styled.div`
     //margin-right: 20px;
 `;
 const ImageWrapper = styled.div`
+  margin-top:20px;
   flex: 1 1 auto;
   max-width: 50%;
 `;
@@ -368,7 +369,7 @@ const Mention: React.FC<Props> = ({ startExtended,linkType,tp, sessionid, params
     console.log("localUrl=", localUrl)
     const mentionsKey: MetaLinkKey = { func: "meta", findexarxid,long:startExtended?1:0 };
     const meta = useSWRImmutable(mentionsKey, getMetaLink).data;
-    let digest = meta ? meta.digest.replace('<p>', '').replace('</p>', '') : "";
+    let digest = meta?.digest||"";//meta ? meta.digest.replace('<p>', '').replace('</p>', '') : "";
     // console.log("expanded:", {findexarxid,expanded, meta,fav});
     //console.log("MENTION", { url, localUrl, shareUrl })
     useEffect(() => {
@@ -466,6 +467,7 @@ const Mention: React.FC<Props> = ({ startExtended,linkType,tp, sessionid, params
                             }}
                             className="material-icons-outlined">{!expanded ? "expand_more" : "expand_less"}</Icon>
                     </BottomLine>
+                  
                     {expanded && meta && <Link href={url}><ExtendedMention>
                         <Title>{meta.title}</Title>
                         <Byline>
@@ -476,7 +478,7 @@ const Mention: React.FC<Props> = ({ startExtended,linkType,tp, sessionid, params
                             <ImageWrapper><Image src={meta.image} alt={meta.title} /></ImageWrapper>
                             <Body>
                                 <Digest>
-                                    {digest}
+                               <div dangerouslySetInnerHTML={{ __html: digest }}></div> 
                                 </Digest>
                             </Body>
                         </HorizontalContainer>
@@ -528,7 +530,7 @@ const Mention: React.FC<Props> = ({ startExtended,linkType,tp, sessionid, params
                             <ImageWrapper><Image src={meta.image} width={100} height={100} alt={meta.title} /></ImageWrapper>
                             <Body>
                                 <Digest>
-                                    {digest}
+                                <div dangerouslySetInnerHTML={{ __html: digest }}></div> 
                                 </Digest>
                             </Body>
                         </HorizontalContainer>
