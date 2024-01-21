@@ -99,10 +99,10 @@ export const getFilteredMentions = async ({ type, league, noUser }: MentionsKey)
 }
 
 // SWR get expanded meta
-export type MetaLinkKey = { func: string, findexarxid: string };
-export const getMetaLink = async ({ func, findexarxid }: MetaLinkKey) => {
+export type MetaLinkKey = { func: string, findexarxid: string, long?: number };
+export const getMetaLink = async ({ func, findexarxid,long=0 }: MetaLinkKey) => {
   try {
-    const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-meta-link?xid=${findexarxid}`;
+    const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-meta-link?xid=${findexarxid}&long=${long}`;
 
     const res = await axios.get(url);
     //console.log("getMetaLink=>",{findexarxid,url,resp:res.data.meta});

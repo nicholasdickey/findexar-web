@@ -366,7 +366,7 @@ const Mention: React.FC<Props> = ({ startExtended,linkType,tp, sessionid, params
     if(!localUrl)
         localUrl="";
     console.log("localUrl=", localUrl)
-    const mentionsKey: MetaLinkKey = { func: "meta", findexarxid };
+    const mentionsKey: MetaLinkKey = { func: "meta", findexarxid,long:startExtended?1:0 };
     const meta = useSWRImmutable(mentionsKey, getMetaLink).data;
     let digest = meta ? meta.digest.replace('<p>', '').replace('</p>', '') : "";
     // console.log("expanded:", {findexarxid,expanded, meta,fav});
