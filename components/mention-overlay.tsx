@@ -149,10 +149,9 @@ const MentionOverlay = ({findexarxid,setDismiss,...props}:Props) => {
      
       <DialogActions>
       <ContentWrap>
-          <DismissContainer autoFocus onClick={()=>{handleClose();}}>
-            <span>Dismiss</span>
-          </DismissContainer>    
-          </ContentWrap>
+          
+      </ContentWrap>
+            
         </DialogActions>
         
       </Dialog>
