@@ -33,11 +33,11 @@ import { UserButton, SignInButton, SignedOut, SignedIn } from "@clerk/nextjs";
 import { useSubscription } from "use-stripe-subscription";
 //other
 import 'material-icons/iconfont/outlined.css';
-import { getCookie } from 'cookies-next';
+import { getCookie, hasCookie } from 'cookies-next';
 //local
 import { palette } from '@/lib/palette';
 import GlobalStyle from '@/components/globalstyles';
-import { LeagueTeamsKey, getLeagueTeams, recordEvent, setCookie,GetAMentionKey,getAMention } from '@/lib/api';
+import { LeagueTeamsKey, getLeagueTeams, recordEvent, setCookie, GetAMentionKey, getAMention } from '@/lib/api';
 import Team from './team-page';
 import Mentions from './league-mentions';
 import SecondaryTabs from "./secondary-tabs";
@@ -464,13 +464,13 @@ interface Props {
   t1: number;
   tab: string;
   mode: string;
-  findexarxid:string;
+  findexarxid: string;
 }
 
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 
 const SinglePage: React.FC<Props> = (props) => {
-  let { findexarxid,mode, tab, t1, fbclid = "", sessionid = "", isfb, isbot, list, freeUser, createdAt, userId, utm_content, dark, leagues, league = "", team = "", pagetype = "league", player = "", view = "" } = props;
+  let { findexarxid, mode, tab, t1, fbclid = "", sessionid = "", isfb, isbot, list, freeUser, createdAt, userId, utm_content, dark, leagues, league = "", team = "", pagetype = "league", player = "", view = "" } = props;
 
   const [localTeam, setLocalTeam] = useState(team);
   const [localPlayer, setLocalPlayer] = useState(player);
@@ -490,8 +490,8 @@ const SinglePage: React.FC<Props> = (props) => {
 
   const muiTheme = useTheme();
   const fullScreen = useMediaQuery(muiTheme.breakpoints.down('md'));
-  const isMobile= useMediaQuery('(max-width:1199px)');
-  console.log("isMobile",isMobile);
+  const isMobile = useMediaQuery('(max-width:1199px)');
+  console.log("isMobile", isMobile);
   useEffect(() => {
     document.body.setAttribute("data-theme", localMode);
   }, [localMode]);
@@ -552,7 +552,7 @@ const SinglePage: React.FC<Props> = (props) => {
   useEffect(() => {
     const query = router.query;
     console.log(`The page is now: ${router.pathname}`, query);
-    const { id:findexarxid="",tab: qtab = "", view: qview = "", ssr = [] } = query as { tab: string | null, view: string | null, ssr: string[],id:string|"" };
+    const { id: findexarxid = "", tab: qtab = "", view: qview = "", ssr = [] } = query as { tab: string | null, view: string | null, ssr: string[], id: string | "" };
     let changed = false;
     setLocalTab(qtab as string);
     setLocalView(qview as string);
@@ -576,7 +576,7 @@ const SinglePage: React.FC<Props> = (props) => {
     else if (arg3 == 'player') {
       qplayer = arg4;
     }
-    console.log("setting findexarxid",findexarxid);
+    console.log("setting findexarxid", findexarxid);
     setLocalLeague(qleague);
     setLocalTeam(qteam);
     setLocalPlayer(qplayer);
@@ -691,7 +691,7 @@ const SinglePage: React.FC<Props> = (props) => {
   const onViewNav = async (option: { name: string, access: string }) => {
     console.log(option);
     setLocalView(option.name);
-    router.replace(localLeague ? `/pub/league/${localLeague}?view=${encodeURIComponent(option.name.toLowerCase())}${params2}${tp2.replace('?','&')}` : `/pub?view=${encodeURIComponent(option.name.toLowerCase())}${params2}${tp2.replace('?','&')}`, undefined, { shallow: true })
+    router.replace(localLeague ? `/pub/league/${localLeague}?view=${encodeURIComponent(option.name.toLowerCase())}${params2}${tp2.replace('?', '&')}` : `/pub?view=${encodeURIComponent(option.name.toLowerCase())}${params2}${tp2.replace('?', '&')}`, undefined, { shallow: true })
     await recordEvent(sessionid as string || "",
       'view-nav',
       `{"fbclid":"${fbclid}","utm_content":"${utm_content}","view":"${option.name}"}`
@@ -700,51 +700,51 @@ const SinglePage: React.FC<Props> = (props) => {
   console.log("PAGE state:", { localUserId, v, localMode, localPageType, localLeague, localTeam, localPlayer, params, params2 })
 
   useEffect(() => {
-    let mode = getCookie('mode');
-    if (!mode) {
-      const matchMedia = window.matchMedia("(prefers-color-scheme: dark)");
-      const matches = matchMedia.matches;
-      document.body.setAttribute("data-theme", matchMedia.matches ? 'dark' : 'light');
-      setLocalMode(matchMedia.matches ? 'dark' : 'light');
+    if (!hasCookie('mode')) {
+        const matchMedia = window.matchMedia("(prefers-color-scheme: dark)");
+        const matches = matchMedia.matches;
+        document.body.setAttribute("data-theme", matchMedia.matches ? 'dark' : 'light');
+        setLocalMode(matchMedia.matches ? 'dark' : 'light');      
     }
     else {
+      let mode = getCookie('mode')||"";
       if (mode != localMode)
         setLocalMode(mode);
     }
   }, []);
-  console.log("==>",localFindexarxid)
-  const key:GetAMentionKey={type:"GetAMention",findexarxid:localFindexarxid,noLoad:localFindexarxid!==""?false:true};
-  const{ data: amention }= useSWR(key, getAMention)
-  const {summary:amentionSummary="",league:amentionLeague="",team:amentionTeam="",name:amentionPlayer="",image:amentionImage="",date:amentionDate=""} =amention?amention:{};
-  let ogUrl='';
-  if(amention&&amentionLeague&&amentionTeam&&amentionPlayer)
-    ogUrl=`${process.env.NEXT_PUBLIC_SERVER}pub/league/${amentionLeague}/team/${amentionTeam}/player/${amentionPlayer}?id=${localFindexarxid}`;
-  else if(amention&&amentionLeague&&amentionTeam)
-    ogUrl=`${process.env.NEXT_PUBLIC_SERVER}pub/league/${amentionLeague}/team/${amentionTeam}?id=${localFindexarxid}`;
-  else if(amention&&amentionLeague)
-    ogUrl=`${process.env.NEXT_PUBLIC_SERVER}pub/league/${amentionLeague}?id=${localFindexarxid}`;
-  else if(amention)
-    ogUrl=`${process.env.NEXT_PUBLIC_SERVER}pub?id=${localFindexarxid}`;
+  console.log("==>", localFindexarxid)
+  const key: GetAMentionKey = { type: "GetAMention", findexarxid: localFindexarxid, noLoad: localFindexarxid !== "" ? false : true };
+  const { data: amention } = useSWR(key, getAMention)
+  const { summary: amentionSummary = "", league: amentionLeague = "", team: amentionTeam = "", name: amentionPlayer = "", image: amentionImage = "", date: amentionDate = "" } = amention ? amention : {};
+  let ogUrl = '';
+  if (amention && amentionLeague && amentionTeam && amentionPlayer)
+    ogUrl = `${process.env.NEXT_PUBLIC_SERVER}pub/league/${amentionLeague}/team/${amentionTeam}/player/${amentionPlayer}?id=${localFindexarxid}`;
+  else if (amention && amentionLeague && amentionTeam)
+    ogUrl = `${process.env.NEXT_PUBLIC_SERVER}pub/league/${amentionLeague}/team/${amentionTeam}?id=${localFindexarxid}`;
+  else if (amention && amentionLeague)
+    ogUrl = `${process.env.NEXT_PUBLIC_SERVER}pub/league/${amentionLeague}?id=${localFindexarxid}`;
+  else if (amention)
+    ogUrl = `${process.env.NEXT_PUBLIC_SERVER}pub?id=${localFindexarxid}`;
   else
-    ogUrl=`${process.env.NEXT_PUBLIC_SERVER}`;
-  let ogTarget='';
-  if(amention&&amentionLeague&&amentionTeam&&amentionPlayer)
-    ogTarget=`${amentionPlayer} of ${amentionTeam}`;
-  else if(amention&&amentionLeague&&amentionTeam)
-    ogTarget=`${amentionTeam} Media Mentions`;
-  
-  
+    ogUrl = `${process.env.NEXT_PUBLIC_SERVER}`;
+  let ogTarget = '';
+  if (amention && amentionLeague && amentionTeam && amentionPlayer)
+    ogTarget = `${amentionPlayer} of ${amentionTeam}`;
+  else if (amention && amentionLeague && amentionTeam)
+    ogTarget = `${amentionTeam} Media Mentions`;
 
-  let ogDescription=amentionSummary?amentionSummary:"Real-time annotated media mentions index for Fantasy Sports.";
-  let ogImage=amentionImage?amentionImage:"https://findexar.com/findexar-logo.png";
-  let ogTitle=ogTarget?`${ogTarget}`:"Findexar Media Tracker";
-  console.log("==>",{localFindexarxid,amention,ogUrl,ogDescription,ogImage})
+
+
+  let ogDescription = amentionSummary ? amentionSummary : "Real-time annotated media mentions index for Fantasy Sports.";
+  let ogImage = amentionImage ? amentionImage : "https://findexar.com/findexar-logo.png";
+  let ogTitle = ogTarget ? `${ogTarget}` : "Findexar Media Tracker";
+  console.log("==>", { localFindexarxid, amention, ogUrl, ogDescription, ogImage })
   return (
     <>
       <Head>
         <title>Findexar</title>
         <link rel="canonical" href={ogUrl} />
-        {pagetype!='landing'&&<meta name="robots" content="noindex,nofollow" />}
+        {pagetype != 'landing' && <meta name="robots" content="noindex,nofollow" />}
         <meta property="og:description" content={ogDescription} />
         <meta name="title" content={ogTitle} />
         <meta property="og:title" content={ogTitle} />
@@ -816,13 +816,13 @@ const SinglePage: React.FC<Props> = (props) => {
                 </HeaderRight>
               </HeaderTopline>
             </Header>
-           
-            {!isMobile&&<ContainerWrap>
+
+            {!isMobile && <ContainerWrap>
               <Leagues>
-               {LeaguesNav}
+                {LeaguesNav}
               </Leagues>
               {pagetype == "landing" && <Landing />}
-              {pagetype !== "landing" &&<MainPanel>
+              {pagetype !== "landing" && <MainPanel>
                 <LeftPanel>
                   {localLeague ? <><SideLeagueName>{localLeague}:</SideLeagueName> {TeamsNav}</> : <> <Welcome>
                     Welcome to Findexar!<br /><hr /><br />
@@ -837,11 +837,11 @@ const SinglePage: React.FC<Props> = (props) => {
                     <Favorites><Button disabled={view == 'fav'} onClick={() => {
                       if (v != 'readme') {
                         setLocalView("readme")
-                        router.push(`/pub?view=readme${params2}${tp2.replace('?','&')}`);
+                        router.push(`/pub?view=readme${params2}${tp2.replace('?', '&')}`);
                       }
                       else {
                         setLocalView("mentions")
-                        router.push(`/pub${params}${tp2.replace('?','&')}`);
+                        router.push(`/pub${params}${tp2.replace('?', '&')}`);
                       }
                     }} style={{ padding: 10 }} variant="outlined">{v == "readme" ? <HomeIcon /> : <HelpOutlineIcon />}&nbsp;&nbsp;{v == "readme" ? <span>Back to Home</span> : <span>Read Me</span>}</Button></Favorites>
                     <br /><br />
@@ -859,13 +859,13 @@ const SinglePage: React.FC<Props> = (props) => {
                 </LeftPanel>
                 <CenterPanel>
                   {subscriptionPrompt && !dismiss && <SubscriptionMenu hardStop={hardStop} setDismiss={setDismiss} {...subscriptionObject} />}
-                  {v != "readme" && (localPageType == "team" || localPageType == "player") && <Team  findexarxid={localFindexarxid} tp={tp} tp2={tp2} sessionid={sessionid} params={params} params2={params2} noUser={!localUserId} setDismiss={setDismiss} subscriptionPrompt={subscriptionPrompt && !dismiss} subscriptionObject={subscriptionObject} view={v} teams={null} team={localTeam} league={localLeague} teamName={teamName} pagetype={localPageType} player={localPlayer} setLocalPlayer={setLocalPlayer} setLocalPageType={setLocalPageType} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} />}
+                  {v != "readme" && (localPageType == "team" || localPageType == "player") && <Team findexarxid={localFindexarxid} tp={tp} tp2={tp2} sessionid={sessionid} params={params} params2={params2} noUser={!localUserId} setDismiss={setDismiss} subscriptionPrompt={subscriptionPrompt && !dismiss} subscriptionObject={subscriptionObject} view={v} teams={null} team={localTeam} league={localLeague} teamName={teamName} pagetype={localPageType} player={localPlayer} setLocalPlayer={setLocalPlayer} setLocalPageType={setLocalPageType} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} />}
                   {v != "readme" && localPageType == "league" && !localTeam && <Mentions findexarxid={localFindexarxid} tp={tp} tp2={tp2} tab={localTab} sessionid={sessionid} params={params} params2={params2} league={localLeague || ""} noUser={!localUserId} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} view={v} setLocalTab={setLocalTab} />}
                   {v == 'readme' && <Readme />}
                 </CenterPanel>
               </MainPanel>}
             </ContainerWrap>}
-            {isMobile&&<MobileContainerWrap>
+            {isMobile && <MobileContainerWrap>
               <MuiTabs
                 value={selectedLeague}
                 variant="scrollable"
@@ -876,34 +876,34 @@ const SinglePage: React.FC<Props> = (props) => {
                 {MobileLeaguesNav}
               </MuiTabs>
               {pagetype == "landing" && <Landing />}
-              {pagetype !== "landing" &&<div>
-              {localPageType == 'league' && !localLeague &&
-                <div>
-                  <SecondaryTabs options={[{ name: "Mentions", icon: <MentionIcon fontSize="small" />, access: "pub" }, { name: "My Team", icon: <ListIcon fontSize="small" />, access: "pub" }, { name: "Readme", icon: <ContactSupportIcon fontSize="small" />, access: "pub" }]} onChange={async (option: any) => { await onViewNav(option); }} selectedOptionName={v} />
-                  <CenterPanel>
-                    {subscriptionPrompt && !dismiss && <SubscriptionMenu hardStop={hardStop} setDismiss={setDismiss} {...subscriptionObject} />}
+              {pagetype !== "landing" && <div>
+                {localPageType == 'league' && !localLeague &&
+                  <div>
+                    <SecondaryTabs options={[{ name: "Mentions", icon: <MentionIcon fontSize="small" />, access: "pub" }, { name: "My Team", icon: <ListIcon fontSize="small" />, access: "pub" }, { name: "Readme", icon: <ContactSupportIcon fontSize="small" />, access: "pub" }]} onChange={async (option: any) => { await onViewNav(option); }} selectedOptionName={v} />
+                    <CenterPanel>
+                      {subscriptionPrompt && !dismiss && <SubscriptionMenu hardStop={hardStop} setDismiss={setDismiss} {...subscriptionObject} />}
 
-                    <Mentions findexarxid={localFindexarxid} tp={tp} tp2={tp2} tab={localTab} sessionid={sessionid} params={params} params2={params2} noUser={!localUserId} league={localLeague || ""} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} view={v} setLocalTab={setLocalTab} />
-                  </CenterPanel>
-                </div>}
-              {localPageType == 'league' && localLeague &&
-                <div>
-                  <SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> }, { name: "Mentions", icon: <MentionIcon /> }, { name: "My Team", icon: <ListIcon />, access: "pub" }]} onChange={async (option: any) => { await onViewNav(option) }} selectedOptionName={v} />
-                  {v != "readme" && v == 'teams' &&
-                    <LeftMobilePanel>
-                      <SideLeagueName>{localLeague}:</SideLeagueName>{TeamsNav}
-                    </LeftMobilePanel>}
-                  <CenterPanel>
-                    {subscriptionPrompt && !dismiss && <SubscriptionMenu hardStop={hardStop} setDismiss={setDismiss} {...subscriptionObject} />}
-                    <Mentions findexarxid={localFindexarxid} tp={tp} tp2={tp2} tab={localTab} sessionid={sessionid} params={params} params2={params2} noUser={!localUserId} league={localLeague || ""} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} view={v} setLocalTab={setLocalTab} />
-                  </CenterPanel>
-                </div>}
-              {v != "readme" && (localPageType == 'team' || localPageType == 'player') &&
-                <div>
-                  <Team findexarxid={localFindexarxid} tp={tp} tp2={tp2} sessionid={sessionid} params={params} params2={params2} noUser={!localUserId} setDismiss={setDismiss} subscriptionPrompt={subscriptionPrompt && !dismiss} subscriptionObject={subscriptionObject} view={v} teams={<LeftMobilePanel>{TeamsNav}</LeftMobilePanel>} team={localTeam} league={localLeague} teamName={teamName} pagetype={localPageType} player={localPlayer} setLocalPlayer={setLocalPlayer} setLocalPageType={setLocalPageType} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} />
-                </div>
-              }
-              {v == 'readme' && <Readme />}
+                      <Mentions findexarxid={localFindexarxid} tp={tp} tp2={tp2} tab={localTab} sessionid={sessionid} params={params} params2={params2} noUser={!localUserId} league={localLeague || ""} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} view={v} setLocalTab={setLocalTab} />
+                    </CenterPanel>
+                  </div>}
+                {localPageType == 'league' && localLeague &&
+                  <div>
+                    <SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> }, { name: "Mentions", icon: <MentionIcon /> }, { name: "My Team", icon: <ListIcon />, access: "pub" }]} onChange={async (option: any) => { await onViewNav(option) }} selectedOptionName={v} />
+                    {v != "readme" && v == 'teams' &&
+                      <LeftMobilePanel>
+                        <SideLeagueName>{localLeague}:</SideLeagueName>{TeamsNav}
+                      </LeftMobilePanel>}
+                    <CenterPanel>
+                      {subscriptionPrompt && !dismiss && <SubscriptionMenu hardStop={hardStop} setDismiss={setDismiss} {...subscriptionObject} />}
+                      <Mentions findexarxid={localFindexarxid} tp={tp} tp2={tp2} tab={localTab} sessionid={sessionid} params={params} params2={params2} noUser={!localUserId} league={localLeague || ""} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} view={v} setLocalTab={setLocalTab} />
+                    </CenterPanel>
+                  </div>}
+                {v != "readme" && (localPageType == 'team' || localPageType == 'player') &&
+                  <div>
+                    <Team findexarxid={localFindexarxid} tp={tp} tp2={tp2} sessionid={sessionid} params={params} params2={params2} noUser={!localUserId} setDismiss={setDismiss} subscriptionPrompt={subscriptionPrompt && !dismiss} subscriptionObject={subscriptionObject} view={v} teams={<LeftMobilePanel>{TeamsNav}</LeftMobilePanel>} team={localTeam} league={localLeague} teamName={teamName} pagetype={localPageType} player={localPlayer} setLocalPlayer={setLocalPlayer} setLocalPageType={setLocalPageType} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} setLocalView={setLocalView} />
+                  </div>
+                }
+                {v == 'readme' && <Readme />}
               </div>}
             </MobileContainerWrap>}
           </ThemeProvider>
