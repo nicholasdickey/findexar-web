@@ -104,7 +104,7 @@ const MentionOverlay = ({findexarxid,setDismiss,...props}:Props) => {
     const {date,url,summary,fav,type,league,team,teamName,name}=amention||{};
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-    console.log("dialog render, open=",{open,findexarxid});
+    console.log("dialog render, open=",{open,findexarxid,type,league,team,teamName,name});
     const router = useRouter();
     useEffect(() => {
         if(amention){
@@ -143,7 +143,7 @@ const MentionOverlay = ({findexarxid,setDismiss,...props}:Props) => {
         </DialogActions>
       <ContentWrap>
         <MentionWrap>
-      <Mention startExtended={true} linkType="final" {...props} findexarxid={findexarxid} date={date} url={url} summary={summary} fav={fav} type={type} team={team} teamName={teamName} league={league} name={name} mutate={()=>{}}/>
+      {league&&team&&name&&<Mention startExtended={true} linkType="final" {...props} findexarxid={findexarxid} date={date} url={url} summary={summary} fav={fav} type={type} team={team} teamName={teamName} league={league} name={name} mutate={()=>{}}/>}
       </MentionWrap>  
       </ContentWrap>
       </DialogContent>

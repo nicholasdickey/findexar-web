@@ -363,6 +363,8 @@ const Mention: React.FC<Props> = ({ startExtended,linkType,tp, sessionid, params
         localUrl=(type == 'person' ? `/pub/league/${league}/team/${team}/player/${name}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}` : `/pub/league/${league}/team/${team}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}`)
        // localUrl.replace("https://findexar.com/","/");
     } 
+    if(!localUrl)
+        localUrl="";
     console.log("localUrl=", localUrl)
     const mentionsKey: MetaLinkKey = { func: "meta", findexarxid };
     const meta = useSWRImmutable(mentionsKey, getMetaLink).data;
