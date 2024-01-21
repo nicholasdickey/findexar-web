@@ -542,7 +542,7 @@ const Mention: React.FC<Props> = ({ startExtended,linkType,tp, sessionid, params
                             <ImageWrapper><Image src={meta.image} width={100} height={100} alt={meta.title} /></ImageWrapper>
                             <Body>
                             <ArticleDigest>
-                            {true?'Article Digest:':'Short Digest:'}{!startExtended&&<div><br/></div>}
+                            {true?'Article Digest:':'Short Digest:'}
                             </ArticleDigest>
                                 <Digest>
                                 <div dangerouslySetInnerHTML={{ __html: digest }}></div> 
