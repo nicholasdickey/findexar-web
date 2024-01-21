@@ -719,7 +719,7 @@ const SinglePage: React.FC<Props> = (props) => {
   console.log("==>", localFindexarxid)
   const key: GetAMentionKey = { type: "GetAMention", findexarxid: localFindexarxid, noLoad: localFindexarxid !== "" ? false : true };
   const { data: amention } = useSWR(key, getAMention)
-  const { summary: amentionSummary = "", league: amentionLeague = "", type="",team: amentionTeam = "", name: amentionPlayer = "", image: amentionImage = "", date: amentionDate = "" } = amention ? amention : {};
+  const { summary: amentionSummary = "", league: amentionLeague = "", type="",team: amentionTeam = "", teamName:amentionTeamName="",name: amentionPlayer = "", image: amentionImage = "", date: amentionDate = "" } = amention ? amention : {};
   let ogUrl = '';
   if (amention && amentionLeague && amentionTeam && amentionPlayer)
     ogUrl = `${process.env.NEXT_PUBLIC_SERVER}pub/league/${amentionLeague}/team/${amentionTeam}/player/${amentionPlayer}?id=${localFindexarxid}`;
@@ -733,10 +733,10 @@ const SinglePage: React.FC<Props> = (props) => {
     ogUrl = `${process.env.NEXT_PUBLIC_SERVER}`;
 
   let ogTarget = '';
-  if (amention && type=='person')
-    ogTarget = `${amentionPlayer} of ${amentionTeam}`;
+  if (amention &&amentionLeague&&amentionTeam&&amentionPlayer&&type=='person')
+    ogTarget = `${amentionPlayer} of ${amentionTeamName}`;
   else if (amention && amentionLeague && amentionTeam)
-    ogTarget = `${amentionTeam} Media Mentions`;
+    ogTarget = `${amentionTeamName} Media Mentions`;
 
 
   let ogDescription = amentionSummary ? amentionSummary : "Fantasy Sports Media Tracker.";
