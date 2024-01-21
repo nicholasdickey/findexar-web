@@ -17,11 +17,12 @@ import Mention from './mention';
 const ContentWrap = styled.div`
   width: 100%;
   height: 100%;
-  padding: 0 20px;
-  overflow: auto;
+  padding: 0 10px;
+  //overflow: auto;
   font-family:'Roboto','Helvetica',sans-serif;
   @media (max-width: 600px) {
-    padding: 0 10px;
+    //padding: 0 10px;
+    padding: 0 0px;
   }
 `;
 const MentionWrap = styled.div`
@@ -133,7 +134,6 @@ const MentionOverlay = ({findexarxid,setDismiss,...props}:Props) => {
         },
       }} >
     
-      <DialogContent>
       <DialogActions>
       <ContentWrap>
           <div autoFocus onClick={()=>{handleClose();}}>
@@ -146,7 +146,7 @@ const MentionOverlay = ({findexarxid,setDismiss,...props}:Props) => {
       {league&&team&&name&&<Mention startExtended={true} linkType="final" {...props} findexarxid={findexarxid} date={date} url={url} summary={summary} fav={fav} type={type} team={team} teamName={teamName} league={league} name={name} mutate={()=>{}}/>}
       </MentionWrap>  
       </ContentWrap>
-      </DialogContent>
+     
       <DialogActions>
       <ContentWrap>
           <DismissContainer autoFocus onClick={()=>{handleClose();}}>
