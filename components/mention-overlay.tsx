@@ -144,6 +144,7 @@ const MentionOverlay = ({findexarxid,setDismiss,...props}:Props) => {
          // boxShadow: 'none',
         },
       }} >
+      <DialogTitle> </DialogTitle>
      {false&& <DialogTitle onClick={()=>{setDismiss(true);}}><TitleWrap>{target}</TitleWrap></DialogTitle>}
       <DialogActions>
       <ContentWrap>

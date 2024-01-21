@@ -69,6 +69,10 @@ const Header = styled.header`
       a{
           color: var(--mobile-header-title-color);  
       }
+      position: -webkit-sticky; /* Safari */
+	    position: sticky;
+	    top: 0;
+      z-index:1000;
   }
 `;
 
