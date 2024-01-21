@@ -37,6 +37,7 @@ const MentionWrap = styled.div<MentionsProps>`
     margin-top:20px;
     padding-left:4px;
     padding-right:4px;
+    padding-top:4px;
     color:var(--text);
     z-index:200;
     font-size: 16px;
