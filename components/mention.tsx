@@ -210,7 +210,7 @@ const Digest = styled.div`
 const ImageWrapper = styled.div`
   margin-top:20px;
   flex: 1 1 auto;
-  max-width: 50%;
+  max-width: 66%;
 `;
 const Topline = styled.div`
     display:flex;
