@@ -17,7 +17,8 @@ import Mention from './mention';
 const ContentWrap = styled.div`
   width: 100%;
   height: 100%;
-  padding: 0 10px;
+  padding-left:10px;
+  padding-right:25px;
   //overflow: auto;
   font-family:'Roboto','Helvetica',sans-serif;
   @media (max-width: 600px) {
@@ -72,27 +73,37 @@ const DismissContainer=styled.div`
     }
 `;
 const XElement = styled.div`
-    width: 20px;
+    width: 30px;
     height:20px;
     display: flex;
     flex-direction: row;
-    justify-content:flex-end;
+    justify-content:center;
     align-items:center;
     font-size:28px;
-   // background-color:#444;
+    margin-top:-110px;
+    
+    //background-color:#444;
     color:#fff;
+    @media (max-width: 1199px) {
+      margin-top:0px;
+    }
   
 `;
 const RElement = styled.div`
     width: 20px;
-    height:20px;
+   // height:20px;
+    
     display: flex;
     flex-direction: row;
     justify-content:flex-end;
     align-items:center;
     font-size:28px;
+    margin-top:-110px;
    // background-color:#444;
-    color:#f44;
+    color:#f44; 
+    @media (max-width: 1199px) {
+      margin-top:0px;
+    }
 `;
 const TitleWrap = styled.div`
     color:#fff !important;
@@ -135,6 +146,8 @@ const MentionOverlay = ({findexarxid,setDismiss,...props}:Props) => {
     console.log("dialog render, open=",{open,findexarxid,type,league,team,teamName,name});
     const router = useRouter();
     const linkType=team?'final':'top';
+    const isMobile = useMediaQuery('(max-width:1199px)');
+    
     useEffect(() => {
         if(amention){
             console.log("openDialog")
@@ -160,7 +173,8 @@ const MentionOverlay = ({findexarxid,setDismiss,...props}:Props) => {
     router.replace(localUrl,undefined,{shallow:true});
     //(type == 'person' ? `/pub/league/${league}/team/${team}/player/${name}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}` : `/pub/league/${league}/team/${team}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}`)
   }
-  const target=type=='person'?`${teamName}:${name}`: `${teamName}`;
+  let target=type=='person'?`${teamName}:${name}`: `${teamName}`;
+  target=!target||target=='undefined'?'' : target;
   console.log("linkType=",linkType);
 
   useEffect(() => {
@@ -186,16 +200,17 @@ const MentionOverlay = ({findexarxid,setDismiss,...props}:Props) => {
       setDismiss(true);
     }
   }
-
+  if(!amention)
+    return null;
     return <Dialog disableEscapeKeyDown={true} open={open} fullScreen={fullScreen} PaperProps={{
         style: {
-          backgroundColor: 'transparent',
+          backgroundColor: isMobile?'transparent':'#555',
          // boxShadow: 'none',
         },
       }} >
       <DialogTitleMobileWrap> <DialogTitle/></DialogTitleMobileWrap>
       <DialogTitleWrap><DialogTitle onClick={()=>{setDismiss(true);}}><TitleWrap>{target}</TitleWrap></DialogTitle></DialogTitleWrap>
-      <DialogActions>
+   
       <ContentWrap>
           <div autoFocus onClick={()=>{handleClose();}}>
            <XContainer><XElement>x</XElement></XContainer> 
@@ -204,7 +219,7 @@ const MentionOverlay = ({findexarxid,setDismiss,...props}:Props) => {
            <XContainer><RElement>R</RElement></XContainer> 
           </div>} 
           </ContentWrap>  
-        </DialogActions>
+     
       <ContentWrap>
         <MentionWrap>
       <Mention startExtended={true} linkType={linkType} {...props} findexarxid={findexarxid} date={date} url={url} summary={summary} fav={fav} type={type} team={team} teamName={teamName} league={league} name={name} mutate={()=>{}}/>

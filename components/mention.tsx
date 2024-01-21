@@ -19,12 +19,14 @@ declare global {
 
 
 interface MentionsProps {
-    hideit: boolean;
+    hideit?: boolean;
+    noborder?: boolean;
 }
 const MentionWrap = styled.div<MentionsProps>`
     width:100%;
     min-height:100px;
-    background-color: var(--mention-border);
+    //background-color:${props => props.noborder ? 'var(--mention-bg);' : 'var(--mention-border)'};
+    background-color: var(--mention-bg);//var(--mention-border);
     //display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -33,11 +35,13 @@ const MentionWrap = styled.div<MentionsProps>`
     border-radius: 5px;
     margin-left:8px;
     margin-top:20px;
+    padding-left:4px;
+    padding-right:4px;
     color:var(--text);
     z-index:200;
     font-size: 16px;
     &:hover{
-           // background-color:var(--mention-high-bg);
+            background-color:var(--mention-high-bg);
             color: var(--mention-text);
         } 
    
@@ -111,7 +115,8 @@ const MentionFindex = styled.div`
 const MentionSummary = styled.div`
     width:100%;
     padding-right:20px;
-    margin-left:20px;
+    border-radius: 30px;
+    //margin-left:5px;
     font-size: 18px;
     padding-left:10px;
     padding-right:10px;
@@ -121,9 +126,9 @@ const MentionSummary = styled.div`
         background-color:var(--mention-high-bg);// #ddd;
         //color:var(--highlight);
     } 
-    border-radius: 0px 5px 5px 0px;
+    border-radius: 5px 5px 5px 5px;
     @media screen and (max-width: 1199px) {
-       margin:1px;
+       margin:0px;
   }
 `;
 
@@ -227,6 +232,7 @@ const Topline = styled.div`
     justify-content :space-between ;
     align-items:center;
     margin-bottom:4px;
+    
 `;
 
 const Image = styled.img`
@@ -378,7 +384,7 @@ const Mention: React.FC<Props> = ({ startExtended,linkType,tp, sessionid, params
     const mentionsKey: MetaLinkKey = { func: "meta", findexarxid,long:startExtended?1:1 };
     const meta = useSWRImmutable(mentionsKey, getMetaLink).data;
     let digest = meta?.digest||"";//meta ? meta.digest.replace('<p>', '').replace('</p>', '') : "";
-    // console.log("expanded:", {findexarxid,expanded, meta,fav});
+    console.log("expanded:", {findexarxid,expanded, meta,fav});
     //console.log("MENTION", { url, localUrl, shareUrl })
     useEffect(() => {
         try {
@@ -446,7 +452,7 @@ const Mention: React.FC<Props> = ({ startExtended,linkType,tp, sessionid, params
         <>
             <MentionWrap hideit={hide} onMouseEnter={() => onHover('desktop')}>
                 <MentionSummary>
-                    <div>
+                    
                         <Topline><LocalDate><i>{localDate}</i></LocalDate>
                             {!localFav ? noUser ? <SignInButton><StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); enableRedirect(); addFavorite({ findexarxid }); mutate() }} style={{ color: "#888" }} /></SignInButton> : <StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); enableRedirect(); addFavorite({ findexarxid }); mutate(); }} style={{ color: "#888" }} /> : <StarIcon onClick={() => { if (noUser) return; setLocalFav(0); removeFavorite({ findexarxid }); mutate(); }} style={{ color: "FFA000" }} />}</Topline>
 
@@ -456,7 +462,7 @@ const Mention: React.FC<Props> = ({ startExtended,linkType,tp, sessionid, params
                         <hr />
                         <Atmention><b>{(type == "person") && '@'}{name}</b> | {type == "person" ? `${teamName} |` : ""} {league} </Atmention>
                         <Atmention2>{meta?.site_name}</Atmention2>
-                    </div>
+                    
                     <BottomLine>
                         <RWebShare
                             data={{
