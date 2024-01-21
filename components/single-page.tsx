@@ -727,9 +727,17 @@ const SinglePage: React.FC<Props> = (props) => {
     ogUrl=`${process.env.NEXT_PUBLIC_SERVER}pub?id=${localFindexarxid}`;
   else
     ogUrl=`${process.env.NEXT_PUBLIC_SERVER}`;
+  let ogTarget='';
+  if(amention&&amentionLeague&&amentionTeam&&amentionPlayer)
+    ogTarget=`${amentionPlayer} Media Mentions`;
+  else if(amention&&amentionLeague&&amentionTeam)
+    ogTarget=`${amentionTeam} Media Mentions`;
+  
+  
+
   let ogDescription=amentionSummary?amentionSummary:"Real-time annotated media mentions index for Fantasy Sports.";
   let ogImage=amentionImage?amentionImage:"https://findexar.com/findexar-logo.png";
-  
+  let ogTitle=ogTarget?`${ogTarget}`:"Findexar Media Tracker";
   console.log("==>",{localFindexarxid,amention,ogUrl,ogDescription,ogImage})
   return (
     <>
@@ -738,8 +746,8 @@ const SinglePage: React.FC<Props> = (props) => {
         <link rel="canonical" href={ogUrl} />
         {pagetype!='landing'&&<meta name="robots" content="noindex,nofollow" />}
         <meta property="og:description" content={ogDescription} />
-        <meta name="title" content="Findexar" />
-        <meta property="og:title" content="Findexar" />
+        <meta name="title" content={ogTitle} />
+        <meta property="og:title" content={ogTitle} />
         <meta name="description" content={ogDescription} />
         <meta property="og:type" content="website" />
         <meta property="fb:appid" content="358234474670240" />
@@ -748,6 +756,8 @@ const SinglePage: React.FC<Props> = (props) => {
         <meta property="og:image" content={ogImage} />
         <meta property="findexar:verify" content="findexar" />
         <meta httpEquiv='X-UA-Compatible' content='IE=edge' />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@findexar" />
         <meta name='viewport' content='width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no' />
         <link rel="apple-touch-icon" href="/FiLogo.png"></link>
         <meta name="theme-color" content={localMode == 'dark' ? palette.dark.colors.background : palette.light.colors.background} />
