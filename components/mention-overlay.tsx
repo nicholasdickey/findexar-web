@@ -86,6 +86,18 @@ const XElement = styled.div`
 const TitleWrap = styled.div`
     color:#fff !important;
 `;
+const DialogTitleWrap = styled.div`
+    display:block;
+    @media (max-width: 1199px) {
+        display:none;
+    }
+`;
+const DialogTitleMobileWrap = styled.div`
+    display:block;
+    @media (min-width: 1200px) {
+        display:none;
+    }
+`;
 interface Props {
     fav: number;
     noUser: boolean;
@@ -138,14 +150,33 @@ const MentionOverlay = ({findexarxid,setDismiss,...props}:Props) => {
   }
   const target=type=='person'?`${teamName}:${name}`: `${teamName}`;
   console.log("linkType=",linkType);
-    return <Dialog open={open} fullScreen={fullScreen} PaperProps={{
+
+  useEffect(() => {
+    const keyDownHandler = (event:any) => {
+      console.log('User pressed: ', event.key);
+
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        handleClose();
+      }
+    };
+
+    window.addEventListener('keydown', keyDownHandler);
+
+    return () => {
+      window.removeEventListener('keydown', keyDownHandler);
+    };
+  }, []);
+
+
+    return <Dialog disableEscapeKeyDown={true} open={open} fullScreen={fullScreen} PaperProps={{
         style: {
           backgroundColor: 'transparent',
          // boxShadow: 'none',
         },
       }} >
-      <DialogTitle> </DialogTitle>
-     {false&& <DialogTitle onClick={()=>{setDismiss(true);}}><TitleWrap>{target}</TitleWrap></DialogTitle>}
+      <DialogTitleMobileWrap> <DialogTitle/></DialogTitleMobileWrap>
+      <DialogTitleWrap><DialogTitle onClick={()=>{setDismiss(true);}}><TitleWrap>{target}</TitleWrap></DialogTitle></DialogTitleWrap>
       <DialogActions>
       <ContentWrap>
           <div autoFocus onClick={()=>{handleClose();}}>

@@ -13,7 +13,7 @@ import {
     recordEvent, getLeagues,
     LeagueTeamsKey, getLeagueTeams, TeamPlayersKey, getTeamPlayers, DetailsKey, 
     MentionsKey,  TrackerListMembersKey, FavoritesKey, FetchedMentionsKey,
-    GetAMentionKey, getAMention
+    GetAMentionKey, getAMention, MetaLinkKey, getMetaLink
 } from '@/lib/api'
 const api_key = process.env.LAKE_API_KEY
 
@@ -138,8 +138,11 @@ const ssr = async (context: GetServerSidePropsContext) => {
         console.log("========== ========= SSR CHECKPOINT 3:", new Date().getTime() - t1, "ms");
         const getAMentionKey:GetAMentionKey={type:"GetAMention",findexarxid:findexarxid,noLoad:findexarxid!==""?false:true};
         let amention=null;
+        const metalinkKey: MetaLinkKey = { func: "meta", findexarxid,long:1 };
+        let metaLink=null;
         if(findexarxid){
             amention=await getAMention(getAMentionKey);
+            metaLink=await getMetaLink(metalinkKey);
         }
         console.log("VIEW:", view,"team:",team,"player:",player,"league:",league,"userId",userId,"options:",options,"keyMentions:",keyMentions)
         if (team) {
@@ -198,6 +201,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
         fallback[unstable_serialize({ type: "options", noUser: userId ? false : true })] = options;
         fallback[unstable_serialize(trackerListMembersKey)] = trackerListMembers;
         fallback[unstable_serialize(getAMentionKey)] = amention;
+        fallback[unstable_serialize(metalinkKey)] = metaLink;
         
         fallback[us(page => {
             const keyFetchedMentions: FetchedMentionsKey = { type: "FetchedMentions", teamid: team || "", name: player || "", noUser: userId ? false : true, page: page, league: league || "", myteam: tab=='myteam' ? 1 : 0,noLoad: view != 'mentions'&&tab!='fav' }

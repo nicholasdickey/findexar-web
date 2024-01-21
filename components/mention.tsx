@@ -208,6 +208,13 @@ const Digest = styled.div`
     //margin-left: 20px;
     //margin-right: 20px;
 `;
+const ArticleDigest = styled.div`
+    font-size: 24px;
+    padding-top:10px;
+   // margin-bottom:-20px;
+    //margin-left: 20px;
+    //margin-right: 20px;
+`;
 const ImageWrapper = styled.div`
   margin-top:20px;
   flex: 1 1 auto;
@@ -329,7 +336,7 @@ const Mention: React.FC<Props> = ({ startExtended,linkType,tp, sessionid, params
     const [hide, setHide] = React.useState(false);
     const [signin, setSignin] = React.useState(false);
     
-    console.log("Mention, extended:", { startExtended, expanded })
+   // console.log("Mention, extended:", { startExtended, expanded })
     
     useEffect(() => {
         console.log("Mention, extended:", "useEffect",startExtended,expanded)
@@ -358,7 +365,7 @@ const Mention: React.FC<Props> = ({ startExtended,linkType,tp, sessionid, params
     //console.log("mention params:",params)
     //if(!params)
     //    tp=tp.replace(/&/g,'?');
-    console.log("tp=", tp)
+   // console.log("tp=", tp)
     const shareUrl = "https://findexar.com" + (type == 'person' ? `/pub/league/${league}/team/${team}/player/${name}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}` : `/pub/league/${league}/team/${team}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}`);
     let localUrl ="";// (type == 'person' ? `/pub/league/${league}/team/${team}/player/${name}${params}${tp}` : `/pub/league/${league}/team/${team}${params}${tp}`) /*: url*/;
    //if(linkType=="final"){
@@ -367,8 +374,8 @@ const Mention: React.FC<Props> = ({ startExtended,linkType,tp, sessionid, params
     //} 
    /* if(!localUrl)
         localUrl="";*/
-    console.log("localUrl=", localUrl)
-    const mentionsKey: MetaLinkKey = { func: "meta", findexarxid,long:startExtended?1:0 };
+   // console.log("localUrl=", localUrl)
+    const mentionsKey: MetaLinkKey = { func: "meta", findexarxid,long:startExtended?1:1 };
     const meta = useSWRImmutable(mentionsKey, getMetaLink).data;
     let digest = meta?.digest||"";//meta ? meta.digest.replace('<p>', '').replace('</p>', '') : "";
     // console.log("expanded:", {findexarxid,expanded, meta,fav});
@@ -479,9 +486,9 @@ const Mention: React.FC<Props> = ({ startExtended,linkType,tp, sessionid, params
                         <HorizontalContainer>
                             <ImageWrapper><Image src={meta.image} alt={meta.title} /></ImageWrapper>
                             <Body>
-                            <Digest>
-                            {startExtended?'Article Digest:':'Short Digest:'}{!startExtended&&<div><br/></div>}
-                            </Digest>
+                            <ArticleDigest>
+                            {true?'Article Digest:':'Short Digest:'}
+                            </ArticleDigest>
                                 <Digest>
                                <div dangerouslySetInnerHTML={{ __html: digest }}></div> 
                                 </Digest>
@@ -534,9 +541,9 @@ const Mention: React.FC<Props> = ({ startExtended,linkType,tp, sessionid, params
                         <HorizontalContainer>
                             <ImageWrapper><Image src={meta.image} width={100} height={100} alt={meta.title} /></ImageWrapper>
                             <Body>
-                            <Digest>
-                            {startExtended?'Article Digest:':'Short Digest:'}{!startExtended&&<div><br/></div>}
-                            </Digest>
+                            <ArticleDigest>
+                            {true?'Article Digest:':'Short Digest:'}{!startExtended&&<div><br/></div>}
+                            </ArticleDigest>
                                 <Digest>
                                 <div dangerouslySetInnerHTML={{ __html: digest }}></div> 
                                 </Digest>
