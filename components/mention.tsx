@@ -372,15 +372,16 @@ const Mention: React.FC<Props> = ({ startExtended,linkType,tp, sessionid, params
     //if(!params)
     //    tp=tp.replace(/&/g,'?');
    // console.log("tp=", tp)
-    const shareUrl = "https://findexar.com" + (type == 'person' ? `/pub/league/${league}/team/${team}/player/${name}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}` : `/pub/league/${league}/team/${team}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}`);
+    const shareUrl = "https://findexar.com" + (type == 'person' ? `/pub/league/${league}/team/${team}/player/${name}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}&utm_content=sharelink` : `/pub/league/${league}/team/${team}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}&utm_content=sharelink`);
     let localUrl ="";// (type == 'person' ? `/pub/league/${league}/team/${team}/player/${name}${params}${tp}` : `/pub/league/${league}/team/${team}${params}${tp}`) /*: url*/;
    //if(linkType=="final"){
-        localUrl=(type == 'person' ? `/pub/league/${league}/team/${team}/player/${name}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}` : `/pub/league/${league}/team/${team}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}`)
+        localUrl=type == 'person' ? `/pub/league/${league}/team/${team}/player/${name}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}` : `/pub/league/${league}/team/${team}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}`
        // localUrl.replace("https://findexar.com/","/");
     //} 
    /* if(!localUrl)
         localUrl="";*/
    // console.log("localUrl=", localUrl)
+   
     const mentionsKey: MetaLinkKey = { func: "meta", findexarxid,long:startExtended?1:1 };
     const meta = useSWRImmutable(mentionsKey, getMetaLink).data;
     let digest = meta?.digest||"";//meta ? meta.digest.replace('<p>', '').replace('</p>', '') : "";
