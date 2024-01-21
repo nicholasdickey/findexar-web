@@ -804,7 +804,7 @@ const SinglePage: React.FC<Props> = (props) => {
                     <HeaderCenter>
                       <Superhead>{(localPageType == "league" || localPageType == "landing") ? <Link href={`/pub${params}`}>FINDEXAR{localLeague ? ` : ${localLeague}` : ``}</Link> : !localTeam ? `${localLeague}` : localPlayer ? <PlayerNameGroup><PlayerName><Link href={`/pub/league/${localLeague}/team/${localTeam}${params}`}>{teamName}</Link></PlayerName> </PlayerNameGroup> : `${localLeague} : ${teamName}`}</Superhead>
                       <SuperheadMobile>{(localPageType == "league" || localPageType == "landing") ? <Link href={`/pub${params}`}>{localLeague ? ` ${localLeague}` : `FINDEXAR`}</Link> : !localTeam ? `${localLeague}` : localPlayer ? <PlayerNameGroup><PlayerName><Link href={`/pub/league/${localLeague}/team/${localTeam}${params}`}>{teamName}</Link></PlayerName> </PlayerNameGroup> : `${teamName}`}</SuperheadMobile>
-                      {(localPageType == "league" || localPageType == "landing") && <div><Subhead>Annotated real-time index of media mentions for Fantasy Sports.</Subhead><SubheadMobile>Fantasy Sports Media Index</SubheadMobile></div>}
+                      {(localPageType == "league" || localPageType == "landing") && <div><Subhead>Sports Media Tracker</Subhead><SubheadMobile>Sports Media Tracker</SubheadMobile></div>}
                       {localPageType == "player" && localPlayer && <div><Subhead>{localPlayer ? localPlayer : ''}</Subhead><SubheadMobile>{localPlayer ? localPlayer : ''}</SubheadMobile></div>}
                     </HeaderCenter>
                     {localPageType == "player" && localPlayer && <Photo><PlayerPhoto teamid={localTeam || ""} name={localPlayer || ""} /></Photo>}
