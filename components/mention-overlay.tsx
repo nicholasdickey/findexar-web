@@ -83,6 +83,9 @@ const XElement = styled.div`
     color:#fff;
   
 `;
+const TitleWrap = styled.div`
+    color:#fff !important;
+`;
 interface Props {
     fav: number;
     noUser: boolean;
@@ -107,6 +110,7 @@ const MentionOverlay = ({findexarxid,setDismiss,...props}:Props) => {
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     console.log("dialog render, open=",{open,findexarxid,type,league,team,teamName,name});
     const router = useRouter();
+    const linkType=team?'final':'top';
     useEffect(() => {
         if(amention){
             console.log("openDialog")
@@ -132,13 +136,15 @@ const MentionOverlay = ({findexarxid,setDismiss,...props}:Props) => {
     router.replace(localUrl,undefined,{shallow:true});
     //(type == 'person' ? `/pub/league/${league}/team/${team}/player/${name}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}` : `/pub/league/${league}/team/${team}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}`)
   }
+  const target=type=='person'?`${teamName}:${name}`: `${teamName}`;
+  console.log("linkType=",linkType);
     return <Dialog open={open} fullScreen={fullScreen} PaperProps={{
         style: {
           backgroundColor: 'transparent',
          // boxShadow: 'none',
         },
       }} >
-    
+     {false&& <DialogTitle onClick={()=>{setDismiss(true);}}><TitleWrap>{target}</TitleWrap></DialogTitle>}
       <DialogActions>
       <ContentWrap>
           <div autoFocus onClick={()=>{handleClose();}}>
@@ -148,7 +154,7 @@ const MentionOverlay = ({findexarxid,setDismiss,...props}:Props) => {
         </DialogActions>
       <ContentWrap>
         <MentionWrap>
-      {league&&team&&name&&<Mention startExtended={true} linkType="final" {...props} findexarxid={findexarxid} date={date} url={url} summary={summary} fav={fav} type={type} team={team} teamName={teamName} league={league} name={name} mutate={()=>{}}/>}
+      <Mention startExtended={true} linkType={linkType} {...props} findexarxid={findexarxid} date={date} url={url} summary={summary} fav={fav} type={type} team={team} teamName={teamName} league={league} name={name} mutate={()=>{}}/>
       </MentionWrap>  
       </ContentWrap>
      

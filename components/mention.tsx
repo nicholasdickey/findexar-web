@@ -359,13 +359,13 @@ const Mention: React.FC<Props> = ({ startExtended,linkType,tp, sessionid, params
     //    tp=tp.replace(/&/g,'?');
     console.log("tp=", tp)
     const shareUrl = "https://findexar.com" + (type == 'person' ? `/pub/league/${league}/team/${team}/player/${name}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}` : `/pub/league/${league}/team/${team}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}`);
-    let localUrl = (type == 'person' ? `/pub/league/${league}/team/${team}/player/${name}${params}${tp}` : `/pub/league/${league}/team/${team}${params}${tp}`) /*: url*/;
-    if(linkType=="final"){
+    let localUrl ="";// (type == 'person' ? `/pub/league/${league}/team/${team}/player/${name}${params}${tp}` : `/pub/league/${league}/team/${team}${params}${tp}`) /*: url*/;
+   //if(linkType=="final"){
         localUrl=(type == 'person' ? `/pub/league/${league}/team/${team}/player/${name}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}` : `/pub/league/${league}/team/${team}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}`)
        // localUrl.replace("https://findexar.com/","/");
-    } 
-    if(!localUrl)
-        localUrl="";
+    //} 
+   /* if(!localUrl)
+        localUrl="";*/
     console.log("localUrl=", localUrl)
     const mentionsKey: MetaLinkKey = { func: "meta", findexarxid,long:startExtended?1:0 };
     const meta = useSWRImmutable(mentionsKey, getMetaLink).data;
@@ -433,6 +433,7 @@ const Mention: React.FC<Props> = ({ startExtended,linkType,tp, sessionid, params
             console.log('recordEvent', x);
         }
     }
+    //console.log("startExtended",startExtended )
     return (
         <>
             <MentionWrap hideit={hide} onMouseEnter={() => onHover('desktop')}>
@@ -477,6 +478,9 @@ const Mention: React.FC<Props> = ({ startExtended,linkType,tp, sessionid, params
                         <HorizontalContainer>
                             <ImageWrapper><Image src={meta.image} alt={meta.title} /></ImageWrapper>
                             <Body>
+                            <Digest>
+                            {startExtended?'Article Digest:':'Short Digest:'}{!startExtended&&<div><br/></div>}
+                            </Digest>
                                 <Digest>
                                <div dangerouslySetInnerHTML={{ __html: digest }}></div> 
                                 </Digest>
@@ -529,6 +533,9 @@ const Mention: React.FC<Props> = ({ startExtended,linkType,tp, sessionid, params
                         <HorizontalContainer>
                             <ImageWrapper><Image src={meta.image} width={100} height={100} alt={meta.title} /></ImageWrapper>
                             <Body>
+                            <Digest>
+                            {startExtended?'Article Digest:':'Short Digest:'}{!startExtended&&<div><br/></div>}
+                            </Digest>
                                 <Digest>
                                 <div dangerouslySetInnerHTML={{ __html: digest }}></div> 
                                 </Digest>
