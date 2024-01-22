@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import useSWRImmutable from 'swr/immutable'
 import Link from 'next/link';
 import { SignInButton, RedirectToSignIn } from "@clerk/nextjs";
-import { styled } from "styled-components";
+import { styled,useTheme } from "styled-components";
 import { RWebShare } from "react-web-share";
 import XIcon from '@mui/icons-material/X';
 import FacebookIcon from '@mui/icons-material/Facebook';
@@ -321,6 +321,11 @@ const Mention: React.FC<Props> = ({ startExtended, linkType, tp, sessionid, para
     const [signin, setSignin] = React.useState(false);
     const [copied, setCopied] = React.useState(false);
     const [value, copy] = useCopyToClipboard();
+    const theme = useTheme();
+    //@ts-ignore
+    const mode = theme.palette.mode;
+
+
     useEffect(() => {
         // if (content!=text) {
         setTimeout(() => {
@@ -499,9 +504,9 @@ const Mention: React.FC<Props> = ({ startExtended, linkType, tp, sessionid, para
                         //containerClassName="awesome-comments"
                         //customColor="663399"
                         //customHeight={250}
-                        //isDark={true}
+                        useDarkMode={mode=='dark'}
                         onLoad={() => console.log("Comments loaded!")}
-                        pageId={tgLink}
+                        pageId={meta.url}
                         //showColorfulNames
                         //showDislikes*/
                        // showIconOutlines
