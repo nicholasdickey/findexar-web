@@ -4,12 +4,16 @@ import Link from 'next/link';
 import { SignInButton, RedirectToSignIn } from "@clerk/nextjs";
 import { styled } from "styled-components";
 import { RWebShare } from "react-web-share";
-import { MetaLinkKey, getMetaLink, addFavorite, removeFavorite, recordEvent } from '@/lib/api';
-import { convertToUTCDateString, convertToReadableLocalTime } from "@/lib/date-convert";
-
+import XIcon from '@mui/icons-material/X';
+import FacebookIcon from '@mui/icons-material/Facebook';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import StarIcon from '@mui/icons-material/Star';
 import IosShareIcon from '@mui/icons-material/IosShare';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { MetaLinkKey, getMetaLink, addFavorite, removeFavorite, recordEvent } from '@/lib/api';
+import { convertToUTCDateString, convertToReadableLocalTime } from "@/lib/date-convert";
+import useCopyToClipboard from '@/lib/copy-to-clipboard';
+
 
 declare global {
     interface Window {
@@ -223,10 +227,25 @@ const ShareContainer = styled.div`
     font-size: 28x;  
     height:38px;
     opacity:0.6;
+    cursor:pointer;
+    color:var(--mention-text);
     :hover{
         opacity:1;
         color: var(--highlight);
     }
+    :hover:active{
+        opacity:1;
+        color:var(--highlight);
+    }
+
+`;
+const ShareGroup = styled.div`
+    display:flex;
+    flex-direction:row;
+    justify-content:space-between;
+    align-items:center;
+    width:60px;
+    margin-top:10px;
 `;
 
 const BottomLine = styled.div`
@@ -240,6 +259,16 @@ const BottomLine = styled.div`
 
 const LocalDate = styled.div`
     font-size: 12px;
+`;
+const SummaryWrap=styled.div`
+    display:inline;
+
+    float:right;
+    /*flex-direction:row;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap: wrap;*/
+    //width:100%;
 `;
 interface Props {
     league: string;
@@ -262,21 +291,30 @@ interface Props {
     params: string;
     sessionid: string;
     tp: string;
-    linkType:string;
+    linkType: string;
     startExtended?: boolean;
 }
 
-const Mention: React.FC<Props> = ({ startExtended,linkType,tp, sessionid, params, noUser, league, type, team, teamName, name, date, url, findex, summary, findexarxid, fav, setLocalPageType, setLocalPlayer, setLocalLeague, setLocalTeam, mutate }) => {
+const Mention: React.FC<Props> = ({ startExtended, linkType, tp, sessionid, params, noUser, league, type, team, teamName, name, date, url, findex, summary, findexarxid, fav, setLocalPageType, setLocalPlayer, setLocalLeague, setLocalTeam, mutate }) => {
     const [expanded, setExpanded] = React.useState(startExtended);
     const [localDate, setLocalDate] = React.useState(convertToUTCDateString(date));
     const [localFav, setLocalFav] = React.useState(fav);
     const [hide, setHide] = React.useState(false);
     const [signin, setSignin] = React.useState(false);
-
+    const [copied, setCopied] = React.useState(false);
+    const [value, copy] = useCopyToClipboard();
     useEffect(() => {
-        console.log("Mention, extended:", "useEffect",startExtended,expanded)
-        setExpanded(startExtended );
-    },[startExtended]);
+      // if (content!=text) {
+      setTimeout(() => {
+        setCopied(false);
+      }
+        , 2000);
+      //}
+    }, [copied]);
+    useEffect(() => {
+        console.log("Mention, extended:", "useEffect", startExtended, expanded)
+        setExpanded(startExtended);
+    }, [startExtended]);
 
     useEffect(() => {
         setLocalFav(fav);
@@ -291,14 +329,26 @@ const Mention: React.FC<Props> = ({ startExtended,linkType,tp, sessionid, params
             setHide(false);
         }
     }, [summary, mutate, date, url]);
-
-    const shareUrl = "https://findexar.com" + (type == 'person' ? `/pub/league/${league}/team/${team}/player/${name}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}&utm_content=sharelink` : `/pub/league/${league}/team/${team}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}&utm_content=sharelink`);
-    let localUrl ="";
-    localUrl=type == 'person' ? `/pub/league/${league}/team/${team}/player/${name}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}` : `/pub/league/${league}/team/${team}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}`
+    const prepName = name.replaceAll(' ', '_');
+    const shareUrl = (type == 'person' ? `${process.env.NEXT_PUBLIC_SERVER}pub/league/${league}/team/${encodeURIComponent(team)}/player/${encodeURIComponent(prepName)}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}&utm_content=sharelink` : `/pub/league/${league}/team/${encodeURIComponent(team)}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}&utm_content=sharelink`);
+    const twitterShareUrl = "http://findexar.com/"+(type == 'person' ? `pub/league/${league}/team/${encodeURIComponent(team)}/player/${encodeURIComponent(prepName)}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}&utm_content=xlink` : `/pub/league/${league}/team/${encodeURIComponent(team)}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}&utm_content=xlink`);
+    const fbShareUrl = "http://findexar.com/"+(type == 'person' ? `pub/league/${league}/team/${encodeURIComponent(team)}/player/${encodeURIComponent(prepName)}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}&utm_content=fblink` : `/pub/league/${league}/team/${encodeURIComponent(team)}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}&utm_content=fblink`);
    
-    const mentionsKey: MetaLinkKey = { func: "meta", findexarxid,long:startExtended?1:1 };
+   
+    let localUrl = "";
+    localUrl = type == 'person' ? `/pub/league/${league}/team/${team}/player/${prepName}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}` : `/pub/league/${league}/team/${team}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}`
+    const bottomLink = type == 'person' ? `/pub/league/${league}/team/${team}/player/${prepName}${params}${tp}` : `/pub/league/${league}/team/${team}${params}${tp}`;
+    const twitterLink = `https://twitter.com/intent/tweet?text=${encodeURIComponent(summary.substring(0, 240) + '...')}&url=${twitterShareUrl}&via=findexar`;
+
+	
+    const fbLink=`http://www.facebook.com/sharer.php?kid_directed_site=0&sdk=joey&u=${encodeURIComponent(fbShareUrl)}&t=${encodeURIComponent('Findexar')}&quote=${encodeURIComponent(summary.substring(0, 140) + '...')}&hashtag=%23findexar&display=popup&ref=plugin&src=share_button`;
+
+    //<a class="_2vmz" href="/sharer/sharer.php?kid_directed_site=0&amp;sdk=joey&amp;u=https%3A%2F%2Ffindexar.com%2Fpub%2Fleague%2FNFL%2Fteam%2Fkansas-city-chiefs%2Fplayer%2FPatrick%2520Mahomes%3Futm_content%3Dsharelink%26tab%3Dmyteam%26id%3D44078&amp;display=popup&amp;ref=plugin&amp;src=share_button" target="_blank" id="u_0_1_kW"><div><button id="icon-button" type="submit" class="inlineBlock _2tga _89n_ _8j9v"><span class="_8f1i"></span><div class=""><span class="_3jn- inlineBlock _2v7"><span class="_3jn_"></span><span class="_49vg _8a19"><img class="img" style="vertical-align:middle" src="https://static.xx.fbcdn.net/rsrc.php/v3/yo/r/6S2Dc9mdP9f.png" alt="" width="12" height="12"></span></span><span class="_49vh _2pi7">Share</span><span class="_5n6h _2pih" id="u_0_2_Ig">0</span></div></button></div></a>
+
+
+    const mentionsKey: MetaLinkKey = { func: "meta", findexarxid, long: startExtended ? 1 : 1 };
     const meta = useSWRImmutable(mentionsKey, getMetaLink).data;
-    let digest = meta?.digest||"";//meta ? meta.digest.replace('<p>', '').replace('</p>', '') : "";
+    let digest = meta?.digest || "";//meta ? meta.digest.replace('<p>', '').replace('</p>', '') : "";
     //console.log("expanded:", {findexarxid,expanded, meta,fav});
     useEffect(() => {
         try {
@@ -364,22 +414,27 @@ const Mention: React.FC<Props> = ({ startExtended,linkType,tp, sessionid, params
             console.log('recordEvent', x);
         }
     }
-
+    const onCopyClick=()=>{
+        console.log("copy click")
+        setCopied(true);
+        copy(summary);
+    }
     return (
         <>
             <MentionWrap hideit={hide} onMouseEnter={() => onHover('desktop')}>
-                <MentionSummary>                   
-                        <Topline><LocalDate><i>{localDate}</i></LocalDate>
-                            {!localFav ? noUser ? <SignInButton><StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); enableRedirect(); addFavorite({ findexarxid }); mutate() }} style={{ color: "#888" }} /></SignInButton> : <StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); enableRedirect(); addFavorite({ findexarxid }); mutate(); }} style={{ color: "#888" }} /> : <StarIcon onClick={() => { if (noUser) return; setLocalFav(0); removeFavorite({ findexarxid }); mutate(); }} style={{ color: "FFA000" }} />}</Topline>
+                <MentionSummary>
+                    <Topline><LocalDate><i>{localDate}</i></LocalDate>
+                        {!localFav ? noUser ? <SignInButton><StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); enableRedirect(); addFavorite({ findexarxid }); mutate() }} style={{ color: "#888" }} /></SignInButton> : <StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); enableRedirect(); addFavorite({ findexarxid }); mutate(); }} style={{ color: "#888" }} /> : <StarIcon onClick={() => { if (noUser) return; setLocalFav(0); removeFavorite({ findexarxid }); mutate(); }} style={{ color: "FFA000" }} />}</Topline>
 
-                        <Link scroll={linkType=='final'?false:true} href={localUrl} onClick={async () => { await onMentionNav(name) }} shallow>
-                            {summary}
-                        </Link>
-                        <hr />
-                        <Atmention><b>{(type == "person") && '@'}{name}</b> | {type == "person" ? `${teamName} |` : ""} {league} </Atmention>
-                        <Atmention2>{meta?.site_name}</Atmention2>                   
+                    <SummaryWrap><Link scroll={linkType == 'final' ? false : true} href={localUrl} onClick={async () => { await onMentionNav(name) }} shallow>
+                        {summary}
+                    </Link><ShareContainer><ContentCopyIcon sx={{color:copied?'green':''}} onClick={()=>onCopyClick()} /></ShareContainer>
+                    </SummaryWrap>
+                    <hr />
+                    <Atmention><Link href={bottomLink}><b>{(type == "person") && '@'}{name}</b> | {type == "person" ? `${teamName} |` : ""} {league} </Link></Atmention>
+                    <Atmention2>{meta?.site_name}</Atmention2>
                     <BottomLine>
-                        <RWebShare
+                        <ShareGroup><RWebShare
                             data={{
                                 text: summary,
                                 url: shareUrl,
@@ -389,6 +444,9 @@ const Mention: React.FC<Props> = ({ startExtended,linkType,tp, sessionid, params
                         >
                             <ShareContainer><IosShareIcon /></ShareContainer>
                         </RWebShare>
+                            <Link href={twitterLink} passHref><ShareContainer><XIcon /></ShareContainer></Link>
+                            <Link href={fbLink} passHref><ShareContainer><FacebookIcon /></ShareContainer></Link>
+                        </ShareGroup>
                         <Icon onClick={
                             async (e) => {
                                 const ne = !expanded
@@ -396,7 +454,7 @@ const Mention: React.FC<Props> = ({ startExtended,linkType,tp, sessionid, params
                                 await onExtended(ne);
                             }}
                             className="material-icons-outlined">{!expanded ? "expand_more" : "expand_less"}</Icon>
-                    </BottomLine>                
+                    </BottomLine>
                     {expanded && meta && <Link href={url}><ExtendedMention>
                         <Title>{meta.title}</Title>
                         <Byline>
@@ -406,11 +464,11 @@ const Mention: React.FC<Props> = ({ startExtended,linkType,tp, sessionid, params
                         <HorizontalContainer>
                             <ImageWrapper><Image src={meta.image} alt={meta.title} /></ImageWrapper>
                             <Body>
-                            <ArticleDigest>
-                            {true?'Article Digest:':'Short Digest:'}
-                            </ArticleDigest>
+                                <ArticleDigest>
+                                    {true ? 'Article Digest:' : 'Short Digest:'}
+                                </ArticleDigest>
                                 <Digest>
-                               <div dangerouslySetInnerHTML={{ __html: digest }}></div> 
+                                    <div dangerouslySetInnerHTML={{ __html: digest }}></div>
                                 </Digest>
                             </Body>
                         </HorizontalContainer>
@@ -422,15 +480,16 @@ const Mention: React.FC<Props> = ({ startExtended,linkType,tp, sessionid, params
                 <MentionSummary>
                     <div>
                         <Topline><LocalDate><b><i>{localDate}</i></b></LocalDate>{!localFav ? noUser ? <SignInButton><StarOutlineIcon onClick={() => { if (noUser) return; enableRedirect(); setLocalFav(1); addFavorite({ findexarxid }); mutate(); }} style={{ color: "#888" }} /></SignInButton> : <StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); enableRedirect(); addFavorite({ findexarxid }); mutate(); }} style={{ color: "#888" }} /> : <StarIcon onClick={() => { if (noUser) return; setLocalFav(0); removeFavorite({ findexarxid }); mutate(); }} style={{ color: "FFA000" }} />}</Topline>
-                        <Link  scroll={linkType=='final'?false:true} href={localUrl} onClick={async () => { await onMentionNav(name) }}>
-                            {summary}
-                        </Link>
+                         <SummaryWrap><Link scroll={linkType == 'final' ? false : true} href={localUrl} onClick={async () => { await onMentionNav(name) }} shallow>
+                        {summary}
+                    </Link><ShareContainer><ContentCopyIcon sx={{color:copied?'green':''}} onClick={()=>onCopyClick()} /></ShareContainer>
+                    </SummaryWrap>
                         <hr />
                         <Atmention><b>{(type == "person") && '@'}{name}</b> | {type == "person" ? `${teamName} |` : ""}  {league}</Atmention>
                         <MobileAtmention2>{meta?.site_name}</MobileAtmention2>
                     </div>
                     <BottomLine>
-                        <RWebShare
+                        <ShareGroup><RWebShare
                             data={{
                                 text: summary,
                                 url: shareUrl,
@@ -440,6 +499,10 @@ const Mention: React.FC<Props> = ({ startExtended,linkType,tp, sessionid, params
                         >
                             <ShareContainer><IosShareIcon /></ShareContainer>
                         </RWebShare>
+                            <Link href={twitterLink} passHref><ShareContainer><XIcon /></ShareContainer></Link>
+                            <Link href={fbLink} passHref><ShareContainer><FacebookIcon /></ShareContainer></Link>
+               
+                        </ShareGroup>
                         <Icon onClick={
                             async (e) => {
                                 const ne = !expanded;
@@ -457,11 +520,11 @@ const Mention: React.FC<Props> = ({ startExtended,linkType,tp, sessionid, params
                         <HorizontalContainer>
                             <ImageWrapper><Image src={meta.image} width={100} height={100} alt={meta.title} /></ImageWrapper>
                             <Body>
-                            <ArticleDigest>
-                            {true?'Article Digest:':'Short Digest:'}
-                            </ArticleDigest>
+                                <ArticleDigest>
+                                    {true ? 'Article Digest:' : 'Short Digest:'}
+                                </ArticleDigest>
                                 <Digest>
-                                <div dangerouslySetInnerHTML={{ __html: digest }}></div> 
+                                    <div dangerouslySetInnerHTML={{ __html: digest }}></div>
                                 </Digest>
                             </Body>
                         </HorizontalContainer>

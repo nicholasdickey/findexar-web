@@ -573,12 +573,12 @@ const SinglePage: React.FC<Props> = (props) => {
       qteam = arg4;
       qpagetype = "team";
       if (arg5 == 'player') {
-        qplayer = arg6;
+        qplayer = arg6.replaceAll('_', ' ');
         qpagetype = "player";
       }
     }
     else if (arg3 == 'player') {
-      qplayer = arg4;
+      qplayer = arg4.replaceAll('_', ' ');
     }
     console.log("setting findexarxid", findexarxid);
     setLocalLeague(qleague);
@@ -736,7 +736,7 @@ const SinglePage: React.FC<Props> = (props) => {
   if (amention &&amentionLeague&&amentionTeam&&amentionPlayer&&type=='person')
     ogTarget = `${amentionPlayer} of ${amentionTeamName}`;
   else if (amention && amentionLeague && amentionTeam)
-    ogTarget = `${amentionTeamName} Media Mentions`;
+    ogTarget = `${amentionTeamName} on Findexar`;
 
 
   let ogDescription = amentionSummary ? amentionSummary : "Fantasy Sports Media Tracker.";

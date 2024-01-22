@@ -76,16 +76,17 @@ const ssr = async (context: GetServerSidePropsContext) => {
             team = arg4;
             pagetype = "team";
             if (arg5 == 'player') {
-                player = arg6;
+                player = arg6.replaceAll('_', ' ');
                 pagetype = "player";
             }
         }
         else if (arg3 == 'player') {
-            player = arg4;
+            player = arg4.replaceAll('_', ' ');
         }
         if(arg7=='xid'||arg7=='id'||arg7=='findexarxid'){
             findexarxid=arg8;
         }
+        console.log("NAME:", player);
         var randomstring = () => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
         let sessionid=getCookie('sessionid', { req:context.req, res:context.res });
         let mode=getCookie('mode', { req:context.req, res:context.res })||"light";
