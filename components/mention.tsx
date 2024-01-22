@@ -91,7 +91,7 @@ const MentionSummary = styled.div`
     width:100%;
     padding-right:20px;
     border-radius: 30px;
-    font-size: 18px;
+    font-size: 14px;
     padding-left:10px;
     padding-right:10px;
     background-color: var(--mention-bg); 
@@ -128,6 +128,10 @@ const ExtendedMention = styled.div`
     } 
     display:flex;
     flex-direction:column;
+    a{
+        font-size:14px !important;
+      
+    }
 `;
 const MobileExtendedMention = styled.div`
     margin-top:20px;
@@ -140,12 +144,20 @@ const MobileExtendedMention = styled.div`
     }
     display:flex;
     flex-direction:column;
+    a{
+        font-size:14px !important;
+      
+    }
 `;
 
 const Body = styled.div`
-    font-size: 18px;
+    font-size: 14px;
     margin-bottom: 14px;
     flex: 2 1 auto;
+    a{
+        font-size:14px !important;
+      
+    }
 `;
 
 const Title = styled.div`
@@ -155,11 +167,11 @@ const Title = styled.div`
 `;
 
 const Digest = styled.div`
-    font-size: 18px;
+    font-size: 14px;
 `;
 
 const ArticleDigest = styled.div`
-    font-size: 24px;
+    font-size: 18px;
     padding-top:10px;
 `;
 
@@ -205,6 +217,10 @@ const HorizontalContainer = styled.div`
     display: flex;
     align-items:flex-start;
     flex-wrap: wrap;   
+    a{
+        font-size:14px !important;
+      
+    }
 `;
 
 const Atmention = styled.div`
@@ -280,6 +296,11 @@ const LocalDate = styled.div`
 const SummaryWrap = styled.div`
     display:inline;
     line-height: 1.2;
+    font-size:14px !important;
+    a{
+        font-size:14px !important;
+      
+    }
     /*display:flex;
     flex-direction:row;
     justify-content:space-between;
