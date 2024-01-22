@@ -169,7 +169,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
                       
                         console.log("========== ========= SSR CHECKPOINT 31:", new Date().getTime() - t1, "ms");
       
-                        const { data: dataMentions } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?api_key=${api_key}&userid=${userId}&teamid=${team}&name=${encodeURIComponent(player as string || "")}&page=0&league=${league}&myteam=0`);
+                        const { data: dataMentions } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?api_key=${api_key}&userid=${userId}&teamid=${team}&name=${encodeURIComponent(player as string || "")}&page=0&league=${league}&myteam=${tab=='myteam'?1:0}`);
                         
                         console.log("========== ========= SSR CHECKPOINT 32:", new Date().getTime() - t1, "ms");
       
@@ -178,7 +178,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
                 }
                 else {
                     if (view == 'mentions') {
-                        const { data: dataMentions } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?api_key=${api_key}&userid=${userId}&teamid=${team}&name=${encodeURIComponent(player as string || "")}&page=0&league=${league}&myteam=0`);
+                        const { data: dataMentions } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?api_key=${api_key}&userid=${userId}&teamid=${team}&name=${encodeURIComponent(player as string || "")}&page=0&league=${league}&myteam=${tab=='myteam'?1:0}`);
                         fetchMentions = dataMentions.mentions;
                     }
                 }
