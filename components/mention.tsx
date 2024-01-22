@@ -263,7 +263,7 @@ const LocalDate = styled.div`
 const SummaryWrap=styled.div`
     display:inline;
 
-    //float:right;
+    float:left;
     /*flex-direction:row;
     justify-content:space-between;
     align-items:center;
@@ -428,7 +428,7 @@ const Mention: React.FC<Props> = ({ startExtended, linkType, tp, sessionid, para
 
                     <SummaryWrap><Link scroll={linkType == 'final' ? false : true} href={localUrl} onClick={async () => { await onMentionNav(name) }} shallow>
                         {summary}
-                    </Link><ShareContainer><ContentCopyIcon sx={{color:copied?'green':''}} onClick={()=>onCopyClick()} /></ShareContainer>
+                    </Link><ShareContainer><ContentCopyIcon fontSize="small" sx={{color:copied?'green':''}} onClick={()=>onCopyClick()} /></ShareContainer>
                     </SummaryWrap>
                     <hr />
                     <Atmention><Link href={bottomLink}><b>{(type == "person") && '@'}{name}</b> | {type == "person" ? `${teamName} |` : ""} {league} </Link></Atmention>
@@ -482,7 +482,7 @@ const Mention: React.FC<Props> = ({ startExtended, linkType, tp, sessionid, para
                         <Topline><LocalDate><b><i>{localDate}</i></b></LocalDate>{!localFav ? noUser ? <SignInButton><StarOutlineIcon onClick={() => { if (noUser) return; enableRedirect(); setLocalFav(1); addFavorite({ findexarxid }); mutate(); }} style={{ color: "#888" }} /></SignInButton> : <StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); enableRedirect(); addFavorite({ findexarxid }); mutate(); }} style={{ color: "#888" }} /> : <StarIcon onClick={() => { if (noUser) return; setLocalFav(0); removeFavorite({ findexarxid }); mutate(); }} style={{ color: "FFA000" }} />}</Topline>
                          <SummaryWrap><Link scroll={linkType == 'final' ? false : true} href={localUrl} onClick={async () => { await onMentionNav(name) }} shallow>
                         {summary}
-                    </Link><ShareContainer><ContentCopyIcon sx={{color:copied?'green':''}} onClick={()=>onCopyClick()} /></ShareContainer>
+                    </Link><ShareContainer><ContentCopyIcon  fontSize="small" sx={{color:copied?'green':''}} onClick={()=>onCopyClick()} /></ShareContainer>
                     </SummaryWrap>
                         <hr />
                         <Atmention><b>{(type == "person") && '@'}{name}</b> | {type == "person" ? `${teamName} |` : ""}  {league}</Atmention>
