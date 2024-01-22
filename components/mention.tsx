@@ -263,7 +263,7 @@ const LocalDate = styled.div`
 const SummaryWrap=styled.div`
     display:inline;
 
-    float:right;
+    //float:right;
     /*flex-direction:row;
     justify-content:space-between;
     align-items:center;
