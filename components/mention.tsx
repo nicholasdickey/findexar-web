@@ -499,7 +499,7 @@ const Mention: React.FC<Props> = ({ startExtended, linkType, tp, sessionid, para
                             </Body>
                         </HorizontalContainer>
                         {meta.url.substring(0, 50)}...
-                        <TelegramComments
+                       {false&&<TelegramComments
                         commentsNumber={3}
                         //containerClassName="awesome-comments"
                         //customColor="663399"
@@ -512,7 +512,7 @@ const Mention: React.FC<Props> = ({ startExtended, linkType, tp, sessionid, para
                        // showIconOutlines
                         websiteKey="2tZ-G5G6"
                        // wrapperClassName="awesome-comments__wrapper"
-                    />
+                    />}
                     </ExtendedMention></Link>}
                 </MentionSummary>
             </MentionWrap>
