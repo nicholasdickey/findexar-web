@@ -13,7 +13,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { MetaLinkKey, getMetaLink, addFavorite, removeFavorite, recordEvent } from '@/lib/api';
 import { convertToUTCDateString, convertToReadableLocalTime } from "@/lib/date-convert";
 import useCopyToClipboard from '@/lib/copy-to-clipboard';
-
+import { TelegramComments } from "react-telegram-comments";
 
 declare global {
     interface Window {
@@ -239,6 +239,23 @@ const ShareContainer = styled.div`
     }
 
 `;
+const ShareContainerInline = styled.span`
+    font-size: 28x;  
+    height:38px;
+    opacity:0.6;
+    cursor:pointer;
+    margin-left:10px;
+    color:var(--mention-text);
+    :hover{
+        opacity:1;
+        color: var(--highlight);
+    }
+    :hover:active{
+        opacity:1;
+        color:var(--highlight);
+    }
+
+`;
 const ShareGroup = styled.div`
     display:flex;
     flex-direction:row;
@@ -260,16 +277,17 @@ const BottomLine = styled.div`
 const LocalDate = styled.div`
     font-size: 12px;
 `;
-const SummaryWrap=styled.div`
+const SummaryWrap = styled.div`
     display:inline;
-
-    float:left;
-    /*flex-direction:row;
+    line-height: 1.2;
+    /*display:flex;
+    flex-direction:row;
     justify-content:space-between;
     align-items:center;
-    flex-wrap: wrap;*/
-    //width:100%;
+    flex-wrap: wrap; 
+    width:100%;*/
 `;
+
 interface Props {
     league: string;
     type: string;
@@ -304,12 +322,12 @@ const Mention: React.FC<Props> = ({ startExtended, linkType, tp, sessionid, para
     const [copied, setCopied] = React.useState(false);
     const [value, copy] = useCopyToClipboard();
     useEffect(() => {
-      // if (content!=text) {
-      setTimeout(() => {
-        setCopied(false);
-      }
-        , 2000);
-      //}
+        // if (content!=text) {
+        setTimeout(() => {
+            setCopied(false);
+        }
+            , 2000);
+        //}
     }, [copied]);
     useEffect(() => {
         console.log("Mention, extended:", "useEffect", startExtended, expanded)
@@ -331,18 +349,18 @@ const Mention: React.FC<Props> = ({ startExtended, linkType, tp, sessionid, para
     }, [summary, mutate, date, url]);
     const prepName = name.replaceAll(' ', '_');
     const shareUrl = (type == 'person' ? `${process.env.NEXT_PUBLIC_SERVER}pub/league/${league}/team/${encodeURIComponent(team)}/player/${encodeURIComponent(prepName)}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}&utm_content=sharelink` : `/pub/league/${league}/team/${encodeURIComponent(team)}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}&utm_content=sharelink`);
-    const twitterShareUrl = "http://findexar.com/"+(type == 'person' ? `pub/league/${league}/team/${encodeURIComponent(team)}/player/${encodeURIComponent(prepName)}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}&utm_content=xlink` : `/pub/league/${league}/team/${encodeURIComponent(team)}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}&utm_content=xlink`);
-    const fbShareUrl = "http://findexar.com/"+(type == 'person' ? `pub/league/${league}/team/${encodeURIComponent(team)}/player/${encodeURIComponent(prepName)}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}&utm_content=fblink` : `/pub/league/${league}/team/${encodeURIComponent(team)}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}&utm_content=fblink`);
-   
-   
+    const twitterShareUrl = "http://findexar.com/" + (type == 'person' ? `pub/league/${league}/team/${encodeURIComponent(team)}/player/${encodeURIComponent(prepName)}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}&utm_content=xlink` : `/pub/league/${league}/team/${encodeURIComponent(team)}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}&utm_content=xlink`);
+    const fbShareUrl = "http://findexar.com/" + (type == 'person' ? `pub/league/${league}/team/${encodeURIComponent(team)}/player/${encodeURIComponent(prepName)}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}&utm_content=fblink` : `/pub/league/${league}/team/${encodeURIComponent(team)}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}&utm_content=fblink`);
+
+
     let localUrl = "";
     localUrl = type == 'person' ? `/pub/league/${league}/team/${team}/player/${prepName}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}` : `/pub/league/${league}/team/${team}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}`
     const bottomLink = type == 'person' ? `/pub/league/${league}/team/${team}/player/${prepName}${params}${tp}` : `/pub/league/${league}/team/${team}${params}${tp}`;
     const twitterLink = `https://twitter.com/intent/tweet?text=${encodeURIComponent(summary.substring(0, 230) + '...')}&url=${twitterShareUrl}&via=findexar`;
 
-	
-    const fbLink=`http://www.facebook.com/sharer.php?kid_directed_site=0&sdk=joey&u=${encodeURIComponent(fbShareUrl)}&t=${encodeURIComponent('Findexar')}&quote=${encodeURIComponent(summary.substring(0, 140) + '...')}&hashtag=%23findexar&display=popup&ref=plugin&src=share_button`;
 
+    const fbLink = `http://www.facebook.com/sharer.php?kid_directed_site=0&sdk=joey&u=${encodeURIComponent(fbShareUrl)}&t=${encodeURIComponent('Findexar')}&quote=${encodeURIComponent(summary.substring(0, 140) + '...')}&hashtag=%23findexar&display=popup&ref=plugin&src=share_button`;
+    const tgLink="https://findexar.com"+localUrl;
     //<a class="_2vmz" href="/sharer/sharer.php?kid_directed_site=0&amp;sdk=joey&amp;u=https%3A%2F%2Ffindexar.com%2Fpub%2Fleague%2FNFL%2Fteam%2Fkansas-city-chiefs%2Fplayer%2FPatrick%2520Mahomes%3Futm_content%3Dsharelink%26tab%3Dmyteam%26id%3D44078&amp;display=popup&amp;ref=plugin&amp;src=share_button" target="_blank" id="u_0_1_kW"><div><button id="icon-button" type="submit" class="inlineBlock _2tga _89n_ _8j9v"><span class="_8f1i"></span><div class=""><span class="_3jn- inlineBlock _2v7"><span class="_3jn_"></span><span class="_49vg _8a19"><img class="img" style="vertical-align:middle" src="https://static.xx.fbcdn.net/rsrc.php/v3/yo/r/6S2Dc9mdP9f.png" alt="" width="12" height="12"></span></span><span class="_49vh _2pi7">Share</span><span class="_5n6h _2pih" id="u_0_2_Ig">0</span></div></button></div></a>
 
 
@@ -414,11 +432,12 @@ const Mention: React.FC<Props> = ({ startExtended, linkType, tp, sessionid, para
             console.log('recordEvent', x);
         }
     }
-    const onCopyClick=()=>{
+    const onCopyClick = () => {
         console.log("copy click")
         setCopied(true);
         copy(summary);
     }
+    console.log("tgLink:",tgLink);
     return (
         <>
             <MentionWrap hideit={hide} onMouseEnter={() => onHover('desktop')}>
@@ -428,7 +447,8 @@ const Mention: React.FC<Props> = ({ startExtended, linkType, tp, sessionid, para
 
                     <SummaryWrap><Link scroll={linkType == 'final' ? false : true} href={localUrl} onClick={async () => { await onMentionNav(name) }} shallow>
                         {summary}
-                    </Link><ShareContainer><ContentCopyIcon fontSize="small" sx={{color:copied?'green':''}} onClick={()=>onCopyClick()} /></ShareContainer>
+                    </Link>
+                    <ShareContainerInline><ContentCopyIcon fontSize="small" sx={{ color: copied ? 'green' : '' }} onClick={() => onCopyClick()} /></ShareContainerInline>
                     </SummaryWrap>
                     <hr />
                     <Atmention><Link href={bottomLink}><b>{(type == "person") && '@'}{name}</b> | {type == "person" ? `${teamName} |` : ""} {league} </Link></Atmention>
@@ -455,6 +475,7 @@ const Mention: React.FC<Props> = ({ startExtended, linkType, tp, sessionid, para
                             }}
                             className="material-icons-outlined">{!expanded ? "expand_more" : "expand_less"}</Icon>
                     </BottomLine>
+                   
                     {expanded && meta && <Link href={url}><ExtendedMention>
                         <Title>{meta.title}</Title>
                         <Byline>
@@ -473,6 +494,20 @@ const Mention: React.FC<Props> = ({ startExtended, linkType, tp, sessionid, para
                             </Body>
                         </HorizontalContainer>
                         {meta.url.substring(0, 50)}...
+                        <TelegramComments
+                        commentsNumber={3}
+                        containerClassName="awesome-comments"
+                        customColor="663399"
+                        customHeight={250}
+                        //isDark={true}
+                        onLoad={() => console.log("Comments loaded!")}
+                        pageId={tgLink}
+                        //showColorfulNames
+                        //showDislikes
+                        showIconOutlines
+                        websiteKey={"2tZ-G5G6"}
+                        wrapperClassName="awesome-comments__wrapper"
+                    />
                     </ExtendedMention></Link>}
                 </MentionSummary>
             </MentionWrap>
@@ -480,10 +515,11 @@ const Mention: React.FC<Props> = ({ startExtended, linkType, tp, sessionid, para
                 <MentionSummary>
                     <div>
                         <Topline><LocalDate><b><i>{localDate}</i></b></LocalDate>{!localFav ? noUser ? <SignInButton><StarOutlineIcon onClick={() => { if (noUser) return; enableRedirect(); setLocalFav(1); addFavorite({ findexarxid }); mutate(); }} style={{ color: "#888" }} /></SignInButton> : <StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); enableRedirect(); addFavorite({ findexarxid }); mutate(); }} style={{ color: "#888" }} /> : <StarIcon onClick={() => { if (noUser) return; setLocalFav(0); removeFavorite({ findexarxid }); mutate(); }} style={{ color: "FFA000" }} />}</Topline>
-                         <SummaryWrap><Link scroll={linkType == 'final' ? false : true} href={localUrl} onClick={async () => { await onMentionNav(name) }} shallow>
-                        {summary}
-                    </Link><ShareContainer><ContentCopyIcon  fontSize="small" sx={{color:copied?'green':''}} onClick={()=>onCopyClick()} /></ShareContainer>
-                    </SummaryWrap>
+                        <SummaryWrap><Link scroll={linkType == 'final' ? false : true} href={localUrl} onClick={async () => { await onMentionNav(name) }} shallow>
+                            {summary}
+                        </Link>
+                        <ShareContainerInline><ContentCopyIcon fontSize="small" sx={{ color: copied ? 'green' : '' }} onClick={() => onCopyClick()} /></ShareContainerInline>
+                        </SummaryWrap>
                         <hr />
                         <Atmention><b>{(type == "person") && '@'}{name}</b> | {type == "person" ? `${teamName} |` : ""}  {league}</Atmention>
                         <MobileAtmention2>{meta?.site_name}</MobileAtmention2>
@@ -501,7 +537,7 @@ const Mention: React.FC<Props> = ({ startExtended, linkType, tp, sessionid, para
                         </RWebShare>
                             <Link href={twitterLink} passHref><ShareContainer><XIcon /></ShareContainer></Link>
                             <Link href={fbLink} passHref><ShareContainer><FacebookIcon /></ShareContainer></Link>
-               
+
                         </ShareGroup>
                         <Icon onClick={
                             async (e) => {

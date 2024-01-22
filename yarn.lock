@@ -2672,6 +2672,11 @@ react-loader-spinner@^6.1.6:
     react-is "^18.2.0"
     styled-components "^6.1.2"
 
+react-telegram-comments@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-telegram-comments/-/react-telegram-comments-2.0.0.tgz#f79c893097038b4cab8320f577e7b60a27f6651a"
+  integrity sha512-H6p9QuqqZ3mtIRKjfMVGDHfJq5Su1WjrLvo0mcgvM7mpibbUQF/Y1EQaLrzsdINRT0ygZfRb/nyZz+mJmppOQg==
+
 react-transition-group@^4.4.5:
   version "4.4.5"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-4.4.5.tgz#e53d4e3f3344da8521489fbef8f2581d42becdd1"

@@ -26,6 +26,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-loader-spinner": "^6.1.6",
+    "react-telegram-comments": "^2.0.0",
     "react-web-share": "^2.0.2",
     "stripe": "^14.10.0",
     "styled-components": "^6.1.3",
