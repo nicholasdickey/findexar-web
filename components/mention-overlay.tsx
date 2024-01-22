@@ -173,7 +173,7 @@ const MentionOverlay = ({findexarxid,setDismiss,...props}:Props) => {
     router.replace(localUrl,undefined,{shallow:true});
     //(type == 'person' ? `/pub/league/${league}/team/${team}/player/${name}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}` : `/pub/league/${league}/team/${team}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}`)
   }
-  let target=type=='person'?`${teamName}:${name}`: `${teamName}`;
+  let target=type=='person'?`${teamName}: ${name}`: `${teamName}`;
   target=!target||target=='undefined'?'' : target;
   console.log("linkType=",linkType);
 
