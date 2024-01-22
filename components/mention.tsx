@@ -261,7 +261,7 @@ const ShareGroup = styled.div`
     flex-direction:row;
     justify-content:space-between;
     align-items:center;
-    width:60px;
+    width:78px;
     margin-top:10px;
 `;
 
@@ -453,7 +453,7 @@ const Mention: React.FC<Props> = ({ startExtended, linkType, tp, sessionid, para
                     <SummaryWrap><Link scroll={linkType == 'final' ? false : true} href={localUrl} onClick={async () => { await onMentionNav(name) }} shallow>
                         {summary}
                     </Link>
-                    <ShareContainerInline><ContentCopyIcon fontSize="small" sx={{ color: copied ? 'green' : '' }} onClick={() => onCopyClick()} /></ShareContainerInline>
+                    <ShareContainerInline><ContentCopyIcon style={{paddingTop:6,marginBottom:-2}}fontSize="small" sx={{ color: copied ? 'green' : '' }} onClick={() => onCopyClick()} /></ShareContainerInline>
                     </SummaryWrap>
                     <hr />
                     <Atmention><Link href={bottomLink}><b>{(type == "person") && '@'}{name}</b> | {type == "person" ? `${teamName} |` : ""} {league} </Link></Atmention>
@@ -523,7 +523,7 @@ const Mention: React.FC<Props> = ({ startExtended, linkType, tp, sessionid, para
                         <SummaryWrap><Link scroll={linkType == 'final' ? false : true} href={localUrl} onClick={async () => { await onMentionNav(name) }} shallow>
                             {summary}
                         </Link>
-                        <ShareContainerInline><ContentCopyIcon fontSize="small" sx={{ color: copied ? 'green' : '' }} onClick={() => onCopyClick()} /></ShareContainerInline>
+                        <ShareContainerInline><ContentCopyIcon style={{paddingTop:6,marginBottom:-2}} fontSize="small" sx={{ color: copied ? 'green' : '' }} onClick={() => onCopyClick()} /></ShareContainerInline>
                         </SummaryWrap>
                         <hr />
                         <Atmention><b>{(type == "person") && '@'}{name}</b> | {type == "person" ? `${teamName} |` : ""}  {league}</Atmention>
