@@ -508,8 +508,8 @@ const Mention: React.FC<Props> = ({ startExtended, linkType, tp, sessionid, para
                         >
                             <ShareContainer><ShareIcon><IosShareIcon /></ShareIcon></ShareContainer>
                         </RWebShare>
-                            <Link href={twitterLink} ><ShareContainer><XIcon /></ShareContainer></Link>
-                            <Link href={fbLink} ><ShareContainer><FacebookIcon /></ShareContainer></Link>
+                            <Link href={twitterLink} target="_blank"><ShareContainer><XIcon /></ShareContainer></Link>
+                            <Link href={fbLink} target="_blank"><ShareContainer><FacebookIcon /></ShareContainer></Link>
                         </ShareGroup>
                         <Icon onClick={
                             async (e) => {
@@ -594,8 +594,8 @@ const Mention: React.FC<Props> = ({ startExtended, linkType, tp, sessionid, para
                         >
                             <ShareContainer><ShareIcon><IosShareIcon /></ShareIcon></ShareContainer>
                         </RWebShare>
-                            <Link href={twitterLink} ><ShareContainer><XIcon /></ShareContainer></Link>
-                            <Link href={fbLink}><ShareContainer><FacebookIcon /></ShareContainer></Link>
+                            <Link href={twitterLink} target="_blank"><ShareContainer><XIcon /></ShareContainer></Link>
+                            <Link href={fbLink} target="_blank"><ShareContainer><FacebookIcon /></ShareContainer></Link>
                         </ShareGroup>
                         <Icon onClick={
                             async (e) => {
