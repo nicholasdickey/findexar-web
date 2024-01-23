@@ -396,7 +396,7 @@ const Mention: React.FC<Props> = ({ startExtended, linkType, tp, sessionid, para
     const bottomLink = type == 'person' ? `/pub/league/${league}/team/${team}/player/${prepName}${params}${tp}` : `/pub/league/${league}/team/${team}${params}${tp}`;
     const twitterLink = `https://twitter.com/intent/tweet?text=${encodeURIComponent(summary.substring(0, 230) + '...')}&url=${twitterShareUrl}&via=findexar`;
 
-
+    console.log("twitterLink:", twitterLink)
     const fbLink = `https://www.facebook.com/sharer.php?kid_directed_site=0&sdk=joey&u=${encodeURIComponent(fbShareUrl)}&t=${encodeURIComponent('Findexar')}&quote=${encodeURIComponent(summary.substring(0, 140) + '...')}&hashtag=%23findexar&display=popup&ref=plugin&src=share_button`;
     const tgLink = "https://www.findexar.com" + localUrl;
     //<a class="_2vmz" href="/sharer/sharer.php?kid_directed_site=0&amp;sdk=joey&amp;u=https%3A%2F%2Ffindexar.com%2Fpub%2Fleague%2FNFL%2Fteam%2Fkansas-city-chiefs%2Fplayer%2FPatrick%2520Mahomes%3Futm_content%3Dsharelink%26tab%3Dmyteam%26id%3D44078&amp;display=popup&amp;ref=plugin&amp;src=share_button" target="_blank" id="u_0_1_kW"><div><button id="icon-button" type="submit" class="inlineBlock _2tga _89n_ _8j9v"><span class="_8f1i"></span><div class=""><span class="_3jn- inlineBlock _2v7"><span class="_3jn_"></span><span class="_49vg _8a19"><img class="img" style="vertical-align:middle" src="https://static.xx.fbcdn.net/rsrc.php/v3/yo/r/6S2Dc9mdP9f.png" alt="" width="12" height="12"></span></span><span class="_49vh _2pi7">Share</span><span class="_5n6h _2pih" id="u_0_2_Ig">0</span></div></button></div></a>
@@ -508,8 +508,8 @@ const Mention: React.FC<Props> = ({ startExtended, linkType, tp, sessionid, para
                         >
                             <ShareContainer><ShareIcon><IosShareIcon /></ShareIcon></ShareContainer>
                         </RWebShare>
-                            <Link href={twitterLink} passHref><ShareContainer><XIcon /></ShareContainer></Link>
-                            <Link href={fbLink} passHref><ShareContainer><FacebookIcon /></ShareContainer></Link>
+                            <Link href={twitterLink} ><ShareContainer><XIcon /></ShareContainer></Link>
+                            <Link href={fbLink} ><ShareContainer><FacebookIcon /></ShareContainer></Link>
                         </ShareGroup>
                         <Icon onClick={
                             async (e) => {
@@ -594,9 +594,8 @@ const Mention: React.FC<Props> = ({ startExtended, linkType, tp, sessionid, para
                         >
                             <ShareContainer><ShareIcon><IosShareIcon /></ShareIcon></ShareContainer>
                         </RWebShare>
-                            <Link href={twitterLink} passHref><ShareContainer><XIcon /></ShareContainer></Link>
-                            <Link href={fbLink} passHref><ShareContainer><FacebookIcon /></ShareContainer></Link>
-
+                            <Link href={twitterLink} ><ShareContainer><XIcon /></ShareContainer></Link>
+                            <Link href={fbLink}><ShareContainer><FacebookIcon /></ShareContainer></Link>
                         </ShareGroup>
                         <Icon onClick={
                             async (e) => {
