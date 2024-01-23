@@ -592,7 +592,7 @@ const Mention: React.FC<Props> = ({ startExtended, linkType, tp, sessionid, para
                             }}
                             onClick={async () => onShare(url)}
                         >
-                            <ShareContainer><IosShareIcon /></ShareContainer>
+                            <ShareContainer><ShareIcon><IosShareIcon /></ShareIcon></ShareContainer>
                         </RWebShare>
                             <Link href={twitterLink} passHref><ShareContainer><XIcon /></ShareContainer></Link>
                             <Link href={fbLink} passHref><ShareContainer><FacebookIcon /></ShareContainer></Link>
