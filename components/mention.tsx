@@ -386,9 +386,9 @@ const Mention: React.FC<Props> = ({ startExtended, linkType, tp, sessionid, para
         }
     }, [summary, mutate, date, url]);
     const prepName = name.replaceAll(' ', '_');
-    const shareUrl = (type == 'person' ? `${process.env.NEXT_PUBLIC_SERVER}pub/league/${league}/team/${encodeURIComponent(team)}/player/${encodeURIComponent(prepName)}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}&utm_content=sharelink` : `/pub/league/${league}/team/${encodeURIComponent(team)}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}&utm_content=sharelink`);
-    const twitterShareUrl = "https://findexar.com/" + (type == 'person' ? `pub/league/${league}/team/${encodeURIComponent(team)}/player/${encodeURIComponent(prepName)}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}&utm_content=xlink` : `/pub/league/${league}/team/${encodeURIComponent(team)}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}&utm_content=xlink`);
-    const fbShareUrl = "https://findexar.com/" + (type == 'person' ? `pub/league/${league}/team/${encodeURIComponent(team)}/player/${encodeURIComponent(prepName)}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}&utm_content=fblink` : `/pub/league/${league}/team/${encodeURIComponent(team)}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}&utm_content=fblink`);
+    const shareUrl = (type == 'person' ? `${process.env.NEXT_PUBLIC_SERVER}pub/league/${league}/team/${encodeURIComponent(team)}/player/${encodeURIComponent(prepName)}?id=${findexarxid}&utm_content=sharelink` : `/pub/league/${league}/team/${encodeURIComponent(team)}?id=${findexarxid}&utm_content=sharelink`);
+    const twitterShareUrl = "https://findexar.com/" + (type == 'person' ? `pub/league/${league}/team/${encodeURIComponent(team)}/player/${encodeURIComponent(prepName)}?id=${findexarxid}&utm_content=xlink` : `/pub/league/${league}/team/${encodeURIComponent(team)}?id=${findexarxid}&utm_content=xlink`);
+    const fbShareUrl = "https://findexar.com/" + (type == 'person' ? `pub/league/${league}/team/${encodeURIComponent(team)}/player/${encodeURIComponent(prepName)}?id=${findexarxid}&utm_content=fblink` : `/pub/league/${league}/team/${encodeURIComponent(team)}?id=${findexarxid}&utm_content=fblink`);
 
 
     let localUrl = "";
