@@ -91,7 +91,7 @@ const MentionSummary = styled.div`
     width:100%;
     padding-right:20px;
     border-radius: 30px;
-    font-size: 14px;
+    font-size: 15px;
     padding-left:10px;
     padding-right:10px;
     background-color: var(--mention-bg); 
@@ -120,7 +120,7 @@ const Icon = styled.span`
 const ExtendedMention = styled.div`
     margin:20px;
     border-radius: 10px;
-    font-size: 14px;
+    font-size: 15px;
     padding:20px;
     background-color:var(--background);
     &:hover{
@@ -129,14 +129,14 @@ const ExtendedMention = styled.div`
     display:flex;
     flex-direction:column;
     a{
-        font-size:14px !important;
+        font-size:15px !important;
       
     }
 `;
 const MobileExtendedMention = styled.div`
     margin-top:20px;
     border-radius: 20px;
-    font-size: 14px;
+    font-size: 15px;
     padding:20px;
     background-color:var(--background);
     &:hover{
@@ -145,17 +145,18 @@ const MobileExtendedMention = styled.div`
     display:flex;
     flex-direction:column;
     a{
-        font-size:14px !important;
+        font-size:15px !important;
       
     }
 `;
 
 const Body = styled.div`
-    font-size: 14px;
+    font-size: 15px;
     margin-bottom: 14px;
     flex: 2 1 auto;
+    line-height:1.4;
     a{
-        font-size:14px !important;
+        font-size:15px !important;
       
     }
 `;
@@ -167,7 +168,7 @@ const Title = styled.div`
 `;
 
 const Digest = styled.div`
-    font-size: 14px;
+    font-size: 15px;
 `;
 
 const ArticleDigest = styled.div`
@@ -218,7 +219,7 @@ const HorizontalContainer = styled.div`
     align-items:flex-start;
     flex-wrap: wrap;   
     a{
-        font-size:14px !important;
+        font-size:15px !important;
       
     }
 `;
@@ -276,8 +277,9 @@ const ShareGroup = styled.div`
     display:flex;
     flex-direction:row;
     justify-content:space-between;
-    align-items:center;
+    align-items:flex-start;
     width:78px;
+    height:40px;
     margin-top:10px;
 `;
 
@@ -296,9 +298,9 @@ const LocalDate = styled.div`
 const SummaryWrap = styled.div`
     display:inline;
     line-height: 1.2;
-    font-size:14px !important;
+    font-size:15px !important;
     a{
-        font-size:14px !important;
+        font-size:15px !important;
       
     }
     /*display:flex;
@@ -307,6 +309,11 @@ const SummaryWrap = styled.div`
     align-items:center;
     flex-wrap: wrap; 
     width:100%;*/
+`;
+const ShareIcon=styled.div`
+    margin-top:-1px;
+   // padding-top:6px;
+    padding-bottom:4px;
 `;
 
 interface Props {
@@ -499,7 +506,7 @@ const Mention: React.FC<Props> = ({ startExtended, linkType, tp, sessionid, para
                             }}
                             onClick={async () => await onShare(url)}
                         >
-                            <ShareContainer><IosShareIcon /></ShareContainer>
+                            <ShareContainer><ShareIcon><IosShareIcon /></ShareIcon></ShareContainer>
                         </RWebShare>
                             <Link href={twitterLink} passHref><ShareContainer><XIcon /></ShareContainer></Link>
                             <Link href={fbLink} passHref><ShareContainer><FacebookIcon /></ShareContainer></Link>
