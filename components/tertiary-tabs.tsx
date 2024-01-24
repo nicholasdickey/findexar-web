@@ -3,7 +3,7 @@ import { styled } from "styled-components";
 import { Tabs, Tab } from '@mui/material'
 
 const TabsWrap = styled.div`
-background-color: #fff;
+//background-color: #fff;
 font-size:12px;
 color:#444 !important;
 `;
