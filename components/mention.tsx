@@ -61,6 +61,7 @@ const MentionWrap = styled.div<MentionsProps>`
 
 const MobileMentionWrap = styled.div<MentionsProps>` 
     min-height:100px;
+    width:100%;
     display:${props => props.hideit ? 'none' : 'flex'};
     flex-direction: row;
     justify-content: flex-start;
@@ -69,8 +70,8 @@ const MobileMentionWrap = styled.div<MentionsProps>`
     border-radius: 5px;
     margin-top:2px;
     margin-bottom:10px;
-    margin-left:2px;
-    margin-right:2px;
+   // margin-left:2px;
+    //margin-right:2px;
     color:var(--text);
     &:hover{
             color: var(--mention-text);
@@ -134,10 +135,11 @@ const ExtendedMention = styled.div`
     }
 `;
 const MobileExtendedMention = styled.div`
-    margin-top:20px;
-    border-radius: 20px;
+    margin-top:10px;
+    margin-bottom:10px;
+    border-radius: 10px;
     font-size: 15px;
-    padding:20px;
+    padding:12px;
     background-color:var(--background);
     &:hover{
             background-color: var(--background)
