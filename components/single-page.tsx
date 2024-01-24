@@ -540,11 +540,11 @@ const SinglePage: React.FC<Props> = (props) => {
         const diff: number = (now - (+(createdAt || 0))) / 1000;
         console.log("no subscription", diff)
 
-        if (diff > 3 * 24 * 3600) { // if account created over three days ago, hard stop
+        if (diff > 10 * 24 * 3600) { // if account created over three days ago, hard stop
           setSubscriptionPrompt(true);
           setHardStop(true);
         }
-        else if (diff > 24 * 3600) {
+        else if (diff > 7*24 * 3600) {
           setSubscriptionPrompt(true);
         }
       }
