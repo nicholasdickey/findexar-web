@@ -491,11 +491,13 @@ const SinglePage: React.FC<Props> = (props) => {
   const [localTab, setLocalTab] = React.useState(tab);
   const [localMode, setLocalMode] = React.useState(mode);
   const [localFindexarxid, setLocalFindexarxid] = React.useState(findexarxid);
-
+  const [localView, setLocalView] = useState(view.toLowerCase());
+  const router = useRouter();
   const muiTheme = useTheme();
   const fullScreen = useMediaQuery(muiTheme.breakpoints.down('md'));
   const isMobile = useMediaQuery('(max-width:1199px)');
   console.log("isMobile", isMobile);
+
   useEffect(() => {
     document.body.setAttribute("data-theme", localMode);
   }, [localMode]);
@@ -533,7 +535,6 @@ const SinglePage: React.FC<Props> = (props) => {
   } = subscriptionObject;
 
   useEffect(() => {
-    console.log("useEffect", isLoaded, subscription, products)
     if (isLoaded && !freeUser) {
       if (!subscription && userId) {
         const now = new Date().getTime();
@@ -551,7 +552,7 @@ const SinglePage: React.FC<Props> = (props) => {
     }
   }, [isLoaded, subscription, products, userId, createdAt, freeUser]);
 
-  const router = useRouter();
+
 
   useEffect(() => {
     const query = router.query;
@@ -580,27 +581,30 @@ const SinglePage: React.FC<Props> = (props) => {
     else if (arg3 == 'player') {
       qplayer = arg4.replaceAll('_', ' ');
     }
-    console.log("setting findexarxid", findexarxid);
     setLocalLeague(qleague);
     setLocalTeam(qteam);
     setLocalPlayer(qplayer);
     setLocalPageType(qpagetype);
     setLocalFindexarxid(findexarxid);
-
   }, [router]);
+  
+  useEffect(() => {
+    setLocalView(view.toLowerCase());
+  }, [view]);
 
+  let v = (!localView || localView == "home") ? "mentions" : localView;
+  v = v.toLowerCase();
+  
   useEffect(() => {
     let params = '';
     let params2 = ''
     let p: string[] = [];
     let p2: string[] = [];
-
     if (fbclid)
       p.push(`fbclid=${fbclid}`);
     if (utm_content)
       p.push(`utm_content=${utm_content}`);
     p2 = [...p];
-
     if (p.length > 0) {
       params = `?${p.join('&')}`;
     }
@@ -619,38 +623,6 @@ const SinglePage: React.FC<Props> = (props) => {
     setTp(tp);
     setTp2(tp2);
   }, [fbclid, utm_content, localTab]);
-
-  const leagueTeamsKey: LeagueTeamsKey = { func: "leagueTeams", league: localLeague || "", noLoad: pagetype == "landing" };
-  const { data: teams, error, isLoading } = useSWR(leagueTeamsKey, getLeagueTeams);
-  const [localView, setLocalView] = useState(view.toLowerCase());
-
-  useEffect(() => {
-    setLocalView(view.toLowerCase());
-  }, [view]);
-
-  let v = (!localView || localView == "home") ? "mentions" : localView;
-  v = v.toLowerCase();
-  const onLeagueNavClick = async (l: string) => {
-    setLocalLeague(l);
-    setLocalView('mentions');
-    setLocalPageType('league');
-    setLocalTeam("")
-    await recordEvent(sessionid as string || "",
-      'league-nav',
-      `{"fbclid":"${fbclid}","utm_content":"${utm_content}","league":"${l}"}`
-    );
-  }
-  const LeaguesNav = leagues?.map((l: string, i: number) => {
-    return l == localLeague ? <SelectedLeague key={`league-${i}`} ><Link href={`/pub/league/${l}${params}${tp}`} shallow onClick={async () => { await onLeagueNavClick(l) }} >{l}</Link></SelectedLeague> : <League key={`league-${i}`}><Link href={`/pub/league/${l}${params}${tp}`} shallow onClick={async () => { await onLeagueNavClick(l) }} >{l}</Link></League>
-  });
-  const MobileLeaguesNav = leagues?.map((l: string, i: number) => {
-    //@ts-ignore
-    return <LeaguesTab selected={l == localLeague} key={`league-${i}`} label={l} onClick={() => { onLeagueNavClick(l).then(() => { }); router.replace(`/pub/league/${l}${params}${tp}`); }} />
-  })
-  //@ts-ignore
-  MobileLeaguesNav.unshift(<LeaguesTab selected={!localLeague} key={`league-${leagues?.length}`} icon={<HomeIcon />} onClick={() => { onLeagueNavClick('').then(() => { }); router.replace(`/pub${params}${tp}`); }} />)
-  LeaguesNav.unshift(localLeague ? <League key={`league-${leagues?.length}`}><Link href={`/pub${params}${tp}`} shallow onClick={() => { onLeagueNavClick('').then(() => { }) }}><LeagueIcon><HomeIcon fontSize="medium" sx={{ m: 0.3 }} /></LeagueIcon></Link></League> : <SelectedLeague key={`league-${leagues?.length}`}><Link href={`/pub${params}${tp}`} shallow onClick={() => { onLeagueNavClick('').then(() => { }) }}><LeagueIcon><HomeIcon fontSize="medium" sx={{ m: 0.3 }} /></LeagueIcon></Link></SelectedLeague>)
-  const selectedLeague = leagues?.findIndex((l: string) => l == localLeague) + 1;
 
   useEffect(() => {
     if (pagetype != 'landing') {
@@ -672,37 +644,6 @@ const SinglePage: React.FC<Props> = (props) => {
     }
   }, [pagetype, league, team, player, view, fbclid, utm_content, isbot, localUserId, sessionid]);
 
-  const onTeamNav = async (name: string) => {
-    setLocalPageType("team");
-    setLocalPlayer("");
-    setLocalTeam(name);
-    setLocalView("mentions");
-    await recordEvent(sessionid as string || "",
-      'team-nav',
-      `{"params":"${params}","teamid":"${name}"}`
-    );
-  }
-  let teamName = "";
-  let TeamsNav = null;
-
-  if (teams && teams.length > 0)
-    TeamsNav = teams?.map((t: { id: string, name: string }, i: number) => {
-      if (t.id == localTeam)
-        teamName = t.name;
-      return t.id == localTeam ? <SelectedSideTeam key={`sideteam-${i}`}>
-        <Link onClick={async () => { await onTeamNav(t.id); }} href={`/pub/league/${localLeague}/team/${t.id}${params}${tp}`} shallow>{t.name}</Link></SelectedSideTeam> : <SideTeam key={`sideteam-${i}`}><Link onClick={async () => { onTeamNav(t.id) }} href={`/pub/league/${localLeague}/team/${t.id}${params}${tp}`} shallow>{t.name}</Link></SideTeam>
-    });
-  const onViewNav = async (option: { name: string, access: string }) => {
-    console.log(option);
-    setLocalView(option.name);
-    router.replace(localLeague ? `/pub/league/${localLeague}?view=${encodeURIComponent(option.name.toLowerCase())}${params2}${tp2.replace('?', '&')}` : `/pub?view=${encodeURIComponent(option.name.toLowerCase())}${params2}${tp2.replace('?', '&')}`, undefined, { shallow: true })
-    await recordEvent(sessionid as string || "",
-      'view-nav',
-      `{"fbclid":"${fbclid}","utm_content":"${utm_content}","view":"${option.name}"}`
-    );
-  }
-  console.log("PAGE state:", { localUserId, v, localMode, localPageType, localLeague, localTeam, localPlayer, params, params2 })
-
   useEffect(() => {
     if (!hasCookie('mode')) {
         const matchMedia = window.matchMedia("(prefers-color-scheme: dark)");
@@ -716,10 +657,73 @@ const SinglePage: React.FC<Props> = (props) => {
         setLocalMode(mode);
     }
   }, []);
-  console.log("==>", localFindexarxid)
+
+  const leagueTeamsKey: LeagueTeamsKey = { func: "leagueTeams", league: localLeague || "", noLoad: pagetype == "landing" };
+  const { data: teams, error, isLoading } = useSWR(leagueTeamsKey, getLeagueTeams);
+  
+
+  const onLeagueNavClick = useCallback(async (l: string) => {
+    setLocalLeague(l);
+    setLocalView('mentions');
+    setLocalPageType('league');
+    setLocalTeam("")
+    await recordEvent(sessionid as string || "",
+      'league-nav',
+      `{"fbclid":"${fbclid}","utm_content":"${utm_content}","league":"${l}"}`
+    );
+  },[fbclid, utm_content, sessionid]);
+
+  const LeaguesNav = leagues?.map((l: string, i: number) => {
+    return l == localLeague ? <SelectedLeague key={`league-${i}`} ><Link href={`/pub/league/${l}${params}${tp}`} shallow onClick={async () => { await onLeagueNavClick(l) }} >{l}</Link></SelectedLeague> : <League key={`league-${i}`}><Link href={`/pub/league/${l}${params}${tp}`} shallow onClick={async () => { await onLeagueNavClick(l) }} >{l}</Link></League>
+  });
+  const MobileLeaguesNav = leagues?.map((l: string, i: number) => {
+    //@ts-ignore
+    return <LeaguesTab selected={l == localLeague} key={`league-${i}`} label={l} onClick={() => { onLeagueNavClick(l).then(() => { }); router.replace(`/pub/league/${l}${params}${tp}`); }} />
+  })
+  //@ts-ignore
+  MobileLeaguesNav.unshift(<LeaguesTab selected={!localLeague} key={`league-${leagues?.length}`} icon={<HomeIcon />} onClick={() => { onLeagueNavClick('').then(() => { }); router.replace(`/pub${params}${tp}`); }} />)
+  LeaguesNav.unshift(localLeague ? <League key={`league-${leagues?.length}`}><Link href={`/pub${params}${tp}`} shallow onClick={() => { onLeagueNavClick('').then(() => { }) }}><LeagueIcon><HomeIcon fontSize="medium" sx={{ m: 0.3 }} /></LeagueIcon></Link></League> : <SelectedLeague key={`league-${leagues?.length}`}><Link href={`/pub${params}${tp}`} shallow onClick={() => { onLeagueNavClick('').then(() => { }) }}><LeagueIcon><HomeIcon fontSize="medium" sx={{ m: 0.3 }} /></LeagueIcon></Link></SelectedLeague>)
+  const selectedLeague = leagues?.findIndex((l: string) => l == localLeague) + 1;
+
+  const onTeamNav = useCallback( async (name: string) => {
+    setLocalPageType("team");
+    setLocalPlayer("");
+    setLocalTeam(name);
+    setLocalView("mentions");
+    await recordEvent(sessionid as string || "",
+      'team-nav',
+      `{"params":"${params}","teamid":"${name}"}`
+    );
+  },[sessionid, params]);
+
+  let teamName = "";
+  let TeamsNav = null;
+
+  if (teams && teams.length > 0)
+    TeamsNav = teams?.map((t: { id: string, name: string }, i: number) => {
+      if (t.id == localTeam)
+        teamName = t.name;
+      return t.id == localTeam ? <SelectedSideTeam key={`sideteam-${i}`}>
+        <Link onClick={async () => { await onTeamNav(t.id); }} href={`/pub/league/${localLeague}/team/${t.id}${params}${tp}`} shallow>{t.name}</Link></SelectedSideTeam> : <SideTeam key={`sideteam-${i}`}><Link onClick={async () => { onTeamNav(t.id) }} href={`/pub/league/${localLeague}/team/${t.id}${params}${tp}`} shallow>{t.name}</Link></SideTeam>
+    });
+
+  const onViewNav = useCallback(async (option: { name: string, access: string }) => {
+    console.log(option);
+    setLocalView(option.name);
+    router.replace(localLeague ? `/pub/league/${localLeague}?view=${encodeURIComponent(option.name.toLowerCase())}${params2}${tp2.replace('?', '&')}` : `/pub?view=${encodeURIComponent(option.name.toLowerCase())}${params2}${tp2.replace('?', '&')}`, undefined, { shallow: true })
+    await recordEvent(sessionid as string || "",
+      'view-nav',
+      `{"fbclid":"${fbclid}","utm_content":"${utm_content}","view":"${option.name}"}`
+    );
+  },[fbclid, utm_content, sessionid, localLeague, params2, tp2]);
+
+  console.log("PAGE state:", { localUserId, v, localMode, localPageType, localLeague, localTeam, localPlayer, params, params2 })
+
   const key: AMentionKey = { type: "AMention", findexarxid: localFindexarxid, noLoad: localFindexarxid !== "" ? false : true };
   const { data: amention } = useSWR(key, getAMention)
   const { summary: amentionSummary = "", league: amentionLeague = "", type="",team: amentionTeam = "", teamName:amentionTeamName="",name: amentionPlayer = "", image: amentionImage = "", date: amentionDate = "" } = amention ? amention : {};
+
+  //prep meta data for amention
   let ogUrl = '';
   if (amention && amentionLeague && amentionTeam && amentionPlayer)
     ogUrl = `${process.env.NEXT_PUBLIC_SERVER}pub/league/${amentionLeague}/team/${amentionTeam}/player/${amentionPlayer}?id=${localFindexarxid}`;
@@ -738,11 +742,10 @@ const SinglePage: React.FC<Props> = (props) => {
   else if (amention && amentionLeague && amentionTeam)
     ogTarget = `${amentionTeamName} on Findexar`;
 
-
   let ogDescription = amentionSummary ? amentionSummary : "Fantasy Sports Media Tracker.";
   let ogImage = amentionImage ? amentionImage : "https://findexar.com/findexar-logo.png";
   let ogTitle = ogTarget ? `${ogTarget}` : "Findexar Sports Media Tracker";
-  console.log("==>", { localFindexarxid, amention, ogUrl, ogDescription, ogImage })
+ 
   return (
     <>
       <Head>

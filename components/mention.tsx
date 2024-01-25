@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useCallback } from "react";
 import useSWRImmutable from 'swr/immutable'
 import Link from 'next/link';
 import { SignInButton, RedirectToSignIn } from "@clerk/nextjs";
@@ -13,7 +13,6 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { MetaLinkKey, getMetaLink, addFavorite, removeFavorite, recordEvent } from '@/lib/api';
 import { convertToUTCDateString, convertToReadableLocalTime } from "@/lib/date-convert";
 import useCopyToClipboard from '@/lib/copy-to-clipboard';
-import { TelegramComments } from "react-telegram-comments";
 
 declare global {
     interface Window {
@@ -70,8 +69,6 @@ const MobileMentionWrap = styled.div<MentionsProps>`
     border-radius: 5px;
     margin-top:2px;
     margin-bottom:10px;
-   // margin-left:2px;
-    //margin-right:2px;
     color:var(--text);
     &:hover{
             color: var(--mention-text);
@@ -134,6 +131,7 @@ const ExtendedMention = styled.div`
       
     }
 `;
+
 const MobileExtendedMention = styled.div`
     margin-top:10px;
     margin-bottom:10px;
@@ -183,6 +181,7 @@ const ImageWrapper = styled.div`
     flex: 1 1 auto;
     max-width: 100%;
 `;
+
 const Topline = styled.div`
     display:flex;
     min-height:24px;
@@ -221,8 +220,7 @@ const HorizontalContainer = styled.div`
     align-items:flex-start;
     flex-wrap: wrap;   
     a{
-        font-size:15px !important;
-      
+        font-size:15px !important;     
     }
 `;
 
@@ -256,8 +254,8 @@ const ShareContainer = styled.div`
         opacity:1;
         color:var(--highlight);
     }
-
 `;
+
 const ShareContainerInline = styled.span`
     font-size: 28x;  
     height:38px;
@@ -273,8 +271,8 @@ const ShareContainerInline = styled.span`
         opacity:1;
         color:var(--highlight);
     }
-
 `;
+
 const ShareGroup = styled.div`
     display:flex;
     flex-direction:row;
@@ -297,6 +295,7 @@ const BottomLine = styled.div`
 const LocalDate = styled.div`
     font-size: 12px;
 `;
+
 const SummaryWrap = styled.div`
     display:inline;
     line-height: 1.2;
@@ -305,16 +304,10 @@ const SummaryWrap = styled.div`
         font-size:15px !important;
       
     }
-    /*display:flex;
-    flex-direction:row;
-    justify-content:space-between;
-    align-items:center;
-    flex-wrap: wrap; 
-    width:100%;*/
 `;
+
 const ShareIcon=styled.div`
     margin-top:-1px;
-   // padding-top:6px;
     padding-bottom:4px;
 `;
 
@@ -353,8 +346,10 @@ const Mention: React.FC<Props> = ({ startExtended, linkType, tp, sessionid, para
     const [digestCopied, setDigestCopied] = React.useState(false);
     const [value, copy] = useCopyToClipboard();
     const theme = useTheme();
-    //@ts-ignore
-    const mode = theme.palette.mode;
+   
+    useEffect(() => {
+        setExpanded(startExtended);
+    }, [startExtended,url]);
 
     useEffect(() => {
         setTimeout(() => {
@@ -362,6 +357,7 @@ const Mention: React.FC<Props> = ({ startExtended, linkType, tp, sessionid, para
         }
             , 2000);
     }, [digestCopied]);
+
     useEffect(() => {
         setTimeout(() => {
             setCopied(false);
@@ -387,27 +383,22 @@ const Mention: React.FC<Props> = ({ startExtended, linkType, tp, sessionid, para
             setHide(false);
         }
     }, [summary, mutate, date, url]);
+    
+    //prepare urls:
     const prepName = name.replaceAll(' ', '_');
     const shareUrl = (type == 'person' ? `${process.env.NEXT_PUBLIC_SERVER}pub/league/${league}/team/${encodeURIComponent(team)}/player/${encodeURIComponent(prepName)}?id=${findexarxid}&utm_content=sharelink` : `/pub/league/${league}/team/${encodeURIComponent(team)}?id=${findexarxid}&utm_content=sharelink`);
     const twitterShareUrl = "https://www.findexar.com/" + (type == 'person' ? `pub/league/${league}/team/${encodeURIComponent(team)}/player/${encodeURIComponent(prepName)}?id=${findexarxid}&utm_content=xlink` : `/pub/league/${league}/team/${encodeURIComponent(team)}?id=${findexarxid}&utm_content=xlink`);
     const fbShareUrl = "https://www.findexar.com/" + (type == 'person' ? `pub/league/${league}/team/${encodeURIComponent(team)}/player/${encodeURIComponent(prepName)}?id=${findexarxid}&utm_content=fblink` : `/pub/league/${league}/team/${encodeURIComponent(team)}?id=${findexarxid}&utm_content=fblink`);
-
-
     let localUrl = "";
     localUrl = type == 'person' ? `/pub/league/${league}/team/${team}/player/${prepName}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}` : `/pub/league/${league}/team/${team}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}`
     const bottomLink = type == 'person' ? `/pub/league/${league}/team/${team}/player/${prepName}${params}${tp}` : `/pub/league/${league}/team/${team}${params}${tp}`;
     const twitterLink = `https://twitter.com/intent/tweet?text=${encodeURIComponent(summary.substring(0, 230) + '...')}&url=${twitterShareUrl}&via=findexar`;
-
-    console.log("twitterLink:", twitterLink)
     const fbLink = `https://www.facebook.com/sharer.php?kid_directed_site=0&sdk=joey&u=${encodeURIComponent(fbShareUrl)}&t=${encodeURIComponent('Findexar')}&quote=${encodeURIComponent(summary.substring(0, 140) + '...')}&hashtag=%23findexar&display=popup&ref=plugin&src=share_button`;
     const tgLink = "https://www.findexar.com" + localUrl;
-    //<a class="_2vmz" href="/sharer/sharer.php?kid_directed_site=0&amp;sdk=joey&amp;u=https%3A%2F%2Ffindexar.com%2Fpub%2Fleague%2FNFL%2Fteam%2Fkansas-city-chiefs%2Fplayer%2FPatrick%2520Mahomes%3Futm_content%3Dsharelink%26tab%3Dmyteam%26id%3D44078&amp;display=popup&amp;ref=plugin&amp;src=share_button" target="_blank" id="u_0_1_kW"><div><button id="icon-button" type="submit" class="inlineBlock _2tga _89n_ _8j9v"><span class="_8f1i"></span><div class=""><span class="_3jn- inlineBlock _2v7"><span class="_3jn_"></span><span class="_49vg _8a19"><img class="img" style="vertical-align:middle" src="https://static.xx.fbcdn.net/rsrc.php/v3/yo/r/6S2Dc9mdP9f.png" alt="" width="12" height="12"></span></span><span class="_49vh _2pi7">Share</span><span class="_5n6h _2pih" id="u_0_2_Ig">0</span></div></button></div></a>
-
-
     const mentionsKey: MetaLinkKey = { func: "meta", findexarxid, long: startExtended ? 1 : 1 };
     const meta = useSWRImmutable(mentionsKey, getMetaLink).data;
-    let digest = meta?.digest || "";//meta ? meta.digest.replace('<p>', '').replace('</p>', '') : "";
-    //console.log("expanded:", {findexarxid,expanded, meta,fav});
+    let digest = meta?.digest || "";
+
     useEffect(() => {
         try {
             setLocalDate(convertToReadableLocalTime(date));
@@ -417,7 +408,7 @@ const Mention: React.FC<Props> = ({ startExtended, linkType, tp, sessionid, para
         }
     }, [date])
 
-    const onMentionNav = async (name: string) => {
+    const onMentionNav = useCallback(async (name: string) => {
         setLocalLeague(league);
         setLocalTeam(team);
         setLocalPlayer(type == 'person' ? name : '');
@@ -429,9 +420,9 @@ const Mention: React.FC<Props> = ({ startExtended, linkType, tp, sessionid, para
             'mention-nav',
             `{"params":"${params}","name":"${name}","sessionid":"${sessionid}"}`
         );
-    }
+    },[league,team,type,params,sessionid]);
 
-    const enableRedirect = () => {
+    const enableRedirect = useCallback(() => {
         if (window && window.Clerk) {
             const Clerk = window.Clerk;
             const user = Clerk.user;
@@ -441,17 +432,17 @@ const Mention: React.FC<Props> = ({ startExtended, linkType, tp, sessionid, para
                 return;
             }
         }
-    }
+    },[]);
 
-    const onExtended = async (on: boolean) => {
+    const onExtended =useCallback( async (on: boolean) => {
 
         await recordEvent(sessionid as string || "",
             'mention-extended',
             `{"on":"${on}","params":"${params}"}`
         );
-    }
+    },[sessionid,params]);
 
-    const onHover = (label: string) => {
+    const onHover = useCallback((label: string) => {
         try {
             recordEvent(sessionid as string || "", `mention-hover`, `{"label","${label}","params":"${params}"}`)
                 .then((r: any) => {
@@ -460,9 +451,9 @@ const Mention: React.FC<Props> = ({ startExtended, linkType, tp, sessionid, para
         } catch (x) {
             console.log('recordEvent', x);
         }
-    }
+    },[sessionid,params]);
 
-    const onShare = (url: string) => {
+    const onShare = useCallback((url: string) => {
         try {
             recordEvent(sessionid as string || "", `mention-share`, `{"url","${url}","params":"${params}"}`)
                 .then((r: any) => {
@@ -471,25 +462,24 @@ const Mention: React.FC<Props> = ({ startExtended, linkType, tp, sessionid, para
         } catch (x) {
             console.log('recordEvent', x);
         }
-    }
-    const onCopyClick = () => {
-        console.log("copy click")
+    },[sessionid,params]);
+
+    const onCopyClick = useCallback(() => {
         setCopied(true);
         copy(summary);
-    }
-    const onDigestCopyClick = () => {
-        console.log("copy click")
+    },[summary]);
+
+    const onDigestCopyClick = useCallback(() => {
         setDigestCopied(true);
         copy(digest);
-    }
-    // console.log("tgLink:", tgLink);
+    },[digest]);
+
     return (
         <>
             <MentionWrap hideit={hide} onMouseEnter={() => onHover('desktop')}>
                 <MentionSummary>
                     <Topline><LocalDate><i>{localDate}</i></LocalDate>
                         {!localFav ? noUser ? <SignInButton><StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); enableRedirect(); addFavorite({ findexarxid }); mutate() }} style={{ color: "#888" }} /></SignInButton> : <StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); enableRedirect(); addFavorite({ findexarxid }); mutate(); }} style={{ color: "#888" }} /> : <StarIcon onClick={() => { if (noUser) return; setLocalFav(0); removeFavorite({ findexarxid }); mutate(); }} style={{ color: "FFA000" }} />}</Topline>
-
                     <SummaryWrap>
                         <Link scroll={linkType == 'final' ? false : true} href={localUrl} onClick={async () => { await onMentionNav(name) }} shallow>
                             {summary}
@@ -554,20 +544,6 @@ const Mention: React.FC<Props> = ({ startExtended, linkType, tp, sessionid, para
                             </Body>
                         </HorizontalContainer>
                         <Link href={url}>{meta.url.substring(0, 50)}..</Link>
-                        {false && <TelegramComments
-                            commentsNumber={3}
-                            //containerClassName="awesome-comments"
-                            //customColor="663399"
-                            //customHeight={250}
-                            useDarkMode={mode == 'dark'}
-                            onLoad={() => console.log("Comments loaded!")}
-                            pageId={meta.url}
-                            //showColorfulNames
-                            //showDislikes*/
-                            // showIconOutlines
-                            websiteKey="2tZ-G5G6"
-                        // wrapperClassName="awesome-comments__wrapper"
-                        />}
                     </ExtendedMention>}
                 </MentionSummary>
             </MentionWrap>
@@ -634,8 +610,7 @@ const Mention: React.FC<Props> = ({ startExtended, linkType, tp, sessionid, para
                             </Body>
                         </HorizontalContainer>
                         <Link href={url}> {meta.url.substring(0, 30)}...</Link>
-                    </MobileExtendedMention>}
-                  
+                    </MobileExtendedMention>}                 
                 </MentionSummary>
             </MobileMentionWrap>
         </>
