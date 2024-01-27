@@ -370,7 +370,7 @@ export const fetchMentions = async ({ type, league, noUser,page,teamid,name,myte
     return res.data.mentions;
   }
   catch (e) {
-    console.log("getPageMentions", e);
+    console.log("fetchMentions", e);
     return false;
   }
 }
@@ -420,6 +420,31 @@ export const removeAMention = async ({ type, findexarxid,noLoad }: AMentionKey) 
   }
   catch (e) {
     console.log("removeAMention", e);
+    return false;
+  }
+}
+
+// SWR infinite:
+// SWR get stories and mentions grouped by story
+// 
+export type FetchedStoriesKey = { type: string, league?: string, noUser: boolean,page:number,noLoad:boolean };
+export const fetchStories = async ({ type, league, noUser,page,noLoad }: FetchedMentionsKey) => {
+  try {
+    if(noLoad) return [];
+    console.log("api: fetchStories",type, league, noUser,page)
+    let url = '';
+    if (!noUser) {
+      url =  `${process.env.NEXT_PUBLIC_SERVER}/api/user/fetch-stories?league=${encodeURIComponent(league||"")}&page=${page||0}`;
+    }
+    else {
+      url =  `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-stories?league=${encodeURIComponent(league ||"")}&page=${page||0}`;
+    }
+    console.log("fetchStories-url",url)
+    const res = await axios.get(url);
+    return res.data.stories;
+  }
+  catch (e) {
+    console.log("fetchStories", e);
     return false;
   }
 }

@@ -1,0 +1,167 @@
+import React, { useEffect } from "react";
+import { useRouter } from 'next/router'
+import { styled, ThemeProvider } from "styled-components";
+
+
+import Landing from "@/components/func-components/landing";
+import Teams from "@/components/func-components/teams";
+import Welcome from "@/components/func-components/welcome";
+import Readme from "@/components/func-components/readme";
+import Mentions from "@/components/func-components/mentions";
+import Stories from "@/components/func-components/stories";
+import MyTeam from "@/components/func-components/myteam";
+import Players from "@/components/func-components/players";
+import { useAppContext } from '@/lib/context';
+import TertiaryTabs  from "@/components/nav-components/tertiary-tabs";
+
+const PageWrap = styled.div`
+  width:100%;
+  display:flex;
+  flex-direction:row;
+  justify-content: center;
+`;
+
+const Page = styled.div`
+  max-width:1600px;
+`;
+
+const ContainerWrap = styled.div`
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    font-family: 'Roboto', sans-serif;
+    font-size:14px;
+    color:var(--text);
+    @media screen and (max-width: 1199px) {
+        display: none;
+    }
+    @media screen and (min-width: 1600px) {
+      font-size: 18px;
+    }
+    @media screen and (min-width: 1800px) {
+      font-size: 19px;
+    }
+    @media screen and (min-width: 2000px) {
+      font-size: 20px;
+    }
+`;
+
+const MainPanel = styled.div`
+    display:flex;
+    position:relative;
+    flex-direction:row;
+    justify-content:flex-start;
+    height:100%;
+`;
+
+const LeftPanel = styled.div`
+    min-width:300px;
+    height:auto !important;
+    background-color:var(--background);
+    padding-top:18px;
+    padding-left:20px;
+    flex-grow:1;
+    a{
+        color:var(--text);
+        text-decoration: none;
+        &:hover{
+            color: var(--highlight);
+        }
+    }
+    overflow-y: hidden;
+    overflow-x: hidden;
+    padding-top:18px;
+    max-height: 150vh;
+    position:sticky;
+    top:-300px;
+`;
+
+const CenterPanel = styled.div`
+    //position:relative;
+    //width:100%;
+    //max-width:1000px;
+    //min-width:400px;  
+    max-width:50%;
+    min-width:50%;
+    overflow-y: auto;
+   // overflow-x: hidden;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    align-items:flex-start;
+    padding-top:18px;
+    height:auto;
+    flex-grow:1;
+`;
+
+const RightPanel = styled.div`
+    min-width:300px;
+    padding-left:20px;
+    overflow-y: hidden;
+    overflow-x: hidden;
+   
+    height:auto !important;
+    //height:100%;
+    max-height: 100vw;
+    position:sticky;
+    top:100px;
+    flex-grow:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    align-items:flex-start; 
+    padding-top:18px;
+
+    a{
+        color:var(--text); // #eee;
+        text-decoration: none;
+        &:hover{
+        color: var(--highlight);//#4f8;
+        }
+    }
+`;
+
+
+interface Props {
+
+
+}
+const Desktop: React.FC<Props> = () => {
+    const router = useRouter();
+    const { tab,view,mode, userId, isMobile, setLeague, setView,setTab, setPagetype, setTeam, setPlayer, setMode, sessionid, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName } = useAppContext();
+    const onTabNav = async (option: any) => {
+        const tab = option.tab;
+        setTab(tab);
+        setView("mentions");
+        let tp = tab != 'all' ? params ? `&tab=${tab}` : `?tab=${tab}` : ``;
+        router.push(league ? `/pub/league/${league}${params}${tp}` : params ? `/pub${params}${tp}` : `/pub?tab=${tab}`)
+    }
+    console.log("DESKTOP:",{pagetype,view,tab})
+    return (
+        <ContainerWrap>
+            <PageWrap>
+                <Page>
+                    {pagetype == "landing" && <Landing />}
+                    {pagetype !== "landing" && <MainPanel>
+                        <LeftPanel>
+                            {league ? <Teams /> : <Welcome />}
+                        </LeftPanel>
+                        <CenterPanel>
+                            {view == 'mentions' && <TertiaryTabs options={[{ name: `${league ? league : 'Full'} Feed`, tab: 'all' }, { name: "My Feed", tab: "myteam" }, { name: "Favorites", tab: "fav" }]} onChange={async (option: any) => { await onTabNav(option); }} selectedOptionName={tab} />}
+                            {view != "readme" && (pagetype == "team" || pagetype == "player") && <Mentions />}
+                            {view != "readme" && pagetype == "league" && !team && (tab=='all'||tab=='')&&<Stories />}
+                            {view == 'readme' && <Readme />}
+                        </CenterPanel>
+                        <RightPanel>
+                            {pagetype=='league'&&<MyTeam />}
+                            {(pagetype=='team'||pagetype=='player')&&<Players />}
+                        </RightPanel>
+                    </MainPanel>}
+                </Page>
+            </PageWrap>
+        </ContainerWrap>
+
+    )
+}
+export default Desktop;

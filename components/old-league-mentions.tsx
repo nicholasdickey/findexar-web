@@ -106,14 +106,11 @@ const MobileMentionsHeader = styled.div`
     justify-content:space-between;
 `;
 const OuterContainer = styled.div`
-
     display:flex;
     flex-direction:row;
     justify-content:flex-start;
-    //width:100%;
-    //height:100%;
-    position:relative;
-    overflow:clip;
+    width:100%;
+    height:100%;
     margin:0px;
     @media screen and (max-width: 1199px) {
         display: none;
@@ -148,17 +145,11 @@ const MobileTeamName = styled.div`
 
 
 const RightPanel = styled.div`
-  //height:auto !important;
-  //height:100%;
+  height:auto !important;
+  height:100%;
   width:300px;
   padding-left:20px;
- // min-height: 1000vh;
-  position:sticky;
-  top:0px;
-  //height:auto;
- // max-height:100vh;
-  max-height: 100vh;
-  overflow-y: clip;
+  min-height: 1000vh;
   
  // background-color:  #668;
   //background-color:#263238;
