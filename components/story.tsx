@@ -14,7 +14,7 @@ import { MetaLinkKey, getMetaLink, addFavorite, removeFavorite, recordEvent } fr
 import { convertToUTCDateString, convertToReadableLocalTime } from "@/lib/date-convert";
 import useCopyToClipboard from '@/lib/copy-to-clipboard';
 import Mention from '@/components/mention';
-import MiniMention from '@/components/mini-mention';
+import MiniMention from '@/components/old-mini-mention';
 
 declare global {
     interface Window {

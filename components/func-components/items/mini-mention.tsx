@@ -13,7 +13,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { MetaLinkKey, getMetaLink, addFavorite, removeFavorite, recordEvent } from '@/lib/api';
 import { convertToUTCDateString, convertToReadableLocalTime } from "@/lib/date-convert";
 import useCopyToClipboard from '@/lib/copy-to-clipboard';
-import Mention from "@/components/mention";
+import Mention from "@/components/func-components/items/mention";
 
 declare global {
     interface Window {
@@ -27,18 +27,22 @@ interface MentionsProps {
 
 const MentionWrap = styled.div<MentionsProps>`
     width:100%;
+    margin-right:20px;
+    position:relative;
     //min-height:100px;
     background-color: var(--mention-bg);//var(--mention-border);
     flex-direction: row;
     justify-content: flex-start;
     align-items:flex-start;
+    margin:4px;
+    padding-left:16px;
     //border: 1px solid #ccc;
     //border-radius: 5px;
-    margin-left:8px;
+   // margin-left:8px;
     //margin-top:20px;
-    padding-left:4px;
-    padding-right:4px;
-    padding-top:4px;
+   // padding-left:4px;
+    //padding-right:4px;
+    //padding-top:4px;
     color:var(--text);
     z-index:200;
     font-size: 16px;
@@ -58,19 +62,27 @@ const MentionWrap = styled.div<MentionsProps>`
         display: none;
     }
 `;
+const InnerMention=styled.div`
+    margin-left:20px;
+    margin-top:20px;
+    margin-bottom:20px;
+`;
 
 const MobileMentionWrap = styled.div<MentionsProps>` 
-    min-height:100px;
+    //min-height:100px;
     width:100%;
     display:${props => props.hideit ? 'none' : 'flex'};
     flex-direction: row;
     justify-content: flex-start;
     align-items:flex-start;
-    border: 1px solid #ccc;
+    margin:4px;
+    padding-left:16px;
+    
+   /* border: 1px solid #ccc;
     border-radius: 5px;
     margin-top:2px;
     margin-bottom:10px;
-    color:var(--text);
+    color:var(--text);*/
     &:hover{
             color: var(--mention-text);
         } 
@@ -88,11 +100,11 @@ const MobileMentionWrap = styled.div<MentionsProps>`
 
 const MentionSummary = styled.div`
     width:100%;
-    padding-right:20px;
-    border-radius: 30px;
-    font-size: 15px;
-    padding-left:10px;
-    padding-right:10px;
+    margin-right:20px;
+    //border-radius: 30px;
+    //font-size: 15px;
+   // padding-left:10px;
+    //padding-right:10px;
     background-color: var(--mention-bg); 
    &:hover{
         background-color:var(--mention-high-bg);
@@ -482,78 +494,19 @@ const MiniMention: React.FC<Props> = ({ selectedXid,setSelectedXid,startExtended
     },[findexarxid]);
     return (
         <>
-            <MentionWrap hideit={hide} onMouseEnter={() => onHover('desktop')} onClick={openMention}>
-               {(selectedXid!=findexarxid)&& <MentionSummary>  
+            {selectedXid!=findexarxid&& <MentionWrap onMouseEnter={() => onHover('desktop')} onClick={openMention}>
+                <MentionSummary>  
                     <Atmention><b>{(type == "person") && '@'}{name}</b> | {type == "person" ? `${teamName} |` : ""} {league}</Atmention>
-                 </MentionSummary>}
-               {selectedXid==findexarxid&& <Mention startExtended={false} linkType="top" tp={tp} sessionid={sessionid} params={params} noUser={noUser} league={league} type={type} team={team} teamName={teamName} name={name} date={date} url={url} findex={findex} summary={summary} findexarxid={findexarxid} fav={fav} setLocalPageType={setLocalPageType} setLocalPlayer={setLocalPlayer} setLocalLeague={setLocalLeague} setLocalTeam={setLocalTeam} mutate={mutate}  />}  
-            </MentionWrap>
-            <MobileMentionWrap hideit={hide} onMouseEnter={() => onHover('mobile')}>
+                 </MentionSummary>
+              
+            </MentionWrap>}
+            <MobileMentionWrap hideit={hide} onMouseEnter={() => onHover('mobile')} onClick={openMention}>
                 <MentionSummary>
-                    <div>
-                        <Topline><LocalDate><b><i>{localDate}</i></b></LocalDate>{!localFav ? noUser ? <SignInButton><StarOutlineIcon onClick={() => { if (noUser) return; enableRedirect(); setLocalFav(1); addFavorite({ findexarxid }); mutate(); }} style={{ color: "#888" }} /></SignInButton> : <StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); enableRedirect(); addFavorite({ findexarxid }); mutate(); }} style={{ color: "#888" }} /> : <StarIcon onClick={() => { if (noUser) return; setLocalFav(0); removeFavorite({ findexarxid }); mutate(); }} style={{ color: "FFA000" }} />}</Topline>
-                        <SummaryWrap>
-                            <Link scroll={linkType == 'final' ? false : true} href={localUrl} onClick={async () => { await onMentionNav(name) }} shallow>
-                                {summary}
-                            </Link>
-                            <ShareContainerInline><ContentCopyIcon style={{ paddingTop: 6, marginBottom: -2 }} fontSize="small" sx={{ color: copied ? 'green' : '' }} onClick={() => onCopyClick()} /></ShareContainerInline>
-                        </SummaryWrap>
-                        <hr />
-                        <Atmention><b>{(type == "person") && '@'}{name}</b> | {type == "person" ? `${teamName} |` : ""}  {league}</Atmention>
-                        <MobileAtmention2>{meta?.site_name}</MobileAtmention2>
-                    </div>
-                    <BottomLine>
-                        <ShareGroup><RWebShare
-                            data={{
-                                text: summary,
-                                url: shareUrl,
-                                title: "Findexar",
-                            }}
-                            onClick={async () => onShare(url)}
-                        >
-                            <ShareContainer><ShareIcon><IosShareIcon /></ShareIcon></ShareContainer>
-                        </RWebShare>
-                            <Link href={twitterLink} target="_blank"><ShareContainer><XIcon /></ShareContainer></Link>
-                            <Link href={fbLink} target="_blank"><ShareContainer><FacebookIcon /></ShareContainer></Link>
-                        </ShareGroup>
-                        <Icon onClick={
-                            async (e) => {
-                                const ne = !expanded;
-                                setExpanded(ne);
-                                await onExtended(ne);
-                            }}
-                            className="material-icons-outlined">{!expanded ? "expand_more" : "expand_less"}</Icon>
-                    </BottomLine>
-                    {expanded && meta && <MobileExtendedMention>
-                        <Link href={url}><Title>{meta.title}</Title></Link>
-                        <Link href={url}><Byline>
-                            {meta.authors && <Authors>{meta.authors}</Authors>}
-                            <SiteName>{meta.site_name}</SiteName>
-                        </Byline>
-                        </Link>
-                        <HorizontalContainer>
-                            <Link href={url}>
-                                <ImageWrapper>
-                                    <Image src={meta.image} width={100} height={100} alt={meta.title} />
-                                </ImageWrapper>
-                            </Link>
-                            <Body>
-                                <Link href={url}><ArticleDigest>
-                                    {true ? 'Article Digest:' : 'Short Digest:'}
-                                </ArticleDigest>
-                                </Link>
-                                <Digest>
-                                    <Link href={url}> <div dangerouslySetInnerHTML={{ __html: digest }} /></Link>
-                                    <ShareContainerInline>
-                                        <ContentCopyIcon style={{ paddingTop: 6, marginBottom: 0,marginTop:-10 }} fontSize="small" sx={{ color: digestCopied ? 'green' : '' }} onClick={() => onDigestCopyClick()} />
-                                    </ShareContainerInline>
-                                </Digest>
-                            </Body>
-                        </HorizontalContainer>
-                        <Link href={url}> {meta.url.substring(0, 30)}...</Link>
-                    </MobileExtendedMention>}                 
+                <Atmention><b>{(type == "person") && '@'}{name}</b> | {type == "person" ? `${teamName} |` : ""}  {league}</Atmention>                         
                 </MentionSummary>
             </MobileMentionWrap>
+            {selectedXid==findexarxid&& <InnerMention><Mention startExtended={false} mention={{league,type,team,teamName,name,date,url,summary,findexarxid,fav}}  mutate={mutate}  /></InnerMention>}  
+       
         </>
     );
 };

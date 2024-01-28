@@ -1,6 +1,7 @@
-import React, { use, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 //next
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { Roboto } from 'next/font/google';
 //styled-components
 import { styled, ThemeProvider } from "styled-components";
@@ -19,19 +20,21 @@ import LightModeTwoToneIcon from '@mui/icons-material/LightModeOutlined';
 import { UserButton, SignInButton, SignedOut, SignedIn } from "@clerk/nextjs";
 //other
 import { useAppContext } from '@/lib/context';
-import {  recordEvent, setCookie } from '@/lib/api';
+import { recordEvent, setCookie } from '@/lib/api';
 import PlayerPhoto from "@/components/util-components/player-photo";
 
 //styles
-
-const Header = styled.header`
-  height: 100px;
+interface HeaderProps {
+  scrolled: boolean;
+}
+const Header = styled.header<HeaderProps>`
+  height:${({ scrolled }) => scrolled ? 80 : 100}px;
   width: 100%;
   min-width:1hw;
   background-color:var(--header-bg);
   text-align: center;
   font-size: 40px;
-  padding-top: 10px;
+  padding-top: ${({ scrolled }) => scrolled ? 0 : 10}px;
   padding-bottom:10px;
   font-family: 'Roboto', sans-serif;
   a{
@@ -92,56 +95,28 @@ const MobileContainerWrap = styled.div`
     }
 `;
 
-const SideTeam = styled.div`
-    height: 20px;
-    //margin-top:5px;
-   //font-size: 16px;
-    padding-left:20px;
-    border-left: 1px solid #aaa;
-    padding-bottom:20px;
-    @media screen and (min-width: 1600px) {
-      //font-size: 18px;
-    }
-`;
 
-const SideLeagueName = styled.div`
-    height: 40px;
-    width: 200px; 
-    color:var(--text);
-    font-size: 20px;
-`;
 
-const SelectedSideTeam = styled.div`
-    height: 20px;
-    color:var(--selected);
-    font-size: 16px;
-    padding-left:20px;
-    border-left: 1px solid #aaa;
-    a{
-        color:var(--selected) !important;
-        text-decoration: none;
-        &:hover{
-            color: var(--highlight);
-        }
-    }
-`;
-
-const League = styled.div`
-    height: 24px;
+const League = styled.div<HeaderProps>`
+    height: ${({ scrolled }) => scrolled ? 16 : 24}px;
     width: 100px; 
     color: var(--leagues-text);
     text-align: center;
     margin: 0px;
-    padding-top:3px;
+    padding-top:${({ scrolled }) => scrolled ? 0 : 3}px;
+    @media screen and (max-width: 1199px) {
+      height: 24px;
+    }
+ 
 `;
 
-const SelectedLeague = styled.div`
-    height: 24px;
+const SelectedLeague = styled.div<HeaderProps>`
+    height: ${({ scrolled }) => scrolled ? 16 : 24}px;
     width: 100px;
     color: var(--leagues-selected);
     text-align: center;
     margin: 0px;
-    padding-top:3px;
+    padding-top:${({ scrolled }) => scrolled ? 1 : 3}px;
     a{
         color:var(--leagues-selected) !important;
         text-decoration: none;
@@ -149,20 +124,23 @@ const SelectedLeague = styled.div`
           color:var(--leagues-highlight);
         }
     }
+    @media screen and (max-width: 1199px) {
+      height: 24px;
+    }
 `;
 
-const Leagues = styled.div`
+const Leagues = styled.div<HeaderProps>`
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-evenly;
     align-items: center;
-    height: 28px;
+    height:${({ scrolled }) => scrolled ? 21 : 28}px;
     width: 100%;
     background-color:var(--leagues-bg);
     color: #aaa;
     text-align: center;
-    font-size: 17px;
+    font-size:    ${({ scrolled }) => scrolled ? 14 : 17}px;
     margin: 0px;
     a{
         color: var(--leagues-text);
@@ -171,130 +149,18 @@ const Leagues = styled.div`
             color:var(--leagues-highlight);
         } 
     }
-`;
-
-const LeftPanel = styled.div`
-    min-width:300px;
-    height:auto !important;
-   // height:100%;
-   // min-height: 200vw;
-   // flex-grow: 1;
-    background-color:var(--background);
-    //display:flex;
-    //flex-direction:column;
-    //justify-content:flex-start;
-    //align-items:flex-start; 
-    padding-top:18px;
-    padding-left:20px;
-    a{
-        color:var(--text);
-        text-decoration: none;
-        &:hover{
-            color: var(--highlight);
-        }
+    @media screen and (max-width: 1199px) {
+      font-size: 17px;
     }
-    overflow-y: hidden;
-    overflow-x: hidden;
-    //display:flex;
-    //flex-direction:column;
-    //justify-content:flex-start;
-    //align-items:flex-start;
-    padding-top:18px;
-   // height:auto;
-    max-height: 130vh;
-    position:sticky;
-    top:-40px;
-    //flex-grow:3;
-    
 `;
 
-const LeagueIcon = styled.div`
-    min-height:26px;
-    margin-top:-6px;
+
+const LeagueIcon = styled.div<HeaderProps>`
+    min-height: ${({ scrolled }) => scrolled ? 10 : 26}px;
+    margin-top:${({ scrolled }) => scrolled ? -5 : -6}px;
   
 `;
-const Favorites = styled.div`
-    margin-top:28px;
-    margin-left:22px;
-    width:100%;
-    height:40px;
-    font-size:12px;
-    a{
-        text-decoration: none;
-        &:hover{
-          color: var(--highlight);
-        }
-    }
-`;
 
-const LeftText = styled.div`
-    padding-top:28px;
-    padding-right:20px;
-    line-height:1.5;
-    //font-size:12px;
-    a{
-        text-decoration: none;
-        &:hover{
-            color: var(--highlight);
-        }
-    }
-`;
-
-const LeftMobilePanel = styled.div`
-    width:100%;
-    display:flex;
-    flex-direction:column;
-    padding-left:20px;
-    align-items:flex-start; 
-    padding-top:18px;
-    a{
-        color: var(--text);
-        text-decoration: none;
-        &:hover{
-            color:var(--highlight);
-        }
-    }
-`;
-
-const Welcome = styled.div`
-    padding-top:18px;
-    //font-size:13px;
-    a{
-      text-decoration: none;
-      &:hover{
-        color:var(--highlight);
-      }
-    }
-`;
-
-const CenterPanel = styled.div`
-    position:relative;
-    width:100%;
-   // height:100%;
-    max-width:1000px;
-    min-width:800px;  
-    //co-pilot, add auto vertical scroll
-    overflow-y: auto;
-    overflow-x: hidden;
-    display:flex;
-    flex-direction:column;
-    justify-content:flex-start;
-    align-items:flex-start;
-    padding-top:18px;
-    height:auto;
-   // max-height: 100vh;
-   flex-grow:1;
-
-
-`;
-
-const MainPanel = styled.div`
-    display:flex;
-    position:relative;
-    flex-direction:row;
-    justify-content:flex-start;
-    height:100%;
-`;
 
 const MuiTabs = styled(Tabs)`
     width:100%;
@@ -304,8 +170,9 @@ const MuiTabs = styled(Tabs)`
     background-color:var(--mobile-leagues-bg);
 `;
 
-const Superhead = styled.div`
-    font-size: 32px !important;
+
+const Superhead = styled.div<HeaderProps>`
+    font-size: ${({ scrolled }) => scrolled ? 24 : 32}px !important;
     margin-top:4px;
     text-align:left;
     color:var(--header-title-color);
@@ -325,12 +192,12 @@ const SuperheadMobile = styled.div`
     }
 `;
 
-const Subhead = styled.div`
-    font-size: 18x;
+const Subhead = styled.div<HeaderProps>`
+    font-size: ${({ scrolled }) => scrolled ? 14 : 18}px;
     margin-top:4px;
     text-align:left;
     color:var(--subheader-color);
-    font-size:18px;
+    
     @media screen and (max-width: 1199px ){
         display:none;
     }
@@ -345,7 +212,6 @@ const SubheadMobile = styled.div`
         display:none;
     }
 `;
-
 const HeaderTopline = styled.div`
     display:flex;
     height:100%;
@@ -475,13 +341,15 @@ const LeaguesTab = styled(Tab) <LeaguesNavProps>`
 interface Props {
   leagues: string[];
 }
-
+let s = false;
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 
-const HeaderNav: React.FC<Props> = ({leagues}) => {
-
-  const {mode,userId,isMobile,setLeague,setView,setPagetype,setTeam,setPlayer, setMode,sessionid,fbclid,utm_content,params,tp,league,pagetype,team,player,teamName}=useAppContext();
-  console.log("league=>:",league)
+const HeaderNav: React.FC<Props> = ({ leagues }) => {
+  const [scrolled, setScrolled] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
+  const { mode, userId, isMobile, setLeague, setView, setPagetype, setTeam, setPlayer, setMode, sessionid, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName } = useAppContext();
+  //console.log("league=>:", league)
+  const router = useRouter();
   const onLeagueNavClick = useCallback(async (l: string) => {
     setLeague(l);
     setView('mentions');
@@ -492,14 +360,53 @@ const HeaderNav: React.FC<Props> = ({leagues}) => {
       `{"fbclid":"${fbclid}","utm_content":"${utm_content}","league":"${l}"}`
     );
   }, [fbclid, utm_content, sessionid]);
-  
+
+  useEffect(() => {
+    const listener = () => {
+      setScrollY(window.scrollY);
+      console.log("scrollY", window.scrollY);
+      if (window.scrollY > 0) {
+
+        if (!scrolled && !s) {
+          try {
+            s = true;
+            setScrolled(true);
+            recordEvent("", `header-scrolled`, `{"fbclid":"${fbclid}", "utm_content":"${utm_content}"}`)
+              .then((r: any) => {
+                console.log("recordEvent", r);
+              });
+          } catch (x) {
+            console.log('recordEvent', x);
+          }
+        }
+        setScrolled(true);
+      }
+    }
+    function throttle(callbackFn: any, limit: number) {
+      let wait = false;
+      return function () {
+        if (!wait) {
+          callbackFn.call();
+          wait = true;
+          setTimeout(function () {
+            wait = false;
+            callbackFn.call();
+          }, limit);
+        }
+      }
+    }
+
+    window.addEventListener("scroll", throttle(listener, 200));
+    return () => window.removeEventListener("scroll", listener);
+  }, [fbclid, utm_content, scrolled]);
+
   const updateMode = useCallback(async (mode: string) => {
     console.log("updateMode", mode)
     setMode(mode);
     await setCookie({ name: 'mode', value: mode });
   }, []);
   const LeaguesNav = leagues?.map((l: string, i: number) => {
-    return l == league ? <SelectedLeague key={`league-${i}`} ><Link href={`/pub/league/${l}${params}${tp}`} shallow onClick={async () => { await onLeagueNavClick(l) }} >{l}</Link></SelectedLeague> : <League key={`league-${i}`}><Link href={`/pub/league/${l}${params}${tp}`} shallow onClick={async () => { await onLeagueNavClick(l) }} >{l}</Link></League>
+    return l == league ? <SelectedLeague scrolled={scrollY != 0} key={`league-${i}`} ><Link href={`/pub/league/${l}${params}${tp}`} shallow onClick={async () => { await onLeagueNavClick(l) }} >{l}</Link></SelectedLeague> : <League scrolled={scrollY != 0} key={`league-${i}`}><Link href={`/pub/league/${l}${params}${tp}`} shallow onClick={async () => { await onLeagueNavClick(l) }} >{l}</Link></League>
   });
   const MobileLeaguesNav = leagues?.map((l: string, i: number) => {
     //@ts-ignore
@@ -507,58 +414,58 @@ const HeaderNav: React.FC<Props> = ({leagues}) => {
   })
   //@ts-ignore
   MobileLeaguesNav.unshift(<LeaguesTab selected={!league} key={`league-${leagues?.length}`} icon={<HomeIcon />} onClick={() => { onLeagueNavClick('').then(() => { }); router.replace(`/pub${params}${tp}`); }} />)
-  LeaguesNav.unshift(league ? <League key={`league-${leagues?.length}`}><Link href={`/pub${params}${tp}`} shallow onClick={() => { onLeagueNavClick('').then(() => { }) }}><LeagueIcon><HomeIcon fontSize="medium" sx={{ m: 0.3 }} /></LeagueIcon></Link></League> : <SelectedLeague key={`league-${leagues?.length}`}><Link href={`/pub${params}${tp}`} shallow onClick={() => { onLeagueNavClick('').then(() => { }) }}><LeagueIcon><HomeIcon fontSize="medium" sx={{ m: 0.3 }} /></LeagueIcon></Link></SelectedLeague>)
+  LeaguesNav.unshift(league ? <League scrolled={scrollY != 0} key={`league-${leagues?.length}`}><Link href={`/pub${params}${tp}`} shallow onClick={() => { onLeagueNavClick('').then(() => { }) }}><LeagueIcon scrolled={scrollY != 0}><HomeIcon fontSize={scrollY != 0 ? "small" : "medium"} sx={{ m: 0.3 }} /></LeagueIcon></Link></League> : <SelectedLeague scrolled={scrollY != 0} key={`league-${leagues?.length}`}><Link href={`/pub${params}${tp}`} shallow onClick={() => { onLeagueNavClick('').then(() => { }) }}><LeagueIcon scrolled={scrollY != 0}><HomeIcon fontSize={scrollY != 0 ? "small" : "medium"} sx={{ m: 0.3 }} /></LeagueIcon></Link></SelectedLeague>)
   const selectedLeague = leagues?.findIndex((l: string) => l == league) + 1;
-
- 
-
 
   return (
     <>
-            <Header>
-              <HeaderTopline>
-                <LeftContainer>
-                  <HeaderLeft>
-                    <FLogo><Link href={`/pub${params}`}><Avatar sx={{ bgcolor: cyan[800] }}>Q</Avatar></Link></FLogo>
-                    <FLogoMobile ><Link href={`/pub${params}`}><Avatar sx={{ bgcolor: cyan[800] }}>Q</Avatar></Link></FLogoMobile>
-                  </HeaderLeft>
-                  <ContainerCenter>
-                    <HeaderCenter>
-                      <Superhead>{(pagetype == "league" || pagetype == "landing") ? <Link href={`/pub${params}`}>QWIKET{league ? ` : ${league}` : ``}</Link> : !team ? `${league}` : player ? <PlayerNameGroup><PlayerName><Link href={`/pub/league/${league}/team/${team}${params}`}>{teamName}</Link></PlayerName> </PlayerNameGroup> : `${league} : ${teamName}`}</Superhead>
-                      <SuperheadMobile>{(pagetype == "league" || pagetype == "landing") ? <Link href={`/pub${params}`}>{league ? ` ${league}` : `QWIKET`}</Link> : !team ? `${league}` : player ? <PlayerNameGroup><PlayerName><Link href={`/pub/league/${league}/team/${team}${params}`}>{teamName}</Link></PlayerName> </PlayerNameGroup> : `${teamName}`}</SuperheadMobile>
-                      {(pagetype == "league" || pagetype == "landing") && <div><Subhead>Sports News Digest And Index</Subhead><SubheadMobile>Sports News Index</SubheadMobile></div>}
-                      {pagetype == "player" && player && <div><Subhead>{player ? player : ''}</Subhead><SubheadMobile>{player ? player : ''}</SubheadMobile></div>}
-                    </HeaderCenter>
-                    {pagetype == "player" && player && <Photo><PlayerPhoto teamid={team || ""} name={player || ""} /></Photo>}
-                  </ContainerCenter>
-                </LeftContainer>
-                <HeaderRight>  <IconButton color={"inherit"} size="small" onClick={async () => {
-                  await updateMode(mode == "light" ? "dark" : "light");
-                }}>
-                  {mode == "dark" ? <LightModeTwoToneIcon fontSize="small" /> : <ModeNightTwoToneIcon fontSize="small" />}
-                </IconButton>
-                  <SUserButton afterSignOutUrl="/" />
-                  {pagetype != 'landing' && !userId && <SignInButton><IconButton color={"inherit"} size="small" ><LoginIcon fontSize="small" /></IconButton></SignInButton>}
-                </HeaderRight>
-              </HeaderTopline>
-            </Header>
-            {!isMobile && <ContainerWrap>
-              <Leagues>
-                {LeaguesNav}
-              </Leagues>
-              </ContainerWrap>}
-              {isMobile && <MobileContainerWrap>
-              <MuiTabs
-                value={selectedLeague}
-                variant="scrollable"
-                scrollButtons={true}
-                allowScrollButtonsMobile
-                aria-label="scrollable auto tabs example"
-              >
-                {MobileLeaguesNav}
-              </MuiTabs>
-            </MobileContainerWrap>}
-            </>
+      <Header scrolled={!isMobile && scrollY != 0}>
+        <HeaderTopline>
+          <LeftContainer>
+            <HeaderLeft>
+              <FLogo><Link href={`/pub${params}`}><Avatar sx={{ bgcolor: cyan[800] }}>Q</Avatar></Link></FLogo>
+              <FLogoMobile ><Link href={`/pub${params}`}><Avatar sx={{ bgcolor: cyan[800] }}>Q</Avatar></Link></FLogoMobile>
+            </HeaderLeft>
+            <ContainerCenter>
+              <HeaderCenter>
+                <Superhead scrolled={scrollY != 0}>{(pagetype == "league" || pagetype == "landing") ? <Link href={`/pub${params}`}>QWIKET{league ? ` : ${league}` : ``}</Link> : !team ? `${league}` : player ? <PlayerNameGroup><PlayerName><Link href={`/pub/league/${league}/team/${team}${params}`}>{teamName}</Link></PlayerName> </PlayerNameGroup> : `${league} : ${teamName}`}</Superhead>
+                <SuperheadMobile>{(pagetype == "league" || pagetype == "landing") ? <Link href={`/pub${params}`}>{league ? ` ${league}` : `QWIKET`}</Link> : !team ? `${league}` : player ? <PlayerNameGroup><PlayerName><Link href={`/pub/league/${league}/team/${team}${params}`}>{teamName}</Link></PlayerName> </PlayerNameGroup> : `${teamName}`}</SuperheadMobile>
+                {(pagetype == "league" || pagetype == "landing") && <div><Subhead scrolled={scrollY != 0}>Sports News Digest And Index</Subhead><SubheadMobile>Sports News Index</SubheadMobile></div>}
+                {pagetype == "player" && player && <div><Subhead scrolled={scrollY != 0}>{player ? player : ''}</Subhead><SubheadMobile>{player ? player : ''}</SubheadMobile></div>}
+              </HeaderCenter>
+              {pagetype == "player" && player && <Photo><PlayerPhoto teamid={team || ""} name={player || ""} /></Photo>}
+            </ContainerCenter>
+          </LeftContainer>
+          <HeaderRight>  <IconButton color={"inherit"} size="small" onClick={async () => {
+            await updateMode(mode == "light" ? "dark" : "light");
+          }}>
+            {mode == "dark" ? <LightModeTwoToneIcon fontSize="small" /> : <ModeNightTwoToneIcon fontSize="small" />}
+          </IconButton>
+            <SUserButton afterSignOutUrl="/" />
+            {pagetype != 'landing' && !userId && <SignInButton><IconButton color={"inherit"} size="small" ><LoginIcon fontSize="small" /></IconButton></SignInButton>}
+          </HeaderRight>
+        </HeaderTopline>
+        {!isMobile && scrollY != 0 && <Leagues scrolled={scrollY != 0}>
+          {LeaguesNav}
+        </Leagues>}
+      </Header>
+      {!isMobile && <ContainerWrap>
+        <Leagues scrolled={scrollY != 0}>
+          {LeaguesNav}
+        </Leagues>
+      </ContainerWrap>}
+      {isMobile && <MobileContainerWrap>
+        <MuiTabs
+          value={selectedLeague}
+          variant="scrollable"
+          scrollButtons={true}
+          allowScrollButtonsMobile
+          aria-label="scrollable auto tabs example"
+        >
+          {MobileLeaguesNav}
+        </MuiTabs>
+      </MobileContainerWrap>}
+    </>
   )
 }
 export default HeaderNav;

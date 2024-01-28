@@ -24,13 +24,13 @@ const SidePlayer = styled.div<SideProps>`
    // color: #eee;
     //text-align: center;
     color:${props => props.highlight ? 'var(--myteam)' : 'var(--text)'};
-    font-size: 16px;
+   // font-size: 16px;
     padding-left:20px;
     &:hover{
         color:var(--highlight);
       }
   
-    margin: 10px;
+    margin: 4px;
     a{
       color:${props => props.highlight ? 'var(--myteam)' : 'var(--text)'} !important;//#ff8 !important;
       text-decoration: none;
@@ -100,7 +100,7 @@ const SelectedSidePlayer = styled.div<SideProps>`
    // color:var(--selected);// #ff8;
    color:${props => props.highlight ? 'var(--selected)' : 'var(--selected)'};
    // text-align: center;
-    font-size: 16px;
+   // font-size: 16px;
     padding-left:20px;
     margin: 10px;
     a{
@@ -163,13 +163,23 @@ const MobilePlayersPanel = styled.div`
     }
   }
 `;
-
+interface ScrollProps {
+    numPlayers:number;
+}
+const RightScroll=styled.div<ScrollProps>`
+    position:sticky;
+    //max-height: ${({numPlayers})=>numPlayers*36}px;
+    height:auto !important;
+    top:-${({numPlayers})=>numPlayers>60?numPlayers*numPlayers*0.20:numPlayers*numPlayers*0.10}px;
+    overflow-y: hidden;
+    padding-bottom:20px;
+`;
 interface Props {
 }
 const Players: React.FC<Props> = () => {
     const [signin, setSignin] = React.useState(false);
 
-    const { userId, isMobile, setLeague, setView, setPagetype, setTeam, setPlayer, setMode, sessionid, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName, setTeamName } = useAppContext();
+    const { userId, isMobile, setLeague, setView, setTab,setPagetype, setTeam, setPlayer, setMode, sessionid, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName, setTeamName } = useAppContext();
 
     const teamPlayersKey: TeamPlayersKey = { type: 'teamPlayers', league: league || "", teamid: team || "" };
     const { data: players, error, isLoading, mutate: mutatePlayers } = useSWR(teamPlayersKey, getTeamPlayers);
@@ -184,6 +194,7 @@ const Players: React.FC<Props> = () => {
         setPagetype("player");
         setPlayer(name);
         setView("mentions");
+        setTab("all");
         //setGlobalLoading(true);
         await recordEvent(sessionid as string || "",
             'player-nav',
@@ -194,7 +205,7 @@ const Players: React.FC<Props> = () => {
     const PlayersNav = players && players?.map((p: { name: string, findex: string, mentions: string, tracked: boolean }, i: number) => {
         return <SideGroup key={`ewfggvfn-${i}`}>{p.name == player ?
             <SelectedSidePlayer highlight={p.tracked}>
-                <Link onClick={async () => { await onPlayerNav(p.name) }} href={`/pub/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}${params}${tp}`} shallow>
+                <Link onClick={async () => { await onPlayerNav(p.name) }} href={`/pub/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}${params}`} shallow>
                     {p.name} ({`${p.mentions}`})
                 </Link>
             </SelectedSidePlayer>
@@ -257,10 +268,12 @@ const Players: React.FC<Props> = () => {
         </SideGroup>
     });
     return (<>
-        {!isMobile?<>
+        {!isMobile?
+            <RightScroll numPlayers={players?.length}>
             <TeamName>{teamName}:</TeamName>
             {PlayersNav}
-        </>:
+            </RightScroll>
+        :
         <MobilePlayersPanel>
         <MobileTeamName>{teamName}</MobileTeamName>
         {PlayersNav}

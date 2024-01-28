@@ -4,7 +4,6 @@ export const recordEvent = async (sessionid: string, name: string, params: strin
   try {
     const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/record-event?sessionid=${encodeURIComponent(sessionid)}&name=${encodeURIComponent(name)}&params=${encodeURIComponent(params)}`;
     const res = await axios.get(url);
-    console.log("recordEvent", url, res.data.success)
     return res.data.success;
   }
   catch (e) {

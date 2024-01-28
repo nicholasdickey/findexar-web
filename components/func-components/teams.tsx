@@ -25,9 +25,9 @@ const SideTeam = styled.div`
 `;
 
 const SelectedSideTeam = styled.div`
-    height: 20px;
+    height: 30px;
     color:var(--selected);
-    font-size: 16px;
+   // font-size: 16px;
     padding-left:20px;
     border-left: 1px solid #aaa;
     a{
@@ -42,7 +42,7 @@ const SelectedSideTeam = styled.div`
 interface Props {
 }
 const Teams:React.FC<Props>= () => {
-    const { mode, userId, isMobile, setLeague, setView, setPagetype, setTeam, setPlayer, setMode, sessionid, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName,setTeamName } = useAppContext();
+    const { mode, userId, isMobile, setLeague, setView, setTab,setPagetype, setTeam, setPlayer, setMode, sessionid, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName,setTeamName } = useAppContext();
     
     const leagueTeamsKey: LeagueTeamsKey = { func: "leagueTeams", league: league || "", noLoad: pagetype == "landing" };
     const { data: teams, error, isLoading } = useSWR(leagueTeamsKey, getLeagueTeams);
@@ -53,6 +53,7 @@ const Teams:React.FC<Props>= () => {
         setPlayer("");
         setTeam(name);
         setView("mentions");
+        setTab("all");
         await recordEvent(sessionid as string || "",
           'team-nav',
           `{"params":"${params}","teamid":"${name}"}`
@@ -67,7 +68,7 @@ const Teams:React.FC<Props>= () => {
         if (t.id == team)
           setTeamName(t.name);
         return t.id == team ? <SelectedSideTeam key={`sideteam-${i}`}>
-          <Link onClick={async () => { await onTeamNav(t.id); }} href={`/pub/league/${league}/team/${t.id}${params}${tp}`} shallow>{t.name}</Link></SelectedSideTeam> : <SideTeam key={`sideteam-${i}`}><Link onClick={async () => { onTeamNav(t.id) }} href={`/pub/league/${league}/team/${t.id}${params}${tp}`} shallow>{t.name}</Link></SideTeam>
+          <Link onClick={async () => { await onTeamNav(t.id); }} href={`/pub/league/${league}/team/${t.id}${params}`} shallow>{t.name}</Link></SelectedSideTeam> : <SideTeam key={`sideteam-${i}`}><Link onClick={async () => { onTeamNav(t.id) }} href={`/pub/league/${league}/team/${t.id}${params}`} shallow>{t.name}</Link></SideTeam>
       });
   
     return (

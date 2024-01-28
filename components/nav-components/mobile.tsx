@@ -25,7 +25,7 @@ const MobileContainerWrap = styled.div`
     flex-direction: column;
     height: 100%;
     width: 100%;
-    color: #111;
+   // color: #111;
     font-family: 'Roboto', sans-serif;
     border-top: 1px solid #ccc;
     @media screen and (min-width: 1200px) {
@@ -53,7 +53,9 @@ const CenterPanel = styled.div`
     position:relative;
     width:100%;
     max-width:1000px;
-    min-width:800px;  
+    margin-right:auto;
+    margin-left:auto;
+   // min-width:800px;  
     overflow-y: auto;
     overflow-x: hidden;
     display:flex;
@@ -63,6 +65,7 @@ const CenterPanel = styled.div`
     padding-top:18px;
     height:auto;
     flex-grow:1;
+    padding-bottom:60px;
 `;
 
 const SideLeagueName = styled.div`
@@ -76,11 +79,11 @@ interface Props {
 
 
 }
-const Desktop: React.FC<Props> = () => {
+const Mobile: React.FC<Props> = () => {
     const router = useRouter();
     let { tab, view, mode, userId, isMobile, setLeague, setView, setTab, params2, tp2, setPagetype, setTeam, setPlayer, setMode, sessionid, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName } = useAppContext();
 
-    tab == tab || "all";
+    tab =tab || "all";
     const onTabNav = async (option: any) => {
         const tab = option.tab;
         setTab(tab);
@@ -98,6 +101,7 @@ const Desktop: React.FC<Props> = () => {
             `{"fbclid":"${fbclid}","utm_content":"${utm_content}","view":"${option.name}"}`
         );
     }, [fbclid, utm_content, sessionid, league, params2, tp2]);
+    console.log("MOBILE:", { pagetype, view, tab })
     return (
         <MobileContainerWrap>
             {pagetype == "landing" && <Landing />}
@@ -122,4 +126,4 @@ const Desktop: React.FC<Props> = () => {
 
     )
 }
-export default Desktop;
+export default Mobile;

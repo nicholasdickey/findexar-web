@@ -33,18 +33,21 @@ const MentionWrap = styled.div<MentionsProps>`
     justify-content: flex-start;
     align-items:flex-start;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    padding:4px;
+   /* border-radius: 5px;
     margin-left:8px;
     margin-top:20px;
+    margin-bottom:20px;
+    
     padding-left:4px;
     padding-right:4px;
-    padding-top:4px;
-    color:var(--text);
+    //padding-top:4px;
+    color:var(--text);*/
     z-index:200;
     font-size: 16px;
     &:hover{
-            background-color:var(--mention-high-bg);
-            color: var(--mention-text);
+          //  background-color:var(--mention-high-bg);
+          //  color: var(--mention-text);
         }   
     a{
         color:var(--mention-text);
@@ -88,7 +91,7 @@ const MobileMentionWrap = styled.div<MentionsProps>`
 
 const MentionSummary = styled.div`
     width:100%;
-    padding-right:20px;
+   // padding-right:20px;
     border-radius: 30px;
     font-size: 15px;
     padding-left:10px;
@@ -465,7 +468,7 @@ const Mention: React.FC<Props> = ({ startExtended, linkType,mention, mutate }) =
 
     return (
         <>
-            <MentionWrap hideit={hide} onMouseEnter={() => onHover('desktop')}>
+            <MentionWrap  onMouseEnter={() => onHover('desktop')}>
                 <MentionSummary>
                     <Topline><LocalDate><i>{localDate}</i></LocalDate>
                         {!localFav ? noUser ? <SignInButton><StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); enableRedirect(); addFavorite({ findexarxid }); mutate() }} style={{ color: "#888" }} /></SignInButton> : <StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); enableRedirect(); addFavorite({ findexarxid }); mutate(); }} style={{ color: "#888" }} /> : <StarIcon onClick={() => { if (noUser) return; setLocalFav(0); removeFavorite({ findexarxid }); mutate(); }} style={{ color: "FFA000" }} />}</Topline>

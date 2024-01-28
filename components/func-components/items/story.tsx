@@ -1,4 +1,4 @@
-import React, { useEffect,useCallback } from "react";
+import React, { useEffect, useCallback } from "react";
 import useSWRImmutable from 'swr/immutable'
 import Link from 'next/link';
 import { SignInButton, RedirectToSignIn } from "@clerk/nextjs";
@@ -14,7 +14,7 @@ import { MetaLinkKey, getMetaLink, addFavorite, removeFavorite, recordEvent } fr
 import { convertToUTCDateString, convertToReadableLocalTime } from "@/lib/date-convert";
 import useCopyToClipboard from '@/lib/copy-to-clipboard';
 import Mention from '@/components/mention';
-import MiniMention from '@/components/mini-mention';
+import MiniMention from '@/components/func-components/items/mini-mention';
 import { useAppContext } from '@/lib/context';
 
 declare global {
@@ -175,10 +175,24 @@ const Digest = styled.div`
 `;
 
 const ArticleDigest = styled.div`
-    font-size: 18px;
+    font-size: 14px;
     padding-top:10px;
 `;
-
+const ArticleMentionsTitle = styled.div`
+    font-size: 14px;
+    padding-top:10px;
+    margin-left:20px;
+`;
+const ArticleMentions = styled.div`
+    font-size: 18px;
+    padding-top:10px;
+    border: 1px dotted #ccc;
+   
+    border-radius: 5px;
+    padding-bottom:10px;
+    margin-bottom:10px;
+   // background-color: var(--background);
+`;
 const ImageWrapper = styled.div`
     margin-top:20px;
     flex: 1 1 auto;
@@ -310,7 +324,7 @@ const SummaryWrap = styled.div`
     }
 `;
 
-const ShareIcon=styled.div`
+const ShareIcon = styled.div`
     margin-top:-1px;
     padding-bottom:4px;
 `;
@@ -334,7 +348,10 @@ const MobileWrap = styled.div`
     display:flex;
     flex-direction:column;
     width:100%;
+    padding:10px;
     margin-bottom:20px;
+    background-color:var(--background);
+    padding:10px;
     a{
         font-size:15px !important;
       
@@ -348,6 +365,7 @@ const MentionsWrap = styled.div`
     display:flex;
     flex-direction:column;
     width:100%;
+    padding-right:20px;
     margin-top:20px;
     margin-bottom:20px;
     a{
@@ -356,20 +374,20 @@ const MentionsWrap = styled.div`
     }
 `;
 interface Props {
-    story:any;
+    story: any;
 }
 
-const Story: React.FC<Props> = ({  story  }) => {
-    const { mode, userId, noUser,view,tab,isMobile, setLeague, setView, setPagetype, setTeam, setPlayer, setMode, sessionid, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName, setTeamName } = useAppContext();
+const Story: React.FC<Props> = ({ story }) => {
+    const { mode, userId, noUser, view, tab, isMobile, setLeague, setView, setPagetype, setTeam, setPlayer, setMode, sessionid, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName, setTeamName } = useAppContext();
 
-    let {title,url,digest,site_name,image,authors,createdTime,mentions}=story;
+    let { title, url, digest, site_name, image, authors, createdTime, mentions } = story;
     const [localDate, setLocalDate] = React.useState(convertToUTCDateString(createdTime));
     const [signin, setSignin] = React.useState(false);
     const [digestCopied, setDigestCopied] = React.useState(false);
     const [selectedXid, setSelectedXid] = React.useState("");
     const [value, copy] = useCopyToClipboard();
     const theme = useTheme();
-   
+
     useEffect(() => {
         setTimeout(() => {
             setDigestCopied(false);
@@ -377,8 +395,8 @@ const Story: React.FC<Props> = ({  story  }) => {
             , 2000);
     }, [digestCopied]);
 
-   
-    
+
+
     //prepare urls:
 
     useEffect(() => {
@@ -390,7 +408,7 @@ const Story: React.FC<Props> = ({  story  }) => {
         }
     }, [createdTime])
 
-    
+
 
     const enableRedirect = useCallback(() => {
         if (window && window.Clerk) {
@@ -402,15 +420,15 @@ const Story: React.FC<Props> = ({  story  }) => {
                 return;
             }
         }
-    },[]);
+    }, []);
 
-    const onExtended =useCallback( async (on: boolean) => {
+    const onExtended = useCallback(async (on: boolean) => {
 
         await recordEvent(sessionid as string || "",
             'mention-extended',
             `{"on":"${on}","params":"${params}"}`
         );
-    },[sessionid,params]);
+    }, [sessionid, params]);
 
     const onHover = useCallback((label: string) => {
         try {
@@ -421,7 +439,7 @@ const Story: React.FC<Props> = ({  story  }) => {
         } catch (x) {
             console.log('recordEvent', x);
         }
-    },[sessionid,params]);
+    }, [sessionid, params]);
 
     const onShare = useCallback((url: string) => {
         try {
@@ -432,90 +450,98 @@ const Story: React.FC<Props> = ({  story  }) => {
         } catch (x) {
             console.log('recordEvent', x);
         }
-    },[sessionid,params]);
+    }, [sessionid, params]);
 
- 
+
     const onDigestCopyClick = useCallback(() => {
         setDigestCopied(true);
         copy(digest);
-    },[digest]);
+    }, [digest]);
 
 
-    const Mentions=<MentionsWrap>{mentions&&mentions.map((mention:any,i:number)=>{
+    const Mentions = <MentionsWrap>{mentions && mentions.map((mention: any, i: number) => {
         return (
-            <MiniMention key={`mention-${i}`} {...mention} params={params} tp={tp} selectedXid={selectedXid} setSelectedXid={setSelectedXid}/>
+            <MiniMention key={`mention-${i}`} {...mention} params={params} tp={tp} selectedXid={selectedXid} setSelectedXid={setSelectedXid} />
         )
 
 
     })}</MentionsWrap>;
-    console.log("RENDER STORY",{story})
+    console.log("RENDER STORY", { story })
+    if (image.indexOf("thestar.com/content/tncms/custom/image/f84403b8-7d76-11ee-9d02-a72a4951957f.png") >= 0)
+        return null;
     return (
         <>
-            <DesktopWrap> 
-                        <Link href={url}>
-                            <Title>{title}</Title>
-                        </Link>
-                        <Link href={url}>
-                            <Byline>
-                                {authors && <Authors>{authors}</Authors>}
-                                <SiteName>{site_name}</SiteName>
-                            </Byline>
-                        </Link>
-                        <HorizontalContainer>
-                            <Link href={url}>
-                                <ImageWrapper>
-                                   {image&&!(image.indexOf("thestar.com/content/tncms/custom/image/f84403b8-7d76-11ee-9d02-a72a4951957f.png")>=0)&&<Image src={image} alt={title} />}
-                                </ImageWrapper>
+            <DesktopWrap>
+                <Link href={url}>
+                    <Title>{title}</Title>
+                </Link>
+                <Link href={url}>
+                    <Byline>
+                        {authors && <Authors>{authors}</Authors>}
+                        <SiteName>{site_name}</SiteName>
+                    </Byline>
+                </Link>
+                <HorizontalContainer>
+                    <Link href={url}>
+                        <ImageWrapper>
+                            {image && !(image.indexOf("thestar.com/content/tncms/custom/image/f84403b8-7d76-11ee-9d02-a72a4951957f.png") >= 0) && <Image src={image} alt={title} />}
+                        </ImageWrapper>
+                    </Link>
+                    <Body>
+                        <Link href={url} target="_blank"><ArticleDigest>
+                            <b>{true ? 'Digest:' : 'Short Digest:'}</b>
+                        </ArticleDigest></Link>
+                        <Digest>
+                            <Link href={url} target="_blank">
+                                <div dangerouslySetInnerHTML={{ __html: digest }} />
                             </Link>
-                            <Body>
-                                <Link href={url}  target="_blank"><ArticleDigest>
-                                    {true ? 'Digest:' : 'Short Digest:'}
-                                </ArticleDigest></Link>
-                                <Digest>
-                                    <Link href={url}  target="_blank">
-                                        <div dangerouslySetInnerHTML={{ __html: digest }} />
-                                    </Link>
-                                    <ShareContainerInline>
-                                        <ContentCopyIcon style={{ paddingTop: 6,marginTop:-10}} fontSize="small" sx={{ color: digestCopied ? 'green' : '' }} onClick={() => onDigestCopyClick()} />
-                                    </ShareContainerInline>
+                            <ShareContainerInline>
+                                <ContentCopyIcon style={{ paddingTop: 6, marginTop: -10 }} fontSize="small" sx={{ color: digestCopied ? 'green' : '' }} onClick={() => onDigestCopyClick()} />
+                            </ShareContainerInline>
 
-                                </Digest>
-                            </Body>
-                        </HorizontalContainer>
-                        <Link href={url} target="_blank">{url.substring(0, 50)}..</Link>
-                        <br/>
-                        <ArticleDigest>Mentions:</ArticleDigest>
-                        {Mentions}
-                    </DesktopWrap>
+                        </Digest>
+                    </Body>
+                </HorizontalContainer>
+                <ArticleMentions>
+                <ArticleMentionsTitle><b>Mentions:</b></ArticleMentionsTitle>
+               {Mentions}</ArticleMentions>
+                <br />
+                <Link href={url} target="_blank">{url.substring(0, 50)}..</Link>
+
+
+            </DesktopWrap>
             <MobileWrap>
-                                <Link href={url}><Title>{title}</Title></Link>
-                        <Link href={url}><Byline>
-                            {authors && <Authors>{authors}</Authors>}
-                            <SiteName>{site_name}</SiteName>
-                        </Byline>
+                <Link href={url}><Title>{title}</Title></Link>
+                <Link href={url}><Byline>
+                    {authors && <Authors>{authors}</Authors>}
+                    <SiteName>{site_name}</SiteName>
+                </Byline>
+                </Link>
+                <HorizontalContainer>
+                    <Link href={url}>
+                        <ImageWrapper>
+                            <Image src={image} width={100} height={100} alt={title} />
+                        </ImageWrapper>
+                    </Link>
+                    <Body>
+                        <Link href={url}><ArticleDigest>
+                            {true ? 'Article Digest:' : 'Short Digest:'}
+                        </ArticleDigest>
                         </Link>
-                        <HorizontalContainer>
-                            <Link href={url}>
-                                <ImageWrapper>
-                                    <Image src={image} width={100} height={100} alt={title} />
-                                </ImageWrapper>
-                            </Link>
-                            <Body>
-                                <Link href={url}><ArticleDigest>
-                                    {true ? 'Article Digest:' : 'Short Digest:'}
-                                </ArticleDigest>
-                                </Link>
-                                <Digest>
-                                    <Link href={url}> <div dangerouslySetInnerHTML={{ __html: digest }} /></Link>
-                                    <ShareContainerInline>
-                                        <ContentCopyIcon style={{ paddingTop: 6, marginBottom: 0,marginTop:-10 }} fontSize="small" sx={{ color: digestCopied ? 'green' : '' }} onClick={() => onDigestCopyClick()} />
-                                    </ShareContainerInline>
-                                </Digest>
-                            </Body>
-                        </HorizontalContainer>
-                        <Link href={url}> {url.substring(0, 30)}...</Link>
-                    </MobileWrap>               
-               
+                        <Digest>
+                            <Link href={url}> <div dangerouslySetInnerHTML={{ __html: digest }} /></Link>
+                            <ShareContainerInline>
+                                <ContentCopyIcon style={{ paddingTop: 6, marginBottom: 0, marginTop: -10 }} fontSize="small" sx={{ color: digestCopied ? 'green' : '' }} onClick={() => onDigestCopyClick()} />
+                            </ShareContainerInline>
+                        </Digest>
+                    </Body>
+                </HorizontalContainer>
+                <ArticleMentions>
+                <ArticleMentionsTitle><b>Mentions:</b></ArticleMentionsTitle>
+               {Mentions}</ArticleMentions>
+                <Link href={url}> {url.substring(0, 30)}...</Link>
+            </MobileWrap>
+
         </>
     );
 };

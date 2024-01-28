@@ -68,7 +68,8 @@ const AntTabs = styled(Tabs)({
     color:${({selected})=>`var(--${selected?'selected':'text'})`} !important;
     background-color: ${({selected})=>`var(--${selected?'background':'background'})`} !important;
     font-size: 12px !important;
-    height:10px !important;
+    width:140px;
+    //height:6px !important;
     border: 0px solid ${({selected})=>selected?`var(--background)`:`var(--background)` }!important;
  `;
 

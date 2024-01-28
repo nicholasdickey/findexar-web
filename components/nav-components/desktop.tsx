@@ -74,7 +74,7 @@ const LeftPanel = styled.div`
     padding-top:18px;
     max-height: 150vh;
     position:sticky;
-    top:-300px;
+    top:-400px;
 `;
 
 const CenterPanel = styled.div`
@@ -82,30 +82,38 @@ const CenterPanel = styled.div`
     //width:100%;
     //max-width:1000px;
     //min-width:400px;  
-    max-width:50%;
-    min-width:50%;
+    //max-width:50%;
+   // min-width:50%;
     overflow-y: auto;
    // overflow-x: hidden;
     display:flex;
     flex-direction:column;
     justify-content:flex-start;
     align-items:flex-start;
-    padding-top:18px;
+    padding-top:10px;
+    padding-bottom:40px;
     height:auto;
     flex-grow:1;
+    width:600px;
+    @media screen and (min-width: 1600px) {
+        width:800px;
+    }
 `;
 
 const RightPanel = styled.div`
     min-width:300px;
     padding-left:20px;
-    overflow-y: hidden;
-    overflow-x: hidden;
+    //overflow-y: hidden;
+    //overflow-x: hidden;
    
-    height:auto !important;
+   // height:auto !important;
+   // position:sticky;
+    //max-height: 500vh;
+   // top:-2200px;
     //height:100%;
-    max-height: 100vw;
-    position:sticky;
-    top:100px;
+    //max-height: 100vw;
+    //position:sticky;
+    //top:100px;
     flex-grow:1;
     display:flex;
     flex-direction:column;
@@ -129,7 +137,9 @@ interface Props {
 }
 const Desktop: React.FC<Props> = () => {
     const router = useRouter();
-    const { tab,view,mode, userId, isMobile, setLeague, setView,setTab, setPagetype, setTeam, setPlayer, setMode, sessionid, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName } = useAppContext();
+    let { tab,view,mode, userId, isMobile, setLeague, setView,setTab, setPagetype, setTeam, setPlayer, setMode, sessionid, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName } = useAppContext();
+    tab=tab||"all";
+    view=view||"mentions";
     const onTabNav = async (option: any) => {
         const tab = option.tab;
         setTab(tab);
@@ -148,9 +158,9 @@ const Desktop: React.FC<Props> = () => {
                             {league ? <Teams /> : <Welcome />}
                         </LeftPanel>
                         <CenterPanel>
-                            {view == 'mentions' && <TertiaryTabs options={[{ name: `${league ? league : 'Full'} Feed`, tab: 'all' }, { name: "My Feed", tab: "myteam" }, { name: "Favorites", tab: "fav" }]} onChange={async (option: any) => { await onTabNav(option); }} selectedOptionName={tab} />}
-                            {view != "readme" && (pagetype == "team" || pagetype == "player") && <Mentions />}
-                            {view != "readme" && pagetype == "league" && !team && (tab=='all'||tab=='')&&<Stories />}
+                            {pagetype=="league" && <TertiaryTabs options={[{ name: `${league ? league : 'Full'} Stories`, tab: 'all' }, { name: "My Feed", tab: "myteam" }, { name: "Favorites", tab: "fav" }]} onChange={async (option: any) => { await onTabNav(option); }} selectedOptionName={tab} />}
+                            {(pagetype == "team" || pagetype == "player"||(pagetype=="league"&&(tab=="myteam"||tab=="fav"))) && <Mentions />}
+                            { (pagetype == "league"&& (tab=='all'||tab==''))&&<Stories />}
                             {view == 'readme' && <Readme />}
                         </CenterPanel>
                         <RightPanel>

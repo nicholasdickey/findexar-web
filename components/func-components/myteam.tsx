@@ -27,13 +27,13 @@ const SidePlayer = styled.div<SideProps>`
    // color: #eee;
     //text-align: center;
     color:${props => props.highlight ? 'var(--myteam)' : 'var(--text)'};
-    font-size: 16px;
+    font-size: 14px;
     padding-left:20px;
     &:hover{
         color:var(--highlight);
       }
   
-    margin: 10px;
+    margin: 4px;
     a{
       color:${props => props.highlight ? 'var(--myteam)' : 'var(--text)'} !important;//#ff8 !important;
       text-decoration: none;
@@ -72,6 +72,7 @@ const SideGroup = styled.div`
     display:flex;
    // width:280px;
    width: 260px;
+  
     flex-direction:row;
     justify-content:space-between;
     padding-right:20px;
@@ -225,7 +226,14 @@ const MobileSidePlayer = styled.div`
  // margin-bottom:10px;
  
 `;
-
+const RightScroll=styled.div`
+    position:sticky;
+   // max-height: 1200hv;
+    top:110px;
+    overflow-y: hidden;
+    // top:-400px;
+   // overflow-y: auto;
+`;
 interface Props {
 }
 const MyTeam: React.FC<Props> = () => {
@@ -242,7 +250,7 @@ const MyTeam: React.FC<Props> = () => {
     const palette = theme[mode].colors;
     console.log("nr render myteam")
     return (
-        <>{!isMobile ? <>
+        <>{!isMobile ? <RightScroll>
             <TeamName>My Team{league ? ` for ${league}` : ``}: </TeamName>
             {(!trackerListMembers || trackerListMembers.length == 0) && <RightExplanation>Use  &nbsp;<PlaylistAddIcon sx={{/* color: "#aea" */ }} />&nbsp;  icon to the right of the<br /> player&apos;s name in the team roster<br />(click on the league and the team name)<br />to add to &ldquo;My Team&ldquo; tracking list.<br /><br /><SignedOut>Note, My Team featue requires the user to be signed into their Findexar account.<br /><br /><SignInButton><Button size="small" variant="outlined" style={{ paddingRight: 8, paddingTop: 4, paddingBottom: 4, paddingLeft: 4 }}><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></SignedOut>
                 <br /><br />To view the My Team&apos;s mentions feed<br /> go to Home <HomeIcon /> or select a League. Then select a &ldquo;My Feed&ldquo; tab.
@@ -277,7 +285,7 @@ const MyTeam: React.FC<Props> = () => {
             })
             }
 
-        </> :
+        </RightScroll> :
             <MobilePlayersPanel>
                 <MobileTeamName>My Team: </MobileTeamName>
                 {(!trackerListMembers || trackerListMembers.length == 0) && <MobileRightExplanation>Use  &nbsp;<PlaylistAddIcon />&nbsp;  icon to the right of the player&apos;s name in the team roster (&ldquo;players&ldquo; tab) to add to &ldquo;My Team&ldquo; tracking list.<br /><br /><SignedOut>Note, My Team featue requires the user to be signed into their Findexar account.<br /><br /><SignInButton><Button size="small" variant="outlined" style={{ paddingRight: 8, paddingTop: 4, paddingBottom: 4, paddingLeft: 4 }}><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></SignedOut>

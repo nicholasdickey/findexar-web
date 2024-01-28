@@ -17,6 +17,7 @@ import { useAppContext } from '@/lib/context';
 
 const WelcomeWrap = styled.div`
     padding-top:18px;
+    padding-right:40px;
     //font-size:13px;
     a{
       text-decoration: none;
@@ -59,10 +60,11 @@ const Welcome:React.FC<Props>= () => {
     
    
         return <> <WelcomeWrap>
-        Welcome to Findexar!<br /><hr /><br />
-        Your indispensable Fantasy Sports<br />
-        and Major Leagues athletes <br />
-        media research and tracking tool.<br /><br />
+        Welcome to Qwiket!<br /><hr />
+        <em>That's the ticket.</em> <br/><br/><br/>
+        The indispensable Fantasy Sports<br />
+         real-time, annotated <br />
+        media index.<br /><br />
         Finding and indexing <br />
         mentions of pro athletes<br />
         in the media.<br /><br /><hr />

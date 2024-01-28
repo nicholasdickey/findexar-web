@@ -4,6 +4,8 @@ import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite'
 import { styled } from "styled-components";
 
+import Button from '@mui/material/Button';
+
 import { getFavorites, FavoritesKey, FetchedMentionsKey, fetchMentions } from '@/lib/api';
 import { useAppContext } from '@/lib/context';
 
@@ -37,12 +39,13 @@ const MentionsOuterContainer = styled.div`
     flex-direction:column;
     justify-content:flex-start;
     width:100%;
-    min-width:700px;
+   // min-width:700px;
     height:100%;
 
     font-family: 'Roboto', sans-serif;
    // padding-left:20px;
     padding-right:20px;
+    padding-bottom:100px;
   /*  a{
         font-size: 15px;
         color: #000;
@@ -59,7 +62,7 @@ const MobileMentionsOuterContainer = styled.div`
     display:flex;
     flex-direction:column;
     justify-content:flex-start;
-    width:100%;
+   // width:100%;
     height:100%;
     font-family: 'Roboto', sans-serif;
     align-content:flex-start;
@@ -85,7 +88,7 @@ const Stories: React.FC<Props> = () => {
 
     const fetchMentionsKey = (pageIndex: number, previousPageData: any): FetchedMentionsKey | null => {
         //console.log("getMentionsKey=", pageIndex, previousPageData)
-        let key: FetchedMentionsKey = { type: "FetchedMentions", teamid: "", name: "", noUser, page: pageIndex, league, myteam: tab == 'myteam' ? 1 : 0, noLoad: tab == "fav" || view != "mentions" };
+        let key: FetchedMentionsKey = { type: "FetchedMentions", teamid: team || "", name: player || "", noUser, page: pageIndex, league, myteam: tab == 'myteam' ? 1 : 0, noLoad: tab == "fav" || view != "mentions" };
 
         if (previousPageData && !previousPageData.length) return null // reached the end
         return key;
@@ -130,12 +133,26 @@ const Stories: React.FC<Props> = () => {
                     <MentionsBody>
                         {Mentions}
                     </MentionsBody>
+                    <Button style={{ padding: 4, marginTop: 20 }} onClick={() => setSize(size + 1)} variant="outlined">
+                        {isLoadingMore
+                            ? "loading..."
+                            : isReachingEnd
+                                ? `no more mentions`
+                                : "load more"}
+                    </Button>
                 </MentionsOuterContainer>
                 :
                 <MobileMentionsOuterContainer>
                     <MentionsBody>
                         {Mentions}
                     </MentionsBody>
+                    <Button style={{ padding: 4, marginTop: 20 }} onClick={() => setSize(size + 1)} variant="outlined">
+                        {isLoadingMore
+                            ? "loading..."
+                            : isReachingEnd
+                                ? `no more mentions`
+                                : "load more"}
+                    </Button>
                 </MobileMentionsOuterContainer>}
         </>
     )
