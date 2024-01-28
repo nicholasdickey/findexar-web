@@ -34,9 +34,11 @@ const Header = styled.header<HeaderProps>`
   background-color:var(--header-bg);
   text-align: center;
   font-size: 40px;
-  padding-top: ${({ scrolled }) => scrolled ? 0 : 10}px;
+ // padding-top: ${({ scrolled }) => scrolled ? 0 : 10}px;
   padding-bottom:10px;
+  
   font-family: 'Roboto', sans-serif;
+  transition: height 0.2s ease, padding-top 0.2s ease;
   a{
       color: var(--header-title-color);
       text-decoration: none;
@@ -177,6 +179,7 @@ const Superhead = styled.div<HeaderProps>`
     text-align:left;
     color:var(--header-title-color);
     font-size:18px;
+    transition: font-size 0.2s ease;
     @media screen and (max-width: 1199px ){
         display:none;
     }
@@ -197,7 +200,7 @@ const Subhead = styled.div<HeaderProps>`
     margin-top:4px;
     text-align:left;
     color:var(--subheader-color);
-    
+    transition: font-size 0.2s ease;
     @media screen and (max-width: 1199px ){
         display:none;
     }
@@ -416,7 +419,7 @@ const HeaderNav: React.FC<Props> = ({ leagues }) => {
   MobileLeaguesNav.unshift(<LeaguesTab selected={!league} key={`league-${leagues?.length}`} icon={<HomeIcon />} onClick={() => { onLeagueNavClick('').then(() => { }); router.replace(`/pub${params}${tp}`); }} />)
   LeaguesNav.unshift(league ? <League scrolled={scrollY != 0} key={`league-${leagues?.length}`}><Link href={`/pub${params}${tp}`} shallow onClick={() => { onLeagueNavClick('').then(() => { }) }}><LeagueIcon scrolled={scrollY != 0}><HomeIcon fontSize={scrollY != 0 ? "small" : "medium"} sx={{ m: 0.3 }} /></LeagueIcon></Link></League> : <SelectedLeague scrolled={scrollY != 0} key={`league-${leagues?.length}`}><Link href={`/pub${params}${tp}`} shallow onClick={() => { onLeagueNavClick('').then(() => { }) }}><LeagueIcon scrolled={scrollY != 0}><HomeIcon fontSize={scrollY != 0 ? "small" : "medium"} sx={{ m: 0.3 }} /></LeagueIcon></Link></SelectedLeague>)
   const selectedLeague = leagues?.findIndex((l: string) => l == league) + 1;
-
+  //console.log("APP_NAME:",process.env.NEXT_PUBLIC_APP_NAME)
   return (
     <>
       <Header scrolled={!isMobile && scrollY != 0}>
@@ -428,9 +431,9 @@ const HeaderNav: React.FC<Props> = ({ leagues }) => {
             </HeaderLeft>
             <ContainerCenter>
               <HeaderCenter>
-                <Superhead scrolled={scrollY != 0}>{(pagetype == "league" || pagetype == "landing") ? <Link href={`/pub${params}`}>QWIKET{league ? ` : ${league}` : ``}</Link> : !team ? `${league}` : player ? <PlayerNameGroup><PlayerName><Link href={`/pub/league/${league}/team/${team}${params}`}>{teamName}</Link></PlayerName> </PlayerNameGroup> : `${league} : ${teamName}`}</Superhead>
-                <SuperheadMobile>{(pagetype == "league" || pagetype == "landing") ? <Link href={`/pub${params}`}>{league ? ` ${league}` : `QWIKET`}</Link> : !team ? `${league}` : player ? <PlayerNameGroup><PlayerName><Link href={`/pub/league/${league}/team/${team}${params}`}>{teamName}</Link></PlayerName> </PlayerNameGroup> : `${teamName}`}</SuperheadMobile>
-                {(pagetype == "league" || pagetype == "landing") && <div><Subhead scrolled={scrollY != 0}>Sports News Digest And Index</Subhead><SubheadMobile>Sports News Index</SubheadMobile></div>}
+                <Superhead scrolled={scrollY != 0}>{(pagetype == "league" || pagetype == "landing") ? <Link href={`/pub${params}`}>{process.env.NEXT_PUBLIC_APP_NAME?.toUpperCase()+(league ? ` : ${league}` : ``)}</Link> : !team ? `${league}` : player ? <PlayerNameGroup><PlayerName><Link href={`/pub/league/${league}/team/${team}${params}`}>{teamName}</Link></PlayerName> </PlayerNameGroup> : `${league} : ${teamName}`}</Superhead>
+                <SuperheadMobile>{(pagetype == "league" || pagetype == "landing") ? <Link href={`/pub${params}`}>{league ? ` ${league}` : `${process.env.NEXT_PUBLIC_APP_NAME?.toUpperCase()}`}</Link> : !team ? `${league}` : player ? <PlayerNameGroup><PlayerName><Link href={`/pub/league/${league}/team/${team}${params}`}>{teamName}</Link></PlayerName> </PlayerNameGroup> : `${teamName}`}</SuperheadMobile>
+                {(pagetype == "league" || pagetype == "landing") && <div><Subhead scrolled={scrollY != 0}>Sports Media Digest And Index</Subhead><SubheadMobile>Sports News Index</SubheadMobile></div>}
                 {pagetype == "player" && player && <div><Subhead scrolled={scrollY != 0}>{player ? player : ''}</Subhead><SubheadMobile>{player ? player : ''}</SubheadMobile></div>}
               </HeaderCenter>
               {pagetype == "player" && player && <Photo><PlayerPhoto teamid={team || ""} name={player || ""} /></Photo>}
@@ -445,15 +448,11 @@ const HeaderNav: React.FC<Props> = ({ leagues }) => {
             {pagetype != 'landing' && !userId && <SignInButton><IconButton color={"inherit"} size="small" ><LoginIcon fontSize="small" /></IconButton></SignInButton>}
           </HeaderRight>
         </HeaderTopline>
-        {!isMobile && scrollY != 0 && <Leagues scrolled={scrollY != 0}>
+        {!isMobile &&<ContainerWrap> <Leagues scrolled={scrollY != 0}>
           {LeaguesNav}
-        </Leagues>}
+        </Leagues></ContainerWrap>}
       </Header>
-      {!isMobile && <ContainerWrap>
-        <Leagues scrolled={scrollY != 0}>
-          {LeaguesNav}
-        </Leagues>
-      </ContainerWrap>}
+     
       {isMobile && <MobileContainerWrap>
         <MuiTabs
           value={selectedLeague}

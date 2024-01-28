@@ -18,7 +18,7 @@ import Players from "@/components/func-components/players";
 import { useAppContext } from '@/lib/context';
 import SecondaryTabs from "@/components/nav-components/secondary-tabs";
 import TertiaryTabs from "@/components/nav-components/tertiary-tabs";
-
+import MentionOverlay from "@/components/func-components/mention-overlay";
 import { recordEvent } from '@/lib/api';
 const MobileContainerWrap = styled.div`
     display: flex;
@@ -104,6 +104,7 @@ const Mobile: React.FC<Props> = () => {
     console.log("MOBILE:", { pagetype, view, tab })
     return (
         <MobileContainerWrap>
+           
             {pagetype == "landing" && <Landing />}
             {!league ? <SecondaryTabs options={[{ name: "Mentions", icon: <MentionIcon fontSize="small" />, access: "pub" }, { name: "My Team", icon: <ListIcon fontSize="small" />, access: "pub" }, { name: "Readme", icon: <ContactSupportIcon fontSize="small" />, access: "pub" }]} onChange={async (option: any) => { await onViewNav(option); }} selectedOptionName={view} /> :
                 <SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> }, { name: "Mentions", icon: <MentionIcon /> }, { name: "My Team", icon: <ListIcon />, access: "pub" }]} onChange={async (option: any) => { await onViewNav(option) }} selectedOptionName={view} />
@@ -122,6 +123,8 @@ const Mobile: React.FC<Props> = () => {
             {view == 'readme' && <Readme />}
             {view=='my team' && <MyTeam/>}
             {view=='players'&&<Players/>}
+            <MentionOverlay setDismiss={(dismiss:boolean)=>{setView("mentions");}} mutate={() => {}}  />
+   
         </MobileContainerWrap >
 
     )

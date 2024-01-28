@@ -664,8 +664,8 @@ const SinglePage: React.FC<Props> = (props) => {
     }
   }, []);
 
-  const leagueTeamsKey: LeagueTeamsKey = { func: "leagueTeams", league: localLeague || "", noLoad: pagetype == "landing" };
-  const { data: teams, error, isLoading } = useSWR(leagueTeamsKey, getLeagueTeams);
+  //const leagueTeamsKey: LeagueTeamsKey = { func: "leagueTeams", league: localLeague || "", noLoad: pagetype == "landing" };
+  //const { data: teams, error, isLoading } = useSWR(leagueTeamsKey, getLeagueTeams);
 
 
   const onLeagueNavClick = useCallback(async (l: string) => {
@@ -686,34 +686,7 @@ const SinglePage: React.FC<Props> = (props) => {
     //@ts-ignore
     return <LeaguesTab selected={l == localLeague} key={`league-${i}`} label={l} onClick={() => { onLeagueNavClick(l).then(() => { }); router.replace(`/pub/league/${l}${params}${tp}`); }} />
   })
-  //@ts-ignore
-  MobileLeaguesNav.unshift(<LeaguesTab selected={!localLeague} key={`league-${leagues?.length}`} icon={<HomeIcon />} onClick={() => { onLeagueNavClick('').then(() => { }); router.replace(`/pub${params}${tp}`); }} />)
-  LeaguesNav.unshift(localLeague ? <League key={`league-${leagues?.length}`}><Link href={`/pub${params}${tp}`} shallow onClick={() => { onLeagueNavClick('').then(() => { }) }}><LeagueIcon><HomeIcon fontSize="medium" sx={{ m: 0.3 }} /></LeagueIcon></Link></League> : <SelectedLeague key={`league-${leagues?.length}`}><Link href={`/pub${params}${tp}`} shallow onClick={() => { onLeagueNavClick('').then(() => { }) }}><LeagueIcon><HomeIcon fontSize="medium" sx={{ m: 0.3 }} /></LeagueIcon></Link></SelectedLeague>)
-  const selectedLeague = leagues?.findIndex((l: string) => l == localLeague) + 1;
-
-  const onTeamNav = useCallback(async (name: string) => {
-    setLocalPageType("team");
-    setLocalPlayer("");
-    setLocalTeam(name);
-    setLocalView("mentions");
-    await recordEvent(sessionid as string || "",
-      'team-nav',
-      `{"params":"${params}","teamid":"${name}"}`
-    );
-  }, [sessionid, params]);
-
   
-  
-  const onViewNav = useCallback(async (option: { name: string, access: string }) => {
-    console.log(option);
-    setLocalView(option.name);
-    router.replace(localLeague ? `/pub/league/${localLeague}?view=${encodeURIComponent(option.name.toLowerCase())}${params2}${tp2.replace('?', '&')}` : `/pub?view=${encodeURIComponent(option.name.toLowerCase())}${params2}${tp2.replace('?', '&')}`, undefined, { shallow: true })
-    await recordEvent(sessionid as string || "",
-      'view-nav',
-      `{"fbclid":"${fbclid}","utm_content":"${utm_content}","view":"${option.name}"}`
-    );
-  }, [fbclid, utm_content, sessionid, localLeague, params2, tp2]);
-
   console.log("PAGE state:", { localUserId, v, localMode, localPageType, localLeague, localTeam, localPlayer, params, params2 })
 
   const key: AMentionKey = { type: "AMention", findexarxid: localFindexarxid, noLoad: localFindexarxid !== "" ? false : true };

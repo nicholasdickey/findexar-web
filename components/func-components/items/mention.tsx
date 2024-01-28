@@ -72,7 +72,7 @@ const MobileMentionWrap = styled.div<MentionsProps>`
     border: 1px solid #ccc;
     border-radius: 5px;
     margin-top:2px;
-    margin-bottom:10px;
+    margin-bottom:2px;
     color:var(--text);
     &:hover{
             color: var(--mention-text);
@@ -486,7 +486,7 @@ const Mention: React.FC<Props> = ({ startExtended, linkType,mention, mutate }) =
                             data={{
                                 text: summary,
                                 url: shareUrl,
-                                title: "Findexar",
+                                title: `${process.env.NEXT_PUBLIC_APP_NAME}`,
                             }}
                             onClick={async () => await onShare(url)}
                         >

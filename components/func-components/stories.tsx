@@ -35,10 +35,11 @@ const MentionsBody = styled.div`
 `;
 
 const MentionsOuterContainer = styled.div`
+
     display:flex;
     flex-direction:column;
     justify-content:flex-start;
-    //width:100%;
+    width:100%;
     //min-width:700px;
    // max-width:100%;
    
@@ -127,14 +128,14 @@ const Stories: React.FC<Props> = () => {
                     <MentionsBody>
                         {Stories}
                     </MentionsBody>
-                    <ButtonContainer><Button style={{ padding: 4, marginTop: 20 }} onClick={() => setSize(size + 1)} variant="outlined">
+                    <Button style={{ padding: 4, marginTop: 20 }} onClick={() => setSize(size + 1)} variant="outlined">
                         {isLoadingMore
                             ? "loading..."
                             : isReachingEnd
                                 ? `no more stories`
                                 : "load more"}
                     </Button>
-                    </ButtonContainer>
+                   
                 </MentionsOuterContainer>
                 :
                 <MobileMentionsOuterContainer>

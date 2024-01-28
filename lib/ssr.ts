@@ -13,15 +13,16 @@ import {
     recordEvent, getLeagues,
     LeagueTeamsKey, getLeagueTeams, TeamPlayersKey, getTeamPlayers, DetailsKey,
     MentionsKey, TrackerListMembersKey, FavoritesKey, FetchedMentionsKey,
-    AMentionKey, getAMention, MetaLinkKey, getMetaLink, FetchedStoriesKey, fetchStories
+    AMentionKey, getAMention, MetaLinkKey, getMetaLink, FetchedStoriesKey, fetchStories,
+    AStoryKey, getAStory
 } from '@/lib/api'
 const api_key = process.env.LAKE_API_KEY
 
 const ssr = async (context: GetServerSidePropsContext) => {
     try {
         const t1 = new Date().getTime();
-        let { tab, fbclid, utm_content, dark, view = "mentions", id }:
-            { fbclid: string, utm_content: string, dark: number, view: string, tab: string, id: string } = context.query as any;
+        let { tab, fbclid, utm_content, dark, view = "mentions", id,sid }:
+            { fbclid: string, utm_content: string, dark: number, view: string, tab: string, id: string,sid:string } = context.query as any;
         let { userId }: { userId: string | null } = getAuth(context.req);
         if (userId == "null")
             userId = null;
@@ -137,14 +138,20 @@ const ssr = async (context: GetServerSidePropsContext) => {
         let fetchMentions = [];
 
         console.log("========== ========= SSR CHECKPOINT 3:", new Date().getTime() - t1, "ms");
-        const getAMentionKey: AMentionKey = { type: "AMention", findexarxid: findexarxid, noLoad: findexarxid !== "" ? false : true };
+        
+        const getAMentionKey: AMentionKey = { type: "AMention", findexarxid: findexarxid, noLoad: findexarxid == "" ? false : true };
         let amention = null;
+        const getAStoryKey: AStoryKey = { type: "AStory", sid, noLoad: sid == "" ? false : true };
+        let astory = null;
         const metalinkKey: MetaLinkKey = { func: "meta", findexarxid, long: 1 };
         let metaLink = null;
         console.log("userId:", userId)
         if (findexarxid) {
             amention = await getAMention(getAMentionKey);
             metaLink = await getMetaLink(metalinkKey);
+        }
+        if(sid){
+            astory = await getAStory(getAStoryKey);
         }
         let fetchStories = [];
         console.log("VIEW:", view, "tab:", tab, "team:", team, "player:", player, "league:", league, "userId", userId, "options:", options, "keyMentions:", keyMentions)
@@ -153,7 +160,8 @@ const ssr = async (context: GetServerSidePropsContext) => {
             console.log("in team")
             const { data: dataMentions } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?api_key=${api_key}&userid=${userId}&teamid=${team}&name=${encodeURIComponent(player as string || "")}&page=0&league=${league}&favorites=0`);
             fetchMentions = dataMentions.mentions;
-
+            console.log(66666)
+            console.log('==>',leagueTeams,team)
             const t = leagueTeams?.find((t: any) => t.id == team);
             const teamName = t.name;
             keyTeamPlayers = { type: 'teamPlayers', league, teamid: team };
@@ -217,6 +225,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
             }
             //}
         }
+        console.log("========== ========= SSR CHECKPOINT 4:", new Date().getTime() - t1, "ms");
         let favoritesKey: FavoritesKey = { type: "Favorites", noUser: userId ? false : true, noLoad: tab != 'fav' };
         let favorites: any[] = [];
         if (tab == 'fav' && userId) {
@@ -235,6 +244,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
         fallback[unstable_serialize({ type: "options", noUser: userId ? false : true })] = options;
         fallback[unstable_serialize(trackerListMembersKey)] = trackerListMembers;
         fallback[unstable_serialize(getAMentionKey)] = amention;
+        fallback[unstable_serialize(getAStoryKey)] = astory;
         fallback[unstable_serialize(metalinkKey)] = metaLink;
 
         fallback[us(page => {

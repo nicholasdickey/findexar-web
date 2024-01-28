@@ -61,7 +61,7 @@ const Welcome:React.FC<Props>= () => {
    
         return <> <WelcomeWrap>
         Welcome to Qwiket!<br /><hr />
-        <em>That's the ticket.</em> <br/><br/><br/>
+        <em>That&apos;s the ticket!</em> <br/><br/><br/>
         The indispensable Fantasy Sports<br />
          real-time, annotated <br />
         media index.<br /><br />

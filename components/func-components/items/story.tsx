@@ -306,22 +306,12 @@ const BottomLine = styled.div`
     flex-direction:row;
     justify-content:space-between;
     align-items:flex-end;
-    margin-top:-20px;
+    margin-top:10px;
     width:100%;
 `;
 
 const LocalDate = styled.div`
     font-size: 12px;
-`;
-
-const SummaryWrap = styled.div`
-    display:inline;
-    line-height: 1.2;
-    font-size:15px !important;
-    a{
-        font-size:15px !important;
-      
-    }
 `;
 
 const ShareIcon = styled.div`
@@ -380,13 +370,23 @@ interface Props {
 const Story: React.FC<Props> = ({ story }) => {
     const { mode, userId, noUser, view, tab, isMobile, setLeague, setView, setPagetype, setTeam, setPlayer, setMode, sessionid, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName, setTeamName } = useAppContext();
 
-    let { title, url, digest, site_name, image, authors, createdTime, mentions } = story;
+    let { title, url, digest, site_name, image, authors, createdTime, mentions,xid } = story;
     const [localDate, setLocalDate] = React.useState(convertToUTCDateString(createdTime));
     const [signin, setSignin] = React.useState(false);
     const [digestCopied, setDigestCopied] = React.useState(false);
     const [selectedXid, setSelectedXid] = React.useState("");
     const [value, copy] = useCopyToClipboard();
     const theme = useTheme();
+
+    let prepDigest=digest.replaceAll('<p>', '').replaceAll('</p>','\n\n');
+
+    const shareUrl = `${process.env.NEXT_PUBLIC_SERVER}pub/league/${league}?sid=${encodeURIComponent(xid)}&utm_content=shareslink`;
+    const twitterShareUrl = `https://www.findexar.com/pub/league/${league}?sid=${encodeURIComponent(xid)}&utm_content=xslink`;
+    const fbShareUrl = `https://www.findexar.com/pub/league/${league}?sid=${encodeURIComponent(xid)}&utm_content=fbslink`;
+    
+    const twitterLink = `https://twitter.com/intent/tweet?text=${encodeURIComponent(prepDigest.substring(0, 230) + '...')}&url=${twitterShareUrl}&via=findexar`;
+    const fbLink = `https://www.facebook.com/sharer.php?kid_directed_site=0&sdk=joey&u=${encodeURIComponent(fbShareUrl)}&t=${encodeURIComponent('Findexar')}&quote=${encodeURIComponent(prepDigest.substring(0, 140) + '...')}&hashtag=%23findexar&display=popup&ref=plugin&src=share_button`;
+    
 
     useEffect(() => {
         setTimeout(() => {
@@ -409,18 +409,6 @@ const Story: React.FC<Props> = ({ story }) => {
     }, [createdTime])
 
 
-
-    const enableRedirect = useCallback(() => {
-        if (window && window.Clerk) {
-            const Clerk = window.Clerk;
-            const user = Clerk.user;
-            const id = Clerk.user?.id;
-            if (!id) {
-                setSignin(true);
-                return;
-            }
-        }
-    }, []);
 
     const onExtended = useCallback(async (on: boolean) => {
 
@@ -473,6 +461,7 @@ const Story: React.FC<Props> = ({ story }) => {
         <>
             <DesktopWrap>
                 <Link href={url}>
+                <Topline><LocalDate><i>{localDate}</i></LocalDate></Topline>
                     <Title>{title}</Title>
                 </Link>
                 <Link href={url}>
@@ -507,10 +496,26 @@ const Story: React.FC<Props> = ({ story }) => {
                {Mentions}</ArticleMentions>
                 <br />
                 <Link href={url} target="_blank">{url.substring(0, 50)}..</Link>
-
+                <BottomLine>
+                        <ShareGroup><RWebShare
+                            data={{
+                                text: prepDigest,
+                                url: shareUrl,
+                                title: `${process.env.NEXT_PUBLIC_APP_NAME}`,
+                            }}
+                            onClick={async () => await onShare(url)}
+                        >
+                            <ShareContainer><ShareIcon><IosShareIcon /></ShareIcon></ShareContainer>
+                        </RWebShare>
+                            <Link href={twitterLink} target="_blank"><ShareContainer><XIcon /></ShareContainer></Link>
+                            <Link href={fbLink} target="_blank"><ShareContainer><FacebookIcon /></ShareContainer></Link>
+                        </ShareGroup>
+                       
+                    </BottomLine>
 
             </DesktopWrap>
             <MobileWrap>
+            <Topline><LocalDate><i>{localDate}</i></LocalDate></Topline>
                 <Link href={url}><Title>{title}</Title></Link>
                 <Link href={url}><Byline>
                     {authors && <Authors>{authors}</Authors>}

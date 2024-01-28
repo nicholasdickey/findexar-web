@@ -447,3 +447,36 @@ export const fetchStories = async ({ type, league, noUser,page,noLoad }: Fetched
     return false;
   }
 }
+
+// SWR get a story
+export type AStoryKey = { type: string, sid: string,noLoad:boolean };
+export const getAStory = async ({ type, sid,noLoad }: AStoryKey) => {
+  try {
+    if(noLoad) return null;
+    console.log("api: getAMention",type,sid)
+    let url = '';
+    url =  `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-story?sid=${sid}`;
+    console.log("getStory-url",url)
+    const res = await axios.get(url);
+    return res.data.story;
+  }
+  catch (e) {
+    console.log("getAStory", e);
+    return false;
+  }
+}
+export const removeAStory = async ({ type, sid,noLoad }: AStoryKey) => {
+  try {
+    if(noLoad) return null;
+    console.log("api: removeAStory",type,sid)
+    let url = '';
+    url =  `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/remove-story?sid=${sid}`;
+    console.log("removeAStory-url",url)
+    const res = await axios.get(url);
+    return res.data.mention;
+  }
+  catch (e) {
+    console.log("removeAStory", e);
+    return false;
+  }
+}

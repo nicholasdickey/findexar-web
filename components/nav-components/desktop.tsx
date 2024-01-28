@@ -13,6 +13,7 @@ import MyTeam from "@/components/func-components/myteam";
 import Players from "@/components/func-components/players";
 import { useAppContext } from '@/lib/context';
 import TertiaryTabs  from "@/components/nav-components/tertiary-tabs";
+import MentionOverlay from "@/components/func-components/mention-overlay";
 
 const PageWrap = styled.div`
   width:100%;
@@ -32,6 +33,7 @@ const ContainerWrap = styled.div`
     width: 100%;
     font-family: 'Roboto', sans-serif;
     font-size:14px;
+    margin-top:12px;
     color:var(--text);
     @media screen and (max-width: 1199px) {
         display: none;
@@ -137,7 +139,7 @@ interface Props {
 }
 const Desktop: React.FC<Props> = () => {
     const router = useRouter();
-    let { tab,view,mode, userId, isMobile, setLeague, setView,setTab, setPagetype, setTeam, setPlayer, setMode, sessionid, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName } = useAppContext();
+    let { tab,view,mode, userId, isMobile, setLeague, setView,setTab, setPagetype, setTeam, setPlayer, setMode, sessionid, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName ,findexarxid} = useAppContext();
     tab=tab||"all";
     view=view||"mentions";
     const onTabNav = async (option: any) => {
@@ -150,6 +152,8 @@ const Desktop: React.FC<Props> = () => {
     console.log("DESKTOP:",{pagetype,view,tab})
     return (
         <ContainerWrap>
+             <MentionOverlay setDismiss={(dismiss:boolean)=>{setView("mentions");}} mutate={() => {}}  />
+   
             <PageWrap>
                 <Page>
                     {pagetype == "landing" && <Landing />}

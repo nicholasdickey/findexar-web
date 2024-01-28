@@ -49,6 +49,7 @@ const MentionWrap = styled.div<MentionsProps>`
     &:hover{
             background-color:var(--mention-high-bg);
             color: var(--mention-text);
+            cursor:pointer;
         }   
     a{
         color:var(--mention-text);
