@@ -164,9 +164,9 @@ const Desktop: React.FC<Props> = () => {
                             {league ? <Teams /> : <Welcome />}
                         </LeftPanel>
                         <CenterPanel>
-                            {pagetype=="league" && <TertiaryTabs options={[{ name: `${league ? league : 'Full'} Stories`, tab: 'all' }, { name: "My Feed", tab: "myteam" }, { name: "Favorites", tab: "fav" }]} onChange={async (option: any) => { await onTabNav(option); }} selectedOptionName={tab} />}
+                            {pagetype=="league" &&view!='readme'&& <TertiaryTabs options={[{ name: `${league ? league : 'Full'} Stories`, tab: 'all' }, { name: "My Feed", tab: "myteam" }, { name: "Favorites", tab: "fav" }]} onChange={async (option: any) => { await onTabNav(option); }} selectedOptionName={tab} />}
                             {(pagetype == "team" || pagetype == "player"||(pagetype=="league"&&(tab=="myteam"||tab=="fav"))) && <Mentions />}
-                            { (pagetype == "league"&& (tab=='all'||tab==''))&&<Stories />}
+                            { (pagetype == "league"&&view!='readme'&& (tab=='all'||tab==''))&&<Stories />}
                             {view == 'readme' && <Readme />}
                         </CenterPanel>
                         <RightPanel>

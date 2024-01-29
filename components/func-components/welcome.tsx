@@ -79,7 +79,7 @@ const Welcome:React.FC<Props>= () => {
             setView("mentions")
             router.push(`/pub${params}${tp2.replace('?', '&')}`);
           }
-        }} style={{ padding: 10 }} variant="outlined">{view == "readme" ? <HomeIcon /> : <HelpOutlineIcon />}&nbsp;&nbsp;{view == "readme" ? <span>Back to Home</span> : <span>Read Me</span>}</Button></Favorites>
+        }} style={{ padding: 10 }} variant="outlined">{view == "readme" ? <HomeIcon fontSize="small"/> : <HelpOutlineIcon  fontSize="small"/>}&nbsp;&nbsp;{view == "readme" ? <span>Back to Home</span> : <span>Read Me</span>}</Button></Favorites>
         <br /><br />
         <LeftText><hr />Copyright &#169; 2024, Findexar, Inc.<br />Made in Minnesota. L&apos;Étoile du Nord.</LeftText>
         {noUser && <LeftText>Click here to sign-in or sign-up: <br /><br /><br /><SignInButton><Button style={{ padding: 10 }} size="small" variant="outlined"><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></LeftText>}
