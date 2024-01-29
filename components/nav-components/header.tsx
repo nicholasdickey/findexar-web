@@ -356,6 +356,7 @@ const HeaderNav: React.FC<Props> = ({ leagues }) => {
   const onLeagueNavClick = useCallback(async (l: string) => {
     setLeague(l);
     setView('mentions');
+    console.log("onLeagueNavClick", l,"pagetype")
     setPagetype('league');
     setTeam("")
     await recordEvent(sessionid as string || "",

@@ -128,7 +128,8 @@ export async function getStaticProps() {
         tab:"all",
         mode:"light",
         t1,
-        findexarxid:""
+        findexarxid:"",
+        sid:""
       },
       
     };

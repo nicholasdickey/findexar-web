@@ -488,7 +488,7 @@ const SinglePage: React.FC<Props> = (props) => {
 
   const [localTeam, setLocalTeam] = useState(team);
   const [localPlayer, setLocalPlayer] = useState(player);
-  const [localPageType, setLocalPageType] = useState(pagetype || 'league');
+  const [localPageType, setLocalPageType] = useState(pagetype || 'landing');
   const [localLeague, setLocalLeague] = useState(league);
   const [subscriptionPrompt, setSubscriptionPrompt] = useState(false);
   const [dismiss, setDismiss] = useState(false);
@@ -522,6 +522,7 @@ const SinglePage: React.FC<Props> = (props) => {
   }, [player]);
 
   useEffect(() => {
+    console.log("setPagetype:", pagetype)
     setLocalPageType(pagetype);
   }, [pagetype]);
 
@@ -577,6 +578,9 @@ const SinglePage: React.FC<Props> = (props) => {
     let qplayer = '';
     qleague = arg2 || "";
 
+    if(view=='landing')
+       qpagetype="landing";
+
     if (arg3 == 'team') {
       qteam = arg4;
       qpagetype = "team";
@@ -588,6 +592,7 @@ const SinglePage: React.FC<Props> = (props) => {
     else if (arg3 == 'player') {
       qplayer = arg4.replaceAll('_', ' ');
     }
+    console.log("set pagetype",qpagetype)
     setLocalLeague(qleague);
     setLocalTeam(qteam);
     setLocalPlayer(qplayer);
@@ -597,6 +602,7 @@ const SinglePage: React.FC<Props> = (props) => {
 
   useEffect(() => {
     setLocalView(view.toLowerCase());
+   
   }, [view]);
 
   let v = (!localView || localView == "home") ? "mentions" : localView;
@@ -672,6 +678,7 @@ const SinglePage: React.FC<Props> = (props) => {
   const onLeagueNavClick = useCallback(async (l: string) => {
     setLocalLeague(l);
     setLocalView('mentions');
+    console.log("onLeagueNavClick", l,"setpagetype league2")
     setLocalPageType('league');
     setLocalTeam("")
     await recordEvent(sessionid as string || "",

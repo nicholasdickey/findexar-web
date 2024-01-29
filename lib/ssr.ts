@@ -74,6 +74,8 @@ const ssr = async (context: GetServerSidePropsContext) => {
         let player = '';
         let list = '';
         let findexarxid = id || "";
+        if(!arg1)
+            pagetype="landing";
         league = arg2 || "";
         if (arg3 == 'team') {
             team = arg4;

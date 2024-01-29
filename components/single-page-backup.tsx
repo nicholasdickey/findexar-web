@@ -724,6 +724,7 @@ const SinglePage: React.FC<Props> = (props) => {
   const onLeagueNavClick = useCallback(async (l: string) => {
     setLocalLeague(l);
     setLocalView('mentions');
+    console.log("onLeagueNavClick", l,"setpagetype league")
     setLocalPageType('league');
     setLocalTeam("")
     await recordEvent(sessionid as string || "",
