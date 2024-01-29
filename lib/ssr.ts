@@ -145,7 +145,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
         
         const getAMentionKey: AMentionKey = { type: "AMention", findexarxid: findexarxid, noLoad: findexarxid == "" ? false : true };
         let amention = null;
-        const getAStoryKey: AStoryKey = { type: "AStory", sid, noLoad: sid == "" ? false : true };
+        const getAStoryKey: AStoryKey = { type: "AStory", sid, noLoad: sid == "" ? true : false };
         let astory = null;
         const metalinkKey: MetaLinkKey = { func: "meta", findexarxid, long: 1 };
         let metaLink = null;
@@ -156,6 +156,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
         }
         if(sid){
             astory = await getAStory(getAStoryKey);
+            console.log("GOT ASTORY:",astory);
         }
         let fetchStories = [];
         console.log("VIEW:", view, "tab:", tab, "team:", team, "player:", player, "league:", league, "userId", userId, "options:", options, "keyMentions:", keyMentions)

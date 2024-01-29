@@ -279,7 +279,7 @@ const SinglePage: React.FC<Props> = (props) => {
   const astoryKey: AStoryKey = { type: "AStory", sid:sid, noLoad: localSid == "" ? true : false };
   const { data: astory } = useSWR(astoryKey, getAStory)
   const { title:astoryTitle="",site_name:astorySite_Name="",authors:astoryAuthors="",digest: astoryDigest = "", image: astoryImage = "", createdTime: astoryDate = "" ,mentions:mentions=[]} = astory ? astory : {};
-
+  console.log("astory:",localSid,astory)
   //prep meta data for amention
   let ogUrl = '';
   if (amention && amentionLeague && amentionTeam && amentionPlayer)
@@ -310,7 +310,7 @@ const SinglePage: React.FC<Props> = (props) => {
   return (
     <>
       <Head>
-        <title>Qwiket</title>
+        <title>Findexar</title>
         <link rel="canonical" href={ogUrl} />
         {pagetype != 'landing' && <meta name="robots" content="noindex,nofollow" />}
         <meta property="og:description" content={ogDescription} />
