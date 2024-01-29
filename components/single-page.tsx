@@ -304,7 +304,7 @@ const SinglePage: React.FC<Props> = (props) => {
   if(astory){
     ogUrl= league?`${process.env.NEXT_PUBLIC_SERVER}pub/league/${league}?sid=${localSid}`:`${process.env.NEXT_PUBLIC_SERVER}pub?sid=${localSid}`;
     ogTitle=astoryTitle;;
-    ogDescription=astoryDigest;
+    ogDescription=astoryDigest.replaceAll('<p>','').replaceAll('</p>',"\n\n");
     ogImage=astoryImage;
   }
   return (
