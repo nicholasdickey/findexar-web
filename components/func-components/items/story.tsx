@@ -1,19 +1,14 @@
 import React, { useEffect, useCallback } from "react";
-import useSWRImmutable from 'swr/immutable'
 import Link from 'next/link';
-import { SignInButton, RedirectToSignIn } from "@clerk/nextjs";
 import { styled, useTheme } from "styled-components";
 import { RWebShare } from "react-web-share";
 import XIcon from '@mui/icons-material/X';
 import FacebookIcon from '@mui/icons-material/Facebook';
-import StarOutlineIcon from '@mui/icons-material/StarOutline';
-import StarIcon from '@mui/icons-material/Star';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import { MetaLinkKey, getMetaLink, addFavorite, removeFavorite, recordEvent } from '@/lib/api';
+import { recordEvent } from '@/lib/api';
 import { convertToUTCDateString, convertToReadableLocalTime } from "@/lib/date-convert";
 import useCopyToClipboard from '@/lib/copy-to-clipboard';
-
 import MiniMention from '@/components/func-components/items/mini-mention';
 import { useAppContext } from '@/lib/context';
 
@@ -26,132 +21,6 @@ interface MentionsProps {
     hideit?: boolean;
     noborder?: boolean;
 }
-
-const MentionWrap = styled.div<MentionsProps>`
-    width:100%;
-    min-height:100px;
-    background-color: var(--mention-bg);//var(--mention-border);
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items:flex-start;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-left:8px;
-    margin-top:20px;
-    padding-left:4px;
-    padding-right:4px;
-    padding-top:4px;
-    color:var(--text);
-    z-index:200;
-    font-size: 16px;
-    &:hover{
-            background-color:var(--mention-high-bg);
-            color: var(--mention-text);
-        }   
-    a{
-        color:var(--mention-text);
-        text-decoration: none;
-        &:hover{
-           color: var(--mention-text);
-        }   
-    }
-    display:${props => props.hideit ? 'none' : 'flex'};
-    @media screen and (max-width: 1199px) {
-        display: none;
-    }
-`;
-
-const MobileMentionWrap = styled.div<MentionsProps>` 
-    min-height:100px;
-    width:100%;
-    display:${props => props.hideit ? 'none' : 'flex'};
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items:flex-start;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-top:2px;
-    margin-bottom:10px;
-    color:var(--text);
-    &:hover{
-            color: var(--mention-text);
-        } 
-    a{
-        color:var(--mention-text);
-        text-decoration: none;
-        &:hover{
-           color: var(--mention-text);
-        }   
-    }
-    @media screen and (min-width: 1200px) {
-        display: none;
-  }
-`;
-
-const MentionSummary = styled.div`
-    width:100%;
-    padding-right:20px;
-    border-radius: 30px;
-    font-size: 15px;
-    padding-left:10px;
-    padding-right:10px;
-    background-color: var(--mention-bg); 
-   &:hover{
-        background-color:var(--mention-high-bg);
-    } 
-    border-radius: 5px 5px 5px 5px;
-    @media screen and (max-width: 1199px) {
-       margin:0px;
-  }
-`;
-
-const Icon = styled.span`
-    color:var(--mention-text);
-    font-size: 38px !important;
-    opacity:0.6;
-    height:48px;
-    margin-top:10px;
-    cursor:pointer;
-    &:hover{
-        opacity:0.9;
-        color: var(--highlight);
-    }
-`;
-
-const ExtendedMention = styled.div`
-    margin:20px;
-    border-radius: 10px;
-    font-size: 15px;
-    padding:20px;
-    background-color:var(--background);
-    &:hover{
-            background-color: var(--background)
-    } 
-    display:flex;
-    flex-direction:column;
-    a{
-        font-size:15px !important;
-      
-    }
-`;
-
-const MobileExtendedMention = styled.div`
-    margin-top:10px;
-    margin-bottom:10px;
-    border-radius: 10px;
-    font-size: 15px;
-    padding:12px;
-    background-color:var(--background);
-    &:hover{
-            background-color: var(--background)
-    }
-    display:flex;
-    flex-direction:column;
-    a{
-        font-size:15px !important;
-      
-    }
-`;
 
 const Body = styled.div`
     font-size: 15px;
@@ -191,8 +60,8 @@ const ArticleMentions = styled.div`
     border-radius: 5px;
     padding-bottom:10px;
     margin-bottom:10px;
-   // background-color: var(--background);
 `;
+
 const ImageWrapper = styled.div`
     margin-top:20px;
     flex: 1 1 auto;
@@ -209,8 +78,7 @@ const Topline = styled.div`
 `;
 
 const Image = styled.img`
-   width:100%;
-   /* /width:auto; */
+    width:100%;
     height: auto;
     object-fit: cover;
     margin-bottom: 20px;
@@ -240,22 +108,6 @@ const HorizontalContainer = styled.div`
     a{
         font-size:15px !important;     
     }
-`;
-
-const Atmention = styled.div`
-    font-size: 13px;   
-`;
-
-const Atmention2 = styled.div`
-    font-size: 13px;  
-    text-align:right; 
-    height:30px;
-`;
-
-const MobileAtmention2 = styled.div`
-    font-size: 13px;  
-    height:30px;
-    margin-bottom:-20px;
 `;
 
 const ShareContainer = styled.div`
@@ -321,7 +173,6 @@ const ShareIcon = styled.div`
 const DesktopWrap = styled.div`
     display:flex;
     flex-direction:column;
-    //width:100%;
     max-width:100%;
     margin-top:20px;
     margin-bottom:20px;
@@ -344,7 +195,6 @@ const MobileWrap = styled.div`
     padding:10px;
     a{
         font-size:15px !important;
-      
     }
     @media screen and (min-width: 1200px) {
         display: none;
@@ -359,8 +209,7 @@ const MentionsWrap = styled.div`
     margin-top:20px;
     margin-bottom:20px;
     a{
-        font-size:15px !important;
-      
+        font-size:15px !important;    
     }
 `;
 interface Props {
@@ -370,23 +219,20 @@ interface Props {
 const Story: React.FC<Props> = ({ story }) => {
     const { mode, userId, noUser, view, tab, isMobile, setLeague, setView, setPagetype, setTeam, setPlayer, setMode, sessionid, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName, setTeamName } = useAppContext();
 
-    let { title, url, digest, site_name, image, authors, createdTime, mentions,xid } = story;
+    let { title, url, digest, site_name, image, authors, createdTime, mentions, xid } = story;
     const [localDate, setLocalDate] = React.useState(convertToUTCDateString(createdTime));
-    const [signin, setSignin] = React.useState(false);
     const [digestCopied, setDigestCopied] = React.useState(false);
     const [selectedXid, setSelectedXid] = React.useState("");
     const [value, copy] = useCopyToClipboard();
-    const theme = useTheme();
 
-    let prepDigest=digest.replaceAll('<p>', '').replaceAll('</p>','\n\n');
+    let prepDigest = digest.replaceAll('<p>', '').replaceAll('</p>', '\n\n');
 
-    const shareUrl =league? `${process.env.NEXT_PUBLIC_SERVER}/pub/league/${league}?sid=${encodeURIComponent(xid)}&utm_content=shareslink`:`${process.env.NEXT_PUBLIC_SERVER}/pub?sid=${encodeURIComponent(xid)}&utm_content=shareslink`;
-    const twitterShareUrl = league?`https://www.findexar.com/pub/league/${league}?sid=${encodeURIComponent(xid)}&utm_content=xslink`:`https://www.findexar.com/pub?sid=${encodeURIComponent(xid)}&utm_content=xslink`;
-    const fbShareUrl = league?`https://www.findexar.com/pub/league/${league}?sid=${encodeURIComponent(xid)}&utm_content=fbslink`:`https://www.findexar.com/pub?sid=${encodeURIComponent(xid)}&utm_content=fbslink`;
-    
+    const shareUrl = league ? `${process.env.NEXT_PUBLIC_SERVER}/pub/league/${league}?sid=${encodeURIComponent(xid)}&utm_content=shareslink` : `${process.env.NEXT_PUBLIC_SERVER}/pub?sid=${encodeURIComponent(xid)}&utm_content=shareslink`;
+    const twitterShareUrl = league ? `https://www.findexar.com/pub/league/${league}?sid=${encodeURIComponent(xid)}&utm_content=xslink` : `https://www.findexar.com/pub?sid=${encodeURIComponent(xid)}&utm_content=xslink`;
+    const fbShareUrl = league ? `https://www.findexar.com/pub/league/${league}?sid=${encodeURIComponent(xid)}&utm_content=fbslink` : `https://www.findexar.com/pub?sid=${encodeURIComponent(xid)}&utm_content=fbslink`;
+
     const twitterLink = `https://twitter.com/intent/tweet?text=${encodeURIComponent(prepDigest.substring(0, 230) + '...')}&url=${twitterShareUrl}&via=findexar`;
     const fbLink = `https://www.facebook.com/sharer.php?kid_directed_site=0&sdk=joey&u=${encodeURIComponent(fbShareUrl)}&t=${encodeURIComponent('Findexar')}&quote=${encodeURIComponent(prepDigest.substring(0, 140) + '...')}&hashtag=%23findexar&display=popup&ref=plugin&src=share_button`;
-    //console.log("shareUrl=",shareUrl);
 
     useEffect(() => {
         setTimeout(() => {
@@ -394,10 +240,6 @@ const Story: React.FC<Props> = ({ story }) => {
         }
             , 2000);
     }, [digestCopied]);
-
-
-
-    //prepare urls:
 
     useEffect(() => {
         try {
@@ -407,27 +249,6 @@ const Story: React.FC<Props> = ({ story }) => {
             console.log("EXCEPTION CONVERTING DATE");
         }
     }, [createdTime])
-
-
-
-    const onExtended = useCallback(async (on: boolean) => {
-
-        await recordEvent(sessionid as string || "",
-            'mention-extended',
-            `{"on":"${on}","params":"${params}"}`
-        );
-    }, [sessionid, params]);
-
-    const onHover = useCallback((label: string) => {
-        try {
-            recordEvent(sessionid as string || "", `mention-hover`, `{"label","${label}","params":"${params}"}`)
-                .then((r: any) => {
-                    console.log("recordEvent", r);
-                });
-        } catch (x) {
-            console.log('recordEvent', x);
-        }
-    }, [sessionid, params]);
 
     const onShare = useCallback((url: string) => {
         try {
@@ -440,28 +261,26 @@ const Story: React.FC<Props> = ({ story }) => {
         }
     }, [sessionid, params]);
 
-
     const onDigestCopyClick = useCallback(() => {
         setDigestCopied(true);
         copy(digest);
     }, [digest]);
-
 
     const Mentions = <MentionsWrap>{mentions && mentions.map((mention: any, i: number) => {
         return (
             <MiniMention key={`mention-${i}`} {...mention} params={params} tp={tp} selectedXid={selectedXid} setSelectedXid={setSelectedXid} />
         )
 
-
     })}</MentionsWrap>;
-    console.log("RENDER STORY", { story })
+
     if (image.indexOf("thestar.com/content/tncms/custom/image/f84403b8-7d76-11ee-9d02-a72a4951957f.png") >= 0)
         return null;
+
     return (
         <>
             <DesktopWrap>
                 <Link href={url}>
-                <Topline><LocalDate><i>{localDate}</i></LocalDate></Topline>
+                    <Topline><LocalDate><i>{localDate}</i></LocalDate></Topline>
                     <Title>{title}</Title>
                 </Link>
                 <Link href={url}>
@@ -487,35 +306,32 @@ const Story: React.FC<Props> = ({ story }) => {
                             <ShareContainerInline>
                                 <ContentCopyIcon style={{ paddingTop: 6, marginTop: -10 }} fontSize="small" sx={{ color: digestCopied ? 'green' : '' }} onClick={() => onDigestCopyClick()} />
                             </ShareContainerInline>
-
                         </Digest>
                     </Body>
                 </HorizontalContainer>
                 <ArticleMentions>
-                <ArticleMentionsTitle><b>Mentions:</b></ArticleMentionsTitle>
-               {Mentions}</ArticleMentions>
+                    <ArticleMentionsTitle><b>Mentions:</b></ArticleMentionsTitle>
+                    {Mentions}</ArticleMentions>
                 <br />
                 <Link href={url} target="_blank">{url.substring(0, 50)}..</Link>
                 <BottomLine>
-                        <ShareGroup><RWebShare
-                            data={{
-                                text: prepDigest,
-                                url: shareUrl,
-                                title: `${process.env.NEXT_PUBLIC_APP_NAME}`,
-                            }}
-                            onClick={async () => await onShare(shareUrl)}
-                        >
-                            <ShareContainer><ShareIcon><IosShareIcon /></ShareIcon></ShareContainer>
-                        </RWebShare>
-                            <Link href={twitterLink} target="_blank"><ShareContainer><XIcon /></ShareContainer></Link>
-                            <Link href={fbLink} target="_blank"><ShareContainer><FacebookIcon /></ShareContainer></Link>
-                        </ShareGroup>
-                       
-                    </BottomLine>
-
+                    <ShareGroup><RWebShare
+                        data={{
+                            text: prepDigest,
+                            url: shareUrl,
+                            title: `${process.env.NEXT_PUBLIC_APP_NAME}`,
+                        }}
+                        onClick={async () => await onShare(shareUrl)}
+                    >
+                        <ShareContainer><ShareIcon><IosShareIcon /></ShareIcon></ShareContainer>
+                    </RWebShare>
+                        <Link href={twitterLink} target="_blank"><ShareContainer><XIcon /></ShareContainer></Link>
+                        <Link href={fbLink} target="_blank"><ShareContainer><FacebookIcon /></ShareContainer></Link>
+                    </ShareGroup>
+                </BottomLine>
             </DesktopWrap>
             <MobileWrap>
-            <Topline><LocalDate><i>{localDate}</i></LocalDate></Topline>
+                <Topline><LocalDate><i>{localDate}</i></LocalDate></Topline>
                 <Link href={url}><Title>{title}</Title></Link>
                 <Link href={url}><Byline>
                     {authors && <Authors>{authors}</Authors>}
@@ -542,11 +358,10 @@ const Story: React.FC<Props> = ({ story }) => {
                     </Body>
                 </HorizontalContainer>
                 <ArticleMentions>
-                <ArticleMentionsTitle><b>Mentions:</b></ArticleMentionsTitle>
-               {Mentions}</ArticleMentions>
+                    <ArticleMentionsTitle><b>Mentions:</b></ArticleMentionsTitle>
+                    {Mentions}</ArticleMentions>
                 <Link href={url}> {url.substring(0, 30)}...</Link>
             </MobileWrap>
-
         </>
     );
 };

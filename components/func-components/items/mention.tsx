@@ -34,21 +34,9 @@ const MentionWrap = styled.div<MentionsProps>`
     align-items:flex-start;
     border: 1px solid #ccc;
     padding:4px;
-   /* border-radius: 5px;
-    margin-left:8px;
-    margin-top:20px;
-    margin-bottom:20px;
-    
-    padding-left:4px;
-    padding-right:4px;
-    //padding-top:4px;
-    color:var(--text);*/
     z-index:200;
     font-size: 16px;
-    &:hover{
-          //  background-color:var(--mention-high-bg);
-          //  color: var(--mention-text);
-        }   
+
     a{
         color:var(--mention-text);
         text-decoration: none;
@@ -75,8 +63,8 @@ const MobileMentionWrap = styled.div<MentionsProps>`
     margin-bottom:2px;
     color:var(--text);
     &:hover{
-            color: var(--mention-text);
-        } 
+        color: var(--mention-text);
+    } 
     a{
         color:var(--mention-text);
         text-decoration: none;
@@ -91,13 +79,12 @@ const MobileMentionWrap = styled.div<MentionsProps>`
 
 const MentionSummary = styled.div`
     width:100%;
-   // padding-right:20px;
     border-radius: 30px;
     font-size: 15px;
     padding-left:10px;
     padding-right:10px;
     background-color: var(--mention-bg); 
-   &:hover{
+    &:hover{
         background-color:var(--mention-high-bg);
     } 
     border-radius: 5px 5px 5px 5px;
@@ -131,8 +118,7 @@ const ExtendedMention = styled.div`
     display:flex;
     flex-direction:column;
     a{
-        font-size:15px !important;
-      
+        font-size:15px !important;    
     }
 `;
 
@@ -394,7 +380,7 @@ const Mention: React.FC<Props> = ({mini, startExtended, linkType,mention, mutate
     const mentionsKey: MetaLinkKey = { func: "meta", findexarxid, long: startExtended ? 1 : 1 };
     const meta = useSWRImmutable(mentionsKey, getMetaLink).data;
     let digest = meta?.digest || "";
-    //console.log("shareUrl", mini,shareUrl);
+   
     useEffect(() => {
         try {
             setLocalDate(convertToReadableLocalTime(date));
@@ -478,8 +464,7 @@ const Mention: React.FC<Props> = ({mini, startExtended, linkType,mention, mutate
                 <MentionSummary>
                     <Topline><LocalDate><i>{localDate}</i></LocalDate>
                         {!localFav ? noUser ? <SignInButton><StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); enableRedirect(); addFavorite({ findexarxid }); mutate() }} style={{ color: "#888" }} /></SignInButton> : <StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); enableRedirect(); addFavorite({ findexarxid }); mutate(); }} style={{ color: "#888" }} /> : <StarIcon onClick={() => { if (noUser) return; setLocalFav(0); removeFavorite({ findexarxid }); mutate(); }} style={{ color: "FFA000" }} />}</Topline>
-                    <SummaryWrap>
-                      
+                    <SummaryWrap>                      
                         <Link scroll={linkType == 'final' ? false : true} href={localUrl} onClick={async () => { await onMentionNav(name) }} shallow>
                             {summary}
                         </Link>
@@ -510,7 +495,6 @@ const Mention: React.FC<Props> = ({mini, startExtended, linkType,mention, mutate
                             }}
                             className="material-icons-outlined">{!expanded ? "expand_more" : "expand_less"}</Icon>}
                     </BottomLine>
-
                     {expanded && meta && <ExtendedMention>
                         <Link href={url}>
                             <Title>{meta.title}</Title>
