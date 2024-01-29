@@ -502,13 +502,13 @@ const Mention: React.FC<Props> = ({mini, startExtended, linkType,mention, mutate
                             <Link href={twitterLink} target="_blank"><ShareContainer><XIcon /></ShareContainer></Link>
                             <Link href={fbLink} target="_blank"><ShareContainer><FacebookIcon /></ShareContainer></Link>
                         </ShareGroup>
-                        <Icon onClick={
+                       {!mini&&<Icon onClick={
                             async (e) => {
                                 const ne = !expanded
                                 setExpanded(ne);
                                 await onExtended(ne);
                             }}
-                            className="material-icons-outlined">{!expanded ? "expand_more" : "expand_less"}</Icon>
+                            className="material-icons-outlined">{!expanded ? "expand_more" : "expand_less"}</Icon>}
                     </BottomLine>
 
                     {expanded && meta && <ExtendedMention>
