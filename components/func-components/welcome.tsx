@@ -62,7 +62,7 @@ const Welcome:React.FC<Props>= () => {
         return <> <WelcomeWrap>
         Welcome to Findexar!<br /><hr />
         {false&&<span><em>That&apos;s the ticket!</em> <br/><br/><br/></span>}
-        The indispensable Fantasy Sports<br />
+        <br/>The indispensable Fantasy Sports<br />
          digest and real-time, annotated <br />
         media index.<br /><br />
         Finding and indexing <br />

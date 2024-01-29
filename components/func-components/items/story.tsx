@@ -13,7 +13,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { MetaLinkKey, getMetaLink, addFavorite, removeFavorite, recordEvent } from '@/lib/api';
 import { convertToUTCDateString, convertToReadableLocalTime } from "@/lib/date-convert";
 import useCopyToClipboard from '@/lib/copy-to-clipboard';
-import Mention from '@/components/mention';
+
 import MiniMention from '@/components/func-components/items/mini-mention';
 import { useAppContext } from '@/lib/context';
 
@@ -380,9 +380,9 @@ const Story: React.FC<Props> = ({ story }) => {
 
     let prepDigest=digest.replaceAll('<p>', '').replaceAll('</p>','\n\n');
 
-    const shareUrl = `${process.env.NEXT_PUBLIC_SERVER}/pub/league/${league}?sid=${encodeURIComponent(xid)}&utm_content=shareslink`;
-    const twitterShareUrl = `https://www.findexar.com/pub/league/${league}?sid=${encodeURIComponent(xid)}&utm_content=xslink`;
-    const fbShareUrl = `https://www.findexar.com/pub/league/${league}?sid=${encodeURIComponent(xid)}&utm_content=fbslink`;
+    const shareUrl =league? `${process.env.NEXT_PUBLIC_SERVER}/pub/league/${league}?sid=${encodeURIComponent(xid)}&utm_content=shareslink`:`${process.env.NEXT_PUBLIC_SERVER}/pub?sid=${encodeURIComponent(xid)}&utm_content=shareslink`;
+    const twitterShareUrl = league?`https://www.findexar.com/pub/league/${league}?sid=${encodeURIComponent(xid)}&utm_content=xslink`:`https://www.findexar.com/pub?sid=${encodeURIComponent(xid)}&utm_content=xslink`;
+    const fbShareUrl = league?`https://www.findexar.com/pub/league/${league}?sid=${encodeURIComponent(xid)}&utm_content=fbslink`:`https://www.findexar.com/pub?sid=${encodeURIComponent(xid)}&utm_content=fbslink`;
     
     const twitterLink = `https://twitter.com/intent/tweet?text=${encodeURIComponent(prepDigest.substring(0, 230) + '...')}&url=${twitterShareUrl}&via=findexar`;
     const fbLink = `https://www.facebook.com/sharer.php?kid_directed_site=0&sdk=joey&u=${encodeURIComponent(fbShareUrl)}&t=${encodeURIComponent('Findexar')}&quote=${encodeURIComponent(prepDigest.substring(0, 140) + '...')}&hashtag=%23findexar&display=popup&ref=plugin&src=share_button`;
