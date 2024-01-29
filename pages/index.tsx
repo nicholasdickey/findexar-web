@@ -30,6 +30,7 @@ interface Props {
     tab:string;
     mode:string;
     findexarxid:string;
+    sid:string;
 }
 export default function Home(props: Props) {
    // const fallback = props.fallback;
