@@ -20,6 +20,7 @@ const ContentWrap = styled.div`
   height: 100%;
   padding-left:0px;
   padding-right:0px;
+  color:var(--text);
   //overflow: auto;
   font-family:'Roboto','Helvetica',sans-serif;
   @media (max-width: 600px) {
