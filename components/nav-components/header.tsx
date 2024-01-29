@@ -426,15 +426,16 @@ const HeaderNav: React.FC<Props> = ({ leagues }) => {
         <HeaderTopline>
           <LeftContainer>
             <HeaderLeft>
-              <FLogo><Link href={`/pub${params}`}><Avatar sx={{ bgcolor: cyan[800] }}>Q</Avatar></Link></FLogo>
-              <FLogoMobile ><Link href={`/pub${params}`}><Avatar sx={{ bgcolor: cyan[800] }}>Q</Avatar></Link></FLogoMobile>
+              <FLogo><Link href={`/pub${params}`}><Avatar sx={{ bgcolor: cyan[800] }}>Fi</Avatar></Link></FLogo>
+              <FLogoMobile ><Link href={`/pub${params}`}><Avatar sx={{ bgcolor: cyan[800] }}>Fi</Avatar></Link></FLogoMobile>
             </HeaderLeft>
             <ContainerCenter>
               <HeaderCenter>
                 <Superhead scrolled={scrollY != 0}>{(pagetype == "league" || pagetype == "landing") ? <Link href={`/pub${params}`}>{process.env.NEXT_PUBLIC_APP_NAME?.toUpperCase()+(league ? ` : ${league}` : ``)}</Link> : !team ? `${league}` : player ? <PlayerNameGroup><PlayerName><Link href={`/pub/league/${league}/team/${team}${params}`}>{teamName}</Link></PlayerName> </PlayerNameGroup> : `${league} : ${teamName}`}</Superhead>
-                <SuperheadMobile>{(pagetype == "league" || pagetype == "landing") ? <Link href={`/pub${params}`}>{league ? ` ${league}` : `${process.env.NEXT_PUBLIC_APP_NAME?.toUpperCase()}`}</Link> : !team ? `${league}` : player ? <PlayerNameGroup><PlayerName><Link href={`/pub/league/${league}/team/${team}${params}`}>{teamName}</Link></PlayerName> </PlayerNameGroup> : `${teamName}`}</SuperheadMobile>
+                <SuperheadMobile>{(pagetype == "league" || pagetype == "landing") ? <Link href={`/pub${params}`}>{league ? ` ${league}` : `${process.env.NEXT_PUBLIC_APP_NAME?.toUpperCase()}`}</Link> : !team ? `${league}` : player ? <PlayerNameGroup><PlayerName><Link href={`/pub/league/${league}/team/${team}${params}`}>{teamName}</Link></PlayerName> </PlayerNameGroup> : `${league} : ${teamName}`}</SuperheadMobile>
                 {(pagetype == "league" || pagetype == "landing") && <div><Subhead scrolled={scrollY != 0}>Sports Media Digest And Index</Subhead><SubheadMobile>Sports News Index</SubheadMobile></div>}
                 {pagetype == "player" && player && <div><Subhead scrolled={scrollY != 0}>{player ? player : ''}</Subhead><SubheadMobile>{player ? player : ''}</SubheadMobile></div>}
+               
               </HeaderCenter>
               {pagetype == "player" && player && <Photo><PlayerPhoto teamid={team || ""} name={player || ""} /></Photo>}
             </ContainerCenter>

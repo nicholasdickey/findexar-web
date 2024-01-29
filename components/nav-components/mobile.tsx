@@ -6,6 +6,7 @@ import MentionIcon from '@mui/icons-material/AlternateEmailOutlined';
 import TeamIcon from '@mui/icons-material/PeopleAltOutlined';
 import ListIcon from '@mui/icons-material/ListOutlined';
 import ContactSupportIcon from '@mui/icons-material/ContactSupport';
+import PlayerIcon from '@mui/icons-material/PersonPinOutlined';
 
 import Landing from "@/components/func-components/landing";
 import Teams from "@/components/func-components/teams";
@@ -19,6 +20,7 @@ import { useAppContext } from '@/lib/context';
 import SecondaryTabs from "@/components/nav-components/secondary-tabs";
 import TertiaryTabs from "@/components/nav-components/tertiary-tabs";
 import MentionOverlay from "@/components/func-components/mention-overlay";
+import StoryOverlay from "@/components/func-components/story-overlay";
 import { recordEvent } from '@/lib/api';
 const MobileContainerWrap = styled.div`
     display: flex;
@@ -93,12 +95,20 @@ const Mobile: React.FC<Props> = () => {
     }
 
     const onViewNav = useCallback(async (option: { name: string, access: string }) => {
-        console.log(option);
-        setView(option.name);
-        router.replace(league ? `/pub/league/${league}?view=${encodeURIComponent(option.name.toLowerCase())}${params2}${tp2.replace('?', '&')}` : `/pub?view=${encodeURIComponent(option.name.toLowerCase())}${params2}${tp2.replace('?', '&')}`, undefined, { shallow: true })
+       console.log("onVIewName clicked",option)
+        let name=option.name.toLowerCase();
+        if(name=='feed')
+            name='mentions';
+        console.log("onViewNav:",{name,option,team});
+        setView(name);
+        if(!team)
+        router.replace(league ? `/pub/league/${league}?view=${encodeURIComponent(name)}${params2}${tp2.replace('?', '&')}` : `/pub?view=${encodeURIComponent(name)}${params2}${tp2.replace('?', '&')}`, undefined, { shallow: true })
+            else
+        router.replace(`/pub/league/${league}/team/${team}?view=${encodeURIComponent(name)}${params2}${tp2.replace('?','&')}`, undefined, { shallow: true });
+   
         await recordEvent(sessionid as string || "",
             'view-nav',
-            `{"fbclid":"${fbclid}","utm_content":"${utm_content}","view":"${option.name}"}`
+            `{"fbclid":"${fbclid}","utm_content":"${utm_content}","view":"${name}"}`
         );
     }, [fbclid, utm_content, sessionid, league, params2, tp2]);
     console.log("MOBILE:", { pagetype, view, tab })
@@ -106,11 +116,13 @@ const Mobile: React.FC<Props> = () => {
         <MobileContainerWrap>
            
             {pagetype == "landing" && <Landing />}
-            {!league ? <SecondaryTabs options={[{ name: "Mentions", icon: <MentionIcon fontSize="small" />, access: "pub" }, { name: "My Team", icon: <ListIcon fontSize="small" />, access: "pub" }, { name: "Readme", icon: <ContactSupportIcon fontSize="small" />, access: "pub" }]} onChange={async (option: any) => { await onViewNav(option); }} selectedOptionName={view} /> :
-                <SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> }, { name: "Mentions", icon: <MentionIcon /> }, { name: "My Team", icon: <ListIcon />, access: "pub" }]} onChange={async (option: any) => { await onViewNav(option) }} selectedOptionName={view} />
+            {pagetype=="league"&&!league && <SecondaryTabs options={[{ name: "Feed", icon: <MentionIcon fontSize="small" />, access: "pub" }, { name: "My Team", icon: <ListIcon fontSize="small" />, access: "pub" }, { name: "Readme", icon: <ContactSupportIcon fontSize="small" />, access: "pub" }]} onChange={async (option: any) => { await onViewNav(option); }} selectedOptionName={view} /> 
             }
-          
-            {view == 'mentions' && <TertiaryTabs options={[{ name: `${league ? league : 'Full'} Feed`, tab: 'all' }, { name: "My Feed", tab: "myteam" }, { name: "Favorites", tab: "fav" }]} onChange={async (option: any) => { await onTabNav(option); }} selectedOptionName={tab} />}
+            {pagetype=="league"&&league &&
+                <SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon  fontSize="small" /> }, { name: "Feed", icon: <MentionIcon  fontSize="small" /> }, { name: "My Team", icon: <ListIcon  fontSize="small" /> }]} onChange={async (option: any) => { await onViewNav(option) }} selectedOptionName={view} />
+            }
+            {(pagetype=="team"||pagetype=="player")&&<SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> }, { name: "Feed", icon: <MentionIcon /> }, { name: "Players", icon: <PlayerIcon /> }]} onChange={async (option: any) => { console.log(option); await onViewNav(option); }} selectedOptionName={view} />}
+            {view == 'mentions' && <TertiaryTabs options={[{ name: `${league ? league : 'All'} Stories`, tab: 'all' }, { name: "My Feed", tab: "myteam" }, { name: "Favorites", tab: "fav" }]} onChange={async (option: any) => { await onTabNav(option); }} selectedOptionName={tab} />}
 
             {view == 'teams' &&
                 <LeftMobilePanel>
@@ -124,6 +136,7 @@ const Mobile: React.FC<Props> = () => {
             {view=='my team' && <MyTeam/>}
             {view=='players'&&<Players/>}
             <MentionOverlay setDismiss={(dismiss:boolean)=>{setView("mentions");}} mutate={() => {}}  />
+            <StoryOverlay setDismiss={(dismiss:boolean)=>{setView("mentions");}} mutate={() => {}}  />
    
         </MobileContainerWrap >
 

@@ -117,38 +117,7 @@ const SelectedSidePlayer = styled.div<SideProps>`
     }
   `;
 
-const SideLeagueName = styled.div`
-    height: 40px;
-    width: 200px; 
-    color:var(--text);
-    font-size: 20px;
-`;
-const SideTeam = styled.div`
-    height: 20px;
-    //margin-top:5px;
-   //font-size: 16px;
-    padding-left:20px;
-    border-left: 1px solid #aaa;
-    padding-bottom:20px;
-    @media screen and (min-width: 1600px) {
-      //font-size: 18px;
-    }
-`;
 
-const SelectedSideTeam = styled.div`
-    height: 20px;
-    color:var(--selected);
-    font-size: 16px;
-    padding-left:20px;
-    border-left: 1px solid #aaa;
-    a{
-        color:var(--selected) !important;
-        text-decoration: none;
-        &:hover{
-            color: var(--highlight);
-        }
-    }
-`;
 const RightExplanation = styled.div`
   //height: 30px;
   width: 270px; 
@@ -178,7 +147,7 @@ const MobilePlayersPanel = styled.div`
   color:var(--text);
  //background-color:  #668;
   display:flex;
-  //padding-left:20px;
+  padding-left:20px;
   //padding-right:20px;
   padding-top:10px;
   flex-direction:column;

@@ -27,12 +27,14 @@ const ssr = async (context: GetServerSidePropsContext) => {
         if (userId == "null")
             userId = null;
         tab = tab || 'all';
-
+        sid=sid||'';
         console.log("SSR userid:", userId)
         const user = userId ? await clerkClient.users.getUser(userId) : null;
         console.log("========== ========= SSR CHECKPOINT 0:", new Date().getTime() - t1, "ms");
 
         view = view.toLowerCase();
+        if(view=='feed')
+        view='mentions';
         console.log("VIEW:", view)
         if (view == 'home')
             view = 'mentions';
@@ -284,7 +286,8 @@ const ssr = async (context: GetServerSidePropsContext) => {
                 t1,
                 tab,
                 mode,
-                findexarxid
+                findexarxid,
+                sid
 
             }
         }

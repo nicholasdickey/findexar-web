@@ -380,13 +380,13 @@ const Story: React.FC<Props> = ({ story }) => {
 
     let prepDigest=digest.replaceAll('<p>', '').replaceAll('</p>','\n\n');
 
-    const shareUrl = `${process.env.NEXT_PUBLIC_SERVER}pub/league/${league}?sid=${encodeURIComponent(xid)}&utm_content=shareslink`;
+    const shareUrl = `${process.env.NEXT_PUBLIC_SERVER}/pub/league/${league}?sid=${encodeURIComponent(xid)}&utm_content=shareslink`;
     const twitterShareUrl = `https://www.findexar.com/pub/league/${league}?sid=${encodeURIComponent(xid)}&utm_content=xslink`;
     const fbShareUrl = `https://www.findexar.com/pub/league/${league}?sid=${encodeURIComponent(xid)}&utm_content=fbslink`;
     
     const twitterLink = `https://twitter.com/intent/tweet?text=${encodeURIComponent(prepDigest.substring(0, 230) + '...')}&url=${twitterShareUrl}&via=findexar`;
     const fbLink = `https://www.facebook.com/sharer.php?kid_directed_site=0&sdk=joey&u=${encodeURIComponent(fbShareUrl)}&t=${encodeURIComponent('Findexar')}&quote=${encodeURIComponent(prepDigest.substring(0, 140) + '...')}&hashtag=%23findexar&display=popup&ref=plugin&src=share_button`;
-    
+    //console.log("shareUrl=",shareUrl);
 
     useEffect(() => {
         setTimeout(() => {
@@ -503,7 +503,7 @@ const Story: React.FC<Props> = ({ story }) => {
                                 url: shareUrl,
                                 title: `${process.env.NEXT_PUBLIC_APP_NAME}`,
                             }}
-                            onClick={async () => await onShare(url)}
+                            onClick={async () => await onShare(shareUrl)}
                         >
                             <ShareContainer><ShareIcon><IosShareIcon /></ShareIcon></ShareContainer>
                         </RWebShare>

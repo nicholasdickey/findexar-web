@@ -113,14 +113,18 @@ const SecondaryTabs: React.FC<Props> = ({ options, onChange, selectedOptionName 
   const palette = theme[mode].colors;
   let selectedValue = 0;
   const IconTabs = options.map((option: Option, i: number) => {
+    let name=option.name.toLowerCase();
+    if(name=='feed')
+      name='mentions';
+    console.log("options.map", option.name, selectedOptionName)
     let selected = false;
-    if (option.name.toLowerCase() == selectedOptionName?.toLowerCase()) {
+    if (name == selectedOptionName?.toLowerCase()) {
       selected = true;
       selectedValue = i;
     }
     return <STab iconPosition="start" selected={selected} key={`tab-${i}`} label={option.name} icon={option.icon} />;
   });
-  return <TabsWrap><STabs textColor="primary" variant="fullWidth" value={selectedValue} onChange={(event, value) => { console.log("onChange", value); onChange(options[value]) }}>{IconTabs}</STabs></TabsWrap>;
+  return <TabsWrap><STabs textColor="primary" variant="fullWidth" value={selectedValue} onChange={(event, value) => { console.log("onChange-View", value); onChange(options[value]) }}>{IconTabs}</STabs></TabsWrap>;
 };
 
 export default SecondaryTabs;

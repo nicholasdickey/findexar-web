@@ -320,13 +320,15 @@ interface Props {
     linkType?: string;
     startExtended?: boolean;
     mutate: any;
+    mini?:boolean;
 }
 
-const Mention: React.FC<Props> = ({ startExtended, linkType,mention, mutate }) => {
+const Mention: React.FC<Props> = ({mini, startExtended, linkType,mention, mutate }) => {
     const { mode, userId, noUser,view,tab,isMobile, setLeague, setView, setPagetype, setTeam, setPlayer, setMode, sessionid, fbclid, utm_content, params, tp,  pagetype,  setTeamName } = useAppContext();
 
     let { league, type, team, teamName, name, date, url, findex, summary, findexarxid, fav } = mention;
-    linkType==linkType||'final';
+    linkType=linkType||'final';
+    mini=mini||false;
     const [expanded, setExpanded] = React.useState(startExtended);
     const [localDate, setLocalDate] = React.useState(convertToUTCDateString(date));
     const [localFav, setLocalFav] = React.useState(fav);
@@ -376,11 +378,15 @@ const Mention: React.FC<Props> = ({ startExtended, linkType,mention, mutate }) =
     
     //prepare urls:
     const prepName = name.replaceAll(' ', '_');
-    const shareUrl = (type == 'person' ? `${process.env.NEXT_PUBLIC_SERVER}pub/league/${league}/team/${encodeURIComponent(team)}/player/${encodeURIComponent(prepName)}?id=${findexarxid}&utm_content=sharelink` : `/pub/league/${league}/team/${encodeURIComponent(team)}?id=${findexarxid}&utm_content=sharelink`);
+    let shareUrl = (type == 'person' ? `${process.env.NEXT_PUBLIC_SERVER}/pub/league/${league}/team/${encodeURIComponent(team)}/player/${encodeURIComponent(prepName)}?id=${findexarxid}&utm_content=sharelink` : `/pub/league/${league}/team/${encodeURIComponent(team)}?id=${findexarxid}&utm_content=sharelink`);
+ 
     const twitterShareUrl = "https://www.findexar.com/" + (type == 'person' ? `pub/league/${league}/team/${encodeURIComponent(team)}/player/${encodeURIComponent(prepName)}?id=${findexarxid}&utm_content=xlink` : `/pub/league/${league}/team/${encodeURIComponent(team)}?id=${findexarxid}&utm_content=xlink`);
     const fbShareUrl = "https://www.findexar.com/" + (type == 'person' ? `pub/league/${league}/team/${encodeURIComponent(team)}/player/${encodeURIComponent(prepName)}?id=${findexarxid}&utm_content=fblink` : `/pub/league/${league}/team/${encodeURIComponent(team)}?id=${findexarxid}&utm_content=fblink`);
     let localUrl = "";
     localUrl = type == 'person' ? `/pub/league/${league}/team/${team}/player/${prepName}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}` : `/pub/league/${league}/team/${team}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}`
+    if(mini)
+    localUrl = type == 'person' ? `/pub/league/${league}/team/${team}/player/${prepName}${params}${tp}` : `/pub/league/${league}/team/${team}${params}${tp}`
+  
     const bottomLink = type == 'person' ? `/pub/league/${league}/team/${team}/player/${prepName}${params}${tp}` : `/pub/league/${league}/team/${team}${params}${tp}`;
     const twitterLink = `https://twitter.com/intent/tweet?text=${encodeURIComponent(summary.substring(0, 230) + '...')}&url=${twitterShareUrl}&via=findexar`;
     const fbLink = `https://www.facebook.com/sharer.php?kid_directed_site=0&sdk=joey&u=${encodeURIComponent(fbShareUrl)}&t=${encodeURIComponent('Findexar')}&quote=${encodeURIComponent(summary.substring(0, 140) + '...')}&hashtag=%23findexar&display=popup&ref=plugin&src=share_button`;
@@ -388,7 +394,7 @@ const Mention: React.FC<Props> = ({ startExtended, linkType,mention, mutate }) =
     const mentionsKey: MetaLinkKey = { func: "meta", findexarxid, long: startExtended ? 1 : 1 };
     const meta = useSWRImmutable(mentionsKey, getMetaLink).data;
     let digest = meta?.digest || "";
-
+    //console.log("shareUrl", mini,shareUrl);
     useEffect(() => {
         try {
             setLocalDate(convertToReadableLocalTime(date));
@@ -473,6 +479,7 @@ const Mention: React.FC<Props> = ({ startExtended, linkType,mention, mutate }) =
                     <Topline><LocalDate><i>{localDate}</i></LocalDate>
                         {!localFav ? noUser ? <SignInButton><StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); enableRedirect(); addFavorite({ findexarxid }); mutate() }} style={{ color: "#888" }} /></SignInButton> : <StarOutlineIcon onClick={() => { if (noUser) return; setLocalFav(1); enableRedirect(); addFavorite({ findexarxid }); mutate(); }} style={{ color: "#888" }} /> : <StarIcon onClick={() => { if (noUser) return; setLocalFav(0); removeFavorite({ findexarxid }); mutate(); }} style={{ color: "FFA000" }} />}</Topline>
                     <SummaryWrap>
+                      
                         <Link scroll={linkType == 'final' ? false : true} href={localUrl} onClick={async () => { await onMentionNav(name) }} shallow>
                             {summary}
                         </Link>

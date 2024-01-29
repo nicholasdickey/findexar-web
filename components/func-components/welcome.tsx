@@ -60,10 +60,10 @@ const Welcome:React.FC<Props>= () => {
     
    
         return <> <WelcomeWrap>
-        Welcome to Qwiket!<br /><hr />
-        <em>That&apos;s the ticket!</em> <br/><br/><br/>
+        Welcome to Findexar!<br /><hr />
+        {false&&<span><em>That&apos;s the ticket!</em> <br/><br/><br/></span>}
         The indispensable Fantasy Sports<br />
-         real-time, annotated <br />
+         digest and real-time, annotated <br />
         media index.<br /><br />
         Finding and indexing <br />
         mentions of pro athletes<br />

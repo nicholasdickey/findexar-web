@@ -37,7 +37,7 @@ export const palette = {
                 "#B71C1C"  //red[900]
             ],
             secondaryTabsText:blueGrey[100],
-            secondaryTabsSelectedText:blueGrey[50],
+            secondaryTabsSelectedText:amber[100],
             secondaryTabsBackground:grey[700],   
             leaguesBackground:grey[800],
             leaguesText:blueGrey[50],

@@ -14,6 +14,7 @@ import Players from "@/components/func-components/players";
 import { useAppContext } from '@/lib/context';
 import TertiaryTabs  from "@/components/nav-components/tertiary-tabs";
 import MentionOverlay from "@/components/func-components/mention-overlay";
+import StoryOverlay from "@/components/func-components/story-overlay";
 
 const PageWrap = styled.div`
   width:100%;
@@ -153,6 +154,7 @@ const Desktop: React.FC<Props> = () => {
     return (
         <ContainerWrap>
              <MentionOverlay setDismiss={(dismiss:boolean)=>{setView("mentions");}} mutate={() => {}}  />
+             <StoryOverlay setDismiss={(dismiss:boolean)=>{setView("mentions");}} mutate={() => {}}  />
    
             <PageWrap>
                 <Page>
