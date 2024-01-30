@@ -8,8 +8,8 @@ import Button from '@mui/material/Button';
 
 import { getFavorites, FavoritesKey, FetchedMentionsKey, fetchMentions } from '@/lib/api';
 import { useAppContext } from '@/lib/context';
-
 import Mention from "@/components/func-components/items/mention";
+import LoadMore from "@/components/func-components/load-more";
 
 const OuterContainer = styled.div`
     position:relative;
@@ -133,26 +133,16 @@ const Stories: React.FC<Props> = () => {
                     <MentionsBody>
                         {Mentions}
                     </MentionsBody>
-                    <Button style={{ padding: 4, marginTop: 20 }} onClick={() => setSize(size + 1)} variant="outlined">
-                        {isLoadingMore
-                            ? "loading..."
-                            : isReachingEnd
-                                ? `no more mentions`
-                                : "load more"}
-                    </Button>
+                    <LoadMore setSize={setSize} size={size} isLoadingMore={isLoadingMore||false} isReachingEnd={isReachingEnd||false}/>
+                 
                 </MentionsOuterContainer>
                 :
                 <MobileMentionsOuterContainer>
                     <MentionsBody>
                         {Mentions}
                     </MentionsBody>
-                    <Button style={{ padding: 4, marginTop: 20 }} onClick={() => setSize(size + 1)} variant="outlined">
-                        {isLoadingMore
-                            ? "loading..."
-                            : isReachingEnd
-                                ? `no more mentions`
-                                : "load more"}
-                    </Button>
+                    <LoadMore setSize={setSize} size={size} isLoadingMore={isLoadingMore||false} isReachingEnd={isReachingEnd||false}/>
+                 
                 </MobileMentionsOuterContainer>}
         </>
     )

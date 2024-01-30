@@ -344,7 +344,7 @@ const Mention: React.FC<Props> = ({mini, startExtended, linkType,mention, mutate
     }, [copied]);
 
     useEffect(() => {
-        console.log("Mention, extended:", "useEffect", startExtended, expanded)
+        //console.log("Mention, extended:", "useEffect", startExtended, expanded)
         setExpanded(startExtended);
     }, [startExtended]);
 

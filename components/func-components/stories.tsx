@@ -10,6 +10,7 @@ import { FetchedStoriesKey, fetchStories } from '@/lib/api';
 import { useAppContext } from '@/lib/context';
 
 import Story from "@/components/func-components/items/story";
+import LoadMore from "@/components/func-components/load-more";
 
 const OuterContainer = styled.div`
     position:relative;
@@ -128,13 +129,7 @@ const Stories: React.FC<Props> = () => {
                     <MentionsBody>
                         {Stories}
                     </MentionsBody>
-                    <Button style={{ padding: 4, marginTop: 20 }} onClick={() => setSize(size + 1)} variant="outlined">
-                        {isLoadingMore
-                            ? "loading..."
-                            : isReachingEnd
-                                ? `no more stories`
-                                : "load more"}
-                    </Button>
+                    <LoadMore setSize={setSize} size={size} isLoadingMore={isLoadingMore||false} isReachingEnd={isReachingEnd||false}/>
                    
                 </MentionsOuterContainer>
                 :
@@ -142,13 +137,9 @@ const Stories: React.FC<Props> = () => {
                     <MentionsBody>
                         {Stories}
                     </MentionsBody>
-                    <ButtonContainer> <Button style={{ padding: 4, marginTop: 20 }} onClick={() => setSize(size + 1)} variant="outlined">
-                        {isLoadingMore
-                            ? "loading..."
-                            : isReachingEnd
-                                ? `no more stories`
-                                : "load more"}
-                    </Button></ButtonContainer>
+                    <LoadMore setSize={setSize} size={size} isLoadingMore={isLoadingMore||false} isReachingEnd={isReachingEnd||false}/>
+                 
+                    <ButtonContainer> </ButtonContainer>
                 </MobileMentionsOuterContainer>}
         </>
     )
