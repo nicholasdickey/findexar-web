@@ -101,7 +101,7 @@ const SelectedSidePlayer = styled.div<SideProps>`
    color:${props => props.highlight ? 'var(--selected)' : 'var(--selected)'};
    // text-align: center;
    // font-size: 16px;
-    padding-left:20px;
+    //padding-left:20px;
     margin: 10px;
     a{
       color:${props => props.highlight ? 'var(--selected)' : 'var(--selected)'} !important;//#ff8 !important;
@@ -112,24 +112,6 @@ const SelectedSidePlayer = styled.div<SideProps>`
       }
     }
   `;
-
-const SideLeagueName = styled.div`
-    height: 40px;
-    width: 200px; 
-    color:var(--text);
-    font-size: 20px;
-`;
-const SideTeam = styled.div`
-    height: 20px;
-    //margin-top:5px;
-   //font-size: 16px;
-    padding-left:20px;
-    border-left: 1px solid #aaa;
-    padding-bottom:20px;
-    @media screen and (min-width: 1600px) {
-      //font-size: 18px;
-    }
-`;
 
 const SelectedSideTeam = styled.div`
     height: 20px;
