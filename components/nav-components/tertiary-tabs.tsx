@@ -3,7 +3,7 @@ import { styled } from "styled-components";
 import { Tabs, Tab } from '@mui/material'
 
 const TabsWrap = styled.div`
-z-index:1000;
+//z-index:1000;
 `;
   interface STabsProps {
     selected: boolean;
