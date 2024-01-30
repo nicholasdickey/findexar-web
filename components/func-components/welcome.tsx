@@ -27,7 +27,7 @@ const WelcomeWrap = styled.div`
     }
 `;
 const Favorites = styled.div`
-    margin-top:28px;
+   // margin-top:28px;
     margin-left:22px;
     width:100%;
     height:40px;
@@ -80,16 +80,18 @@ const Welcome:React.FC<Props>= () => {
             router.push(`/pub${params}${tp2.replace('?', '&')}`);
           }
         }} style={{ padding: 10 }} variant="outlined">{view == "readme" ? <HomeIcon fontSize="small"/> : <HelpOutlineIcon  fontSize="small"/>}&nbsp;&nbsp;{view == "readme" ? <span>Back to Home</span> : <span>Read Me</span>}</Button></Favorites>
-        <br /><br />
+     
         <LeftText><hr />Copyright &#169; 2024, Findexar, Inc.<br />Made in Minnesota. L&apos;Étoile du Nord.</LeftText>
-        {noUser && <LeftText>Click here to sign-in or sign-up: <br /><br /><br /><SignInButton><Button style={{ padding: 10 }} size="small" variant="outlined"><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></LeftText>}
+        {noUser && <><LeftText>Click here to sign-in or sign-up: <br /><br /><br /></LeftText>
+        <Favorites><SignInButton><Button style={{ padding: 10 }} size="small" variant="outlined"><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></Favorites></>}
         <LeftText><hr />Contact: @findexar on X (Twitter)</LeftText>
+        <hr/>
         <LeftText><br />League News Digests on X (Twitter):</LeftText>
-        <LeftText><Link href="https://twitter.com/nflpress_digest">NFL Digest</Link></LeftText>
-        <LeftText><Link href="https://twitter.com/nhl_digest">NHL Digest</Link></LeftText>
-        <LeftText><Link href="https://twitter.com/mlbpressdigest">MLB Digest</Link></LeftText>
-        <LeftText><Link href="https://twitter.com/nba_digest">NBA Digest</Link></LeftText>
-        <LeftText><Link href="https://twitter.com/mls_digest">MLS Digest</Link></LeftText>
+        <Favorites><LeftText><Link href="https://twitter.com/nflpress_digest">NFL Digest Twitter Feed</Link></LeftText>
+        <LeftText><Link href="https://twitter.com/nhl_digest">NHL Digest Twitter Feed</Link></LeftText>
+        <LeftText><Link href="https://twitter.com/mlbpressdigest">MLB Digest Twitter Feed</Link></LeftText>
+        <LeftText><Link href="https://twitter.com/nba_digest">NBA Digest Twitter Feed</Link></LeftText>
+        <LeftText><Link href="https://twitter.com/mls_digest">MLS Digest Twitter Feed</Link></LeftText></Favorites>
       </>
   
 }

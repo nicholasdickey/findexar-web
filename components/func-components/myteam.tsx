@@ -197,8 +197,10 @@ const MobileSidePlayer = styled.div`
 `;
 const RightScroll=styled.div`
     position:sticky;
-   // max-height: 1200hv;
-    top:110px;
+    //max-height: 2200px;
+    height:auto !important;
+    //max-height:500vh;
+    top:-110px;
     overflow-y: hidden;
     // top:-400px;
    // overflow-y: auto;
@@ -221,9 +223,20 @@ const MyTeam: React.FC<Props> = () => {
     return (
         <>{!isMobile ? <RightScroll>
             <TeamName>My Team{league ? ` for ${league}` : ``}: </TeamName>
-            {(!trackerListMembers || trackerListMembers.length == 0) && <RightExplanation>Use  &nbsp;<PlaylistAddIcon sx={{/* color: "#aea" */ }} />&nbsp;  icon to the right of the<br /> player&apos;s name in the team roster<br />(click on the league and the team name)<br />to add to &ldquo;My Team&ldquo; tracking list.<br /><br /><SignedOut>Note, My Team featue requires the user to be signed into their Findexar account.<br /><br /><SignInButton><Button size="small" variant="outlined" style={{ paddingRight: 8, paddingTop: 4, paddingBottom: 4, paddingLeft: 4 }}><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></SignedOut>
+            {(!trackerListMembers || trackerListMembers.length == 0) && <><RightExplanation>
+                <b>My Team</b> is a premium feature designed for Fantasy Sports fans who need to track media
+                mentions of the selected athletes.<br/><br/>
+                The functionality to track and annotate mentions is powered by OpenAI (ChatGPT). We have to pay to provide the service and
+                have no choice but to pass the costs to the users. You can create an account and try the feature for free for a week before you will be nagged to subscribe.
+                <br/><br/>Imaging the power of getting a feed of your athletes mentions across the media! No need to spend hours hunting and searching.
+
+
+                <hr/>
+            </RightExplanation>
+            
+            <RightExplanation>Use  &nbsp;<PlaylistAddIcon sx={{/* color: "#aea" */ }} />&nbsp;  icon to the right of the<br /> player&apos;s name in the team roster<br />(click on the league and the team name)<br />to add to &ldquo;My Team&ldquo; tracking list.<br /><br /><SignedOut>Note, My Team featue requires the user to be signed into their Findexar account.<br /><br /><SignInButton><Button size="small" variant="outlined" style={{ paddingRight: 8, paddingTop: 4, paddingBottom: 4, paddingLeft: 4 }}><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></SignedOut>
                 <br /><br />To view the My Team&apos;s mentions feed<br /> go to Home <HomeIcon /> or select a League. Then select a &ldquo;My Feed&ldquo; tab.
-            </RightExplanation>}
+            </RightExplanation></>}
             {trackerListMembers && trackerListMembers.map(({ member, teamid, league }: { member: string, teamid: string, league: string }, i: number) => {
                 //console.log("TRACKER LIST MEMBER", member, teamid, league)
                 return <SideGroup key={`3fdsdvb-${i}`}>
@@ -257,9 +270,21 @@ const MyTeam: React.FC<Props> = () => {
         </RightScroll> :
             <MobilePlayersPanel>
                 <MobileTeamName>My Team: </MobileTeamName>
-                {(!trackerListMembers || trackerListMembers.length == 0) && <MobileRightExplanation>Use  &nbsp;<PlaylistAddIcon />&nbsp;  icon to the right of the player&apos;s name in the team roster (&ldquo;players&ldquo; tab) to add to &ldquo;My Team&ldquo; tracking list.<br /><br /><SignedOut>Note, My Team featue requires the user to be signed into their Findexar account.<br /><br /><SignInButton><Button size="small" variant="outlined" style={{ paddingRight: 8, paddingTop: 4, paddingBottom: 4, paddingLeft: 4 }}><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></SignedOut>
+                {(!trackerListMembers || trackerListMembers.length == 0) && 
+                <><MobileRightExplanation>
+                <b>My Team</b> is a premium feature designed for Fantasy Sports fans who need to track media
+                mentions of the selected athletes.<br/><br/>
+                The functionality to track and annotate mentions is powered by OpenAI (ChatGPT). We have to pay to provide the service and
+                have no choice but to pass the costs to the users. You can create an account and try the feature for free for a week before you will be nagged to subscribe.
+                <br/><br/>Imaging the power of getting a feed of your athletes mentions across the media! No need to spend hours hunting and searching.
+
+
+                <hr/>
+            </MobileRightExplanation>
+                
+                <MobileRightExplanation>Use  &nbsp;<PlaylistAddIcon />&nbsp;  icon to the right of the player&apos;s name in the team roster (&ldquo;players&ldquo; tab) to add to &ldquo;My Team&ldquo; tracking list.<br /><br /><SignedOut>Note, My Team featue requires the user to be signed into their Findexar account.<br /><br /><SignInButton><Button size="small" variant="outlined" style={{ paddingRight: 8, paddingTop: 4, paddingBottom: 4, paddingLeft: 4 }}><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></SignedOut>
                     <br /><br />To view My Team&apos;s mentions feed go to <br />Home <HomeIcon /> or select a League. Then select a &ldquo;My Feed&ldquo; tab.
-                </MobileRightExplanation>}
+                </MobileRightExplanation></>}
                 {trackerListMembers && trackerListMembers.map(({ member, teamid, league }: { member: string, teamid: string, league: string }, i: number) => {
                     return <MobileSideGroup key={`3fdsdvb-${i}`}>
                         <MobileSidePlayer>

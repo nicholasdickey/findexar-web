@@ -54,9 +54,11 @@ const Teams: React.FC<Props> = () => {
     setTeam(name);
     setView("mentions");
     setTab("all");
-    teams.find((t: { id: string, name: string }) => {
-      if (t.id == name)
+    teams&&teams.find((t: { id: string, name: string }) => {
+      if (t.id == name){
         setTeamName(t.name);
+        return true;
+      }
     })
     await recordEvent(sessionid as string || "",
       'team-nav',

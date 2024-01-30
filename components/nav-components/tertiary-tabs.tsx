@@ -18,6 +18,7 @@ const TabsWrap = styled.div`
 interface Option {
     name: string;
     tab:string;
+    disabled:boolean;
 }
 interface Props {
     options: Option[];
@@ -27,13 +28,14 @@ interface Props {
 
 const TertiaryTabs: React.FC<Props> = ({ options, onChange,selectedOptionName }: Props) => {
     let selectedValue=0;
+    
     const tabs = options.map((option: Option, i: number) => {
         let selected=false;
         if(option.tab.toLowerCase()==selectedOptionName?.toLowerCase()){
           selected=true;  
           selectedValue=i;
         }
-        return <STab selected={selected} key={`t3ab-${i}`} label={option.name} />;
+        return <STab disabled={option.disabled}selected={selected} key={`t3ab-${i}`} label={option.name} />;
     });
     return <TabsWrap>< Tabs textColor="primary" variant="fullWidth" value={selectedValue} onChange={(event, value) =>{console.log("onChange",value); onChange(options[value])}}>{tabs}</Tabs></TabsWrap>;
 };
