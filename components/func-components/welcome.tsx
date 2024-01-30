@@ -84,8 +84,8 @@ const Welcome:React.FC<Props>= () => {
         <LeftText><hr />Copyright &#169; 2024, Findexar, Inc.<br />Made in Minnesota. L&apos;Étoile du Nord.</LeftText>
         {noUser && <><LeftText>Click here to sign-in or sign-up: <br /><br /><br /></LeftText>
         <Favorites><SignInButton><Button style={{ padding: 10 }} size="small" variant="outlined"><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></Favorites></>}
-        <LeftText><hr />Contact: @findexar on X (Twitter)</LeftText>
-        <hr/>
+        <LeftText><hr />Contact: @findexar on X (Twitter)<hr/></LeftText>
+        
         <LeftText><br />League News Digests on X (Twitter):</LeftText>
         <Favorites><LeftText><Link href="https://twitter.com/nflpress_digest">NFL Digest Twitter Feed</Link></LeftText>
         <LeftText><Link href="https://twitter.com/nhl_digest">NHL Digest Twitter Feed</Link></LeftText>
