@@ -40,26 +40,26 @@ const Title = styled.div`
 `;
 
 const Digest = styled.div`
+    display:flex;
     font-size: 15px;
 `;
 
 const ArticleDigest = styled.div`
     font-size: 14px;
-    padding-top:10px;
+    //padding-top:10px;
 `;
 const ArticleMentionsTitle = styled.div`
     font-size: 14px;
-    padding-top:10px;
+    padding-top:4px;
     margin-left:20px;
 `;
 const ArticleMentions = styled.div`
     font-size: 18px;
-    padding-top:10px;
+    //padding-top:10px;
     border: 1px dotted #ccc;
-   
     border-radius: 5px;
     padding-bottom:10px;
-    margin-bottom:10px;
+   // margin-bottom:10px;
 `;
 
 const ImageWrapper = styled.div`
@@ -206,7 +206,7 @@ const MentionsWrap = styled.div`
     flex-direction:column;
     width:100%;
     padding-right:20px;
-    margin-top:20px;
+    margin-top:6px;
     margin-bottom:20px;
     a{
         font-size:15px !important;    
@@ -303,9 +303,9 @@ const Story: React.FC<Props> = ({ story }) => {
                             <Link href={url} target="_blank">
                                 <div dangerouslySetInnerHTML={{ __html: digest }} />
                             </Link>
-                            <ShareContainerInline>
-                                <ContentCopyIcon style={{ paddingTop: 6, marginTop: -10 }} fontSize="small" sx={{ color: digestCopied ? 'green' : '' }} onClick={() => onDigestCopyClick()} />
-                            </ShareContainerInline>
+                           
+                                <ContentCopyIcon style={{ paddingTop: 6, marginTop: -10,cursor:'pointer' }} fontSize="small" sx={{ color: digestCopied ? 'green' : '' }} onClick={() => onDigestCopyClick()} />
+                           
                         </Digest>
                     </Body>
                 </HorizontalContainer>
