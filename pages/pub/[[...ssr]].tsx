@@ -41,6 +41,7 @@ interface Props {
     mode:string;
     findexarxid:string;
     sid:string;
+    teamName:string;
 }
 export default function Home(props: Props) {
     const fallback = props.fallback;

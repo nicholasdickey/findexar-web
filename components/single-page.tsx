@@ -68,12 +68,13 @@ interface Props {
   mode: string;
   findexarxid: string;
   sid: string;
+  teamName:string;
 }
 
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 
 const SinglePage: React.FC<Props> = (props) => {
-  let { findexarxid, sid, mode, tab, t1, fbclid = "", sessionid = "", isfb, isbot, list, freeUser, createdAt, userId, utm_content, dark, leagues, league = "", team = "", pagetype = "league", player = "", view = "" } = props;
+  let { teamName:tn,findexarxid, sid, mode, tab, t1, fbclid = "", sessionid = "", isfb, isbot, list, freeUser, createdAt, userId, utm_content, dark, leagues, league = "", team = "", pagetype = "league", player = "", view = "" } = props;
 
   const [localTeam, setLocalTeam] = useState(team);
   const [localPlayer, setLocalPlayer] = useState(player);
@@ -92,7 +93,7 @@ const SinglePage: React.FC<Props> = (props) => {
   const [localFindexarxid, setLocalFindexarxid] = React.useState(findexarxid);
   const [localSid, setLocalSid] = React.useState(sid);
   const [localView, setLocalView] = useState(view.toLowerCase());
-  const [teamName, setTeamName] = useState("");
+  const [teamName, setTeamName] = useState(tn);
   const router = useRouter();
   const muiTheme = useTheme();
   const fullScreen = useMediaQuery(muiTheme.breakpoints.down('md'));

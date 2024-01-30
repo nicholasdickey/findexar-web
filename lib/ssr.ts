@@ -160,7 +160,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
         }
         let fetchStories = [];
         console.log("VIEW:", view, "tab:", tab, "team:", team, "player:", player, "league:", league, "userId", userId, "options:", options, "keyMentions:", keyMentions)
-
+        let teamName = '';
         if (team) {
             console.log("in team")
             const { data: dataMentions } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?api_key=${api_key}&userid=${userId}&teamid=${team}&name=${encodeURIComponent(player as string || "")}&page=0&league=${league}&favorites=0`);
@@ -168,7 +168,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
             console.log(66666)
             console.log('==>',leagueTeams,team)
             const t = leagueTeams?.find((t: any) => t.id == team);
-            const teamName = t.name;
+            teamName = t.name;
             keyTeamPlayers = { type: 'teamPlayers', league, teamid: team };
             teamPlayers = await getTeamPlayers(keyTeamPlayers);
         }
@@ -290,7 +290,8 @@ const ssr = async (context: GetServerSidePropsContext) => {
                 tab,
                 mode,
                 findexarxid,
-                sid
+                sid,
+                teamName
 
             }
         }
