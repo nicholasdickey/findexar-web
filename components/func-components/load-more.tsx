@@ -29,7 +29,7 @@ const LoadMore:React.FC<Props> = ({isLoadingMore,isReachingEnd,setSize,size}) =>
    // console.log("entry:",entry)
     const isVisible = !!entry?.isIntersecting ||false;
     useEffect(() => {
-        console.log("useEffect isVisible",isVisible,visible);
+       // console.log("useEffect isVisible",isVisible,visible);
         if (isVisible) {
             if(!visible){
                 setVisible(true);

@@ -361,6 +361,21 @@ const Story: React.FC<Props> = ({ story }) => {
                     <ArticleMentionsTitle><b>Mentions:</b></ArticleMentionsTitle>
                     {Mentions}</ArticleMentions>
                 <Link href={url}> {url.substring(0, 30)}...</Link>
+                <BottomLine>
+                    <ShareGroup><RWebShare
+                        data={{
+                            text: prepDigest,
+                            url: shareUrl,
+                            title: `${process.env.NEXT_PUBLIC_APP_NAME}`,
+                        }}
+                        onClick={async () => await onShare(shareUrl)}
+                    >
+                        <ShareContainer><ShareIcon><IosShareIcon /></ShareIcon></ShareContainer>
+                    </RWebShare>
+                        <Link href={twitterLink} target="_blank"><ShareContainer><XIcon /></ShareContainer></Link>
+                        <Link href={fbLink} target="_blank"><ShareContainer><FacebookIcon /></ShareContainer></Link>
+                    </ShareGroup>
+                </BottomLine>
             </MobileWrap>
         </>
     );
