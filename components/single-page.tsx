@@ -297,11 +297,11 @@ const SinglePage: React.FC<Props> = (props) => {
   if (amention && amentionLeague && amentionTeam && amentionPlayer && type == 'person')
     ogTarget = `${amentionPlayer} of ${amentionTeamName}`;
   else if (amention && amentionLeague && amentionTeam)
-    ogTarget = `${amentionTeamName} on Findexar`;
+    ogTarget = `${amentionTeamName} on ${process.env.NEXT_PUBLIC_SITE_NAME}`;
 
   let ogDescription = amentionSummary ? amentionSummary : "Fantasy Sports Media Tracker.";
-  let ogImage = amentionImage ? amentionImage : "https://findexar.com/findexar-logo.png";
-  let ogTitle = ogTarget ? `${ogTarget}` : "Findexar Sports Media Tracker";
+  let ogImage = amentionImage ? amentionImage : process.env.NEXT_PUBLIC_SITE_NAME=="Findexar"?"https://findexar.com/findexar-logo.png":"https://www.qwiket.com/findexar-logo.png";
+  let ogTitle = ogTarget ? `${ogTarget}` : `${[process.env.NEXT_PUBLIC_SITE_NAME]} Sports Media Tracker`;
   if(astory){
     ogUrl= league?`${process.env.NEXT_PUBLIC_SERVER}pub/league/${league}?sid=${localSid}`:`${process.env.NEXT_PUBLIC_SERVER}pub?sid=${localSid}`;
     ogTitle=astoryTitle;;
@@ -320,7 +320,7 @@ const SinglePage: React.FC<Props> = (props) => {
         <meta name="description" content={ogDescription} />
         <meta property="og:type" content="website" />
         <meta property="fb:appid" content="358234474670240" />
-        <meta property="og:site_name" content="qwiket.com" />
+        <meta property="og:site_name" content={process.env.NEXT_PUBLIC_APP_NAME=="Finexar"?"findexar.com":"qwiket.com"} />
         <meta property="og:url" content={ogUrl} />
         <meta property="og:image" content={ogImage} />
         <meta property="findexar:verify" content="findexar" />
