@@ -101,8 +101,8 @@ const SelectedSidePlayer = styled.div<SideProps>`
    color:${props => props.highlight ? 'var(--selected)' : 'var(--selected)'};
    // text-align: center;
    // font-size: 16px;
-    //padding-left:20px;
-    margin: 10px;
+    padding-left:20px;
+    margin: 4px;
     a{
       color:${props => props.highlight ? 'var(--selected)' : 'var(--selected)'} !important;//#ff8 !important;
       text-decoration: none;

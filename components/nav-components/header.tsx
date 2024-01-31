@@ -368,7 +368,7 @@ const HeaderNav: React.FC<Props> = ({ leagues }) => {
   useEffect(() => {
     const listener = () => {
       setScrollY(window.scrollY);
-      console.log("scrollY", window.scrollY);
+      //console.log("scrollY", window.scrollY);
       if (window.scrollY > 0) {
 
         if (!scrolled && !s) {
@@ -405,7 +405,7 @@ const HeaderNav: React.FC<Props> = ({ leagues }) => {
   }, [fbclid, utm_content, scrolled]);
 
   const updateMode = useCallback(async (mode: string) => {
-    console.log("updateMode", mode)
+    //console.log("updateMode", mode)
     setMode(mode);
     await setCookie({ name: 'mode', value: mode });
   }, []);

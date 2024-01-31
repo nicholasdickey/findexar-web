@@ -104,7 +104,7 @@ const Stories: React.FC<Props> = () => {
     const fetchStoriesKey = (pageIndex: number, previousPageData: any): FetchedStoriesKey | null => {
         //console.log("getMentionsKey=", pageIndex, previousPageData)
         let key: FetchedStoriesKey = { type: "FetchedStories", noUser, page: pageIndex, league, noLoad: view != "mentions" && tab != "all" };
-        console.log("getSoriesKey=>>>", key)
+        //console.log("getSoriesKey=>>>", key)
 
         if (previousPageData && !previousPageData.length) return null // reached the end
         return key;
@@ -125,20 +125,17 @@ const Stories: React.FC<Props> = () => {
         <>
             {!isMobile ?
                 <MentionsOuterContainer>
-
                     <MentionsBody>
                         {Stories}
                     </MentionsBody>
-                    <LoadMore setSize={setSize} size={size} isLoadingMore={isLoadingMore||false} isReachingEnd={isReachingEnd||false}/>
-                   
+                    <LoadMore setSize={setSize} size={size} isLoadingMore={isLoadingMore || false} isReachingEnd={isReachingEnd || false} />
                 </MentionsOuterContainer>
                 :
                 <MobileMentionsOuterContainer>
                     <MentionsBody>
                         {Stories}
                     </MentionsBody>
-                    <LoadMore setSize={setSize} size={size} isLoadingMore={isLoadingMore||false} isReachingEnd={isReachingEnd||false}/>
-                 
+                    <LoadMore setSize={setSize} size={size} isLoadingMore={isLoadingMore || false} isReachingEnd={isReachingEnd || false} />
                     <ButtonContainer> </ButtonContainer>
                 </MobileMentionsOuterContainer>}
         </>
