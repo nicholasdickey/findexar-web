@@ -427,8 +427,8 @@ const HeaderNav: React.FC<Props> = ({ leagues }) => {
         <HeaderTopline>
           <LeftContainer>
             <HeaderLeft>
-              <FLogo><Link href={`/pub${params}`}><Avatar sx={{ bgcolor: cyan[800] }}>Fi</Avatar></Link></FLogo>
-              <FLogoMobile ><Link href={`/pub${params}`}><Avatar sx={{ bgcolor: cyan[800] }}>Fi</Avatar></Link></FLogoMobile>
+              <FLogo><Link href={`/pub${params}`}><Avatar sx={{ bgcolor: cyan[800] }}>{process.env.NEXT_PUBLIC_APP_NAME=='Findexar'?"Fi":"Q"}</Avatar></Link></FLogo>
+              <FLogoMobile ><Link href={`/pub${params}`}><Avatar sx={{ bgcolor: cyan[800] }}>{process.env.NEXT_PUBLIC_APP_NAME=='Findexar'?"Fi":"Q"}</Avatar></Link></FLogoMobile>
             </HeaderLeft>
             <ContainerCenter>
               <HeaderCenter>
