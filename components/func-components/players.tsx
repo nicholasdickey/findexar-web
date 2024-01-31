@@ -2,9 +2,7 @@ import React, { use, useCallback, useEffect, useState } from "react";
 import Link from 'next/link'
 import useSWR from 'swr';
 import { UserButton, SignInButton, SignedOut, SignedIn, RedirectToSignIn } from "@clerk/nextjs";
-
-import { styled ,useTheme} from "styled-components";
-
+import { styled, useTheme } from "styled-components";
 import IconButton from '@mui/material/IconButton';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
@@ -19,140 +17,97 @@ declare global {
 }
 
 const SidePlayer = styled.div<SideProps>`
-    //height: 40px;
-    //width: 200px; 
-   // color: #eee;
-    //text-align: center;
     color:${props => props.highlight ? 'var(--myteam)' : 'var(--text)'};
-   // font-size: 16px;
     padding-left:20px;
     &:hover{
         color:var(--highlight);
-      }
-  
+    }  
     margin: 4px;
     a{
-      color:${props => props.highlight ? 'var(--myteam)' : 'var(--text)'} !important;//#ff8 !important;
-      text-decoration: none;
-      background-color:${props => props.highlight ? 'var(--myteam-bg)' : 'var(--background)'} !important;
-      &:hover{
-        color:var(--highlight) !important;
-      }
+        color:${props => props.highlight ? 'var(--myteam)' : 'var(--text)'} !important;
+        text-decoration: none;
+        background-color:${props => props.highlight ? 'var(--myteam-bg)' : 'var(--background)'} !important;
+        &:hover{
+            color:var(--highlight) !important;
+        }
     }
 `;
 
 const TeamName = styled.div`
     height: 30px;
     width: 100%; 
-   // color: #aea;
-    //text-align: center;
-    //padding-left:20px;
     font-size: 20px;
-    //margin: 10px;
     padding-top:2px;
     padding-bottom:35px;
-  `;
+`;
 
 const MobileTeamName = styled.div`
     height: 40px;
     color:var(--text); 
-   // color: #aea;
     text-align: center;
     font-size: 20px;
-    //margin: 10px;
-    //padding-left:20px;
     padding-top:12px;
     padding-bottom:35px;
 `;
 
 const SideGroup = styled.div`
     display:flex;
-   // width:280px;
-   width: 260px;
+    width: 260px;
     flex-direction:row;
     justify-content:space-between;
     padding-right:20px;
     align-items:center;
     border-left: 1px solid #aaa;
-  
 `;
-
 interface SideProps {
     highlight?: boolean;
 }
 const SideIcon = styled.div<SideProps>`
-   // margin-top:-8px;
-    //color:#aaa;
     width:20px;
     height:20px;
-    color:${props => props.highlight ? 'var(--selected))' : 'var(--link)'};
-  
-  `;
+    color:${props => props.highlight ? 'var(--selected))' : 'var(--link)'};  
+`;
+
 const SideButton = styled.div`
-    //margin-top:-8px;
     width:40px;
-   //color:#aaa;
-  
-  `;
+`;
+
 const SelectedSidePlayer = styled.div<SideProps>`
-   // height: 40px;
-   // width: 200px;
-   // color:var(--selected);// #ff8;
-   color:${props => props.highlight ? 'var(--selected)' : 'var(--selected)'};
-   // text-align: center;
-   // font-size: 16px;
+    color:${props => props.highlight ? 'var(--selected)' : 'var(--selected)'};
     padding-left:20px;
     margin: 4px;
     a{
-      color:${props => props.highlight ? 'var(--selected)' : 'var(--selected)'} !important;//#ff8 !important;
-      text-decoration: none;
-      background-color:${props => props.highlight ? 'var(--myteam-bg)' : 'var(--background)'} !important;
-      &:hover{
-        color:var(--highlight);
-      }
-    }
-  `;
-
-const SelectedSideTeam = styled.div`
-    height: 20px;
-    color:var(--selected);
-    font-size: 16px;
-    padding-left:20px;
-    border-left: 1px solid #aaa;
-    a{
-        color:var(--selected) !important;
+        color:${props => props.highlight ? 'var(--selected)' : 'var(--selected)'} !important;//#ff8 !important;
         text-decoration: none;
+        background-color:${props => props.highlight ? 'var(--myteam-bg)' : 'var(--background)'} !important;
         &:hover{
-            color: var(--highlight);
+            color:var(--highlight);
         }
     }
 `;
 
 const MobilePlayersPanel = styled.div`
-  height:100%;
- // background-color:  #668;
-  display:flex;
-  flex-direction:column;
-  justify-content:flex-start;
-  align-items:flex-start; 
-  padding-left:20px;
-  //font-family: roboto;
-  a{
-    color:var(--text); // #eee;
-    text-decoration: none;
-    &:hover{
-      color: var(--highlight);//#4f8;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    align-items:flex-start; 
+    padding-left:20px;
+    a{
+        color:var(--text); // #eee;
+        text-decoration: none;
+        &:hover{
+        color: var(--highlight);//#4f8;
+        }
     }
-  }
 `;
 interface ScrollProps {
-    numPlayers:number;
+    numPlayers: number;
 }
-const RightScroll=styled.div<ScrollProps>`
+const RightScroll = styled.div<ScrollProps>`
     position:sticky;
-    //max-height: ${({numPlayers})=>numPlayers*36}px;
     height:auto !important;
-    top:-${({numPlayers})=>numPlayers>60?numPlayers*numPlayers*0.20:numPlayers*numPlayers*0.10}px;
+    top:-${({ numPlayers }) => numPlayers > 60 ? numPlayers * numPlayers * 0.20 : numPlayers * numPlayers * 0.10}px;
     overflow-y: hidden;
     padding-bottom:20px;
 `;
@@ -160,12 +115,9 @@ interface Props {
 }
 const Players: React.FC<Props> = () => {
     const [signin, setSignin] = React.useState(false);
-
-    const { userId, isMobile, setLeague, setView, setTab,setPagetype, setTeam, setPlayer, setMode, sessionid, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName, setTeamName } = useAppContext();
-
+    const { userId, isMobile, setLeague, setView, setTab, setPagetype, setTeam, setPlayer, setMode, sessionid, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName, setTeamName } = useAppContext();
     const teamPlayersKey: TeamPlayersKey = { type: 'teamPlayers', league: league || "", teamid: team || "" };
     const { data: players, error, isLoading, mutate: mutatePlayers } = useSWR(teamPlayersKey, getTeamPlayers);
-
     const theme = useTheme();
     //@ts-ignore
     const mode = theme.palette.mode;
@@ -177,7 +129,6 @@ const Players: React.FC<Props> = () => {
         setPlayer(name);
         setView("mentions");
         setTab("all");
-        //setGlobalLoading(true);
         await recordEvent(sessionid as string || "",
             'player-nav',
             `{"params":"${params}","player":"${name}"}`
@@ -201,7 +152,6 @@ const Players: React.FC<Props> = () => {
                 <IconButton
                     onClick={async () => {
                         setPlayer(p.name);
-
                         if (window && window.Clerk) {
                             const Clerk = window.Clerk;
                             const user = Clerk.user;
@@ -211,12 +161,9 @@ const Players: React.FC<Props> = () => {
                                 return;
                             }
                         }
-
                         if (p.tracked == true) {
                             console.log("TRACKED", p.name)
                             const removeTrackerListMemberParams: RemoveTrackerListMemberParams = { member: p.name, teamid: team || "" };
-
-                            //to copilot: find in players the item with name p.name and set tracked to true.
                             mutatePlayers((players: any) => {
                                 return players.map((player: any) => {
                                     if (player.name == p.name) {
@@ -250,17 +197,19 @@ const Players: React.FC<Props> = () => {
         </SideGroup>
     });
     return (<>
-        {!isMobile?
+        {!isMobile ?
             <RightScroll numPlayers={players?.length}>
-            <TeamName>{teamName}:</TeamName>
-            {PlayersNav}
+                <TeamName>{teamName}:</TeamName>
+                {PlayersNav}
             </RightScroll>
-        :
-        <MobilePlayersPanel>
-        <MobileTeamName>{teamName}</MobileTeamName>
-        {PlayersNav}
-      </MobilePlayersPanel>}
-      </>
+            :
+            <MobilePlayersPanel>
+                <MobileTeamName>{teamName}</MobileTeamName>
+                {PlayersNav}
+            </MobilePlayersPanel>
+        }
+    </>
     );
 }
+
 export default Players;

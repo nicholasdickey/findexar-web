@@ -34,9 +34,7 @@ const Header = styled.header<HeaderProps>`
   background-color:var(--header-bg);
   text-align: center;
   font-size: 40px;
- // padding-top: ${({ scrolled }) => scrolled ? 0 : 10}px;
   padding-bottom:10px;
-  
   font-family: 'Roboto', sans-serif;
   transition: height 0.2s ease, padding-top 0.2s ease;
   a{
@@ -46,6 +44,7 @@ const Header = styled.header<HeaderProps>`
         color:var(--highlight);
       }  
   }
+
   @media screen and (max-width: 1199px) {
       height: 84px;
       background-color:var(--mobile-header-bg);
@@ -65,7 +64,6 @@ const Header = styled.header<HeaderProps>`
 const ContainerWrap = styled.div`
     display: flex;
     flex-direction: column;
-    //height: 100%;
     width: 100%;
     font-family: 'Roboto', sans-serif;
     font-size:14px;
@@ -96,8 +94,6 @@ const MobileContainerWrap = styled.div`
       display: none;
     }
 `;
-
-
 
 const League = styled.div<HeaderProps>`
     height: ${({ scrolled }) => scrolled ? 16 : 24}px;
@@ -156,13 +152,11 @@ const Leagues = styled.div<HeaderProps>`
     }
 `;
 
-
 const LeagueIcon = styled.div<HeaderProps>`
     min-height: ${({ scrolled }) => scrolled ? 10 : 26}px;
     margin-top:${({ scrolled }) => scrolled ? -5 : -6}px;
   
 `;
-
 
 const MuiTabs = styled(Tabs)`
     width:100%;
@@ -171,7 +165,6 @@ const MuiTabs = styled(Tabs)`
     color: var(--mobile-leagues-text);
     background-color:var(--mobile-leagues-bg);
 `;
-
 
 const Superhead = styled.div<HeaderProps>`
     font-size: ${({ scrolled }) => scrolled ? 24 : 32}px !important;
@@ -279,11 +272,6 @@ const HeaderRight = styled.div`
     }
 `;
 
-const SmallButton = styled(Button)`
-    max-width:12px !important;
-    padding:0px;
-`;
-
 const Photo = styled.div`
     height:60px;
     width:60px;
@@ -345,18 +333,16 @@ interface Props {
   leagues: string[];
 }
 let s = false;
-const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 
 const HeaderNav: React.FC<Props> = ({ leagues }) => {
   const [scrolled, setScrolled] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const { mode, userId, isMobile, setLeague, setView, setPagetype, setTeam, setPlayer, setMode, sessionid, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName } = useAppContext();
-  //console.log("league=>:", league)
+
   const router = useRouter();
   const onLeagueNavClick = useCallback(async (l: string) => {
     setLeague(l);
     setView('mentions');
-    console.log("onLeagueNavClick", l,"pagetype")
     setPagetype('league');
     setTeam("")
     await recordEvent(sessionid as string || "",
@@ -368,7 +354,6 @@ const HeaderNav: React.FC<Props> = ({ leagues }) => {
   useEffect(() => {
     const listener = () => {
       setScrollY(window.scrollY);
-      //console.log("scrollY", window.scrollY);
       if (window.scrollY > 0) {
 
         if (!scrolled && !s) {
@@ -399,19 +384,19 @@ const HeaderNav: React.FC<Props> = ({ leagues }) => {
         }
       }
     }
-
     window.addEventListener("scroll", throttle(listener, 200));
     return () => window.removeEventListener("scroll", listener);
   }, [fbclid, utm_content, scrolled]);
 
   const updateMode = useCallback(async (mode: string) => {
-    //console.log("updateMode", mode)
     setMode(mode);
     await setCookie({ name: 'mode', value: mode });
   }, []);
+
   const LeaguesNav = leagues?.map((l: string, i: number) => {
     return l == league ? <SelectedLeague scrolled={scrollY != 0} key={`league-${i}`} ><Link href={`/pub/league/${l}${params}${tp}`} shallow onClick={async () => { await onLeagueNavClick(l) }} >{l}</Link></SelectedLeague> : <League scrolled={scrollY != 0} key={`league-${i}`}><Link href={`/pub/league/${l}${params}${tp}`} shallow onClick={async () => { await onLeagueNavClick(l) }} >{l}</Link></League>
   });
+
   const MobileLeaguesNav = leagues?.map((l: string, i: number) => {
     //@ts-ignore
     return <LeaguesTab selected={l == league} key={`league-${i}`} label={l} onClick={() => { onLeagueNavClick(l).then(() => { }); router.replace(`/pub/league/${l}${params}${tp}`); }} />
@@ -420,7 +405,7 @@ const HeaderNav: React.FC<Props> = ({ leagues }) => {
   MobileLeaguesNav.unshift(<LeaguesTab selected={!league} key={`league-${leagues?.length}`} icon={<HomeIcon />} onClick={() => { onLeagueNavClick('').then(() => { }); router.replace(`/pub${params}${tp}`); }} />)
   LeaguesNav.unshift(league ? <League scrolled={scrollY != 0} key={`league-${leagues?.length}`}><Link href={`/pub${params}${tp}`} shallow onClick={() => { onLeagueNavClick('').then(() => { }) }}><LeagueIcon scrolled={scrollY != 0}><HomeIcon fontSize={scrollY != 0 ? "small" : "medium"} sx={{ m: 0.3 }} /></LeagueIcon></Link></League> : <SelectedLeague scrolled={scrollY != 0} key={`league-${leagues?.length}`}><Link href={`/pub${params}${tp}`} shallow onClick={() => { onLeagueNavClick('').then(() => { }) }}><LeagueIcon scrolled={scrollY != 0}><HomeIcon fontSize={scrollY != 0 ? "small" : "medium"} sx={{ m: 0.3 }} /></LeagueIcon></Link></SelectedLeague>)
   const selectedLeague = leagues?.findIndex((l: string) => l == league) + 1;
-  //console.log("APP_NAME:",process.env.NEXT_PUBLIC_APP_NAME)
+
   return (
     <>
       <Header scrolled={!isMobile && scrollY != 0}>
@@ -454,7 +439,6 @@ const HeaderNav: React.FC<Props> = ({ leagues }) => {
           {LeaguesNav}
         </Leagues></ContainerWrap>}
       </Header>
-     
       {isMobile && <MobileContainerWrap>
         <MuiTabs
           value={selectedLeague}

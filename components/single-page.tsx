@@ -98,7 +98,6 @@ const SinglePage: React.FC<Props> = (props) => {
   const muiTheme = useTheme();
   const fullScreen = useMediaQuery(muiTheme.breakpoints.down('md'));
   const isMobile = useMediaQuery('(max-width:1199px)');
-  console.log("isMobile", isMobile);
 
   useEffect(() => {
     document.body.setAttribute("data-theme", localMode);
@@ -123,7 +122,6 @@ const SinglePage: React.FC<Props> = (props) => {
 
   view = view ? view.toLowerCase() : "";
   const subscriptionObject = useSubscription();
-
 
   const {
     isLoaded,
@@ -153,14 +151,13 @@ const SinglePage: React.FC<Props> = (props) => {
 
   useEffect(() => {
     const query = router.query;
-    //console.log(`The page is now: ${router.pathname}`, query);
     const { id: findexarxid = "", tab: qtab = "", view: qview = "", ssr = [] } = query as { tab: string | null, view: string | null, ssr: string[], id: string | "" };
 
     setLocalTab(qtab as string);
     setLocalView(qview as string);
 
     let [arg1, arg2, arg3, arg4, arg5, arg6, arg7] = ssr;
-    //console.log("ARGS", arg1, arg2, arg3, arg4, arg5, arg6, arg7)
+
     let qpagetype = 'league';
     let qleague = '';
     let qteam = '';

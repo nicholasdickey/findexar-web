@@ -7,48 +7,7 @@ background-color:var(--secondary-tabs-bg);
 font-size:10px;
 //color:#fff !important;
 `;
-const AntTabs = styled(Tabs)({
-  borderBottom: '1px solid #e8e8e8',
-  '& .MuiTabs-indicator': {
-    backgroundColor: '#1890ff',
-  },
-});
 
-const AntTab = styled((props: StyledTabProps) => <Tab disableRipple {...props} />)(
-  ({ theme }) => ({
-    textTransform: 'none',
-    minWidth: 0,
-    [theme.breakpoints.up('sm')]: {
-      minWidth: 0,
-    },
-    fontWeight: theme.typography.fontWeightRegular,
-    marginRight: theme.spacing(1),
-    color: '#fff',
-    fontFamily: [
-      '-apple-system',
-      'BlinkMacSystemFont',
-      '"Segoe UI"',
-      'Roboto',
-      '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
-      '"Apple Color Emoji"',
-      '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"',
-    ].join(','),
-    '&:hover': {
-      color: '#40a9ff',
-      opacity: 1,
-    },
-    '&.Mui-selected': {
-      color: '#1890ff',
-      fontWeight: theme.typography.fontWeightMedium,
-    },
-    '&.Mui-focusVisible': {
-      backgroundColor: '#d1eaff',
-    },
-  }),
-);
 interface StyledTabsProps {
   children?: React.ReactNode;
   value: number;
@@ -85,16 +44,12 @@ const STab = styled(Tab) <STabsProps>`
     color:${({ selected }) => selected?'var(--secondary-tabs-selected)':'var(--secondary-tabs-text)'} !important;
     font-size: 9px !important;
     max-height: 10px !important;
-   // padding:0px !important;
-   margin:-10px !important;
+    margin:-10px !important;
  `;
 
 const STabs = styled(Tabs)`
-   //background: #706e85 !important;
-
   max-height:12px !important;
- // padding:0px !important;
-  `;
+`;
 interface Option {
   name: string;
   icon: any;

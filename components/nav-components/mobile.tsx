@@ -57,7 +57,6 @@ const CenterPanel = styled.div`
     max-width:1000px;
     margin-right:auto;
     margin-left:auto;
-   // min-width:800px;  
     overflow-y: auto;
     overflow-x: hidden;
     display:flex;
@@ -78,14 +77,12 @@ const SideLeagueName = styled.div`
 `;
 
 interface Props {
-
-
 }
 const Mobile: React.FC<Props> = () => {
     const router = useRouter();
     let { tab, view, mode, userId, isMobile, setLeague, setView, setTab, params2, tp2, setPagetype, setTeam, setPlayer, setMode, sessionid, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName } = useAppContext();
 
-    tab =tab || "all";
+    tab = tab || "all";
     const onTabNav = async (option: any) => {
         const tab = option.tab;
         setTab(tab);
@@ -95,34 +92,33 @@ const Mobile: React.FC<Props> = () => {
     }
 
     const onViewNav = useCallback(async (option: { name: string, access: string }) => {
-       console.log("onVIewName clicked",option)
-        let name=option.name.toLowerCase();
-        if(name=='feed')
-            name='mentions';
-        console.log("onViewNav:",{name,option,team});
+        let name = option.name.toLowerCase();
+        if (name == 'feed')
+            name = 'mentions';
+
         setView(name);
-        if(!team)
-        router.replace(league ? `/pub/league/${league}?view=${encodeURIComponent(name)}${params2}${tp2.replace('?', '&')}` : `/pub?view=${encodeURIComponent(name)}${params2}${tp2.replace('?', '&')}`, undefined, { shallow: true })
-            else
-        router.replace(`/pub/league/${league}/team/${team}?view=${encodeURIComponent(name)}${params2}${tp2.replace('?','&')}`, undefined, { shallow: true });
-   
+        if (!team)
+            router.replace(league ? `/pub/league/${league}?view=${encodeURIComponent(name)}${params2}${tp2.replace('?', '&')}` : `/pub?view=${encodeURIComponent(name)}${params2}${tp2.replace('?', '&')}`, undefined, { shallow: true })
+        else
+            router.replace(`/pub/league/${league}/team/${team}?view=${encodeURIComponent(name)}${params2}${tp2.replace('?', '&')}`, undefined, { shallow: true });
+
         await recordEvent(sessionid as string || "",
             'view-nav',
             `{"fbclid":"${fbclid}","utm_content":"${utm_content}","view":"${name}"}`
         );
     }, [fbclid, utm_content, sessionid, league, params2, tp2]);
-    console.log("MOBILE:", { pagetype, view, tab })
+    //console.log("MOBILE:", { pagetype, view, tab })
     return (
         <MobileContainerWrap>
-           
+
             {pagetype == "landing" && <Landing />}
-            {pagetype=="league"&&!league && <SecondaryTabs options={[{ name: "Feed", icon: <MentionIcon fontSize="small" />, access: "pub" }, { name: "My Team", icon: <ListIcon fontSize="small" />, access: "pub" }, { name: "Readme", icon: <ContactSupportIcon fontSize="small" />, access: "pub" }]} onChange={async (option: any) => { await onViewNav(option); }} selectedOptionName={view} /> 
+            {pagetype == "league" && !league && <SecondaryTabs options={[{ name: "Feed", icon: <MentionIcon fontSize="small" />, access: "pub" }, { name: "My Team", icon: <ListIcon fontSize="small" />, access: "pub" }, { name: "Readme", icon: <ContactSupportIcon fontSize="small" />, access: "pub" }]} onChange={async (option: any) => { await onViewNav(option); }} selectedOptionName={view} />
             }
-            {pagetype=="league"&&league &&
-                <SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon  fontSize="small" /> }, { name: "Feed", icon: <MentionIcon  fontSize="small" /> }, { name: "My Team", icon: <ListIcon  fontSize="small" /> }]} onChange={async (option: any) => { await onViewNav(option) }} selectedOptionName={view} />
+            {pagetype == "league" && league &&
+                <SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon fontSize="small" /> }, { name: "Feed", icon: <MentionIcon fontSize="small" /> }, { name: "My Team", icon: <ListIcon fontSize="small" /> }]} onChange={async (option: any) => { await onViewNav(option) }} selectedOptionName={view} />
             }
-            {(pagetype=="team"||pagetype=="player")&&<SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> }, { name: "Feed", icon: <MentionIcon /> }, { name: "Players", icon: <PlayerIcon /> }]} onChange={async (option: any) => { console.log(option); await onViewNav(option); }} selectedOptionName={view} />}
-            {view == 'mentions' && <TertiaryTabs options={[{ name: `${league ? league : 'All'} Stories`, tab: 'all',disabled:false }, { name: "My Feed", tab: "myteam",disabled:!userId }, { name: "Favorites", tab: "fav",disabled:!userId }]} onChange={async (option: any) => { await onTabNav(option); }} selectedOptionName={tab} />}
+            {(pagetype == "team" || pagetype == "player") && <SecondaryTabs options={[{ name: "Teams", icon: <TeamIcon /> }, { name: "Feed", icon: <MentionIcon /> }, { name: "Players", icon: <PlayerIcon /> }]} onChange={async (option: any) => { console.log(option); await onViewNav(option); }} selectedOptionName={view} />}
+            {view == 'mentions' && <TertiaryTabs options={[{ name: `${league ? league : 'All'} Stories`, tab: 'all', disabled: false }, { name: "My Feed", tab: "myteam", disabled: !userId }, { name: "Favorites", tab: "fav", disabled: !userId }]} onChange={async (option: any) => { await onTabNav(option); }} selectedOptionName={tab} />}
 
             {view == 'teams' &&
                 <LeftMobilePanel>
@@ -130,16 +126,14 @@ const Mobile: React.FC<Props> = () => {
                 </LeftMobilePanel>
             }
             {view == 'mentions' && <CenterPanel>
-                {pagetype == "league" && tab == "all" ? <Stories />:<Mentions />}
+                {pagetype == "league" && tab == "all" ? <Stories /> : <Mentions />}
             </CenterPanel>}
             {view == 'readme' && <Readme />}
-            {view=='my team' && <MyTeam/>}
-            {view=='players'&&<Players/>}
-            <MentionOverlay setDismiss={(dismiss:boolean)=>{setView("mentions");}} mutate={() => {}}  />
-            <StoryOverlay setDismiss={(dismiss:boolean)=>{setView("mentions");}} mutate={() => {}}  />
-   
+            {view == 'my team' && <MyTeam />}
+            {view == 'players' && <Players />}
+            <MentionOverlay setDismiss={(dismiss: boolean) => { setView("mentions"); }} mutate={() => { }} />
+            <StoryOverlay setDismiss={(dismiss: boolean) => { setView("mentions"); }} mutate={() => { }} />
         </MobileContainerWrap >
-
     )
 }
 export default Mobile;

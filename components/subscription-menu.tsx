@@ -45,6 +45,5 @@ const SubscriptionMenu = ({hardStop,setDismiss,products,redirectToCheckout,redir
       <br/>
        {!hardStop&&<Button  variant="contained" onClick={() => setDismiss(true)}>Dismiss</Button>}
       </Alert>
-
 }
 export default SubscriptionMenu;

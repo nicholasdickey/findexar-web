@@ -81,14 +81,7 @@ const LeftPanel = styled.div`
 `;
 
 const CenterPanel = styled.div`
-    //position:relative;
-    //width:100%;
-    //max-width:1000px;
-    //min-width:400px;  
-    //max-width:50%;
-   // min-width:50%;
     overflow-y: auto;
-   // overflow-x: hidden;
     display:flex;
     flex-direction:column;
     justify-content:flex-start;
@@ -106,24 +99,12 @@ const CenterPanel = styled.div`
 const RightPanel = styled.div`
     min-width:300px;
     padding-left:20px;
-    //overflow-y: hidden;
-    //overflow-x: hidden;
-   
-   // height:auto !important;
-   // position:sticky;
-    //max-height: 500vh;
-   // top:-2200px;
-    //height:100%;
-    //max-height: 100vw;
-    //position:sticky;
-    //top:100px;
     flex-grow:1;
     display:flex;
     flex-direction:column;
     justify-content:flex-start;
     align-items:flex-start; 
     padding-top:18px;
-
     a{
         color:var(--text); // #eee;
         text-decoration: none;
@@ -135,8 +116,6 @@ const RightPanel = styled.div`
 
 
 interface Props {
-
-
 }
 const Desktop: React.FC<Props> = () => {
     const router = useRouter();
@@ -155,7 +134,6 @@ const Desktop: React.FC<Props> = () => {
         <ContainerWrap>
              <MentionOverlay setDismiss={(dismiss:boolean)=>{setView("mentions");}} mutate={() => {}}  />
              <StoryOverlay setDismiss={(dismiss:boolean)=>{setView("mentions");}} mutate={() => {}}  />
-   
             <PageWrap>
                 <Page>
                     {pagetype == "landing" && <Landing />}
@@ -177,7 +155,6 @@ const Desktop: React.FC<Props> = () => {
                 </Page>
             </PageWrap>
         </ContainerWrap>
-
     )
 }
 export default Desktop;

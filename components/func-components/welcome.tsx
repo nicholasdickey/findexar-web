@@ -1,49 +1,41 @@
 import React, { use, useCallback, useEffect, useState } from "react";
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-
 import { UserButton, SignInButton, SignedOut, SignedIn } from "@clerk/nextjs";
-
 import { styled} from "styled-components";
-
 import Button from '@mui/material/Button';
 import HomeIcon from '@mui/icons-material/HomeOutlined';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import LoginIcon from '@mui/icons-material/Login';
-
 import { LeagueTeamsKey, getLeagueTeams, recordEvent, setCookie, AMentionKey, getAMention } from '@/lib/api';
 import { useAppContext } from '@/lib/context';
-
 
 const WelcomeWrap = styled.div`
     padding-top:18px;
     padding-right:40px;
-    //font-size:13px;
     a{
-      text-decoration: none;
-      &:hover{
-        color:var(--highlight);
-      }
+        text-decoration: none;
+        &:hover{
+            color:var(--highlight);
+        }
     }
 `;
 const Favorites = styled.div`
-   // margin-top:28px;
     margin-left:22px;
     width:100%;
     height:40px;
     font-size:12px;
-    a{
-        text-decoration: none;
-        &:hover{
-          color: var(--highlight);
-        }
-    }
+      a{
+          text-decoration: none;
+          &:hover{
+              color: var(--highlight);
+          }
+      }
 `;
 const LeftText = styled.div`
     padding-top:28px;
     padding-right:20px;
     line-height:1.5;
-    //font-size:12px;
     a{
         text-decoration: none;
         &:hover{
@@ -57,8 +49,6 @@ interface Props {
 const Welcome:React.FC<Props>= () => {
     const router = useRouter();
     const { view,params2,tp2,noUser,mode, userId, isMobile, setLeague, setView, setPagetype, setTeam, setPlayer, setMode, sessionid, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName,setTeamName } = useAppContext();
-    
-   
         return <> <WelcomeWrap>
         Welcome to {process.env.NEXT_PUBLIC_APP_NAME}!<br /><hr />
         {false&&<span><em>That&apos;s the ticket!</em> <br/><br/><br/></span>}
@@ -84,8 +74,7 @@ const Welcome:React.FC<Props>= () => {
         <LeftText><hr />Copyright &#169; 2024, Findexar, Inc.<br />Made in Minnesota. L&apos;Étoile du Nord.</LeftText>
         {noUser && <><LeftText>Click here to sign-in or sign-up: <br /><br /><br /></LeftText>
         <Favorites><SignInButton><Button style={{ padding: 10 }} size="small" variant="outlined"><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></Favorites></>}
-        <LeftText><hr />Contact: @findexar on X (Twitter)<hr/></LeftText>
-        
+        <LeftText><hr />Contact: @findexar on X (Twitter)<hr/></LeftText>  
         <LeftText><br />League News Digests on X (Twitter):</LeftText>
         <Favorites><LeftText><Link href="https://twitter.com/nflpress_digest">NFL Digest Twitter Feed</Link></LeftText>
         <LeftText><Link href="https://twitter.com/nhl_digest">NHL Digest Twitter Feed</Link></LeftText>
@@ -93,6 +82,6 @@ const Welcome:React.FC<Props>= () => {
         <LeftText><Link href="https://twitter.com/nba_digest">NBA Digest Twitter Feed</Link></LeftText>
         <LeftText><Link href="https://twitter.com/mls_digest">MLS Digest Twitter Feed</Link></LeftText></Favorites>
       </>
-  
 }
+
 export default Welcome;
