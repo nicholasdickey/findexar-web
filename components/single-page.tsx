@@ -250,7 +250,7 @@ const SinglePage: React.FC<Props> = (props) => {
       const matchMedia = window.matchMedia("(prefers-color-scheme: dark)");
       const matches = matchMedia.matches;
       document.body.setAttribute("data-theme", matchMedia.matches ? 'dark' : 'light');
-      setLocalMode(matchMedia.matches ? 'dark' : 'light');
+      setLocalMode('light');//matchMedia.matches ? 'dark' : 'light');
     }
     else {
       let mode = getCookie('mode') || "";
