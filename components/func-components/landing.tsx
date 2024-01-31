@@ -284,7 +284,7 @@ const Landing = () => {
                         </NegativeAnswer>
                         <Link href={`/pub${params}`} onClick={onClick}><PositiveAnswer onMouseEnter={() => onHover('D-P1')}>
 
-                            Yes, &nbsp;<b>Enter Findexar.</b>
+                            Yes, &nbsp;<b>Enter {process.env.NEXT_PUBLIC_APP_NAME}.</b>
 
                         </PositiveAnswer></Link>
                     </ul>
@@ -296,8 +296,7 @@ const Landing = () => {
                         </NegativeAnswer>
                         <Link href={`/pub${params}`} onClick={onClick}>
                             <PositiveAnswer onClick={() => onClick()} onMouseEnter={() => onHover('D-P2')}>
-                                Yes,&nbsp;<b>Enter Findexar.</b>
-
+                                Yes,&nbsp;<b>Enter {process.env.NEXT_PUBLIC_APP_NAME}.</b>
                             </PositiveAnswer>
                         </Link>
                     </ul>
@@ -311,7 +310,7 @@ const Landing = () => {
 
                         <Link href={`/pub${params}`} onClick={onClick}>
                             <PositiveAnswer onClick={onClick} onMouseEnter={() => onHover('D-P31')}>
-                                Yes,&nbsp;<b>Enter Findexar.</b>
+                                Yes,&nbsp;<b>Enter {process.env.NEXT_PUBLIC_APP_NAME}.</b>
 
                             </PositiveAnswer></Link>
                     </ul>
@@ -337,7 +336,7 @@ const Landing = () => {
                 </MobileNegativeAnswer>
                 <Link href={`/pub${params}`} onClick={onClick}><MobilePositiveAnswer onClick={onClick} onMouseEnter={() => onHover('M-P1')}>
                     <MobileAnswerText>
-                        Yes, &nbsp;<b>Enter Findexar.</b>
+                        Yes, &nbsp;<b>Enter {process.env.NEXT_PUBLIC_APP_NAME}.</b>
                     </MobileAnswerText>
                 </MobilePositiveAnswer></Link>
 
@@ -353,7 +352,7 @@ const Landing = () => {
                 </MobileNegativeAnswer>
                 <Link href={`/pub${params}`} onClick={onClick}><MobilePositiveAnswer onClick={onClick} onMouseEnter={() => onHover('M-P2')}>
                     <MobileAnswerText>
-                        Yes, &nbsp;<b>Enter Findexar.</b>
+                        Yes, &nbsp;<b>Enter {process.env.NEXT_PUBLIC_APP_NAME}.</b>
                     </MobileAnswerText>
                 </MobilePositiveAnswer></Link>
                 <MobileContainerWrap>
@@ -368,7 +367,7 @@ const Landing = () => {
 
                 <Link href={`/pub${params}`} onClick={onClick}><MobilePositiveAnswer onClick={onClick} onMouseEnter={() => onHover('M-P3')}>
                     <MobileAnswerText>
-                        Yes, &nbsp;<b>Enter Findexar.</b>
+                        Yes, &nbsp;<b>Enter {process.env.NEXT_PUBLIC_APP_NAME}.</b>
                     </MobileAnswerText>
                 </MobilePositiveAnswer></Link>
                 <MobileContainerWrap>
