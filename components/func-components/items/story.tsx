@@ -28,8 +28,7 @@ const Body = styled.div`
     flex: 2 1 auto;
     line-height:1.4;
     a{
-        font-size:15px !important;
-      
+        font-size:15px !important;    
     }
 `;
 
@@ -46,20 +45,17 @@ const Digest = styled.div`
 
 const ArticleDigest = styled.div`
     font-size: 14px;
-    //padding-top:10px;
 `;
 const ArticleMentionsTitle = styled.div`
     font-size: 14px;
     padding-top:4px;
     margin-left:20px;
 `;
+
 const ArticleMentions = styled.div`
     font-size: 18px;
-    //padding-top:10px;
     border: 1px dotted #ccc;
     border-radius: 5px;
-    //padding-bottom:10px;
-   // margin-bottom:10px;
 `;
 
 const ImageWrapper = styled.div`
@@ -230,7 +226,6 @@ const Story: React.FC<Props> = ({ story }) => {
     const shareUrl = league ? `${process.env.NEXT_PUBLIC_SERVER}/pub/league/${league}?sid=${encodeURIComponent(xid)}&utm_content=shareslink` : `${process.env.NEXT_PUBLIC_SERVER}/pub?sid=${encodeURIComponent(xid)}&utm_content=shareslink`;
     const twitterShareUrl = league ? `https://www.findexar.com/pub/league/${league}?sid=${encodeURIComponent(xid)}&utm_content=xslink` : `https://www.findexar.com/pub?sid=${encodeURIComponent(xid)}&utm_content=xslink`;
     const fbShareUrl = league ? `https://www.findexar.com/pub/league/${league}?sid=${encodeURIComponent(xid)}&utm_content=fbslink` : `https://www.findexar.com/pub?sid=${encodeURIComponent(xid)}&utm_content=fbslink`;
-
     const twitterLink = `https://twitter.com/intent/tweet?text=${encodeURIComponent(prepDigest.substring(0, 230) + '...')}&url=${twitterShareUrl}&via=findexar`;
     const fbLink = `https://www.facebook.com/sharer.php?kid_directed_site=0&sdk=joey&u=${encodeURIComponent(fbShareUrl)}&t=${encodeURIComponent('Findexar')}&quote=${encodeURIComponent(prepDigest.substring(0, 140) + '...')}&hashtag=%23findexar&display=popup&ref=plugin&src=share_button`;
 
@@ -296,22 +291,21 @@ const Story: React.FC<Props> = ({ story }) => {
                         </ImageWrapper>
                     </Link>
                     <Body>
-                       {false&&<Link href={url} target="_blank"><ArticleDigest>
+                        {false && <Link href={url} target="_blank"><ArticleDigest>
                             <b>{true ? 'Digest:' : 'Short Digest:'}</b>
                         </ArticleDigest></Link>}
                         <Digest>
                             <Link href={url} target="_blank">
                                 <div dangerouslySetInnerHTML={{ __html: digest }} />
                             </Link>
-                           
-                                <ContentCopyIcon style={{ paddingTop: 6, marginTop: -10,cursor:'pointer' }} fontSize="small" sx={{ color: digestCopied ? 'green' : '' }} onClick={() => onDigestCopyClick()} />
-                           
+                            <ContentCopyIcon style={{ paddingTop: 6, marginTop: -10, cursor: 'pointer' }} fontSize="small" sx={{ color: digestCopied ? 'green' : '' }} onClick={() => onDigestCopyClick()} />
                         </Digest>
                     </Body>
                 </HorizontalContainer>
                 <ArticleMentions>
                     <ArticleMentionsTitle><b>Mentions:</b></ArticleMentionsTitle>
-                    {Mentions}</ArticleMentions>
+                    {Mentions}
+                </ArticleMentions>
                 <br />
                 <Link href={url} target="_blank">{url.substring(0, 50)}..</Link>
                 <BottomLine>
@@ -345,7 +339,7 @@ const Story: React.FC<Props> = ({ story }) => {
                         </ImageWrapper>
                     </Link>
                     <Body>
-                        {false&&<Link href={url}><ArticleDigest>
+                        {false && <Link href={url}><ArticleDigest>
                             {true ? 'Article Digest:' : 'Short Digest:'}
                         </ArticleDigest>
                         </Link>}

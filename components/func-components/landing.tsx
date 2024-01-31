@@ -1,38 +1,16 @@
-import React, { use, useEffect, useState } from "react";
-import Head from 'next/head'
+import { useEffect, useState } from "react";
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { Roboto } from 'next/font/google';
 import 'material-icons/iconfont/outlined.css';
-import Script from "next/script";
-import { styled, ThemeProvider } from "styled-components";
-import { ThemeProvider as MuiTP, createTheme } from '@mui/material/styles';
 
-import { Watch } from 'react-loader-spinner'
-import Button from '@mui/material/Button';
-import { useTheme } from '@mui/material/styles';
-import { palette } from '@/lib/palette';
-import GlobalStyle from '@/components/globalstyles';
-
+import { styled} from "styled-components";
+import '@mui/material/Button';
 import { recordEvent } from '@/lib/api';
 const OuterContainer = styled.div`
     background-color:var(--background);
     padding-bottom:200px;
 `;
-const LoadingContainer = styled.div`
-    position: fixed;
-    top:0px;
-    left:0px;
-    width:100%;
-    height:100%;
-    z-index: 1000;
-    background-color: #000;
-    opacity: 0.4;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-`;
+
 const ContainerWrap = styled.div`
     display: flex;
     flex-direction: row;
@@ -41,13 +19,9 @@ const ContainerWrap = styled.div`
     width: 100%;
     font-family: 'Roboto', sans-serif;
     color:var(--text);
-   // background-color: var(--background);
-  //  color:#444;
     @media screen and (max-width: 1199px) {
         display: none;
     }
-    //background-color: #666;
-    //color:#fff;
     a{
         color:var(--text);
         text-decoration: none;
@@ -66,15 +40,13 @@ const TextContainer = styled.div`
     font-family: 'Roboto', sans-serif;
     @media screen and (max-width: 1199px) {
         display: none;
-    }
-   
+    }   
 `;
 const MobileTextContainer = styled.div`
     margin-top:0px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    //height: 100%;
     width: 250px;
     line-height: 1.5;
     font-family: 'Roboto', sans-serif;
@@ -82,13 +54,13 @@ const MobileTextContainer = styled.div`
     @media screen and (min-width: 1200px) {
         display: none;
     }
-   
-`
+`;
+
 const TextContainerCenter = styled.div`
     text-align:center;
-    color:var(--text);
-   
+    color:var(--text);   
 `;
+
 const MobileVContainer = styled.div`
     display: flex;
     flex-direction: column;
@@ -97,18 +69,12 @@ const MobileVContainer = styled.div`
         display: none;
     }
 `;
-const MobileContainerWrap = styled.div`
-  
+
+const MobileContainerWrap = styled.div`  
     display: flex;
     flex-direction: row;
     justify-content: center;
-    //min-height:100%;
     line-height: 1.5;
-    //width: 100%;
-   // padding:40px;
-   // background-color: #666;
-    //olor:#444;
-
     font-family: 'Roboto', sans-serif;
     @media screen and (min-width: 1200px) {
         display: none;
@@ -122,117 +88,8 @@ const MobileContainerWrap = styled.div`
     }
 `;
 
-const Title = styled.div`
-    font-size: 28px;
-    width:100%;
-    margin:10px;
-    text-align:center;
-    padding-bottom:10px;
-`;
-const MobileTitle = styled.div`
-    font-size: 18px;
-    //margin:10px;
-    text-align:center;
-   // padding-bottom:10px;
-`;
-
-const FLogo = styled.div`
-  margin-left:20px;
-  margin-right:20px;
-  @media screen and (max-width: 1199px) {
-    display:none;
-  }
-`;
-
-const FLogoMobile = styled.div`
-  margin-left:20px;
-  margin-right:20px;
-  @media screen and (min-width: 1200px) {
-    display:none;
-  }
-`;
-const MobileLogoVContainer = styled.div`
-    min-height:100%;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-`;
-const MobileLogoContainer = styled.div`
-    height:20px;
-    display:flex;
-    flex-direction:row;
-    margin-top:20px;
-    justify-content:flex-begin;
-`;
-const ButtonContainer = styled.div`
-   // margin-top: 120px;
-    width:100%;
-    display:flex;
-    flex-direction:row;
-    justify-content:center;
-    //color: #2aa;
-    color:var(--text);
-   
-    @media screen and (max-width: 1199px) {
-        display:none;
-    }
-`;
-const MobileButtonContainer = styled.div`
-    width:100%;
-    display:flex;
-    flex-direction:row;
-    justify-content:center;
-    color:var(--text);
-    position: -webkit-sticky; /* Safari */
-	position: sticky;
-	top: 100;
-    z-index:100;
-    @media screen and (min-width: 1200px) {
-        display:none;
-    }
-`;
-const StickyDiv = styled.div`
-    position: -webkit-sticky; /* Safari */
-    position: sticky;
-    top: 0;
-    z-index:100;
-    height:100px;
-    padding:20px;
-    width:100%;
-    text-align:center;
-    background-color:var(--background);
-    color:var(--text);
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-   
-`;
-const InnerButton = styled.div`
-  //  margin-top:0px;
-   // margin-bottom:2px;
-    color:var(--text);
-   // padding-top:2px;
-    //padding-left: 5px;
-    //padding-right:2px;
-    //font-size:18px;
-    &:hover{
-        color:var(--highlight);
-        background-color:var(--highBackground) ;
-       
-    }
-    a{
-        &:hover{
-            color:var(--highlight);
-            background-color:var(--highBackground) ;
-            
-        }
-    }
-
-`;
 const NegativeAnswer = styled.div`
     margin-bottom:10px;
-   
     color:var(--text);
     height:60px;
     width:600px;
@@ -242,20 +99,16 @@ const NegativeAnswer = styled.div`
     text-align: center;
     &:hover{
         color:var(--highlight);
-        background-color:var(--highBackground) ;
-       
+        background-color:var(--highBackground) ;     
     }
     a{
         &:hover{
             color:var(--highlight);
-            background-color:var(--highBackground) ;
-            
+            background-color:var(--highBackground) ;  
         }
     }
-
-
-
 `;
+
 const PositiveAnswer = styled.div`
     display:flex;
     flex-direction:row;
@@ -269,21 +122,19 @@ const PositiveAnswer = styled.div`
     width:600px;
     border:1px solid var(--qwiket-border-new);
     border-radius:15px;
-    //padding:8px;
     text-align: center;
     &:hover{
         color:var(--highlight);
-        background-color:var(--highBackground) ;
-       
+        background-color:var(--highBackground);
     }
     a{
         &:hover{
             color:var(--highlight);
-            background-color:var(--highBackground) ;
-            
+            background-color:var(--highBackground);
         }
     }
 `;
+
 const MobileNegativeAnswer = styled.div`
     margin-bottom:10px;
     color:var(--text);
@@ -296,8 +147,8 @@ const MobileNegativeAnswer = styled.div`
     display:flex;
     flex-direction:column;
     justify-content:center;
- 
 `;
+
 const MobilePositiveAnswer = styled.div`
     margin-top:10px;
     margin-bottom:40px;
@@ -307,14 +158,11 @@ const MobilePositiveAnswer = styled.div`
     width:300px;
     border:1px solid var(--qwiket-border-new);
     border-radius:15px;
-  //  padding:10px;
-  
-    
     display:flex;
     flex-direction:column;
-    justify-content:center;
-    
+    justify-content:center; 
 `;
+
 const MobileAnswerText = styled.div`
     width:300px;
     text-align: center;
@@ -325,7 +173,6 @@ const MobileAnswerText = styled.div`
     flex-wrap: wrap;
 
 `;
-const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 
 let s = false;
 
@@ -333,10 +180,7 @@ const Landing = () => {
     const [fbclid, setFbclid] = useState("");
     const [utm_content, setUtm_content] = useState("");
     const [params, setParams] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [localMode, setLocalMode] = useState("");
     const router = useRouter();
-
     const [scrolled, setScrolled] = useState(false);
 
     useEffect(() => {
@@ -373,8 +217,6 @@ const Landing = () => {
 
         let params = ''
         let p: string[] = [];
-
-        console.log("parsed params", fbclid, utm_content);
         if (fbclid)
             p.push(`fbclid=${fbclid}`);
         if (utm_content)
@@ -399,10 +241,8 @@ const Landing = () => {
 
     }, [params, router.isReady]);
 
-    const theme = useTheme();
     const onClick = () => {
         try {
-            //setLoading(true);
             recordEvent("", `enter-clicked`, `{"fbclid":"${fbclid}", "utm_content":"${utm_content}"}`)
                 .then((r: any) => {
                     console.log("recordEvent", r);
@@ -410,11 +250,9 @@ const Landing = () => {
         } catch (x) {
             console.log('recordEvent', x);
         }
-
     }
     const onFarSide = () => {
         try {
-            //setLoading(true);
             recordEvent("", `far-side`, `{"fbclid":"${fbclid}", "utm_content":"${utm_content}"}`)
                 .then((r: any) => {
                     console.log("recordEvent", r);
@@ -422,11 +260,10 @@ const Landing = () => {
         } catch (x) {
             console.log('recordEvent', x);
         }
-
     }
+
     const onHover = (label: string) => {
         try {
-            //setLoading(true);
             recordEvent("", `hover`, `{"label","${label}","fbclid":"${fbclid}", "utm_content":"${utm_content}"}`)
                 .then((r: any) => {
                     console.log("recordEvent", r);
@@ -435,6 +272,7 @@ const Landing = () => {
             console.log('recordEvent', x);
         }
     }
+
     return (
         <OuterContainer>
             <ContainerWrap>
@@ -550,21 +388,11 @@ const Landing = () => {
                     </TextContainerCenter>
                 </MobileContainerWrap>
             </MobileVContainer>
-
-
-
             <ContainerWrap><TextContainerCenter>
-
                 <br /><br /><hr />Copyright &#169; 2024, Findexar, Inc.<br />Made in USA.
             </TextContainerCenter></ContainerWrap>
         </OuterContainer>
-
-
     )
-
-
-
-
 }
 
 export default Landing;

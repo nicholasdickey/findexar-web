@@ -1,18 +1,6 @@
-import React, { useEffect,useCallback } from "react";
-import useSWRImmutable from 'swr/immutable'
-import Link from 'next/link';
-import { SignInButton, RedirectToSignIn } from "@clerk/nextjs";
-import { styled, useTheme } from "styled-components";
-import { RWebShare } from "react-web-share";
-import XIcon from '@mui/icons-material/X';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import StarOutlineIcon from '@mui/icons-material/StarOutline';
-import StarIcon from '@mui/icons-material/Star';
-import IosShareIcon from '@mui/icons-material/IosShare';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import { MetaLinkKey, getMetaLink, addFavorite, removeFavorite, recordEvent } from '@/lib/api';
-import { convertToUTCDateString, convertToReadableLocalTime } from "@/lib/date-convert";
-import useCopyToClipboard from '@/lib/copy-to-clipboard';
+import React, { useEffect, useCallback } from "react";
+import { styled } from "styled-components";
+import { recordEvent } from '@/lib/api';
 import Mention from "@/components/func-components/items/mention";
 
 declare global {
@@ -56,7 +44,7 @@ const MentionWrap = styled.div<MentionsProps>`
     }
 `;
 
-const InnerMention=styled.div`
+const InnerMention = styled.div`
     margin-left:20px;
     margin-top:20px;
     margin-bottom:20px;
@@ -70,7 +58,6 @@ const MobileMentionWrap = styled.div<MentionsProps>`
     align-items:flex-start;
     margin:4px;
     padding-left:16px;
-
     &:hover{
         color: var(--mention-text);
     } 
@@ -83,20 +70,20 @@ const MobileMentionWrap = styled.div<MentionsProps>`
     }
     @media screen and (min-width: 1200px) {
         display: none;
-  }
+    }
 `;
 
 const MentionSummary = styled.div`
     width:100%;
     margin-right:20px;
     background-color: var(--mention-bg); 
-   &:hover{
+    &:hover{
         background-color:var(--mention-high-bg);
     } 
     border-radius: 5px 5px 5px 5px;
     @media screen and (max-width: 1199px) {
        margin:0px;
-  }
+    }
 `;
 
 const Atmention = styled.div`
@@ -130,15 +117,15 @@ interface Props {
     setSelectedXid: (xid: string) => void;
 }
 
-const MiniMention: React.FC<Props> = ({ selectedXid,setSelectedXid,startExtended, linkType, tp, sessionid, params, noUser, league, type, team, teamName, name, date, url, findex, summary, findexarxid, fav, setLocalPageType, setLocalPlayer, setLocalLeague, setLocalTeam, mutate }) => {
+const MiniMention: React.FC<Props> = ({ selectedXid, setSelectedXid, startExtended, linkType, tp, sessionid, params, noUser, league, type, team, teamName, name, date, url, findex, summary, findexarxid, fav, setLocalPageType, setLocalPlayer, setLocalLeague, setLocalTeam, mutate }) => {
     const [expanded, setExpanded] = React.useState(startExtended);
     const [hide, setHide] = React.useState(false);
     const [copied, setCopied] = React.useState(false);
     const [digestCopied, setDigestCopied] = React.useState(false);
-   
+
     useEffect(() => {
         setExpanded(startExtended);
-    }, [startExtended,url]);
+    }, [startExtended, url]);
 
     useEffect(() => {
         setTimeout(() => {
@@ -168,12 +155,12 @@ const MiniMention: React.FC<Props> = ({ selectedXid,setSelectedXid,startExtended
             setHide(false);
         }
     }, [summary, mutate, date, url]);
-    
+
     //prepare url:
     const prepName = name.replaceAll(' ', '_');
     let localUrl = "";
     localUrl = type == 'person' ? `/pub/league/${league}/team/${team}/player/${prepName}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}` : `/pub/league/${league}/team/${team}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}`
-   
+
     const onHover = useCallback((label: string) => {
         try {
             recordEvent(sessionid as string || "", `mini-mention-hover`, `{"label","${label}","params":"${params}"}`)
@@ -183,25 +170,25 @@ const MiniMention: React.FC<Props> = ({ selectedXid,setSelectedXid,startExtended
         } catch (x) {
             console.log('recordEvent', x);
         }
-    },[sessionid,params]);
+    }, [sessionid, params]);
 
     const openMention = useCallback(async () => {
         setSelectedXid(findexarxid);
-    },[findexarxid]);
+    }, [findexarxid]);
 
     return (
         <>
-            {selectedXid!=findexarxid&& <MentionWrap onMouseEnter={() => onHover('desktop')} onClick={openMention}>
-                <MentionSummary>  
+            {selectedXid != findexarxid && <MentionWrap onMouseEnter={() => onHover('desktop')} onClick={openMention}>
+                <MentionSummary>
                     <Atmention><b>{(type == "person") && '@'}{name}</b> | {type == "person" ? `${teamName} |` : ""} {league}</Atmention>
-                 </MentionSummary>       
+                </MentionSummary>
             </MentionWrap>}
             <MobileMentionWrap hideit={hide} onMouseEnter={() => onHover('mobile')} onClick={openMention}>
                 <MentionSummary>
-                <Atmention><b>{(type == "person") && '@'}{name}</b> | {type == "person" ? `${teamName} |` : ""}  {league}</Atmention>                         
+                    <Atmention><b>{(type == "person") && '@'}{name}</b> | {type == "person" ? `${teamName} |` : ""}  {league}</Atmention>
                 </MentionSummary>
             </MobileMentionWrap>
-            {selectedXid==findexarxid&& <InnerMention><Mention linkType="top" mini={true} startExtended={false} mention={{league,type,team,teamName,name,date,url,summary,findexarxid,fav}}  mutate={mutate}  /></InnerMention>}       
+            {selectedXid == findexarxid && <InnerMention><Mention linkType="top" mini={true} startExtended={false} mention={{ league, type, team, teamName, name, date, url, summary, findexarxid, fav }} mutate={mutate} /></InnerMention>}
         </>
     );
 };
