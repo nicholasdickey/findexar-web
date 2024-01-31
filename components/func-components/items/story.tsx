@@ -58,7 +58,7 @@ const ArticleMentions = styled.div`
     //padding-top:10px;
     border: 1px dotted #ccc;
     border-radius: 5px;
-    padding-bottom:10px;
+    //padding-bottom:10px;
    // margin-bottom:10px;
 `;
 
@@ -207,7 +207,7 @@ const MentionsWrap = styled.div`
     width:100%;
     padding-right:20px;
     margin-top:6px;
-    margin-bottom:20px;
+    margin-bottom:6px;
     a{
         font-size:15px !important;    
     }
