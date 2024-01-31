@@ -426,9 +426,10 @@ export const removeAMention = async ({ type, findexarxid,noLoad }: AMentionKey) 
 // SWR infinite:
 // SWR get stories and mentions grouped by story
 // 
-export type FetchedStoriesKey = { type: string, league?: string, noUser: boolean,page:number,noLoad:boolean };
-export const fetchStories = async ({ type, league, noUser,page,noLoad }: FetchedMentionsKey) => {
+export type FetchedStoriesKey = { type: string, league?: string, noUser: boolean,page:number,noLoad:boolean,firstXid?:string };
+export const fetchStories = async ({ type, league, noUser,page,noLoad,firstXid }: FetchedStoriesKey) => {
   try {
+    firstXid=firstXid||"";
     if(noLoad) return [];
     console.log("api: fetchStories",type, league, noUser,page)
     let url = '';
@@ -439,8 +440,11 @@ export const fetchStories = async ({ type, league, noUser,page,noLoad }: Fetched
       url =  `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-stories?league=${encodeURIComponent(league ||"")}&page=${page||0}`;
     }
     console.log("fetchStories-url",url)
-    const res = await axios.get(url);
-    return res.data.stories;
+   // const res = await axios.get(url);
+   const res=await fetch(url); 
+   const data=await res.json();
+   console.log("fetchStories",data);
+   return data.stories;
   }
   catch (e) {
     console.log("fetchStories", e);

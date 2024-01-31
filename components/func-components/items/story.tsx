@@ -296,9 +296,9 @@ const Story: React.FC<Props> = ({ story }) => {
                         </ImageWrapper>
                     </Link>
                     <Body>
-                        <Link href={url} target="_blank"><ArticleDigest>
+                       {false&&<Link href={url} target="_blank"><ArticleDigest>
                             <b>{true ? 'Digest:' : 'Short Digest:'}</b>
-                        </ArticleDigest></Link>
+                        </ArticleDigest></Link>}
                         <Digest>
                             <Link href={url} target="_blank">
                                 <div dangerouslySetInnerHTML={{ __html: digest }} />
@@ -345,10 +345,10 @@ const Story: React.FC<Props> = ({ story }) => {
                         </ImageWrapper>
                     </Link>
                     <Body>
-                        <Link href={url}><ArticleDigest>
+                        {false&&<Link href={url}><ArticleDigest>
                             {true ? 'Article Digest:' : 'Short Digest:'}
                         </ArticleDigest>
-                        </Link>
+                        </Link>}
                         <Digest>
                             <Link href={url}> <div dangerouslySetInnerHTML={{ __html: digest }} /></Link>
                             <ShareContainerInline>

@@ -159,6 +159,7 @@ const Title = styled.div`
 
 const Digest = styled.div`
     font-size: 15px;
+    display:flex;
 `;
 
 const ArticleDigest = styled.div`
@@ -512,9 +513,9 @@ const Mention: React.FC<Props> = ({mini, startExtended, linkType,mention, mutate
                                 </ImageWrapper>
                             </Link>
                             <Body>
-                                <Link href={url}><ArticleDigest>
+                                {false&&<Link href={url}><ArticleDigest>
                                     {true ? 'Article Digest:' : 'Short Digest:'}
-                                </ArticleDigest></Link>
+                                </ArticleDigest></Link>}
                                 <Digest>
                                     <Link href={url}>
                                         <div dangerouslySetInnerHTML={{ __html: digest }} />
@@ -580,10 +581,10 @@ const Mention: React.FC<Props> = ({mini, startExtended, linkType,mention, mutate
                                 </ImageWrapper>
                             </Link>
                             <Body>
-                                <Link href={url}><ArticleDigest>
+                                {false&&<Link href={url}><ArticleDigest>
                                     {true ? 'Article Digest:' : 'Short Digest:'}
                                 </ArticleDigest>
-                                </Link>
+                                </Link>}
                                 <Digest>
                                     <Link href={url}> <div dangerouslySetInnerHTML={{ __html: digest }} /></Link>
                                     <ShareContainerInline>

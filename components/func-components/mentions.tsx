@@ -94,7 +94,7 @@ const Stories: React.FC<Props> = () => {
         return key;
     }
     // now swrInfinite code:
-    const { data, error: mentionsError, mutate, size, setSize, isValidating, isLoading } = useSWRInfinite(fetchMentionsKey, fetchMentions, { initialSize: 1, })
+    const { data, error: mentionsError, mutate, size, setSize, isValidating, isLoading } = useSWRInfinite(fetchMentionsKey, fetchMentions, { initialSize: 1,revalidateFirstPage:false,parallel:true })
     let mentions = data ? [].concat(...data) : [];
     const isLoadingMore =
         isLoading || (size > 0 && data && typeof data[size - 1] === "undefined");

@@ -30,7 +30,7 @@ interface HeaderProps {
 const Header = styled.header<HeaderProps>`
   height:${({ scrolled }) => scrolled ? 80 : 100}px;
   width: 100%;
-  min-width:1hw;
+  min-width:1vw;
   background-color:var(--header-bg);
   text-align: center;
   font-size: 40px;
