@@ -131,14 +131,15 @@ const RightExplanation = styled.div`
 `;
 const MobileRightExplanation = styled.div`
   //height: 30px;
-  width: 280px; 
+  max-width: 280px; 
  // color: #ccc;
   line-height:1.5;
  // text-align: center;
   font-size: 14px;
   //margin-top: 20px;
   margin-bottom:10px;
-  margin-left:20px;
+  //margin-left:20px;
+  padding-right:20px;
 `;
 const MobilePlayersPanel = styled.div`
   height:100%;
