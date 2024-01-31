@@ -311,7 +311,7 @@ const SinglePage: React.FC<Props> = (props) => {
   return (
     <>
       <Head>
-        <title>Findexar</title>
+        <title>{process.env.NEXT_PUBLIC_APP_NAME}</title>
         <link rel="canonical" href={ogUrl} />
         {pagetype != 'landing' && <meta name="robots" content="noindex,nofollow" />}
         <meta property="og:description" content={ogDescription} />
