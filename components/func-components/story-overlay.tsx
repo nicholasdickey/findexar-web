@@ -169,7 +169,7 @@ const MentionOverlay = ({setDismiss,mutate,...props}:Props) => {
         },
       }} >
       <DialogTitleMobileWrap> <DialogTitle/></DialogTitleMobileWrap>
-      <DialogTitleWrap><DialogTitle onClick={()=>{setDismiss(true);}}><TitleWrap>{process.env.NEXT_PUBLIC_APP_NAME}</TitleWrap></DialogTitle></DialogTitleWrap>
+      <DialogTitleWrap><DialogTitle onClick={()=>{setDismiss(true);}}><TitleWrap></TitleWrap></DialogTitle></DialogTitleWrap>
       <ContentWrap>
           <div autoFocus onClick={()=>{handleClose();}}>
            <XContainer><XElement>x</XElement></XContainer> 
