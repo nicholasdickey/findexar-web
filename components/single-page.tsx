@@ -337,13 +337,13 @@ const SinglePage: React.FC<Props> = (props) => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
-      <Script src={`https://www.googletagmanager.com/gtag/js?id=G-LWYQDGSGWQ`} strategy="afterInteractive"></Script>
+      <Script src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_APP_NAME=="Findexar"?'G-LWYQDGSGWQ':'G-8ZWPQEPDPB'}`} strategy="afterInteractive"></Script>
       <Script id="google-analytics" strategy="afterInteractive" dangerouslySetInnerHTML={{
         __html: `
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
-          gtag('config', 'G-LWYQDGSGWQ', {
+          gtag('config', '${process.env.NEXT_PUBLIC_APP_NAME=="Findexar"?'G-LWYQDGSGWQ':'G-8ZWPQEPDPB'}', {
             page_path: window.location.pathname,
           });
         `,
