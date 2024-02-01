@@ -297,7 +297,7 @@ const SinglePage: React.FC<Props> = (props) => {
     ogTarget = `${amentionTeamName} on ${process.env.NEXT_PUBLIC_SITE_NAME}`;
 
   let ogDescription = amentionSummary ? amentionSummary : "Fantasy Sports Media Tracker.";
-  let ogImage = amentionImage ? amentionImage : process.env.NEXT_PUBLIC_SITE_NAME=="Findexar"?"https://findexar.com/findexar-logo.png":"https://www.qwiket.com/findexar-logo.png";
+  let ogImage = amentionImage ? amentionImage : process.env.NEXT_PUBLIC_SITE_NAME=="Findexar"?"https://findexar.com/findexar-logo.png":"https://www.qwiket.com/QLogo.png";
   let ogTitle = ogTarget ? `${ogTarget}` : `${[process.env.NEXT_PUBLIC_SITE_NAME]} Sports Media Tracker`;
   if(astory){
     ogUrl= league?`${process.env.NEXT_PUBLIC_SERVER}pub/league/${league}?sid=${localSid}`:`${process.env.NEXT_PUBLIC_SERVER}pub?sid=${localSid}`;
@@ -325,14 +325,14 @@ const SinglePage: React.FC<Props> = (props) => {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@findexar" />
         <meta name='viewport' content='width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no' />
-        <link rel="apple-touch-icon" href="/FiLogo.png"></link>
+        <link rel="apple-touch-icon" href={process.env.NEXT_PUBLIC_APP_NAME=="Findexar"?"/FiLogo.png":"QLogo.png"}></link>
         <meta name="theme-color" content={localMode == 'dark' ? palette.dark.colors.background : palette.light.colors.background} />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         {(pagetype != 'league' || league || team || player) && <meta name="robots" content="noindex,nofollow" />}
         <link
           rel="shortcut icon"
           type="image/png"
-          href={"/FiLogo.png"}
+          href={process.env.NEXT_PUBLIC_APP_NAME=="Findexar"?"/FiLogo.png":"QLogo.png"}
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>

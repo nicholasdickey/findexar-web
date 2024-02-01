@@ -53,11 +53,15 @@ const Welcome:React.FC<Props>= () => {
         Welcome to {process.env.NEXT_PUBLIC_APP_NAME}!<br /><hr />
         {false&&<span><em>That&apos;s the ticket!</em> <br/><br/><br/></span>}
         <br/>The indispensable Fantasy Sports<br />
-         digest and real-time, annotated <br />
+         real-time, annotated <br />
         media index.<br /><br />
-        Finding and indexing <br />
-        mentions of pro athletes<br />
-        in the media.<br /><br /><hr />
+        As new stories are published <br/>in the media, they are sliced and diced <br />
+        into annotated indexed mentions of <br />
+        individual athletes and teams.<br /><br />
+        
+        Track the media mentions across <br/>your fantasy teams effortlessly<br/>
+        using the My Team feature<br/><br/>
+        <hr />
         Powered by OpenAI.</WelcomeWrap>
         <br /><br />
         <Favorites><Button disabled={view == 'fav'} onClick={() => {
