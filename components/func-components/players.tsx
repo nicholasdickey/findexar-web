@@ -19,6 +19,7 @@ declare global {
 const SidePlayer = styled.div<SideProps>`
     color:${props => props.highlight ? 'var(--myteam)' : 'var(--text)'};
     padding-left:20px;
+    width: 100%;
     &:hover{
         color:var(--highlight);
     }  
@@ -52,7 +53,7 @@ const MobileTeamName = styled.div`
 
 const SideGroup = styled.div`
     display:flex;
-    width: 260px;
+    width: 300px;
     flex-direction:row;
     justify-content:space-between;
     padding-right:20px;
@@ -64,7 +65,7 @@ interface SideProps {
 }
 const SideIcon = styled.div<SideProps>`
     width:20px;
-    height:20px;
+    height:5px;
     color:${props => props.highlight ? 'var(--selected))' : 'var(--link)'};  
 `;
 
@@ -107,9 +108,10 @@ interface ScrollProps {
 const RightScroll = styled.div<ScrollProps>`
     position:sticky;
     height:auto !important;
-    top:-${({ numPlayers }) => numPlayers > 60 ? numPlayers * numPlayers * 0.20 : numPlayers * numPlayers * 0.10}px;
+    top:-${({ numPlayers }) => numPlayers > 60 ? numPlayers * numPlayers * 0.22 : numPlayers * numPlayers * 0.24}px;
     overflow-y: hidden;
     padding-bottom:20px;
+    width:100%;
 `;
 interface Props {
 }
