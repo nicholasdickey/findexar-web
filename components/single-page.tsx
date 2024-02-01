@@ -79,7 +79,7 @@ const SinglePage: React.FC<Props> = (props) => {
   const [localTeam, setLocalTeam] = useState(team);
   const [localPlayer, setLocalPlayer] = useState(player);
   const [localPageType, setLocalPageType] = useState(pagetype || 'landing');
-  const [localLeague, setLocalLeague] = useState(league);
+  const [localLeague, setLocalLeague] = useState(league.toUpperCase());
   const [subscriptionPrompt, setSubscriptionPrompt] = useState(false);
   const [dismiss, setDismiss] = useState(false);
   const [hardStop, setHardStop] = useState(false);
@@ -354,7 +354,7 @@ const SinglePage: React.FC<Props> = (props) => {
             //@ts-ignore
             theme={palette}>
             <GlobalStyle $light={localMode == "light"} />
-            <AppWrapper userId={localUserId} isMobile={isMobile} setUserId={setLocalUserId} params={params} params2={params2} tp={tp} tp2={tp2} findexarxid={localFindexarxid} view={v} tab={localTab} noUser={!localUserId} mode={localMode} setMode={setLocalMode} pagetype={localPageType} sessionid={sessionid} setLeague={setLocalLeague} setPagetype={setLocalPageType} setPlayer={setLocalPlayer} setTeam={setLocalTeam} setTab={setLocalTab} setView={setLocalView} league={localLeague} team={localTeam} player={localPlayer} fbclid={fbclid} utm_content={utm_content} teamName={teamName} setTeamName={setTeamName} sid={localSid} setSid={setLocalSid}>
+            <AppWrapper userId={localUserId} isMobile={isMobile} setUserId={setLocalUserId} params={params} params2={params2} tp={tp} tp2={tp2} findexarxid={localFindexarxid} view={v} tab={localTab} noUser={!localUserId} mode={localMode} setMode={setLocalMode} pagetype={localPageType} sessionid={sessionid} setLeague={setLocalLeague} setPagetype={setLocalPageType} setPlayer={setLocalPlayer} setTeam={setLocalTeam} setTab={setLocalTab} setView={setLocalView} league={localLeague.toUpperCase()} team={localTeam} player={localPlayer} fbclid={fbclid} utm_content={utm_content} teamName={teamName} setTeamName={setTeamName} sid={localSid} setSid={setLocalSid}>
               <Header leagues={leagues} />
               {!isMobile && <Desktop />}
               {isMobile && <Mobile />}
