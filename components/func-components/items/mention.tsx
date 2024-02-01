@@ -83,6 +83,7 @@ const MentionSummary = styled.div`
     font-size: 15px;
     padding-left:10px;
     padding-right:10px;
+    color:var(--text);
     background-color: var(--mention-bg); 
     &:hover{
         background-color:var(--mention-high-bg);
