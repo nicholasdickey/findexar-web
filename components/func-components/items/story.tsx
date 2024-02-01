@@ -17,14 +17,10 @@ declare global {
         Clerk: any;
     }
 }
-interface MentionsProps {
-    hideit?: boolean;
-    noborder?: boolean;
-}
 
 const Body = styled.div`
     font-size: 15px;
-    margin-bottom: 14px;
+    margin-bottom: 4px;
     flex: 2 1 auto;
     line-height:1.4;
     a{
@@ -46,6 +42,7 @@ const Digest = styled.div`
 const ArticleDigest = styled.div`
     font-size: 14px;
 `;
+
 const ArticleMentionsTitle = styled.div`
     font-size: 14px;
     padding-top:4px;
@@ -56,6 +53,9 @@ const ArticleMentions = styled.div`
     font-size: 18px;
     border: 1px dotted #ccc;
     border-radius: 5px;
+    padding-top:4px;
+    padding-bottom:4px;
+    margin-bottom:4px;
 `;
 
 const ImageWrapper = styled.div`
@@ -166,6 +166,7 @@ const ShareIcon = styled.div`
     margin-top:-1px;
     padding-bottom:4px;
 `;
+
 const DesktopWrap = styled.div`
     display:flex;
     flex-direction:column;
@@ -181,6 +182,7 @@ const DesktopWrap = styled.div`
         display: none;
     }
 `;
+
 const MobileWrap = styled.div`
     display:flex;
     flex-direction:column;
@@ -354,6 +356,7 @@ const Story: React.FC<Props> = ({ story }) => {
                 <ArticleMentions>
                     <ArticleMentionsTitle><b>Mentions:</b></ArticleMentionsTitle>
                     {Mentions}</ArticleMentions>
+                <br />
                 <Link href={url}> {url.substring(0, 30)}...</Link>
                 <BottomLine>
                     <ShareGroup><RWebShare
