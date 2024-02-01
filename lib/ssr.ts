@@ -77,6 +77,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
         if(!arg1)
             pagetype="league";
         league = arg2 || "";
+        league=league.toUpperCase();
         if (arg3 == 'team') {
             team = arg4;
             pagetype = "team";

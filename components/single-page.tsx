@@ -117,7 +117,7 @@ const SinglePage: React.FC<Props> = (props) => {
   }, [pagetype]);
 
   useEffect(() => {
-    setLocalLeague(league);
+    setLocalLeague(league.toUpperCase());
   }, [league]);
 
   view = view ? view.toLowerCase() : "";
