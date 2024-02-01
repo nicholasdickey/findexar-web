@@ -368,8 +368,8 @@ const Mention: React.FC<Props> = ({mini, startExtended, linkType,mention, mutate
     const prepName = name.replaceAll(' ', '_');
     let shareUrl = (type == 'person' ? `${process.env.NEXT_PUBLIC_SERVER}/pub/league/${league}/team/${encodeURIComponent(team)}/player/${encodeURIComponent(prepName)}?id=${findexarxid}&utm_content=sharelink` : `/pub/league/${league}/team/${encodeURIComponent(team)}?id=${findexarxid}&utm_content=sharelink`);
  
-    const twitterShareUrl = "https://www.findexar.com/" + (type == 'person' ? `pub/league/${league}/team/${encodeURIComponent(team)}/player/${encodeURIComponent(prepName)}?id=${findexarxid}&utm_content=xlink` : `/pub/league/${league}/team/${encodeURIComponent(team)}?id=${findexarxid}&utm_content=xlink`);
-    const fbShareUrl = "https://www.findexar.com/" + (type == 'person' ? `pub/league/${league}/team/${encodeURIComponent(team)}/player/${encodeURIComponent(prepName)}?id=${findexarxid}&utm_content=fblink` : `/pub/league/${league}/team/${encodeURIComponent(team)}?id=${findexarxid}&utm_content=fblink`);
+    const twitterShareUrl = `${process.env.NEXT_PUBLIC_SERVER}/` + (type == 'person' ? `pub/league/${league}/team/${encodeURIComponent(team)}/player/${encodeURIComponent(prepName)}?id=${findexarxid}&utm_content=xlink` : `/pub/league/${league}/team/${encodeURIComponent(team)}?id=${findexarxid}&utm_content=xlink`);
+    const fbShareUrl = `${process.env.NEXT_PUBLIC_SERVER}/` + (type == 'person' ? `pub/league/${league}/team/${encodeURIComponent(team)}/player/${encodeURIComponent(prepName)}?id=${findexarxid}&utm_content=fblink` : `/pub/league/${league}/team/${encodeURIComponent(team)}?id=${findexarxid}&utm_content=fblink`);
     let localUrl = "";
     localUrl = type == 'person' ? `/pub/league/${league}/team/${team}/player/${prepName}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}` : `/pub/league/${league}/team/${team}${params}${tp}${params.includes('?') ? '&' : '?'}id=${findexarxid}`
     if(mini)
@@ -378,7 +378,7 @@ const Mention: React.FC<Props> = ({mini, startExtended, linkType,mention, mutate
     const bottomLink = type == 'person' ? `/pub/league/${league}/team/${team}/player/${prepName}${params}${tp}` : `/pub/league/${league}/team/${team}${params}${tp}`;
     const twitterLink = `https://twitter.com/intent/tweet?text=${encodeURIComponent(summary.substring(0, 230) + '...')}&url=${twitterShareUrl}&via=findexar`;
     const fbLink = `https://www.facebook.com/sharer.php?kid_directed_site=0&sdk=joey&u=${encodeURIComponent(fbShareUrl)}&t=${encodeURIComponent('Findexar')}&quote=${encodeURIComponent(summary.substring(0, 140) + '...')}&hashtag=%23findexar&display=popup&ref=plugin&src=share_button`;
-    const tgLink = "https://www.findexar.com" + localUrl;
+    const tgLink = `${process.env.NEXT_PUBLIC_SERVER}` + localUrl;
     const mentionsKey: MetaLinkKey = { func: "meta", findexarxid, long: startExtended ? 1 : 1 };
     const meta = useSWRImmutable(mentionsKey, getMetaLink).data;
     let digest = meta?.digest || "";

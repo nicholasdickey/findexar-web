@@ -226,8 +226,8 @@ const Story: React.FC<Props> = ({ story }) => {
     let prepDigest = digest.replaceAll('<p>', '').replaceAll('</p>', '\n\n');
 
     const shareUrl = league ? `${process.env.NEXT_PUBLIC_SERVER}/pub/league/${league}?sid=${encodeURIComponent(xid)}&utm_content=shareslink` : `${process.env.NEXT_PUBLIC_SERVER}/pub?sid=${encodeURIComponent(xid)}&utm_content=shareslink`;
-    const twitterShareUrl = league ? `${process.env.NEXT_PUBLIC_SERVER}/pub/league/${league}?sid=${encodeURIComponent(xid)}&utm_content=xslink` : `https://www.findexar.com/pub?sid=${encodeURIComponent(xid)}&utm_content=xslink`;
-    const fbShareUrl = league ? `${process.env.NEXT_PUBLIC_SERVER}/pub/league/${league}?sid=${encodeURIComponent(xid)}&utm_content=fbslink` : `https://www.findexar.com/pub?sid=${encodeURIComponent(xid)}&utm_content=fbslink`;
+    const twitterShareUrl = league ? `${process.env.NEXT_PUBLIC_SERVER}/pub/league/${league}?sid=${encodeURIComponent(xid)}&utm_content=xslink` : `${process.env.NEXT_PUBLIC_SERVER}/pub?sid=${encodeURIComponent(xid)}&utm_content=xslink`;
+    const fbShareUrl = league ? `${process.env.NEXT_PUBLIC_SERVER}/pub/league/${league}?sid=${encodeURIComponent(xid)}&utm_content=fbslink` : `${process.env.NEXT_PUBLIC_SERVER}/pub?sid=${encodeURIComponent(xid)}&utm_content=fbslink`;
     const twitterLink = `https://twitter.com/intent/tweet?text=${encodeURIComponent(prepDigest.substring(0, 230) + '...')}&url=${twitterShareUrl}&via=findexar`;
     const fbLink = `https://www.facebook.com/sharer.php?kid_directed_site=0&sdk=joey&u=${encodeURIComponent(fbShareUrl)}&t=${encodeURIComponent('Findexar')}&quote=${encodeURIComponent(prepDigest.substring(0, 140) + '...')}&hashtag=%23findexar&display=popup&ref=plugin&src=share_button`;
 
