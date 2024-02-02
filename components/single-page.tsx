@@ -302,7 +302,7 @@ const SinglePage: React.FC<Props> = (props) => {
   let ogImage = astoryImageOgUrl ? astoryImageOgUrl : process.env.NEXT_PUBLIC_SITE_NAME=="Findexar"?"https://findexar.com/findexar-logo.png":"https://www.qwiket.com/QLogo.png";
   let ogTitle = ogTarget ? `${ogTarget}` : `${[process.env.NEXT_PUBLIC_SITE_NAME]} Sports Media Tracker`;
   if(astory){
-    ogUrl= league?`${process.env.NEXT_PUBLIC_SERVER}/pub/league/${league}?sid=${localSid}&test=1`:`${process.env.NEXT_PUBLIC_SERVER}/pub?sid=${localSid}&test=2`;
+    ogUrl= league?`${process.env.NEXT_PUBLIC_SERVER}/pub/league/${league}?sid=${localSid}`:`${process.env.NEXT_PUBLIC_SERVER}/pub?sid=${localSid}`;
     ogTitle=astoryTitle;;
     ogDescription=astoryDigest.replaceAll('<p>','').replaceAll('</p>',"\n\n");
     ogImage=astoryImageOgUrl;
