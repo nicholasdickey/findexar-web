@@ -87,8 +87,8 @@ async function handler(
                 }}>
                     <div style={{
                         position: 'absolute',
-                        top: 20,
-                        left: 20,
+                        top: 70,
+                        left: 40,
                         //right: 0,
                         height:64,// '20%', // Adjust as needed
                         backgroundColor: 'rgba(0, 0, 0, 0.6)', // Dark background with opacity
