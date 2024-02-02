@@ -276,8 +276,10 @@ const SinglePage: React.FC<Props> = (props) => {
 
   const astoryKey: AStoryKey = { type: "AStory", sid:sid, noLoad: localSid == "" ? true : false };
   const { data: astory } = useSWR(astoryKey, getAStory)
-  const { title:astoryTitle="",site_name:astorySite_Name="",authors:astoryAuthors="",digest: astoryDigest = "", image: astoryImage = "", createdTime: astoryDate = "" ,mentions:mentions=[]} = astory ? astory : {};
+  const { title:astoryTitle="",site_name:astorySite_Name="",authors:astoryAuthors="",digest: astoryDigest = "", image: astoryImage = "", createdTime: astoryDate = "" ,mentions:mentions=[],image_width=0,image_height=0} = astory ? astory : {};
   console.log("astory:",localSid,astory)
+  const astoryImageOgUrl=astoryImage?`${process.env.NEXT_PUBLIC_SERVER}/api/og.png?image=${encodeURIComponent(astoryImage||"")}&site_name=${encodeURIComponent(astorySite_Name||"")}&width=${image_width}&height=${image_height}`:``;
+ 
   //prep meta data for amention
   let ogUrl = '';
   if (amention && amentionLeague && amentionTeam && amentionPlayer)
@@ -297,14 +299,15 @@ const SinglePage: React.FC<Props> = (props) => {
     ogTarget = `${amentionTeamName} on ${process.env.NEXT_PUBLIC_SITE_NAME}`;
 
   let ogDescription = amentionSummary ? amentionSummary : "Fantasy Sports Media Tracker.";
-  let ogImage = amentionImage ? amentionImage : process.env.NEXT_PUBLIC_SITE_NAME=="Findexar"?"https://findexar.com/findexar-logo.png":"https://www.qwiket.com/QLogo.png";
+  let ogImage = astoryImageOgUrl ? astoryImageOgUrl : process.env.NEXT_PUBLIC_SITE_NAME=="Findexar"?"https://findexar.com/findexar-logo.png":"https://www.qwiket.com/QLogo.png";
   let ogTitle = ogTarget ? `${ogTarget}` : `${[process.env.NEXT_PUBLIC_SITE_NAME]} Sports Media Tracker`;
   if(astory){
     ogUrl= league?`${process.env.NEXT_PUBLIC_SERVER}pub/league/${league}?sid=${localSid}`:`${process.env.NEXT_PUBLIC_SERVER}pub?sid=${localSid}`;
     ogTitle=astoryTitle;;
     ogDescription=astoryDigest.replaceAll('<p>','').replaceAll('</p>',"\n\n");
-    ogImage=astoryImage;
+    //ogImage=ogImage;
   }
+  console.log("ogImage:",ogImage);
   return (
     <>
       <Head>

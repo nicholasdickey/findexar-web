@@ -484,3 +484,10 @@ export const removeAStory = async ({ type, sid,noLoad }: AStoryKey) => {
     return false;
   }
 }
+const getOg=async (image:string,image_width:number,image_height:number,site_name:string)=>{
+     let url =  `${process.env.NEXT_PUBLIC_SERVER}/og.png?image=${encodeURIComponent(image||"")}&site_name=${encodeURIComponent(site_name||"")}&image_width=${image_width}&image_height=${image_height}`;
+     const res=await fetch(url); 
+     const data=await res.json();
+     console.log("fetchStories",data);
+     return data.stories;
+}
