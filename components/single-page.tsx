@@ -278,18 +278,18 @@ const SinglePage: React.FC<Props> = (props) => {
   const { data: astory } = useSWR(astoryKey, getAStory)
   const { title:astoryTitle="",site_name:astorySite_Name="",authors:astoryAuthors="",digest: astoryDigest = "", image: astoryImage = "", createdTime: astoryDate = "" ,mentions:mentions=[],image_width=0,image_height=0} = astory ? astory : {};
   console.log("astory:",localSid,astory)
-  const astoryImageOgUrl=astoryImage?`${process.env.NEXT_PUBLIC_SERVER}/api/og.png?image=${encodeURIComponent(astoryImage||"")}&site_name=${encodeURIComponent(astorySite_Name||"")}&width=${image_width}&height=${image_height}`:``;
+  const astoryImageOgUrl=astoryImage?`${process.env.NEXT_PUBLIC_SERVER}/api/og.png/${encodeURIComponent(astoryImage||"")}/${encodeURIComponent(astorySite_Name||"")}/${image_width}/${image_height}`:``;
  
   //prep meta data for amention
   let ogUrl = '';
   if (amention && amentionLeague && amentionTeam && amentionPlayer)
-    ogUrl = `${process.env.NEXT_PUBLIC_SERVER}pub/league/${amentionLeague}/team/${amentionTeam}/player/${amentionPlayer}?id=${localFindexarxid}`;
+    ogUrl = `${process.env.NEXT_PUBLIC_SERVER}/pub/league/${amentionLeague}/team/${amentionTeam}/player/${amentionPlayer}?id=${localFindexarxid}`;
   else if (amention && amentionLeague && amentionTeam)
-    ogUrl = `${process.env.NEXT_PUBLIC_SERVER}pub/league/${amentionLeague}/team/${amentionTeam}?id=${localFindexarxid}`;
+    ogUrl = `${process.env.NEXT_PUBLIC_SERVER}/pub/league/${amentionLeague}/team/${amentionTeam}?id=${localFindexarxid}`;
   else if (amention && amentionLeague)
-    ogUrl = `${process.env.NEXT_PUBLIC_SERVER}pub/league/${amentionLeague}?id=${localFindexarxid}`;
+    ogUrl = `${process.env.NEXT_PUBLIC_SERVER}/pub/league/${amentionLeague}?id=${localFindexarxid}`;
   else if (amention)
-    ogUrl = `${process.env.NEXT_PUBLIC_SERVER}pub?id=${localFindexarxid}`;
+    ogUrl = `${process.env.NEXT_PUBLIC_SERVER}/pub?id=${localFindexarxid}`;
   else
     ogUrl = `${process.env.NEXT_PUBLIC_SERVER}`;
   let ogTarget = '';
@@ -302,11 +302,12 @@ const SinglePage: React.FC<Props> = (props) => {
   let ogImage = astoryImageOgUrl ? astoryImageOgUrl : process.env.NEXT_PUBLIC_SITE_NAME=="Findexar"?"https://findexar.com/findexar-logo.png":"https://www.qwiket.com/QLogo.png";
   let ogTitle = ogTarget ? `${ogTarget}` : `${[process.env.NEXT_PUBLIC_SITE_NAME]} Sports Media Tracker`;
   if(astory){
-    ogUrl= league?`${process.env.NEXT_PUBLIC_SERVER}pub/league/${league}?sid=${localSid}`:`${process.env.NEXT_PUBLIC_SERVER}pub?sid=${localSid}`;
+    ogUrl= league?`${process.env.NEXT_PUBLIC_SERVER}/pub/league/${league}?sid=${localSid}&test=1`:`${process.env.NEXT_PUBLIC_SERVER}/pub?sid=${localSid}&test=2`;
     ogTitle=astoryTitle;;
     ogDescription=astoryDigest.replaceAll('<p>','').replaceAll('</p>',"\n\n");
-    //ogImage=ogImage;
+    ogImage=astoryImageOgUrl;
   }
+  console.log("astoryImage:",astoryImage);
   console.log("ogImage:",ogImage);
   return (
     <>
@@ -321,8 +322,9 @@ const SinglePage: React.FC<Props> = (props) => {
         <meta property="og:type" content="website" />
         <meta property="fb:appid" content="358234474670240" />
         <meta property="og:site_name" content={process.env.NEXT_PUBLIC_APP_NAME=="Finexar"?"findexar.com":"qwiket.com"} />
+        <meta property="og:image" data-type="new3" content={ogImage} />
         <meta property="og:url" content={ogUrl} />
-        <meta property="og:image" content={ogImage} />
+        
         <meta property="findexar:verify" content="findexar" />
         <meta httpEquiv='X-UA-Compatible' content='IE=edge' />
         <meta name="twitter:card" content="summary_large_image" />

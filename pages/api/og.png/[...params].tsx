@@ -29,17 +29,25 @@ async function handler(
     //const threadid=req.nextUrl.searchParams.get(['threadid']);
     try {
        // console.log("START====")
-       /* const getParamsObject = (request: NextRequest) => {
+      /*  const getParamsObject = (request: NextRequest) => {
 
         let params: any = {}; for (const [key, val] of request.nextUrl.searchParams.entries()) { params[key] = val; }
         
-        return params; }
-        const params=getParamsObject(req);*/
-        const { searchParams } = new URL(req?.url || "");
+        return params; }*/
+       // const params=getParamsObject(req);
+        //console.log("req.nextUrl",req.url);
+        const parts=req.url.split('?')[0].split('/');
+        const height=parts[parts.length-1];
+        const width=parts[parts.length-2];
+        const site_name=decodeURIComponent(parts[parts.length-3]);
+        const image=decodeURIComponent(parts[parts.length-4]);
+       // console.log("parts:",{image,site_name,width,height});
+       /* const { searchParams } = req.nextUrl;//new URL(req?.url || "");
         const image = searchParams.get('image') || '';
         const site_name = searchParams.get('site_name') || '';
         const width = +(searchParams.get('width') || '0');
         const height = +(searchParams.get('height') || '0');
+        */
         
         
        //console.log({params});
@@ -48,7 +56,7 @@ async function handler(
             query: { image, site_name,width=0,height=0 },
             method,
           } = req;*/
-      //  console.log("image:", image, "site_name:", site_name, "width:", width, "height:", height);
+       // console.log("image:", image, "site_name:", site_name, "width:", width, "height:", height);
         //const query = req.query;
         //const image = query.image || "";
         //const site_name = query.site_name || "";
@@ -105,7 +113,7 @@ async function handler(
         return response;
     }
     catch(x) {
-       // console.log("Error:",x);
+        //console.log("Error:",x);
         return new Response(`Failed to generate the image,${x}`, {
             status: 500,
         });
