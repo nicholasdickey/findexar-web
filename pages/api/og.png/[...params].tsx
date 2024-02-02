@@ -90,7 +90,7 @@ async function handler(
                         top: 80,
                         left: 30,
                         //right: 0,
-                        height:52,// '20%', // Adjust as needed
+                        height:42,// '20%', // Adjust as needed
                         backgroundColor: 'rgba(0, 0, 0, 0.6)', // Dark background with opacity
                         display: 'flex',
                         alignItems: 'center',
@@ -99,7 +99,7 @@ async function handler(
                         padding: '10px',
                         borderRadius: '10px',
                     }}>
-                        <span style={{zIndex:1,fontSize:38,padding:10}} >{site_name}</span>
+                        <span style={{zIndex:1,fontSize:28,padding:10}} >{site_name}</span>
                     </div>
                 </div>
             ),
