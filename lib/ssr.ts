@@ -107,7 +107,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
         }
         if (!botInfo.bot) {
             try {
-                recordEvent(sessionid, `ssr-pub${fresh ? '-init' : ''}`, `{"fbclid":"${fbclid}","ua":"${ua}","isMobile":"${isMobile}","utm_content":"${utm_content}"}`);
+                recordEvent(sessionid, `ssr-pub${fresh ? '-init' : ''}`, `{"fbclid":"${fbclid}","ua":"${ua}","sid:":"${sid}","findexarxid:","${findexarxid}","isMobile":"${isMobile}","utm_content":"${utm_content}"}`);
             } catch (x) {
                 console.log('ssr-landing-init-error', x);
             }
