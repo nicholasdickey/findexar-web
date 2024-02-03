@@ -102,7 +102,7 @@ async function handler(
                         padding: '10px',
                         borderRadius: '10px',
                     }}>
-                        <span style={{zIndex:1,fontSize:'3%',padding:10}} >{site_name}</span>
+                        <span style={{zIndex:1,fontSize:'1.5%',padding:10}} >{site_name}</span>
                     </div>
                 </div>
             ),
