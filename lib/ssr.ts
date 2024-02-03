@@ -25,7 +25,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
             { fbclid: string, utm_content: string, dark: number, view: string, tab: string, id: string,sid:string } = context.query as any;
         let { userId }: { userId: string | null } = getAuth(context.req);
         if (userId == "null")
-            userId = null;
+            userId = "";
         tab = tab || 'all';
         sid=sid||'';
         console.log("SSR userid:", userId)
@@ -224,8 +224,10 @@ const ssr = async (context: GetServerSidePropsContext) => {
                 }
                 else {
                     if (view == 'mentions') {
+                        console.log(6666)
                         const { data: dataStories } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-stories?api_key=${api_key}&userid=${userId}&page=0&league=${league}`);
                         fetchStories = dataStories.stories;
+                       // console.log(fetchStories)
                     }
                 }
             }
@@ -261,7 +263,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
         )] = fetchMentions;
         fallback[us(page => {
             const keyFetchedStories: FetchedStoriesKey = { type: "FetchedStories", noUser: userId ? false : true, page: page, league: league || "", noLoad: (view != 'mentions' && tab != 'fav') || team != '' }
-            // console.log("FETCHED MENTIONS KEY:", keyFetchedMentions);
+           // console.log("FETCHED Stories KEY:", keyFetchedStories);
             return keyFetchedStories;
         }
         )] = fetchStories;

@@ -67,7 +67,7 @@ const Stories: React.FC<Props> = () => {
    
    
     const fetchStoriesKey = (pageIndex: number, previousPageData: any): FetchedStoriesKey | null => {
-        let key: FetchedStoriesKey = { type: "FetchedStories", noUser, page: pageIndex, league, noLoad: view != "mentions" && tab != "all",firstXid };
+        let key: FetchedStoriesKey = { type: "FetchedStories", noUser, page: pageIndex, league, noLoad: view != "mentions" && tab != "all" };
         if (previousPageData && !previousPageData.length) return null // reached the end
         return key;
     }
@@ -82,7 +82,7 @@ const Stories: React.FC<Props> = () => {
             setFirstXid(xid);
         }   
     }, [stories[0]])*/
-
+    console.log("stories=",stories);
     const isLoadingMore =
         isLoading || (size > 0 && data && typeof data[size - 1] === "undefined");
     let isEmpty = data?.[0]?.length === 0;
