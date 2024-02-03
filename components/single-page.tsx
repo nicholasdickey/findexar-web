@@ -225,14 +225,14 @@ const SinglePage: React.FC<Props> = (props) => {
   useEffect(() => {
     if (pagetype != 'landing') {
       const t2 = new Date().getTime();
-      recordEvent(sessionid as string || "", `single-page-time`, `{"fbclid":"${fbclid}","utm_content":"${utm_content}","time":"${t2 - t1 || 0}"}`).then(() => { });
+      recordEvent(sessionid as string || "", `single-page-time`, `{"fbclid":"${fbclid}","utm_content":"${utm_content}", "sid":"${sid}", "findexarxid:","${findexarxid}","time":"${t2 - t1 || 0}"}`).then(() => { });
     }
   }, [fbclid, pagetype, sessionid, t1]);
 
   useEffect(() => {
     if (pagetype != 'landing') {
       try {
-        recordEvent(sessionid as string || "", `single-page-loaded`, `{"fbclid":"${fbclid}","isbot":"${isbot}","league":"${league}", "team":"${team}", "player":"${player}", "pagetype":"${pagetype}", "view":"${view}", "userId":"${localUserId}", "utm_content":"${utm_content}"}`)
+        recordEvent(sessionid as string || "", `single-page-loaded`, `{"fbclid":"${fbclid}","isbot":"${isbot}","league":"${league}", "team":"${team}", "player":"${player}", "pagetype":"${pagetype}", "view":"${view}", "userId":"${localUserId}", "sid":"${sid}", "findexarxid:","${findexarxid}","utm_content":"${utm_content}"}`)
           .then((r: any) => {
             console.log("recordEvent", r);
           });
@@ -264,7 +264,7 @@ const SinglePage: React.FC<Props> = (props) => {
     setLocalTeam("")
     await recordEvent(sessionid as string || "",
       'league-nav',
-      `{"fbclid":"${fbclid}","utm_content":"${utm_content}","league":"${l}"}`
+      `{"fbclid":"${fbclid}","utm_content":"${utm_content}","league":"${l}", "sid":"${sid}", "findexarxid:","${findexarxid}"}`
     );
   }, [fbclid, utm_content, sessionid]);
 
