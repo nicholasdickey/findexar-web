@@ -85,7 +85,7 @@ const SinglePage: React.FC<Props> = (props) => {
   const [hardStop, setHardStop] = useState(false);
   const [params, setParams] = useState("");
   const [params2, setParams2] = useState("");
-  const [localUserId, setLocalUserId] = useState(userId);
+  const [localUserId, setLocalUserId] = useState(userId||"");
   const [tp, setTp] = useState("");
   const [tp2, setTp2] = useState("");
   const [localTab, setLocalTab] = React.useState(tab);
