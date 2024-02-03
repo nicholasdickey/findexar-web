@@ -24,18 +24,8 @@ async function handler(
     req: NextRequest,
     res: NextResponse
 ) {
-    //  console.log("req:",{method:req.method,url:req.url,query:req.query,body:req.body,headers:req.headers});
-
-    //const threadid=req.nextUrl.searchParams.get(['threadid']);
     try {
-       // console.log("START====")
-      /*  const getParamsObject = (request: NextRequest) => {
-
-        let params: any = {}; for (const [key, val] of request.nextUrl.searchParams.entries()) { params[key] = val; }
-        
-        return params; }*/
-       // const params=getParamsObject(req);
-        //console.log("req.nextUrl",req.url);
+ 
         const parts=req.url.split('?')[0].split('/');
         const height=parts[parts.length-1];
         const width=parts[parts.length-2];
@@ -44,37 +34,6 @@ async function handler(
         if(site_name==='https://www.inquirer.com'){
             site_name='Philadelphia Inquirer';
         }
-       // console.log("parts:",{image,site_name,width,height});
-       /* const { searchParams } = req.nextUrl;//new URL(req?.url || "");
-        const image = searchParams.get('image') || '';
-        const site_name = searchParams.get('site_name') || '';
-        const width = +(searchParams.get('width') || '0');
-        const height = +(searchParams.get('height') || '0');
-        */
-        
-        
-       //console.log({params});
-       // const { image = '', site_name = '', width = 0, height = 0 } = params;
-       /* const {
-            query: { image, site_name,width=0,height=0 },
-            method,
-          } = req;*/
-       // console.log("image:", image, "site_name:", site_name, "width:", width, "height:", height);
-        //const query = req.query;
-        //const image = query.image || "";
-        //const site_name = query.site_name || "";
-        //const width = +(query.width as string || "1200");
-        //const height = +(query.height as string || "600");
-
-
-
-        //console.log("threadid:",threadid);
-        //console.log("tag:",tag);
-        //let { threadid = '',tag=''} = req.query;
-        //const key: FetchTopicKey = { threadid:threadid as string, withBody: 1, userslug: "og", sessionid: "", tag: tag as string, ackOverride: false};
-        // const lakeApiUrl = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/topic/fetch?slug=${encodeURIComponent(threadid)}&withBody=${1}&userslug=${"og"}&sessionid=${"og"}&tag=${tag}`;
-
-        // const rsp: any = await fetch(lakeApiUrl).then((res) => res.json());;
         const response = new ImageResponse(
             (
                 <div style={{
@@ -93,7 +52,7 @@ async function handler(
                         top: '20%',
                         left: '3%',
                         //right: 0,
-                        height: '8%', // Adjust as needed
+                        height: '10%', // Adjust as needed
                         backgroundColor: 'rgba(0, 0, 0, 0.6)', // Dark background with opacity
                         display: 'flex',
                         alignItems: 'center',
@@ -102,7 +61,7 @@ async function handler(
                         padding: '10px',
                         borderRadius: '10px',
                     }}>
-                        <span style={{zIndex:1,fontSize:`${(+height)/20}px`,padding:10}} >{site_name}</span>
+                        <span style={{zIndex:1,fontSize:`${(+height)/18}px`,padding:10}} >{site_name}</span>
                     </div>
                 </div>
             ),
