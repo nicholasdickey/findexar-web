@@ -72,10 +72,11 @@ const RElement = styled.div`
 
 const TitleWrap = styled.div`
     color:#fff !important;
+
 `;
 
 const DialogTitleWrap = styled.div`
-    display:block;
+   // display:none;
     height:20px;
     @media (max-width: 1199px) {
         display:none;
@@ -85,6 +86,7 @@ const DialogTitleWrap = styled.div`
 const DialogTitleMobileWrap = styled.div`
     display:block;
     margin-top:20px;
+
     @media (min-width: 1200px) {
         display:none;
     }
@@ -169,7 +171,7 @@ const MentionOverlay = ({setDismiss,mutate,...props}:Props) => {
         },
       }} >
       <DialogTitleMobileWrap> <DialogTitle/></DialogTitleMobileWrap>
-      <DialogTitleWrap><DialogTitle onClick={()=>{setDismiss(true);}}><TitleWrap></TitleWrap></DialogTitle></DialogTitleWrap>
+      <DialogTitleWrap><DialogTitle onClick={()=>{setDismiss(true);}}><TitleWrap>Qwiket Sports Media Index</TitleWrap></DialogTitle></DialogTitleWrap>
       <ContentWrap>
           <div autoFocus onClick={()=>{handleClose();}}>
            <XContainer><XElement>x</XElement></XContainer> 

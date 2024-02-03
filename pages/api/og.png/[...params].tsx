@@ -39,8 +39,11 @@ async function handler(
         const parts=req.url.split('?')[0].split('/');
         const height=parts[parts.length-1];
         const width=parts[parts.length-2];
-        const site_name=decodeURIComponent(parts[parts.length-3]);
+        let site_name=decodeURIComponent(parts[parts.length-3]);
         const image=decodeURIComponent(parts[parts.length-4]);
+        if(site_name==='https://www.inquirer.com'){
+            site_name='Philadelphia Inquirer';
+        }
        // console.log("parts:",{image,site_name,width,height});
        /* const { searchParams } = req.nextUrl;//new URL(req?.url || "");
         const image = searchParams.get('image') || '';
