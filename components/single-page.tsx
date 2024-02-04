@@ -314,7 +314,7 @@ const SinglePage: React.FC<Props> = (props) => {
       <Head>
         <title>{process.env.NEXT_PUBLIC_APP_NAME}</title>
         <link rel="canonical" href={ogUrl} />
-        {false&&pagetype != 'landing' && <meta name="robots" content="noindex,nofollow" />}
+        {pagetype != 'landing' && <meta name="robots" content="noindex,nofollow" />}
         <meta property="og:description" content={ogDescription} />
         <meta name="title" content={ogTitle} />
         <meta property="og:title" content={ogTitle} />

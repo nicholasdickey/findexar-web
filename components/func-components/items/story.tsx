@@ -46,7 +46,7 @@ const ArticleDigest = styled.div`
 const ArticleMentionsTitle = styled.div`
     font-size: 14px;
     padding-top:4px;
-    margin-left:20px;
+    margin-left:10px;
 `;
 
 const ArticleMentions = styled.div`
@@ -187,7 +187,7 @@ const MobileWrap = styled.div`
     display:flex;
     flex-direction:column;
     width:100%;
-    padding:10px;
+    padding:30px;
     margin-bottom:20px;
     background-color:var(--background);
     padding:10px;
@@ -218,6 +218,7 @@ const Story: React.FC<Props> = ({ story }) => {
     const { mode, userId, noUser, view, tab, isMobile, setLeague, setView, setPagetype, setTeam, setPlayer, setMode, sessionid, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName, setTeamName } = useAppContext();
 
     let { title, url, digest, site_name, image, authors, createdTime, mentions, xid } = story;
+    //console.log("STORY CREATED TIME", createdTime,title,site_name);
     const [localDate, setLocalDate] = React.useState(convertToUTCDateString(createdTime));
     const [digestCopied, setDigestCopied] = React.useState(false);
     const [selectedXid, setSelectedXid] = React.useState("");
