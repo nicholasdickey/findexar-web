@@ -14,20 +14,21 @@ import {
     LeagueTeamsKey, getLeagueTeams, TeamPlayersKey, getTeamPlayers, DetailsKey,
     MentionsKey, TrackerListMembersKey, FavoritesKey, FetchedMentionsKey,
     AMentionKey, getAMention, MetaLinkKey, getMetaLink, FetchedStoriesKey, fetchStories,
-    AStoryKey, getAStory
+    AStoryKey, getAStory,ASlugStoryKey,getASlugStory
 } from '@/lib/api'
 const api_key = process.env.LAKE_API_KEY
 
 const ssr = async (context: GetServerSidePropsContext) => {
     try {
         const t1 = new Date().getTime();
-        let { tab, fbclid, utm_content, dark, view = "mentions", id,sid }:
-            { fbclid: string, utm_content: string, dark: number, view: string, tab: string, id: string,sid:string } = context.query as any;
+        let { tab, fbclid, utm_content, dark, view = "mentions", id,sid,story }:
+            { fbclid: string, utm_content: string, dark: number, view: string, tab: string, id: string,sid:string,story:string } = context.query as any;
         let { userId }: { userId: string | null } = getAuth(context.req);
         if (userId == "null")
             userId = '';
         tab = tab || 'all';
         sid=sid||'';
+        story=story||'';
         console.log("SSR userid:", userId)
         const user = userId ? await clerkClient.users.getUser(userId) : null;
         console.log("========== ========= SSR CHECKPOINT 0:", new Date().getTime() - t1, "ms");
@@ -107,7 +108,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
         }
         if (!botInfo.bot) {
             try {
-                recordEvent(sessionid, `ssr-pub${fresh ? '-init' : ''}`, `{"fbclid":"${fbclid}","ua":"${ua}","sid:":"${sid}","findexarxid:","${findexarxid}","isMobile":"${isMobile}","utm_content":"${utm_content}"}`);
+                recordEvent(sessionid, `ssr-pub${fresh ? '-init' : ''}`, `{"fbclid":"${fbclid}","ua":"${ua}","sid:":"${sid}","story:","${story}","findexarxid:","${findexarxid}","isMobile":"${isMobile}","utm_content":"${utm_content}"}`);
             } catch (x) {
                 console.log('ssr-landing-init-error', x);
             }
@@ -148,6 +149,8 @@ const ssr = async (context: GetServerSidePropsContext) => {
         let amention = null;
         const getAStoryKey: AStoryKey = { type: "AStory", sid, noLoad: sid == "" ? true : false };
         let astory = null;
+        const getASlugStoryKey: ASlugStoryKey = { type: "AStory", slug:story, noLoad: story == "" ? true : false };
+        //let astory = null;
         const metalinkKey: MetaLinkKey = { func: "meta", findexarxid, long: 1 };
         let metaLink = null;
         console.log("userId:", userId)
@@ -158,6 +161,10 @@ const ssr = async (context: GetServerSidePropsContext) => {
         if(sid){
             astory = await getAStory(getAStoryKey);
             console.log("GOT ASTORY:",astory);
+        }
+        if(story){
+            astory = await getASlugStory(getASlugStoryKey);
+            console.log("GOT A SLUG STORY:",astory);
         }
         let fetchStories = [];
         console.log("VIEW:", view, "tab:", tab, "team:", team, "player:", player, "league:", league, "userId", userId, "options:", options, "keyMentions:", keyMentions)
@@ -253,6 +260,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
         fallback[unstable_serialize(trackerListMembersKey)] = trackerListMembers;
         fallback[unstable_serialize(getAMentionKey)] = amention;
         fallback[unstable_serialize(getAStoryKey)] = astory;
+        fallback[unstable_serialize(getASlugStoryKey)] = astory;
         fallback[unstable_serialize(metalinkKey)] = metaLink;
 
         fallback[us(page => {
@@ -294,7 +302,8 @@ const ssr = async (context: GetServerSidePropsContext) => {
                 mode,
                 findexarxid,
                 sid,
-                teamName
+                teamName,
+                slug:story,
 
             }
         }

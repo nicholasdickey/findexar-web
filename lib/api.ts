@@ -457,7 +457,7 @@ export type AStoryKey = { type: string, sid: string,noLoad:boolean };
 export const getAStory = async ({ type, sid,noLoad }: AStoryKey) => {
   try {
     if(noLoad) return null;
-    console.log("api: getAMention",type,sid)
+    console.log("api: getAStory",type,sid)
     let url = '';
     url =  `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-story?sid=${sid}`;
     console.log("getStory-url",url)
@@ -484,10 +484,34 @@ export const removeAStory = async ({ type, sid,noLoad }: AStoryKey) => {
     return false;
   }
 }
-const getOg=async (image:string,image_width:number,image_height:number,site_name:string)=>{
-     let url =  `${process.env.NEXT_PUBLIC_SERVER}/og.png?image=${encodeURIComponent(image||"")}&site_name=${encodeURIComponent(site_name||"")}&image_width=${image_width}&image_height=${image_height}`;
-     const res=await fetch(url); 
-     const data=await res.json();
-     console.log("fetchStories",data);
-     return data.stories;
+export type ASlugStoryKey = { type: string, slug: string,noLoad:boolean };
+export const getASlugStory = async ({ type, slug,noLoad }: ASlugStoryKey) => {
+  try {
+    if(noLoad) return null;
+    console.log("api: getASlugStory",type,slug)
+    let url = '';
+    url =  `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-slug-story?slug=${slug}`;
+    console.log("getStory-url",url)
+    const res = await axios.get(url);
+    return res.data.story;
+  }
+  catch (e) {
+    console.log("getASlugStory", e);
+    return false;
+  }
+}
+export const removeASlugStory = async ({ type, slug,noLoad }: ASlugStoryKey) => {
+  try {
+    if(noLoad) return null;
+    console.log("api: removeASlugStory",type,slug)
+    let url = '';
+    url =  `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/remove-slug-story?slug=${slug}`;
+    console.log("removeASlugStory-url",url)
+    const res = await axios.get(url);
+    return res.data.mention;
+  }
+  catch (e) {
+    console.log("removeASlugStory", e);
+    return false;
+  }
 }

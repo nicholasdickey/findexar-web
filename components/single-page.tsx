@@ -24,7 +24,7 @@ import { getCookie, hasCookie } from 'cookies-next';
 //local
 import { palette } from '@/lib/palette';
 import GlobalStyle from '@/components/globalstyles';
-import { recordEvent, AMentionKey, getAMention,AStoryKey,getAStory } from '@/lib/api';
+import { recordEvent, AMentionKey, getAMention,AStoryKey,getAStory,getASlugStory,ASlugStoryKey } from '@/lib/api';
 import { AppWrapper } from '@/lib/context';
 
 import Header from "@/components/nav-components/header";
@@ -69,12 +69,13 @@ interface Props {
   findexarxid: string;
   sid: string;
   teamName:string;
+  slug:string;
 }
 
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 
 const SinglePage: React.FC<Props> = (props) => {
-  let { teamName:tn,findexarxid, sid, mode, tab, t1, fbclid = "", sessionid = "", isfb, isbot, list, freeUser, createdAt, userId, utm_content, dark, leagues, league = "", team = "", pagetype = "league", player = "", view = "" } = props;
+  let { teamName:tn,findexarxid, sid,slug="", mode, tab, t1, fbclid = "", sessionid = "", isfb, isbot, list, freeUser, createdAt, userId, utm_content, dark, leagues, league = "", team = "", pagetype = "league", player = "", view = "" } = props;
 
   const [localTeam, setLocalTeam] = useState(team);
   const [localPlayer, setLocalPlayer] = useState(player);
@@ -92,6 +93,7 @@ const SinglePage: React.FC<Props> = (props) => {
   const [localMode, setLocalMode] = React.useState(mode);
   const [localFindexarxid, setLocalFindexarxid] = React.useState(findexarxid);
   const [localSid, setLocalSid] = React.useState(sid);
+  const [localSlug, setLocalSlug] = React.useState(slug);
   const [localView, setLocalView] = useState(view.toLowerCase());
   const [teamName, setTeamName] = useState(tn);
   const router = useRouter();
@@ -274,8 +276,11 @@ const SinglePage: React.FC<Props> = (props) => {
   const { data: amention } = useSWR(key, getAMention)
   const { summary: amentionSummary = "", league: amentionLeague = "", type = "", team: amentionTeam = "", teamName: amentionTeamName = "", name: amentionPlayer = "", image: amentionImage = "", date: amentionDate = "" } = amention ? amention : {};
 
-  const astoryKey: AStoryKey = { type: "AStory", sid:sid, noLoad: localSid == "" ? true : false };
-  const { data: astory } = useSWR(astoryKey, getAStory)
+  const astoryKey: AStoryKey = { type: "AStory", sid:localSid, noLoad: localSid == "" ? true : false };
+  let { data: astory } = useSWR(astoryKey, getAStory)
+  const aSlugStoryKey: ASlugStoryKey = { type: "ASlugStory", slug:localSlug, noLoad: localSlug == "" ? true : false };
+  let { data: aSlugStory } = useSWR(aSlugStoryKey, getASlugStory);
+  astory=astory||aSlugStory;
   const { title:astoryTitle="",site_name:astorySite_Name="",authors:astoryAuthors="",digest: astoryDigest = "", image: astoryImage = "", createdTime: astoryDate = "" ,mentions:mentions=[],image_width=0,image_height=0} = astory ? astory : {};
   console.log("astory:",localSid,astory)
   const astoryImageOgUrl=astoryImage?`${process.env.NEXT_PUBLIC_SERVER}/api/og.png/${encodeURIComponent(astoryImage||"")}/${encodeURIComponent(astorySite_Name||"")}/${image_width}/${image_height}`:``;
@@ -302,8 +307,9 @@ const SinglePage: React.FC<Props> = (props) => {
   let ogImage = astoryImageOgUrl ? astoryImageOgUrl : process.env.NEXT_PUBLIC_SITE_NAME=="Findexar"?"https://findexar.com/findexar-logo.png":"https://www.qwiket.com/QLogo.png";
   let ogTitle = ogTarget ? `${ogTarget}` : `${[process.env.NEXT_PUBLIC_SITE_NAME]} Sports Media Tracker`;
   if(astory){
-    ogUrl= league?`${process.env.NEXT_PUBLIC_SERVER}/pub/league/${league}?sid=${localSid}`:`${process.env.NEXT_PUBLIC_SERVER}/pub?sid=${localSid}`;
-    ogTitle=astoryTitle;;
+    ogUrl= league?`${process.env.NEXT_PUBLIC_SERVER}/pub/league/${league}?${localSid?`sid=${localSid}`:localSlug?`story=${localSlug}`:``}`
+     :`${process.env.NEXT_PUBLIC_SERVER}/pub?${localSid?`sid=${localSid}`:localSlug?`story=${localSlug}`:``}`;
+    ogTitle=astoryTitle;
     ogDescription=astoryDigest.replaceAll('<p>','').replaceAll('</p>',"\n\n");
     ogImage=astoryImageOgUrl;
   }
@@ -359,7 +365,7 @@ const SinglePage: React.FC<Props> = (props) => {
             //@ts-ignore
             theme={palette}>
             <GlobalStyle $light={localMode == "light"} />
-            <AppWrapper userId={localUserId} isMobile={isMobile} setUserId={setLocalUserId} params={params} params2={params2} tp={tp} tp2={tp2} findexarxid={localFindexarxid} view={v} tab={localTab} noUser={!localUserId} mode={localMode} setMode={setLocalMode} pagetype={localPageType} sessionid={sessionid} setLeague={setLocalLeague} setPagetype={setLocalPageType} setPlayer={setLocalPlayer} setTeam={setLocalTeam} setTab={setLocalTab} setView={setLocalView} league={localLeague.toUpperCase()} team={localTeam} player={localPlayer} fbclid={fbclid} utm_content={utm_content} teamName={teamName} setTeamName={setTeamName} sid={localSid} setSid={setLocalSid}>
+            <AppWrapper userId={localUserId} isMobile={isMobile} setUserId={setLocalUserId} params={params} params2={params2} tp={tp} tp2={tp2} findexarxid={localFindexarxid} view={v} tab={localTab} noUser={!localUserId} mode={localMode} setMode={setLocalMode} pagetype={localPageType} sessionid={sessionid} setLeague={setLocalLeague} setPagetype={setLocalPageType} setPlayer={setLocalPlayer} setTeam={setLocalTeam} setTab={setLocalTab} setView={setLocalView} league={localLeague.toUpperCase()} team={localTeam} player={localPlayer} fbclid={fbclid} utm_content={utm_content} teamName={teamName} setTeamName={setTeamName} sid={localSid} setSid={setLocalSid} slug={localSlug} setSlug={setLocalSlug}>
               <Header leagues={leagues} />
               {!isMobile && <Desktop />}
               {isMobile && <Mobile />}

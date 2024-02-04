@@ -32,6 +32,7 @@ interface Props {
     findexarxid:string;
     sid:string;
     teamName:string;
+    slug:string;
 }
 export default function Home(props: Props) {
    // const fallback = props.fallback;
