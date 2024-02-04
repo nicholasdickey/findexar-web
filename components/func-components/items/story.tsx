@@ -20,6 +20,7 @@ declare global {
 
 const Body = styled.div`
     font-size: 15px;
+    margin-top:-11px;
     margin-bottom: 4px;
     flex: 2 1 auto;
     line-height:1.4;
