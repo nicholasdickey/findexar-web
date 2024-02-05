@@ -60,7 +60,7 @@ const ArticleMentions = styled.div`
 `;
 
 const ImageWrapper = styled.div`
-    margin-top:20px;
+    margin-top:8px;
     flex: 1 1 auto;
     max-width: 100%;
 `;
@@ -156,6 +156,7 @@ const BottomLine = styled.div`
     justify-content:space-between;
     align-items:flex-end;
     margin-top:10px;
+    margin-left:5px;
     width:100%;
 `;
 
@@ -311,7 +312,7 @@ const Story: React.FC<Props> = ({ story }) => {
                     {Mentions}
                 </ArticleMentions>
                 <br />
-                <Link href={url} target="_blank">{url.substring(0, 50)}..</Link>
+                <Link style={{marginLeft:10}} href={url} target="_blank">{url.substring(0, 50)}..</Link>
                 <BottomLine>
                     <ShareGroup><RWebShare
                         data={{
