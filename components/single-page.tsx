@@ -92,9 +92,9 @@ const SinglePage: React.FC<Props> = (props) => {
   const [tp2, setTp2] = useState("");
   const [localTab, setLocalTab] = React.useState(tab);
   const [localMode, setLocalMode] = React.useState(mode);
-  const [localFindexarxid, setLocalFindexarxid] = React.useState(findexarxid);
-  const [localSid, setLocalSid] = React.useState(sid);
-  const [localSlug, setLocalSlug] = React.useState(slug);
+  const [localFindexarxid, setLocalFindexarxid] = React.useState(findexarxid||"");
+  const [localSid, setLocalSid] = React.useState(sid||"");
+  const [localSlug, setLocalSlug] = React.useState(slug||"");
   const [localView, setLocalView] = useState(view.toLowerCase());
   const [teamName, setTeamName] = useState(tn);
   const router = useRouter();
@@ -106,7 +106,8 @@ const SinglePage: React.FC<Props> = (props) => {
   
   useEffect(()=>{
   if(isClerkLoaded&&isSignedIn){
-    setLocalUserId(user.id);
+    if(user.id!=localUserId)
+      setLocalUserId(user.id);
   }},[isClerkLoaded,isSignedIn,user]);
   
   useEffect(() => {
@@ -280,8 +281,9 @@ const SinglePage: React.FC<Props> = (props) => {
 
   console.log("PAGE state:", { userId, localUserId, v, localMode, localPageType, localLeague, localTeam, localPlayer, params, params2 })
 
-  const key: AMentionKey = { type: "AMention", findexarxid: localFindexarxid, noLoad: localFindexarxid !== "" ? false : true };
-  const { data: amention } = useSWR(key, getAMention)
+  const aMentionKey: AMentionKey = { type: "AMention", findexarxid: localFindexarxid, noLoad: localFindexarxid !== "" ? false : true };
+  console.log("aMentionKey:", aMentionKey);
+  const { data: amention } = useSWR(aMentionKey, getAMention)
   const { summary: amentionSummary = "", league: amentionLeague = "", type = "", team: amentionTeam = "", teamName: amentionTeamName = "", name: amentionPlayer = "", image: amentionImage = "", date: amentionDate = "" } = amention ? amention : {};
 
   const astoryKey: AStoryKey = { type: "AStory", sid:localSid, noLoad: localSid == "" ? true : false };

@@ -31,7 +31,14 @@ const ssr = async (context: GetServerSidePropsContext) => {
         sid=sid||'';
         story=story||'';
         console.log("SSR userid:", userId)
-        const user = userId ? await clerkClient.users.getUser(userId) : null;
+        let user;
+        try{
+            user= userId ? await clerkClient.users.getUser(userId) : null;
+        }
+        catch(x){
+            console.log("GET USER ERROR:",x);
+            user=null;
+        }
         console.log("========== ========= SSR CHECKPOINT 0:", new Date().getTime() - t1, "ms");
 
         view = view.toLowerCase();
@@ -146,7 +153,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
 
         console.log("========== ========= SSR CHECKPOINT 3:", new Date().getTime() - t1, "ms");
         
-        const getAMentionKey: AMentionKey = { type: "AMention", findexarxid: findexarxid, noLoad: findexarxid == "" ? false : true };
+        const getAMentionKey: AMentionKey = { type: "AMention", findexarxid: findexarxid||"", noLoad: findexarxid == "" ? false : true };
         let amention = null;
         const getAStoryKey: AStoryKey = { type: "AStory", sid, noLoad: sid == "" ? true : false };
         let astory = null;
