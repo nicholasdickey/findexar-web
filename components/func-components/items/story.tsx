@@ -158,6 +158,9 @@ const BottomLine = styled.div`
     margin-top:10px;
     margin-left:5px;
     width:100%;
+    @media screen and (max-width: 1199px) {
+        margin-left:-5px;
+    }
 `;
 
 const LocalDate = styled.div`
