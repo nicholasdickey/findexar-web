@@ -1,4 +1,5 @@
 import React, { use, useCallback, useEffect, useState } from "react";
+import { useUser } from "@clerk/nextjs";
 //next
 import Head from 'next/head'
 import Link from 'next/link'
@@ -100,7 +101,8 @@ const SinglePage: React.FC<Props> = (props) => {
   const muiTheme = useTheme();
   const fullScreen = useMediaQuery(muiTheme.breakpoints.down('md'));
   const isMobile = useMediaQuery('(max-width:1199px)');
-
+  const { isLoaded:isClerkLoaded, isSignedIn, user } = useUser();
+  console.log("isSignedIn:", isSignedIn, "isLoaded:", isClerkLoaded, "user:", user);
   useEffect(() => {
     document.body.setAttribute("data-theme", localMode);
   }, [localMode]);
