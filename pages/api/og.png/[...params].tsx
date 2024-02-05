@@ -34,6 +34,9 @@ async function handler(
         if(site_name==='https://www.inquirer.com'){
             site_name='Philadelphia Inquirer';
         }
+        let offset=0;
+        if(site_name=='RotoWire')
+            offset=20;
         const response = new ImageResponse(
             (
                 <div style={{
@@ -50,7 +53,7 @@ async function handler(
                     <div style={{
                         position: 'absolute',
                         top: '20%',
-                        left: '3%',
+                        left: offset?'14%':'3%',
                         //right: 0,
                         height: '10%', // Adjust as needed
                         backgroundColor: 'rgba(0, 0, 0, 0.6)', // Dark background with opacity
