@@ -303,9 +303,9 @@ const SinglePage: React.FC<Props> = (props) => {
   else if (amention && amentionLeague && amentionTeam)
     ogTarget = `${amentionTeamName} on ${process.env.NEXT_PUBLIC_SITE_NAME}`;
 
-  let ogDescription = amentionSummary ? amentionSummary : "Fantasy Sports Media Tracker.";
+  let ogDescription = amentionSummary ? amentionSummary : "Fantasy Sports Media Index.";
   let ogImage = astoryImageOgUrl ? astoryImageOgUrl : process.env.NEXT_PUBLIC_SITE_NAME=="Findexar"?"https://findexar.com/findexar-logo.png":"https://www.qwiket.com/QLogo.png";
-  let ogTitle = ogTarget ? `${ogTarget}` : `${[process.env.NEXT_PUBLIC_SITE_NAME]} Sports Media Tracker`;
+  let ogTitle = ogTarget ? `${ogTarget}` : `${[process.env.NEXT_PUBLIC_SITE_NAME]} Sports Media Index`;
   if(astory){
     ogUrl= league?`${process.env.NEXT_PUBLIC_SERVER}/pub/league/${league}?${localSid?`sid=${localSid}`:localSlug?`story=${localSlug}`:``}`
      :`${process.env.NEXT_PUBLIC_SERVER}/pub?${localSid?`sid=${localSid}`:localSlug?`story=${localSlug}`:``}`;
@@ -320,7 +320,7 @@ const SinglePage: React.FC<Props> = (props) => {
       <Head>
         <title>{process.env.NEXT_PUBLIC_APP_NAME}</title>
         <link rel="canonical" href={ogUrl} />
-        {pagetype != 'landing' && <meta name="robots" content="noindex,nofollow" />}
+        {(pagetype != 'landing'||process.env.NEXT_PUBLIC_NOINDEX) && <meta name="robots" content="noindex,nofollow" />}
         <meta property="og:description" content={ogDescription} />
         <meta name="title" content={ogTitle} />
         <meta property="og:title" content={ogTitle} />
