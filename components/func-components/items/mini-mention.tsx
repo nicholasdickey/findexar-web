@@ -57,7 +57,7 @@ const MobileMentionWrap = styled.div<MentionsProps>`
     justify-content: flex-start;
     align-items:flex-start;
     margin:4px;
-    padding-left:16px;
+    padding-left:12px;
     &:hover{
         color: var(--mention-text);
     } 

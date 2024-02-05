@@ -156,10 +156,10 @@ const BottomLine = styled.div`
     justify-content:space-between;
     align-items:flex-end;
     margin-top:10px;
-    margin-left:5px;
+    //margin-left:28px;
     width:100%;
     @media screen and (max-width: 1199px) {
-        margin-left:-5px;
+        margin-left:-4px;
     }
 `;
 
