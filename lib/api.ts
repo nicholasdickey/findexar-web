@@ -443,7 +443,7 @@ export const fetchStories = async ({ type, league, noUser,page,noLoad,firstXid }
    // const res = await axios.get(url);
    const res=await fetch(url); 
    const data=await res.json();
-   console.log("fetchStories",data);
+   //console.log("fetchStories",data);
    return data.stories;
   }
   catch (e) {

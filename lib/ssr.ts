@@ -43,7 +43,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
 
         view = view.toLowerCase();
         if(view=='feed')
-        view='mentions';
+            view='mentions';
         console.log("VIEW:", view)
         if (view == 'home')
             view = 'mentions';
