@@ -7,10 +7,15 @@ export const findOrCreateCustomerId = async ({
   clerkUserId: string;
 }) => {
   let user = await clerkClient.users.getUser(clerkUserId);
+  try{
   if (user.publicMetadata.stripeCustomerId) {
     return user.publicMetadata.stripeCustomerId as string;
   }
-
+  }
+  catch(e){
+    console.log("findOrCreateCustomerId: error",e);
+  } 
+  console.log("stripeApiClient.customers.create")
   const customerCreate = await stripeApiClient.customers.create(
     {
       name: user.firstName + " " + user.lastName,

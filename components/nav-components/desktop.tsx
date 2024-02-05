@@ -129,7 +129,7 @@ const Desktop: React.FC<Props> = () => {
         let tp = tab != 'all' ? params ? `&tab=${tab}` : `?tab=${tab}` : ``;
         router.push(league ? `/pub/league/${league}${params}${tp}` : params ? `/pub${params}${tp}` : `/pub?tab=${tab}`)
     }
-    console.log("DESKTOP:",{pagetype,view,tab})
+   // console.log("DESKTOP:",{pagetype,view,tab})
     return (
         <ContainerWrap>
              <MentionOverlay setDismiss={(dismiss:boolean)=>{setView("mentions");}} mutate={() => {}}  />

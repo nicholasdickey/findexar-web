@@ -271,7 +271,7 @@ const Story: React.FC<Props> = ({ story }) => {
 
     const Mentions = <MentionsWrap>{mentions && mentions.map((mention: any, i: number) => {
         return (
-            <MiniMention key={`mention-${i}`} {...mention} params={params} tp={tp} selectedXid={selectedXid} setSelectedXid={setSelectedXid} />
+            <MiniMention key={`mention-${i}`} {...mention} params={params} tp={tp} selectedXid={selectedXid} setSelectedXid={setSelectedXid} mutate={()=>{}}/>
         )
 
     })}</MentionsWrap>;

@@ -82,7 +82,7 @@ const Stories: React.FC<Props> = () => {
             setFirstXid(xid);
         }   
     }, [stories[0]])*/
-    console.log("stories=",stories);
+    //console.log("stories=",stories);
     const isLoadingMore =
         isLoading || (size > 0 && data && typeof data[size - 1] === "undefined");
     let isEmpty = data?.[0]?.length === 0;

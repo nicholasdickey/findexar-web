@@ -132,8 +132,8 @@ const SinglePage: React.FC<Props> = (props) => {
   }, [league]);
 
   view = view ? view.toLowerCase() : "";
-  const subscriptionObject = useSubscription();
-
+  //const subscriptionObject = useSubscription();
+/*
   const {
     isLoaded,
     products,
@@ -141,7 +141,8 @@ const SinglePage: React.FC<Props> = (props) => {
     redirectToCheckout,
     redirectToCustomerPortal,
   } = subscriptionObject;
-
+  */
+/*
   useEffect(() => {
     if (isLoaded && !freeUser) {
       if (!subscription && userId) {
@@ -159,7 +160,7 @@ const SinglePage: React.FC<Props> = (props) => {
       }
     }
   }, [isLoaded, subscription, products, userId, createdAt, freeUser]);
-
+*/
   useEffect(() => {
     const query = router.query;
     const { id: findexarxid = "", tab: qtab = "", view: qview = "", ssr = [] } = query as { tab: string | null, view: string | null, ssr: string[], id: string | "" };
