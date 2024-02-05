@@ -24,6 +24,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
         let { tab, fbclid, utm_content, dark, view = "mentions", id,sid,story }:
             { fbclid: string, utm_content: string, dark: number, view: string, tab: string, id: string,sid:string,story:string } = context.query as any;
         let { userId }: { userId: string | null } = getAuth(context.req);
+        console.log("AUTH:", userId);
         if (userId == "null")
             userId = '';
         tab = tab || 'all';

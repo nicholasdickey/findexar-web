@@ -270,7 +270,7 @@ const SinglePage: React.FC<Props> = (props) => {
     );
   }, [fbclid, utm_content, sessionid]);
 
-  console.log("PAGE state:", { localUserId, v, localMode, localPageType, localLeague, localTeam, localPlayer, params, params2 })
+  console.log("PAGE state:", { userId, localUserId, v, localMode, localPageType, localLeague, localTeam, localPlayer, params, params2 })
 
   const key: AMentionKey = { type: "AMention", findexarxid: localFindexarxid, noLoad: localFindexarxid !== "" ? false : true };
   const { data: amention } = useSWR(key, getAMention)
@@ -313,8 +313,7 @@ const SinglePage: React.FC<Props> = (props) => {
     ogDescription=astoryDigest.replaceAll('<p>','').replaceAll('</p>',"\n\n");
     ogImage=astoryImageOgUrl;
   }
-  console.log("astoryImage:",astoryImage);
-  console.log("ogImage:",ogImage);
+  
   return (
     <>
       <Head>
