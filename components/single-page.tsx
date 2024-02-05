@@ -103,12 +103,12 @@ const SinglePage: React.FC<Props> = (props) => {
   const isMobile = useMediaQuery('(max-width:1199px)');
   const { isLoaded:isClerkLoaded, isSignedIn, user } = useUser();
   console.log("isSignedIn:", isSignedIn, "isLoaded:", isClerkLoaded, "user:", user);
-  /*
+  
   useEffect(()=>{
   if(isClerkLoaded&&isSignedIn){
     if(user.id!=localUserId)
       setLocalUserId(user.id);
-  }},[isClerkLoaded,isSignedIn,user]); */
+  }},[isClerkLoaded,isSignedIn,user]); 
   
   useEffect(() => {
     document.body.setAttribute("data-theme", localMode);
