@@ -80,11 +80,11 @@ const Welcome:React.FC<Props>= () => {
         <Favorites><SignInButton><Button style={{ padding: 10 }} size="small" variant="outlined"><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></Favorites></>}
         <LeftText><hr />Contact: @findexar on X (Twitter)<hr/></LeftText>  
         <LeftText><br />League News Digests on X (Twitter):</LeftText>
-        <Favorites><LeftText><Link href="https://twitter.com/nflpress_digest">NFL Digest Twitter Feed</Link></LeftText>
-        <LeftText><Link href="https://twitter.com/nhl_digest">NHL Digest Twitter Feed</Link></LeftText>
-        <LeftText><Link href="https://twitter.com/mlbpressdigest">MLB Digest Twitter Feed</Link></LeftText>
-        <LeftText><Link href="https://twitter.com/nba_digest">NBA Digest Twitter Feed</Link></LeftText>
-        <LeftText><Link href="https://twitter.com/mls_digest">MLS Digest Twitter Feed</Link></LeftText></Favorites>
+        <Favorites><LeftText><Link href="https://twitter.com/qwiket_nfl">NFL Digest Twitter Feed</Link></LeftText>
+        <LeftText><Link href="https://twitter.com/qwiket_nhl">NHL Digest Twitter Feed</Link></LeftText>
+        <LeftText><Link href="https://twitter.com/qwiket_mlb">MLB Digest Twitter Feed</Link></LeftText>
+        <LeftText><Link href="https://twitter.com/qwiket_nba">NBA Digest Twitter Feed</Link></LeftText>
+        </Favorites>
       </>
 }
 
