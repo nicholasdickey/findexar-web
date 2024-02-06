@@ -31,6 +31,7 @@ import { AppWrapper } from '@/lib/context';
 import Header from "@/components/nav-components/header";
 import Desktop from "@/components/nav-components/desktop";
 import Mobile from "@/components/nav-components/mobile";
+import SubscriptionMenu from "./util-components/subscription-menu";
 
 
 /*==========================================*/
@@ -72,7 +73,9 @@ interface Props {
   teamName:string;
   slug:string;
 }
-
+const SubscriptionWrap= styled.div`
+  margin-top:20px;
+`;
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 
 const SinglePage: React.FC<Props> = (props) => {
@@ -151,10 +154,12 @@ const SinglePage: React.FC<Props> = (props) => {
         console.log("no subscription", diff)
 
         if (diff > 10 * 24 * 3600) { // if account created over three days ago, hard stop
+          console.log("hard stop");
           setSubscriptionPrompt(true);
           setHardStop(true);
         }
         else if (diff > 7 * 24 * 3600) {
+          console.log("soft stop");
           setSubscriptionPrompt(true);
         }
       }
@@ -377,8 +382,11 @@ const SinglePage: React.FC<Props> = (props) => {
             <GlobalStyle $light={localMode == "light"} />
             <AppWrapper userId={localUserId} isMobile={isMobile} setUserId={setLocalUserId} params={params} params2={params2} tp={tp} tp2={tp2} findexarxid={localFindexarxid} view={v} tab={localTab} noUser={!localUserId} mode={localMode} setMode={setLocalMode} pagetype={localPageType} sessionid={sessionid} setLeague={setLocalLeague} setPagetype={setLocalPageType} setPlayer={setLocalPlayer} setTeam={setLocalTeam} setTab={setLocalTab} setView={setLocalView} league={localLeague.toUpperCase()} team={localTeam} player={localPlayer} fbclid={fbclid} utm_content={utm_content} teamName={teamName} setTeamName={setTeamName} sid={localSid} setSid={setLocalSid} slug={localSlug} setSlug={setLocalSlug}>
               <Header leagues={leagues} />
-              {!isMobile && <Desktop />}
-              {isMobile && <Mobile />}
+              {subscriptionPrompt&&<SubscriptionWrap><SubscriptionMenu  products={products}  redirectToCheckout={redirectToCheckout}
+    redirectToCustomerPortal={redirectToCustomerPortal}
+    setDismiss={()=>{}} hardStop={hardStop} /></SubscriptionWrap>}
+              {!isMobile &&!hardStop&& <Desktop />}
+              {isMobile && !hardStop&&<Mobile />}
             </AppWrapper>
           </ThemeProvider>
         </main>

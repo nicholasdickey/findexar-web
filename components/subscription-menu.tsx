@@ -12,7 +12,7 @@ interface Props {
     hardStop:boolean;
 }
 const SubscriptionMenu = ({hardStop,setDismiss,products,redirectToCheckout,redirectToCustomerPortal}:Props) => {
-    return <Alert severity="warning" >
+    return <Alert style={{paddingTop:40}} severity="warning" >
        <p>Utilizing AI technology, and specifically the OpenAI service, for the in-depth analysis and processing of media content to track athletes and teams, is critical for our operations. This sophisticated technology, which comes with relatively high costs, enables us to slice and dice published articles to provide concise, time-saving summaries of mentions, giving our Fantasy Sports users a distinct competitive advantage.</p>
 
 <p>Findexar offers insights on par with those from high-end agencies like Nielsen, which typically cost professional teams and agencies tens of thousands of dollars monthly, but at a far more accessible price point.</p>

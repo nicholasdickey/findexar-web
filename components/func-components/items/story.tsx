@@ -224,6 +224,7 @@ const Story: React.FC<Props> = ({ story }) => {
 
     let { title, url, digest, site_name, image, authors, createdTime, mentions, xid,slug } = story;
     //console.log("STORY CREATED TIME", createdTime,title,site_name);
+    url=url||"";
     const [localDate, setLocalDate] = React.useState(convertToUTCDateString(createdTime));
     const [digestCopied, setDigestCopied] = React.useState(false);
     const [selectedXid, setSelectedXid] = React.useState("");
@@ -347,7 +348,7 @@ const Story: React.FC<Props> = ({ story }) => {
                         </ImageWrapper>
                     </Link>
                     <Body>
-                        {false && <Link href={url}><ArticleDigest>
+                        {false && <Link href={url||""}><ArticleDigest>
                             {true ? 'Article Digest:' : 'Short Digest:'}
                         </ArticleDigest>
                         </Link>}

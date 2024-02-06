@@ -1,6 +1,6 @@
 import { unstable_serialize } from 'swr'
 import { unstable_serialize as us } from 'swr/infinite';
-import { getAuth } from "@clerk/nextjs/server";
+import { getAuth,buildClerkProps  } from "@clerk/nextjs/server";
 import { clerkClient } from "@clerk/nextjs";
 import axios from 'axios';
 import { isbot } from '@/lib/isbot.js';
@@ -24,7 +24,8 @@ const ssr = async (context: GetServerSidePropsContext) => {
         let { tab, fbclid, utm_content, dark, view = "mentions", id,sid,story }:
             { fbclid: string, utm_content: string, dark: number, view: string, tab: string, id: string,sid:string,story:string } = context.query as any;
         let { userId }: { userId: string | null } = getAuth(context.req);
-        
+        console.log("NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY",process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
+        console.log("CLERK_SECRET_KEY",process.env.CLERK_SECRET_KEY);
         console.log("AUTH:", userId);
         if (userId == "null")
             userId = '';
@@ -34,6 +35,13 @@ const ssr = async (context: GetServerSidePropsContext) => {
         console.log("SSR userid:", userId)
         let user;
         try{
+            const props= await buildClerkProps(context.req);
+            console.log("CLERK PROPS:",{props});
+            const users=await clerkClient.users.getUserList();
+            console.log("CLERK USERS:",{users});
+
+           // const currentUserVar=await currentUser();
+           // console.log("CURRENT USER:",{currentUserVar});
             user= userId ? await clerkClient.users.getUser(userId) : null;
         }
         catch(x){
@@ -252,6 +260,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
                         console.log(6666)
                         const { data: dataStories } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-stories?api_key=${api_key}&userid=${userId}&page=0&league=${league}`);
                         fetchStories = dataStories.stories;
+                        console.log(7777)
                        // console.log(fetchStories)
                     }
                 }
