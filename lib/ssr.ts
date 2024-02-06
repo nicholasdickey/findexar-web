@@ -134,7 +134,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
             }
         }
         try {
-            await recordEvent(sessionid, `ssr-auth`,`{"fbclid":"${fbclid}","sid:":"${sid}","story:","${story}","findexarxid:","${id}","userId":"${userId}"}`);
+            await recordEvent(sessionid, `ssr-auth`,`userId":"${userId||""}"`);
         } catch (x) {
             console.log('ssr-landing-init-error', x);
         }
