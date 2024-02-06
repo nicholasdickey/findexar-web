@@ -229,7 +229,7 @@ const Story: React.FC<Props> = ({ story }) => {
     const [selectedXid, setSelectedXid] = React.useState("");
     const [value, copy] = useCopyToClipboard();
 
-    let prepDigest = digest.replaceAll('<p>', '').replaceAll('</p>', '\n\n');
+    let prepDigest = digest?digest.replaceAll('<p>', '').replaceAll('</p>', '\n\n'):"";
 
     const shareUrl = league ? `${process.env.NEXT_PUBLIC_SERVER}/pub/league/${league}?story=${slug}&utm_content=shareslink` : `${process.env.NEXT_PUBLIC_SERVER}/pub?story=${slug}&utm_content=shareslink`;
     const twitterShareUrl = league ? `${process.env.NEXT_PUBLIC_SERVER}/pub/league/${league}?story=${slug}&utm_content=xslink` : `${process.env.NEXT_PUBLIC_SERVER}/pub?story=${slug}&utm_content=xslink`;
