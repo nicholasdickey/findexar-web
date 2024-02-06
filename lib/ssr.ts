@@ -118,6 +118,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
             console.log("SET SESSION ID", sessionid);
             setCookie('sessionid', sessionid, { req: context.req, res: context.res, maxAge: 60 * 60 * 24 * 365 });
         }
+        console.log("SESSION ID:", sessionid);
         if (!botInfo.bot) {
             try {
                 recordEvent(sessionid, `ssr-pub${fresh ? '-init' : ''}`, `{"fbclid":"${fbclid}","ua":"${ua}","sid:":"${sid}","story:","${story}","findexarxid:","${findexarxid}","isMobile":"${isMobile}","utm_content":"${utm_content}"}`);
