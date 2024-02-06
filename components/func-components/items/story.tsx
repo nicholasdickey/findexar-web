@@ -352,7 +352,7 @@ const Story: React.FC<Props> = ({ story }) => {
                         </ArticleDigest>
                         </Link>}
                         <Digest>
-                            <Link href={url}> <div dangerouslySetInnerHTML={{ __html: digest }} /></Link>
+                            <Link href={url||""}> <div dangerouslySetInnerHTML={{ __html: digest }} /></Link>
                             <ShareContainerInline>
                                 <ContentCopyIcon style={{ paddingTop: 6, marginBottom: 0, marginTop: -10 }} fontSize="small" sx={{ color: digestCopied ? 'green' : '' }} onClick={() => onDigestCopyClick()} />
                             </ShareContainerInline>
@@ -363,7 +363,7 @@ const Story: React.FC<Props> = ({ story }) => {
                     <ArticleMentionsTitle><b>Mentions:</b></ArticleMentionsTitle>
                     {Mentions}</ArticleMentions>
                 <br />
-                <Link href={url}> {url?.substring(0, 30)}...</Link>
+                <Link href={url||""}> {url?.substring(0, 30)}...</Link>
                 <BottomLine>
                     <ShareGroup><RWebShare
                         data={{
