@@ -59,6 +59,7 @@ const MobileTeamName = styled.div`
 const SideGroup = styled.div`
     display:flex;
     width: 260px;
+    height:30px;
     flex-direction:row;
     justify-content:space-between;
     padding-right:20px;
