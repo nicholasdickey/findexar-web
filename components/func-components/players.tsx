@@ -54,6 +54,7 @@ const MobileTeamName = styled.div`
 const SideGroup = styled.div`
     display:flex;
     width: 300px;
+    height:30px;
     flex-direction:row;
     justify-content:space-between;
     padding-right:20px;
@@ -65,7 +66,7 @@ interface SideProps {
 }
 const SideIcon = styled.div<SideProps>`
     width:20px;
-    height:5px;
+    height:30px;
     color:${props => props.highlight ? 'var(--selected))' : 'var(--link)'};  
 `;
 
@@ -108,7 +109,7 @@ interface ScrollProps {
 const RightScroll = styled.div<ScrollProps>`
     position:sticky;
     height:auto !important;
-    top:-${({ numPlayers }) => numPlayers > 60 ? numPlayers * numPlayers * 0.22 : numPlayers * numPlayers * 0.24}px;
+    top:-${({ numPlayers }) => numPlayers > 60 ? numPlayers * numPlayers * 0.30 : numPlayers * numPlayers *0.30}px;
     overflow-y: hidden;
     padding-bottom:20px;
     width:100%;
@@ -141,7 +142,7 @@ const Players: React.FC<Props> = () => {
         return <SideGroup key={`ewfggvfn-${i}`}>{p.name == player ?
             <SelectedSidePlayer highlight={p.tracked}>
                 <Link onClick={async () => { await onPlayerNav(p.name) }} href={`/pub/league/${league}/team/${team}/player/${encodeURIComponent(p.name)}${params}`} shallow>
-                    {p.name} ({`${p.mentions}`})
+                    {p.name} ({`${p.mentions?p.mentions:0}`})
                 </Link>
             </SelectedSidePlayer>
             :

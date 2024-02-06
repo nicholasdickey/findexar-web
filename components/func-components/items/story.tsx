@@ -315,7 +315,7 @@ const Story: React.FC<Props> = ({ story }) => {
                     {Mentions}
                 </ArticleMentions>
                 <br />
-                <Link style={{marginLeft:10}} href={url} target="_blank">{url.substring(0, 50)}..</Link>
+                <Link style={{marginLeft:10}} href={url} target="_blank">{url?.substring(0, 50)}..</Link>
                 <BottomLine>
                     <ShareGroup><RWebShare
                         data={{
@@ -363,7 +363,7 @@ const Story: React.FC<Props> = ({ story }) => {
                     <ArticleMentionsTitle><b>Mentions:</b></ArticleMentionsTitle>
                     {Mentions}</ArticleMentions>
                 <br />
-                <Link href={url}> {url.substring(0, 30)}...</Link>
+                <Link href={url}> {url?.substring(0, 30)}...</Link>
                 <BottomLine>
                     <ShareGroup><RWebShare
                         data={{
