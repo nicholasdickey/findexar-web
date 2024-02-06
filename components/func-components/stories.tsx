@@ -92,7 +92,9 @@ const Stories: React.FC<Props> = () => {
         story={s}
         key={`story-${i}`}
     />);
-
+    if(!stories||stories.length==0){
+        return null;
+    }
     return (
         <>
             {!isMobile ?

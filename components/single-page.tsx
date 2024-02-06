@@ -346,14 +346,14 @@ const SinglePage: React.FC<Props> = (props) => {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@findexar" />
         <meta name='viewport' content='width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no' />
-        <link rel="apple-touch-icon" href={process.env.NEXT_PUBLIC_APP_NAME=="Findexar"?"/FiLogo.png":"QLogo.png"}></link>
+        <link rel="apple-touch-icon" href={process.env.NEXT_PUBLIC_APP_NAME=="Findexar"?"/FiLogo.png":"/QLogo.png"}></link>
         <meta name="theme-color" content={localMode == 'dark' ? palette.dark.colors.background : palette.light.colors.background} />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         {(pagetype != 'league' || league || team || player) && <meta name="robots" content="noindex,nofollow" />}
         <link
           rel="shortcut icon"
           type="image/png"
-          href={process.env.NEXT_PUBLIC_APP_NAME=="Findexar"?"/FiLogo.png":"QLogo.png"}
+          href={process.env.NEXT_PUBLIC_APP_NAME=="Findexar"?"/FiLogo.png":"/QLogo.png"}
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
