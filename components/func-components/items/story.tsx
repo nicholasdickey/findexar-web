@@ -276,7 +276,7 @@ const Story: React.FC<Props> = ({ story }) => {
 
     })}</MentionsWrap>;
 
-    if (image.indexOf("thestar.com/content/tncms/custom/image/f84403b8-7d76-11ee-9d02-a72a4951957f.png") >= 0)
+    if (image&&image.indexOf("thestar.com/content/tncms/custom/image/f84403b8-7d76-11ee-9d02-a72a4951957f.png") >= 0)
         return null;
 
     return (
