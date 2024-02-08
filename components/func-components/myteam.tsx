@@ -159,7 +159,7 @@ const MyTeam: React.FC<Props> = () => {
                 mentions of the selected athletes.<br /><br />
                 The functionality to track and annotate mentions is powered by OpenAI (ChatGPT). We have to pay to provide the service and
                 have no choice but to pass the costs to the users. You can create an account and try the feature for free for a week before you will be nagged to subscribe.
-                <br /><br />Imaging the power of getting a feed of your athletes mentions across the media! No need to spend hours hunting and searching.
+                <br /><br />Imagine the power of getting a feed of your athletes&apos; mentions across the media! No need to spend hours hunting and searching.
                 <hr />
             </RightExplanation>
                 <RightExplanation>Use  &nbsp;<PlaylistAddIcon sx={{/* color: "#aea" */ }} />&nbsp;  icon to the right of the<br /> player&apos;s name in the team roster<br />(click on the league and the team name)<br />to add to &ldquo;My Team&ldquo; tracking list.<br /><br /><SignedOut>Note, My Team featue requires the user to be signed into their {process.env.NEXT_PUBLIC_APP_NAME} account.<br /><br /><SignInButton><Button size="small" variant="outlined" style={{ paddingRight: 8, paddingTop: 4, paddingBottom: 4, paddingLeft: 4 }}><LoginIcon />&nbsp;&nbsp;Sign-In</Button></SignInButton></SignedOut>
