@@ -153,7 +153,7 @@ const SinglePage: React.FC<Props> = (props) => {
         const diff: number = (now - (+(createdAt || 0))) / 1000;
         console.log("no subscription", diff)
 
-        if (diff > 10 * 24 * 3600) { // if account created over three days ago, hard stop
+        if (diff > 10000 * 24 * 3600) { // if account created over three days ago, hard stop
           console.log("hard stop");
           setSubscriptionPrompt(true);
           setHardStop(true);
@@ -382,9 +382,9 @@ const SinglePage: React.FC<Props> = (props) => {
             <GlobalStyle $light={localMode == "light"} />
             <AppWrapper userId={localUserId} isMobile={isMobile} setUserId={setLocalUserId} params={params} params2={params2} tp={tp} tp2={tp2} findexarxid={localFindexarxid} view={v} tab={localTab} noUser={!localUserId} mode={localMode} setMode={setLocalMode} pagetype={localPageType} sessionid={sessionid} setLeague={setLocalLeague} setPagetype={setLocalPageType} setPlayer={setLocalPlayer} setTeam={setLocalTeam} setTab={setLocalTab} setView={setLocalView} league={localLeague.toUpperCase()} team={localTeam} player={localPlayer} fbclid={fbclid} utm_content={utm_content} teamName={teamName} setTeamName={setTeamName} sid={localSid} setSid={setLocalSid} slug={localSlug} setSlug={setLocalSlug}>
               <Header leagues={leagues} />
-              {subscriptionPrompt&&<SubscriptionWrap><SubscriptionMenu  products={products}  redirectToCheckout={redirectToCheckout}
+              {!dismiss&&subscriptionPrompt&&<SubscriptionWrap><SubscriptionMenu  products={products}  redirectToCheckout={redirectToCheckout}
     redirectToCustomerPortal={redirectToCustomerPortal}
-    setDismiss={()=>{}} hardStop={hardStop} /></SubscriptionWrap>}
+    setDismiss={(val:boolean)=>{setDismiss(val);}} hardStop={hardStop} /></SubscriptionWrap>}
               {!isMobile &&!hardStop&& <Desktop />}
               {isMobile && !hardStop&&<Mobile />}
             </AppWrapper>
