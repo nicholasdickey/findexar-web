@@ -77,6 +77,7 @@ const SideButton = styled.div`
 const SelectedSidePlayer = styled.div<SideProps>`
     color:${props => props.highlight ? 'var(--selected)' : 'var(--selected)'};
     padding-left:20px;
+    width: 100%;
     margin: 4px;
     a{
         color:${props => props.highlight ? 'var(--selected)' : 'var(--selected)'} !important;//#ff8 !important;

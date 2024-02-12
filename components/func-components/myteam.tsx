@@ -168,7 +168,7 @@ const MyTeam: React.FC<Props> = () => {
             {trackerListMembers && trackerListMembers.map(({ member, teamid, league }: { member: string, teamid: string, league: string }, i: number) => {
                 return <SideGroup key={`3fdsdvb-${i}`}>
                     <SidePlayer>
-                        <Link onClick={() => { setPlayer(member); setView("mentions"); }} href={`/pub/league/${league}/team/${teamid}/player/${encodeURIComponent(member)}`}>
+                        <Link onClick={() => { setLeague(league); setTeam(teamid);setPlayer(member); setView("mentions"); }} href={`/pub/league/${league}/team/${teamid}/player/${encodeURIComponent(member)}`}>
                             {member}
                         </Link>
                     </SidePlayer>
