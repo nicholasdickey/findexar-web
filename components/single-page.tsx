@@ -232,7 +232,7 @@ const SinglePage: React.FC<Props> = (props) => {
       tp2 = tp.replace(/&/g, '?');
     if (!params)
       tp = tp.replace(/&/g, '?');
-
+   
     setParams(params);
     setParams2(params2)
     setTp(tp);
@@ -288,7 +288,7 @@ const SinglePage: React.FC<Props> = (props) => {
   console.log("PAGE state:", { userId, localUserId, v, localMode, localPageType, localLeague, localTeam, localPlayer, params, params2 })
 
   const aMentionKey: AMentionKey = { type: "AMention", findexarxid: localFindexarxid, noLoad: localFindexarxid !== "" ? false : true };
-  console.log("aMentionKey:", aMentionKey);
+  //console.log("aMentionKey:", aMentionKey);
   const { data: amention } = useSWR(aMentionKey, getAMention)
   const { summary: amentionSummary = "", league: amentionLeague = "", type = "", team: amentionTeam = "", teamName: amentionTeamName = "", name: amentionPlayer = "", image: amentionImage = "", date: amentionDate = "" } = amention ? amention : {};
 
@@ -298,7 +298,7 @@ const SinglePage: React.FC<Props> = (props) => {
   let { data: aSlugStory } = useSWR(aSlugStoryKey, getASlugStory);
   astory=astory||aSlugStory;
   const { title:astoryTitle="",site_name:astorySite_Name="",authors:astoryAuthors="",digest: astoryDigest = "", image: astoryImage = "", createdTime: astoryDate = "" ,mentions:mentions=[],image_width=0,image_height=0} = astory ? astory : {};
-  console.log("astory:",localSid,astory)
+  //console.log("astory:",localSid,astory)
   const astoryImageOgUrl=astoryImage?`${process.env.NEXT_PUBLIC_SERVER}/api/og.png/${encodeURIComponent(astoryImage||"")}/${encodeURIComponent(astorySite_Name||"")}/${image_width}/${image_height}`:``;
  
   //prep meta data for amention
@@ -329,7 +329,6 @@ const SinglePage: React.FC<Props> = (props) => {
     ogDescription=astoryDigest.replaceAll('<p>','').replaceAll('</p>',"\n\n");
     ogImage=astoryImageOgUrl;
   }
-  
   return (
     <>
       <Head>
