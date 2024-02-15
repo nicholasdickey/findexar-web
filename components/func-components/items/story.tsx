@@ -269,10 +269,21 @@ const Story: React.FC<Props> = ({ story }) => {
         setDigestCopied(true);
         copy(digest);
     }, [digest]);
+    const onMentionClick = useCallback((mention:any) => {
+
+       try {
+        recordEvent(sessionid as string || "", `min-mention-click`, `{"mention","${JSON.stringify(mention)}","params":"${params}"}`)
+            .then((r: any) => {
+                console.log("recordEvent", r);
+            });
+    } catch (x) {
+        console.log('recordEvent', x);
+    } 
+    }, []);
 
     const Mentions = <MentionsWrap>{mentions && mentions.map((mention: any, i: number) => {
         return (
-            <MiniMention key={`mention-${i}`} {...mention} sessionid={sessionid} params={params} tp={tp} selectedXid={selectedXid} setSelectedXid={setSelectedXid} mutate={()=>{}}/>
+            <MiniMention onClick={()=>onMentionClick(mention)} key={`mention-${i}`} {...mention} sessionid={sessionid} params={params} tp={tp} selectedXid={selectedXid} setSelectedXid={setSelectedXid} mutate={()=>{}}/>
         )
 
     })}</MentionsWrap>;

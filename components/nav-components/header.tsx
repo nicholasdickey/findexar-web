@@ -360,7 +360,7 @@ const HeaderNav: React.FC<Props> = ({ leagues }) => {
           try {
             s = true;
             setScrolled(true);
-            recordEvent(sessionid||"", `header-scrolled`, `{"fbclid":"${fbclid}", "utm_content":"${utm_content}"}`)
+            recordEvent(sessionid||"", `header-scrolled`, `{"league":"${league}","team":"${team}","player":"${player}","fbclid":"${fbclid}", "utm_content":"${utm_content}"}`)
               .then((r: any) => {
                 console.log("recordEvent", r);
               });
