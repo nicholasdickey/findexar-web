@@ -515,3 +515,9 @@ export const removeASlugStory = async ({ type, slug,noLoad }: ASlugStoryKey) => 
     return false;
   }
 }
+export const getReport = async (): Promise<{ success: boolean, report: any }> => {
+  const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/events/report`;
+  console.log("getReport:", url);
+  const res = await axios.get(url);
+ return res.data;
+}
