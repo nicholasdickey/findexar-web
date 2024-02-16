@@ -49,12 +49,18 @@ import Paper from '@mui/material/Paper';
 
 const ReportItem= function(name:string,expanded:string,setExpanded:any,sessionid:string,reportItem:any){
   let cs=false;  
+  let bot=false;
   const items=reportItem.items.map((record:any,i:number)=>{
       console.log("record:",record);
         const {url,name:eventName,utm_context='',league='',params='',fbclid='',team='',stamp='',player='',slug='',view='',time='',isMobile,ssrTime,userId,t1,findexarxid,story,sid,ua}=record;
         console.log("ReportItem",record,stamp,name)
-        if(name.indexOf('ssr')<0)
+        if(eventName.indexOf('ssr')<0)
           cs=true;
+        if(eventName.indexOf('bot')>=0){
+          bot=true;
+          console.log("===============>>>>bot",name);
+        }
+          
         return (
            <Paper sx={{background:"grey",m:2,p:2,color:"white"}} key={`keyasp-${i}`}>
                 <Typography>Name: {eventName}</Typography>
@@ -91,7 +97,7 @@ const ReportItem= function(name:string,expanded:string,setExpanded:any,sessionid
                   aria-controls="panel4bh-content"
                   id="panel4bh-header"
                 >
-                  <Typography sx={{ width: '33%', flexShrink: 0,color:items.length>1&&cs?"#afa":"888" }}>{name}</Typography>
+                  <Typography sx={{ width: '33%', flexShrink: 0,color:bot?"#004400":items.length>1&&cs?"#afa":"888" }}>{name}</Typography>
                 </AccordionSummary>
                 <AccordionDetails style={{ borderRadius: 14 }}>
                   <Box sx={{ my: 4 }}>
