@@ -256,7 +256,7 @@ const Story: React.FC<Props> = ({ story }) => {
 
     const onShare = useCallback((url: string) => {
         try {
-            recordEvent(sessionid as string || "", `mention-share`, `{"url","${url}","params":"${params}"}`)
+            recordEvent(sessionid as string || "", `story-share`, `{"url","${url}","params":"${params}"}`)
                 .then((r: any) => {
                     console.log("recordEvent", r);
                 });

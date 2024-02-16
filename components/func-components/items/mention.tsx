@@ -397,14 +397,15 @@ const Mention: React.FC<Props> = ({mini, startExtended, linkType,mention, mutate
         setLeague(league);
         setTeam(team);
         setPlayer(type == 'person' ? name : '');
+        let pgt="";
         if (type == 'person')
-            setPagetype('player');
+            pgt='player';
         else
-            setPagetype('team');
-
+            pgt='team';
+        setPagetype(pgt);
         await recordEvent(sessionid as string || "",
             'mention-nav',
-            `{"params":"${params}","name":"${name}","sessionid":"${sessionid}"}`
+            `{"params":"${params}","league":"${league}","team":"${team}","name":"${name}","pagetype":"${pgt}","sessionid":"${sessionid}"}`
         );
     },[league,team,type,params,sessionid]);
 
@@ -424,13 +425,13 @@ const Mention: React.FC<Props> = ({mini, startExtended, linkType,mention, mutate
 
         await recordEvent(sessionid as string || "",
             'mention-extended',
-            `{"on":"${on}","params":"${params}"}`
+            `{"on":"${on}","summary","${summary}","url":"${url}","params":"${params}"}`
         );
     },[sessionid,params]);
 
     const onHover = useCallback((label: string) => {
         try {
-            recordEvent(sessionid as string || "", `mention-hover`, `{"label","${label}","params":"${params}"}`)
+            recordEvent(sessionid as string || "", `mention-hover`, `{"label","${label}","url":"${url}","params":"${params}"}`)
                 .then((r: any) => {
                     console.log("recordEvent", r);
                 });

@@ -36,9 +36,9 @@ const ssr = async (context: GetServerSidePropsContext) => {
         let user;
         try{
             const props= await buildClerkProps(context.req);
-            console.log("CLERK PROPS:",{props});
+            //console.log("CLERK PROPS:",{props});
             const users=await clerkClient.users.getUserList();
-            console.log("CLERK USERS:",{users});
+           // console.log("CLERK USERS:",{users});
 
            // const currentUserVar=await currentUser();
            // console.log("CURRENT USER:",{currentUserVar});
@@ -65,6 +65,8 @@ const ssr = async (context: GetServerSidePropsContext) => {
                 const e = user.emailAddresses[i];
                 const email = e.emailAddress;
                 const { data } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/options/get?userid=${userId}&api_key=${api_key}&email=${email}`);
+                console.log("========== ========= SSR CHECKPOINT 01:", new Date().getTime() - t1, "ms");
+
                 freeUser = data.exists;
                 options = data.options;
                 if (freeUser) {
@@ -127,25 +129,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
             setCookie('sessionid', sessionid, { req: context.req, res: context.res, maxAge: 60 * 60 * 24 * 365 });
         }
         console.log("SESSION ID:", sessionid);
-        if (!botInfo.bot) {
-            try {
-                recordEvent(sessionid, `ssr-pub${fresh ? '-init' : ''}`, `{"fbclid":"${fbclid}","ua":"${ua}","sid:":"${sid}","story:","${story}","findexarxid:","${findexarxid}","isMobile":"${isMobile}","utm_content":"${utm_content}"}`);
-            } catch (x) {
-                console.log('ssr-landing-init-error', x);
-            }
-        }
-        if (botInfo.bot) {
-            try {
-                await recordEvent(sessionid, 'ssr-bot-pub', `{"fbclid":"${fbclid}","ua":"${ua}","utm_content":"${utm_content}"}`);
-            } catch (x) {
-                console.log('ssr-bot-landing-init-error', x);
-            }
-        }
-        try {
-            await recordEvent(sessionid, `ssr-auth`,`userId":"${userId||""}"`);
-        } catch (x) {
-            console.log('ssr-landing-init-error', x);
-        }
+       
         console.log("========== ========= SSR CHECKPOINT 2:", new Date().getTime() - t1, "ms");
 
         let trackerListMembersKey: TrackerListMembersKey = { type: "tracker_list_members", league, noUser: userId ? false : true, noLoad: pagetype != 'league' };
@@ -155,6 +139,8 @@ const ssr = async (context: GetServerSidePropsContext) => {
             const { data } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/tracker-list/get?api_key=${api_key}&userid=${userId}&league=${league}`);
             trackerListMembers = data.members;
         }
+        console.log("========== ========= SSR CHECKPOINT 21:", new Date().getTime() - t1, "ms");
+
         const leagues = await getLeagues();
         const keyLeagueTeams: LeagueTeamsKey = { func: "leagueTeams", league, noLoad: pagetype == "landing" };
         let leagueTeams = await getLeagueTeams(keyLeagueTeams);
@@ -200,14 +186,14 @@ const ssr = async (context: GetServerSidePropsContext) => {
             const { data: dataMentions } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?api_key=${api_key}&userid=${userId}&teamid=${team}&name=${encodeURIComponent(player as string || "")}&page=0&league=${league}&favorites=0`);
             fetchMentions = dataMentions.mentions;
             console.log(66666)
-            console.log('==>',leagueTeams,team)
+            //console.log('==>',leagueTeams,team)
             const t = leagueTeams?.find((t: any) => t.id == team);
             teamName = t.name;
             keyTeamPlayers = { type: 'teamPlayers', league, teamid: team };
             teamPlayers = await getTeamPlayers(keyTeamPlayers);
         }
         else {
-            console.log(1111);
+           // console.log(1111);
             /*if (options && options.tracker_filter == 1) {
                 console.log(222);
                 if (view == 'mentions') {
@@ -216,7 +202,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
                 }
             }
             else {*/
-            console.log(3333);
+           // console.log(3333);
             if (tab == 'fav' || tab == 'myteam') {
                 if (userId) {
                     if (view == 'mentions') {
@@ -238,12 +224,12 @@ const ssr = async (context: GetServerSidePropsContext) => {
                 }
             }
             else {
-                console.log(4444);
+              //  console.log(4444);
                 // REFACTOR 1/25/2024
                 // Fetch stories instead of mentions for the top level (leagues or all)
 
                 if (userId) {
-                    console.log(5555);
+                    //console.log(5555);
                     if (view == 'mentions') {
 
                         console.log("========== ========= SSR CHECKPOINT 131:", new Date().getTime() - t1, "ms");
@@ -257,10 +243,10 @@ const ssr = async (context: GetServerSidePropsContext) => {
                 }
                 else {
                     if (view == 'mentions') {
-                        console.log(6666)
+                        //console.log(6666)
                         const { data: dataStories } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-stories?api_key=${api_key}&userid=${userId}&page=0&league=${league}`);
                         fetchStories = dataStories.stories;
-                        console.log(7777)
+                       // console.log(7777)
                        // console.log(fetchStories)
                     }
                 }
@@ -304,7 +290,27 @@ const ssr = async (context: GetServerSidePropsContext) => {
         )] = fetchStories;
         // console.log("fetchedMentions:", fetchMentions)
         console.log("========== ========= SSR TIME:", new Date().getTime() - t1, "ms");
+        if (!botInfo.bot) {
+            try {
+                console.log("RECORD EVENT:", `ssr-pub${fresh ? '-init' : ''}`, `{"fbclid":"${fbclid}","ua":"${ua}","sid":"${sid}","story":"${story}","findexarxid":"${findexarxid}","isMobile":"${isMobile}","utm_content":"${utm_content}","t1":"${t1}","userId":"${userId}","ssrTime":"${ new Date().getTime() - t1}"}`);
+                await recordEvent(sessionid, `ssr-pub${fresh ? '-init' : ''}`, `{"fbclid":"${fbclid}","ua":"${ua}","sid":"${sid}","story":"${story}","findexarxid":"${findexarxid}","isMobile":"${isMobile}","utm_content":"${utm_content}","t1":"${t1}","userId":"${userId}","ssrTime":"${ new Date().getTime() - t1}"}`);
+            } catch (x) {
 
+                console.log('ssr-landing-init-error', x);
+            }
+        }
+        if (botInfo.bot) {
+            try {
+                await recordEvent(sessionid, 'ssr-bot-pub', `{"fbclid":"${fbclid}","ua":"${ua}","utm_content":"${utm_content}"}`);
+            } catch (x) {
+                console.log('ssr-bot-landing-init-error', x);
+            }
+        }
+       /* try {
+            await recordEvent(sessionid, `ssr-auth`,`userId":"${userId||""}"`);
+        } catch (x) {
+            console.log('ssr-landing-init-error', x);
+        }*/
         return {
             props: {
                 sessionid,
