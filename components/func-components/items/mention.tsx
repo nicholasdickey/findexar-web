@@ -431,7 +431,7 @@ const Mention: React.FC<Props> = ({mini, startExtended, linkType,mention, mutate
 
     const onHover = useCallback((label: string) => {
         try {
-            recordEvent(sessionid as string || "", `mention-hover`, `{"label","${label}","url":"${url}","params":"${params}"}`)
+            recordEvent(sessionid as string || "", `mention-hover`, `{"label":"${label}","url":"${url}","params":"${params}"}`)
                 .then((r: any) => {
                     console.log("recordEvent", r);
                 });

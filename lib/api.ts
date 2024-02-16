@@ -516,7 +516,7 @@ export const removeASlugStory = async ({ type, slug,noLoad }: ASlugStoryKey) => 
   }
 }
 export const getReport = async (): Promise<{ success: boolean, report: any }> => {
-  const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/events/report`;
+  const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/events/report`;
   console.log("getReport:", url);
   const res = await axios.get(url);
  return res.data;

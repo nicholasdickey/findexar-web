@@ -48,27 +48,36 @@ import Paper from '@mui/material/Paper';
 
 
 const ReportItem= function(name:string,expanded:string,setExpanded:any,sessionid:string,reportItem:any){
-    const items=reportItem.items.map((record:any,i:number)=>{
-        const {name:eventName,image='',occasion,naive='',text='',params='',fbclid='',ad='',stamp='',signature='',greeting='',metaimage='',cta_tag=''}=record;
-        console.log("ReportItem",record,greeting,name)
-
+  let cs=false;  
+  const items=reportItem.items.map((record:any,i:number)=>{
+      console.log("record:",record);
+        const {url,name:eventName,utm_context='',league='',params='',fbclid='',team='',stamp='',player='',slug='',view='',time='',isMobile,ssrTime,userId,t1,findexarxid,story,sid,ua}=record;
+        console.log("ReportItem",record,stamp,name)
+        if(name.indexOf('ssr')<0)
+          cs=true;
         return (
            <Paper sx={{background:"grey",m:2,p:2,color:"white"}} key={`keyasp-${i}`}>
                 <Typography>Name: {eventName}</Typography>
-                {occasion&&<Typography>Occasion:{occasion}</Typography>}
-                {naive&&<div>Naive:{naive}</div>}
-                {text&&<div>Text:{text}</div>}
+                {ssrTime&&<Typography>SSR Time:{ssrTime}</Typography>}
+                {time&&<div>SPA Time:{time}</div>}
+                {t1&&<div>SSR start time (t1):{t1}</div>}
                 {params&&<Typography>Params{params}</Typography>}
                 {fbclid&&<Typography>fbclid:{fbclid}</Typography>}
-                {ad&&<Typography>ad:{ad}</Typography>}
                 {stamp&&<Typography>stamp:{stamp}</Typography>}
-                {signature&&<div>Signature:{signature}</div>}
-                {greeting&&<div>Greeting:{greeting}</div>}
-                {cta_tag&&<div>CTA Tag:{cta_tag}</div>}
-               
-                {image&&<img width={4*64} height={3*64} src={image} alt={"Image"}/>}
-                {metaimage&&<img width={64*8} height={64*3} src={metaimage} alt={"Image"}/>}
-                
+                {league&&<div>League:{league}</div>}
+                {team&&<div>Team:{team}</div>}
+                {player&&<div>Player:{player}</div>}
+                {slug&&<div>Slug:{slug}</div>}
+                {url&&<div>Url:{url}</div>}
+                {view&&<div>View:{view}</div>}
+                {sid&&<div>SID:{sid}</div>}
+                {ua&&<div>User Agent:{ua}</div>}
+                {utm_context&&<div>utm_context:{utm_context}</div>}
+                {userId&&<div>userId:{userId}</div>}
+                {findexarxid&&<div>findexarxid:{findexarxid}</div>}
+                {story&&<div>story:{story}</div>}
+                {isMobile&&<div>isMobile:{isMobile}</div>}
+
 
                 
            </Paper>
@@ -82,7 +91,7 @@ const ReportItem= function(name:string,expanded:string,setExpanded:any,sessionid
                   aria-controls="panel4bh-content"
                   id="panel4bh-header"
                 >
-                  <Typography sx={{ width: '33%', flexShrink: 0,color:items.length>1?"#afa":"888" }}>{name}</Typography>
+                  <Typography sx={{ width: '33%', flexShrink: 0,color:items.length>1&&cs?"#afa":"888" }}>{name}</Typography>
                 </AccordionSummary>
                 <AccordionDetails style={{ borderRadius: 14 }}>
                   <Box sx={{ my: 4 }}>
