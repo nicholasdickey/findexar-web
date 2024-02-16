@@ -242,14 +242,14 @@ const SinglePage: React.FC<Props> = (props) => {
   useEffect(() => {
     if (t1>0) {
       const t2 = new Date().getTime();
-      recordEvent(sessionid as string || "", `loaded`, `{"fbclid":"${fbclid}","utm_content":"${utm_content}", "slug":"${slug}", "findexarxid":"${findexarxid}","time":"${t2 - t1 || 0}"}`).then(() => { });
+      recordEvent(sessionid as string || "", `spa-loaded-time`, `{"fbclid":"${fbclid}","utm_content":"${utm_content}", "slug":"${slug}", "findexarxid":"${findexarxid}","time":"${t2 - t1 || 0}"}`).then(() => { });
     }
   }, [fbclid,t1, sessionid,utm_content, slug, findexarxid]);
 
   useEffect(() => {
     if (pagetype != 'landing') {
       try {
-        recordEvent(sessionid as string || "", `spa-nav`, `{"fbclid":"${fbclid}","isbot":"${isbot}","league":"${league}", "team":"${team}", "player":"${player}", "pagetype":"${pagetype}", "view":"${view}", "userId":"${localUserId}", "slug":"${slug}", "findexarxid":"${findexarxid}","utm_content":"${utm_content}"}`)
+        recordEvent(sessionid as string || "", `spa-enter`, `{"fbclid":"${fbclid}","isbot":"${isbot}","league":"${league}", "team":"${team}", "player":"${player}", "pagetype":"${pagetype}", "view":"${view}", "userId":"${localUserId}", "slug":"${slug}", "findexarxid":"${findexarxid}","utm_content":"${utm_content}"}`)
           .then((r: any) => {
             console.log("recordEvent", r);
           });
