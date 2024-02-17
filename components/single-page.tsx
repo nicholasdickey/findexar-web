@@ -242,7 +242,7 @@ const SinglePage: React.FC<Props> = (props) => {
   useEffect(() => {
     if (t1>0) {
       const t2 = new Date().getTime();
-      recordEvent(sessionid as string || "", `spa-loaded-time`, `{"fbclid":"${fbclid}","utm_content":"${utm_content}", "slug":"${slug}", "findexarxid":"${findexarxid}","time":"${t2 - t1 || 0}"}`).then(() => { });
+      recordEvent(sessionid as string || "", `spa-loaded-time`, `{"fbclid":"${fbclid}","utm_content":"${utm_content}", "slug":"${slug}", "findexarxid":"${findexarxid}","t1":"${t1}","time":"${t2 - t1 || 0}"}`).then(() => { });
     }
   }, [fbclid,t1, sessionid,utm_content, slug, findexarxid]);
 
@@ -329,12 +329,13 @@ const SinglePage: React.FC<Props> = (props) => {
     ogDescription=astoryDigest.replaceAll('<p>','').replaceAll('</p>',"\n\n");
     ogImage=astoryImageOgUrl;
   }
+  const noindex=+(process.env.NEXT_PUBLIC_NOINDEX||"0");
   return (
     <>
       <Head>
         <title>{process.env.NEXT_PUBLIC_APP_NAME}</title>
         <link rel="canonical" href={ogUrl} />
-        {(pagetype != 'landing'||process.env.NEXT_PUBLIC_NOINDEX) && <meta name="robots" content="noindex,nofollow" />}
+        {(noindex==1) && <meta name="robots" content="noindex,nofollow" />}
         <meta property="og:description" content={ogDescription} />
         <meta name="title" content={ogTitle} />
         <meta property="og:title" content={ogTitle} />

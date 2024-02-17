@@ -244,8 +244,12 @@ const ssr = async (context: GetServerSidePropsContext) => {
                 else {
                     if (view == 'mentions') {
                         //console.log(6666)
+                        console.log("========== ========= SSR CHECKPOINT 332:", new Date().getTime() - t1, "ms");
+
                         const { data: dataStories } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-stories?api_key=${api_key}&userid=${userId}&page=0&league=${league}`);
                         fetchStories = dataStories.stories;
+                        console.log("========== ========= SSR CHECKPOINT 333:", new Date().getTime() - t1, "ms");
+
                        // console.log(7777)
                        // console.log(fetchStories)
                     }
@@ -301,7 +305,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
         }
         if (botInfo.bot) {
             try {
-                await recordEvent(sessionid, 'ssr-bot-pub', `{"fbclid":"${fbclid}","ua":"${ua}","utm_content":"${utm_content}"}`);
+                await recordEvent(sessionid, 'ssr-bot-pub', `{"fbclid":"${fbclid}","ua":"${ua}","utm_content":"${utm_content}","ssrTime":"${ new Date().getTime() - t1}"}`);
             } catch (x) {
                 console.log('ssr-bot-landing-init-error', x);
             }
