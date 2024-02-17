@@ -38,7 +38,7 @@ export default function Home(props: Props) {
    // const fallback = props.fallback;
     return <SinglePage  {...props} />
 }
-/*
+
 export const getServerSideProps =
     async function getServerSideProps(context: GetServerSidePropsContext): Promise<any> {
     try {
@@ -73,7 +73,7 @@ export const getServerSideProps =
                 console.log('ssr-bot-landing-init-error', x);
             }
         }
-        return {
+      /*  return {
             props: {
                 sessionid,
                 fbclid,
@@ -96,13 +96,13 @@ export const getServerSideProps =
 
             }
         }
-        
-        //return {
-        //    redirect: {
-        //        permanent: false,
-        //        destination: `/pub?${fbclid ? `fbclid=${fbclid}&` : ''}${utm_content ? `utm_content=${utm_content}&` : ''}`,
-        //    }
-        //}
+        */
+        return {
+            redirect: {
+                permanent: false,
+                destination: `/pub?${fbclid ? `fbclid=${fbclid}&` : ''}${utm_content ? `utm_content=${utm_content}` : ''}`,
+            }
+        }
     } catch (x) {
         console.log("FETCH SSR PROPS ERROR", x);
         context.res.statusCode = 503;
@@ -111,8 +111,8 @@ export const getServerSideProps =
         }
     }
 }
-*/
 
+/*
 export async function getStaticProps() {
     const t1=Date.now();
 
@@ -137,3 +137,4 @@ export async function getStaticProps() {
       
     };
   }
+*/
