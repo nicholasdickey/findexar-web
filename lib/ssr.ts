@@ -296,8 +296,8 @@ const ssr = async (context: GetServerSidePropsContext) => {
         console.log("========== ========= SSR TIME:", new Date().getTime() - t1, "ms");
         if (!botInfo.bot) {
             try {
-                console.log("RECORD EVENT:", `ssr-pub${fresh ? '-init' : ''}`, `{"fbclid":"${fbclid}","ua":"${ua}","sid":"${sid}","story":"${story}","findexarxid":"${findexarxid}","isMobile":"${isMobile}","utm_content":"${utm_content}","t1":"${t1}","userId":"${userId}","ssrTime":"${ new Date().getTime() - t1}","league":"${league}","team":"${team}","player":"${player}"}`);
-                await recordEvent(sessionid, `ssr-pub${fresh ? '-init' : ''}`, `{"fbclid":"${fbclid}","ua":"${ua}","sid":"${sid}","story":"${story}","findexarxid":"${findexarxid}","isMobile":"${isMobile}","utm_content":"${utm_content}","t1":"${t1}","userId":"${userId}","ssrTime":"${ new Date().getTime() - t1}","league":"${league}","team":"${team}","player":"${player}"}`);
+                console.log("RECORD EVENT:", `ssr-pub${fresh ? '-init' : ''}`, `{"fbclid":"${fbclid}","ua":"${ua}","sid":"${sid}","story":"${story}","findexarxid":"${findexarxid}","isMobile":"${isMobile}","utm_content":"${utm_content}","t1":"${t1}","userId":"${userId||""}","ssrTime":"${ new Date().getTime() - t1}","league":"${league}","team":"${team}","player":"${player}"}`);
+                await recordEvent(sessionid, `ssr-pub${fresh ? '-init' : ''}`, `{"fbclid":"${fbclid}","ua":"${ua}","sid":"${sid}","story":"${story}","findexarxid":"${findexarxid}","isMobile":"${isMobile}","utm_content":"${utm_content}","t1":"${t1}","userId":"${userId||""}","ssrTime":"${ new Date().getTime() - t1}","league":"${league}","team":"${team}","player":"${player}"}`);
             } catch (x) {
 
                 console.log('ssr-landing-init-error', x);
