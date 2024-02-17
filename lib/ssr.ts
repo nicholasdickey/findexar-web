@@ -64,7 +64,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
             for (let i = 0; i < user.emailAddresses.length; i++) {
                 const e = user.emailAddresses[i];
                 const email = e.emailAddress;
-                const { data } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/options/get?userid=${userId}&api_key=${api_key}&email=${email}`);
+                const { data } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/options/get?userid=${userId||""}&api_key=${api_key}&email=${email}`);
                 console.log("========== ========= SSR CHECKPOINT 01:", new Date().getTime() - t1, "ms");
 
                 freeUser = data.exists;
@@ -136,7 +136,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
         let trackerListMembers = [];
 
         if (userId && pagetype == 'league') {
-            const { data } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/tracker-list/get?api_key=${api_key}&userid=${userId}&league=${league}`);
+            const { data } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/tracker-list/get?api_key=${api_key}&userid=${userId||""}&league=${league}`);
             trackerListMembers = data.members;
         }
         console.log("========== ========= SSR CHECKPOINT 21:", new Date().getTime() - t1, "ms");
@@ -165,7 +165,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
         //let astory = null;
         const metalinkKey: MetaLinkKey = { func: "meta", findexarxid, long: 1 };
         let metaLink = null;
-        console.log("userId:", userId)
+       // console.log("userId:", userId)
         if (findexarxid) {
             amention = await getAMention(getAMentionKey);
             metaLink = await getMetaLink(metalinkKey);
@@ -209,7 +209,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
 
                         console.log("========== ========= SSR CHECKPOINT 31:", new Date().getTime() - t1, "ms");
 
-                        const { data: dataMentions } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?api_key=${api_key}&userid=${userId}&teamid=${team}&name=${encodeURIComponent(player as string || "")}&page=0&league=${league}&myteam=${tab == 'myteam' ? 1 : 0}`);
+                        const { data: dataMentions } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?api_key=${api_key}&userid=${userId||""}&teamid=${team}&name=${encodeURIComponent(player as string || "")}&page=0&league=${league}&myteam=${tab == 'myteam' ? 1 : 0}`);
 
                         console.log("========== ========= SSR CHECKPOINT 32:", new Date().getTime() - t1, "ms");
 
@@ -218,7 +218,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
                 }
                 else {
                     if (view == 'mentions') {
-                        const { data: dataMentions } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?api_key=${api_key}&userid=${userId}&teamid=${team}&name=${encodeURIComponent(player as string || "")}&page=0&league=${league}&myteam=${tab == 'myteam' ? 1 : 0}`);
+                        const { data: dataMentions } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?api_key=${api_key}&userid=${userId||""}&teamid=${team}&name=${encodeURIComponent(player as string || "")}&page=0&league=${league}&myteam=${tab == 'myteam' ? 1 : 0}`);
                         fetchMentions = dataMentions.mentions;
                     }
                 }
@@ -330,7 +330,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
                 pagetype,
                 fallback,
                 view,
-                userId,
+                userId:userId||"",
                 createdAt: createdAt || "",
                 freeUser,
                 list,
