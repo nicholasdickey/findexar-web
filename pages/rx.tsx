@@ -78,7 +78,7 @@ const ReportItem= function(name:string,expanded:string,setExpanded:any,sessionid
                 {view&&<Typography>View:{view}</Typography>}
                 {sid&&<Typography>SID:{sid}</Typography>}
                 {ua&&<Typography>User Agent:{ua}</Typography>}
-                {utm_content&&<Typography>utm_context:{utm_content}</Typography>}
+                {utm_content&&<Typography>utm_content:{utm_content}</Typography>}
                 {userId&&<Typography>userId:{userId}</Typography>}
                 {findexarxid&&<Typography>findexarxid:{findexarxid}</Typography>}
                 {story&&<Typography>story:{story}</Typography>}
