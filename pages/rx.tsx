@@ -65,24 +65,24 @@ const ReportItem= function(name:string,expanded:string,setExpanded:any,sessionid
            <Paper sx={{background:"grey",m:2,p:2,color:"white"}} key={`keyasp-${i}`}>
                 <Typography>Name: {eventName}</Typography>
                 {ssrTime&&<Typography>SSR Time:{ssrTime}</Typography>}
-                {time&&<div>SPA Time:{time}</div>}
-                {t1&&<div>SSR start time (t1):{t1}</div>}
+                {time&&<Typography>SPA Time:{time}</Typography>}
+                {t1&&<Typography>SSR start time (t1):{t1}</Typography>}
                 {params&&<Typography>Params{params}</Typography>}
                 {fbclid&&<Typography>fbclid:{fbclid}</Typography>}
                 {stamp&&<Typography>stamp:{stamp}</Typography>}
-                {league&&<div>League:{league}</div>}
-                {team&&<div>Team:{team}</div>}
-                {player&&<div>Player:{player}</div>}
-                {slug&&<div>Slug:{slug}</div>}
-                {url&&<div>Url:{url}</div>}
-                {view&&<div>View:{view}</div>}
-                {sid&&<div>SID:{sid}</div>}
-                {ua&&<div>User Agent:{ua}</div>}
-                {utm_context&&<div>utm_context:{utm_context}</div>}
-                {userId&&<div>userId:{userId}</div>}
-                {findexarxid&&<div>findexarxid:{findexarxid}</div>}
-                {story&&<div>story:{story}</div>}
-                {isMobile&&<div>isMobile:{isMobile}</div>}
+                {league&&<Typography>League:{league}</Typography>}
+                {team&&<Typography>Team:{team}</Typography>}
+                {player&&<Typography>Player:{player}</Typography>}
+                {slug&&<Typography>Slug:{slug}</Typography>}
+                {url&&<Typography>Url:{url}</Typography>}
+                {view&&<Typography>View:{view}</Typography>}
+                {sid&&<Typography>SID:{sid}</Typography>}
+                {ua&&<Typography>User Agent:{ua}</Typography>}
+                {utm_context&&<Typography>utm_context:{utm_context}</Typography>}
+                {userId&&<Typography>userId:{userId}</Typography>}
+                {findexarxid&&<Typography>findexarxid:{findexarxid}</Typography>}
+                {story&&<Typography>story:{story}</Typography>}
+                {isMobile&&<Typography>isMobile:{isMobile}</Typography>}
 
 
                 
