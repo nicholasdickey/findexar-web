@@ -24,8 +24,8 @@ const ssr = async (context: GetServerSidePropsContext) => {
         let { tab, fbclid, utm_content, dark, view = "mentions", id,sid,story }:
             { fbclid: string, utm_content: string, dark: number, view: string, tab: string, id: string,sid:string,story:string } = context.query as any;
         let { userId }: { userId: string | null } = getAuth(context.req);
-        console.log("NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY",process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
-        console.log("CLERK_SECRET_KEY",process.env.CLERK_SECRET_KEY);
+       // console.log("NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY",process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
+       // console.log("CLERK_SECRET_KEY",process.env.CLERK_SECRET_KEY);
         console.log("AUTH:", userId);
         if (userId == "null")
             userId = '';
@@ -48,7 +48,7 @@ const ssr = async (context: GetServerSidePropsContext) => {
             console.log("GET USER ERROR:",x);
             user=null;
         }
-        console.log("========== ========= SSR CHECKPOINT 0:", new Date().getTime() - t1, "ms");
+          console.log("========== ========= SSR CHECKPOINT 0:", new Date().getTime() - t1, "ms");
 
         view = view.toLowerCase();
         if(view=='feed')
