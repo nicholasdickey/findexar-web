@@ -81,11 +81,11 @@ const ReportItem= function(name:string,expanded:string,setExpanded:any,sessionid
                 {findexarxid&&<Typography>findexarxid:{findexarxid}</Typography>}
                 {story&&<Typography>story:{story}</Typography>}
                 {isMobile&&<Typography>isMobile:{isMobile}</Typography>}
-                {story&&<>
-                        <Typography>url:${story.url}</Typography>
-                        <Typography>title:${story.title}</Typography>
-                        <Typography>slug:${story.slug}</Typography>
-                        <Typography>summary:${story.summary}</Typography>
+                {name=='story-click'&&story&&<>
+                        <Typography>url:{story.url}</Typography>
+                        <Typography>title:{story.title}</Typography>
+                        <Typography>slug:{story.slug}</Typography>
+                        <Typography>summary:{story.summary}</Typography>
                 </>}
 
 
