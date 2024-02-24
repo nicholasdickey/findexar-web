@@ -283,7 +283,7 @@ const Story: React.FC<Props> = ({ story }) => {
 
     const onStoryClick = useCallback(() => {
         try {
-         recordEvent(`story-click`, `{"story","${JSON.stringify(story)}","params":"${params}"}`)
+         recordEvent(`story-click`, `{"url":"${url}","story","${JSON.stringify(story)}","params":"${params}"}`)
              .then((r: any) => {
                  console.log("recordEvent", r);
              });

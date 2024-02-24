@@ -31,7 +31,6 @@ import { getReport } from '../lib/api'
 import styled from 'styled-components';
 import Script from 'next/script'
 
-
 import {
   GetServerSidePropsContext,
 } from "next";
@@ -45,7 +44,6 @@ import Image from 'next/image'
 import { Roboto } from 'next/font/google';
 import { AnyPtrRecord } from 'dns';
 import Paper from '@mui/material/Paper';
-
 
 const ReportItem= function(name:string,expanded:string,setExpanded:any,sessionid:string,reportItem:any){
   let cs=false;  
@@ -83,6 +81,12 @@ const ReportItem= function(name:string,expanded:string,setExpanded:any,sessionid
                 {findexarxid&&<Typography>findexarxid:{findexarxid}</Typography>}
                 {story&&<Typography>story:{story}</Typography>}
                 {isMobile&&<Typography>isMobile:{isMobile}</Typography>}
+                {story&&<>
+                        <Typography>url:${story.url}</Typography>
+                        <Typography>title:${story.title}</Typography>
+                        <Typography>slug:${story.slug}</Typography>
+                        <Typography>summary:${story.summary}</Typography>
+                </>}
 
 
                 
