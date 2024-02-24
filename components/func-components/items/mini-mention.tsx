@@ -109,7 +109,7 @@ interface Props {
     setLocalTeam: (team: string) => void;
     mutate: () => void;
     params: string;
-    sessionid: string;
+    
     tp: string;
     linkType: string;
     startExtended?: boolean;
@@ -117,7 +117,7 @@ interface Props {
     setSelectedXid: (xid: string) => void;
 }
 
-const MiniMention: React.FC<Props> = ({ selectedXid, setSelectedXid, startExtended, linkType, tp, sessionid, params, noUser, league, type, team, teamName, name, date, url, findex, summary, findexarxid, fav, setLocalPageType, setLocalPlayer, setLocalLeague, setLocalTeam, mutate }) => {
+const MiniMention: React.FC<Props> = ({ selectedXid, setSelectedXid, startExtended, linkType, tp,  params, noUser, league, type, team, teamName, name, date, url, findex, summary, findexarxid, fav, setLocalPageType, setLocalPlayer, setLocalLeague, setLocalTeam, mutate }) => {
     const [expanded, setExpanded] = React.useState(startExtended);
     const [hide, setHide] = React.useState(false);
     const [copied, setCopied] = React.useState(false);
@@ -163,14 +163,14 @@ const MiniMention: React.FC<Props> = ({ selectedXid, setSelectedXid, startExtend
 
     const onHover = useCallback((label: string) => {
         try {
-            recordEvent(sessionid as string || "", `mini-mention-hover`, `{"label","${label}","params":"${params}"}`)
+            recordEvent(`mini-mention-hover`, `{"label","${label}","params":"${params}"}`)
                 .then((r: any) => {
                     console.log("recordEvent", r);
                 });
         } catch (x) {
             console.log('recordEvent', x);
         }
-    }, [sessionid, params]);
+    }, [params]);
 
     const openMention = useCallback(async () => {
         setSelectedXid(findexarxid);
