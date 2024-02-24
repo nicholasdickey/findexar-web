@@ -119,7 +119,7 @@ interface Props {
 }
 const Desktop: React.FC<Props> = () => {
     const router = useRouter();
-    let { tab,view,mode, userId, isMobile, setLeague, setView,setTab, setPagetype, setTeam, setPlayer, setMode, sessionid, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName ,findexarxid} = useAppContext();
+    let { tab,view,mode, userId, isMobile, setLeague, setView,setTab, setPagetype, setTeam, setPlayer, setMode, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName ,findexarxid} = useAppContext();
     tab=tab||"all";
     view=view||"mentions";
     const onTabNav = async (option: any) => {

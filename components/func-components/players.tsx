@@ -119,7 +119,7 @@ interface Props {
 }
 const Players: React.FC<Props> = () => {
     const [signin, setSignin] = React.useState(false);
-    const { userId, isMobile, setLeague, setView, setTab, setPagetype, setTeam, setPlayer, setMode, sessionid, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName, setTeamName } = useAppContext();
+    const { userId, isMobile, setLeague, setView, setTab, setPagetype, setTeam, setPlayer, setMode, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName, setTeamName } = useAppContext();
     const teamPlayersKey: TeamPlayersKey = { type: 'teamPlayers', league: league || "", teamid: team || "" };
     const { data: players, error, isLoading, mutate: mutatePlayers } = useSWR(teamPlayersKey, getTeamPlayers);
     const theme = useTheme();
@@ -133,7 +133,7 @@ const Players: React.FC<Props> = () => {
         setPlayer(name);
         setView("mentions");
         setTab("all");
-        await recordEvent(sessionid as string || "",
+        await recordEvent(
             'player-nav',
             `{"params":"${params}","player":"${name}"}`
         );

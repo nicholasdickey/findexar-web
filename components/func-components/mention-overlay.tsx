@@ -99,7 +99,7 @@ interface Props {
 
 const MentionOverlay = ({ setDismiss, mutate, ...props }: Props) => {
   const [open, setOpen] = React.useState(false);
-  let { tab, view, mode, userId, isMobile, setLeague, setView, setTab, setPagetype, setTeam, setPlayer, setMode, sessionid, fbclid, utm_content, params, tp, pagetype, findexarxid } = useAppContext();
+  let { tab, view, mode, userId, isMobile, setLeague, setView, setTab, setPagetype, setTeam, setPlayer, setMode,  fbclid, utm_content, params, tp, pagetype, findexarxid } = useAppContext();
   const [xid, setXid] = React.useState<string>(findexarxid || "");
 
   const key: AMentionKey = { type: "AMention", findexarxid: xid, noLoad: xid !== "" ? false : true };

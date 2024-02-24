@@ -43,6 +43,7 @@ interface Props {
     sid:string;
     teamName:string;
     slug:string;
+    tracker_filter:number;
 }
 export default function Home(props: Props) {
     const fallback = props.fallback;

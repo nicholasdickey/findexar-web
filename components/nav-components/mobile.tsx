@@ -80,7 +80,7 @@ interface Props {
 }
 const Mobile: React.FC<Props> = () => {
     const router = useRouter();
-    let { tab, view, mode, userId, isMobile, setLeague, setView, setTab, params2, tp2, setPagetype, setTeam, setPlayer, setMode, sessionid, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName } = useAppContext();
+    let { tab, view, mode, userId, isMobile, setLeague, setView, setTab, params2, tp2, setPagetype, setTeam, setPlayer, setMode, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName } = useAppContext();
 
     tab = tab || "all";
     const onTabNav = async (option: any) => {
@@ -102,11 +102,11 @@ const Mobile: React.FC<Props> = () => {
         else
             router.replace(`/pub/league/${league}/team/${team}?view=${encodeURIComponent(name)}${params2}${tp2.replace('?', '&')}`, undefined, { shallow: true });
 
-        await recordEvent(sessionid as string || "",
+        await recordEvent(
             'view-nav',
             `{"fbclid":"${fbclid}","utm_content":"${utm_content}","view":"${name}"}`
         );
-    }, [fbclid, utm_content, sessionid, league, params2, tp2]);
+    }, [fbclid, utm_content,  league, params2, tp2]);
     //console.log("MOBILE:", { pagetype, view, tab })
     return (
         <MobileContainerWrap>

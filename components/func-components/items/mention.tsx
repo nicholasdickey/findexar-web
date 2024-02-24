@@ -312,7 +312,7 @@ interface Props {
 }
 
 const Mention: React.FC<Props> = ({mini, startExtended, linkType,mention, mutate }) => {
-    const { mode, userId, noUser,view,tab,isMobile, setLeague, setView, setPagetype, setTeam, setPlayer, setMode, sessionid, fbclid, utm_content, params, tp,  pagetype,  setTeamName } = useAppContext();
+    const { mode, userId, noUser,view,tab,isMobile, setLeague, setView, setPagetype, setTeam, setPlayer, setMode,fbclid, utm_content, params, tp,  pagetype,  setTeamName } = useAppContext();
 
     let { league, type, team, teamName, name, date, url, findex, summary, findexarxid, fav } = mention;
     linkType=linkType||'final';
@@ -403,11 +403,11 @@ const Mention: React.FC<Props> = ({mini, startExtended, linkType,mention, mutate
         else
             pgt='team';
         setPagetype(pgt);
-        await recordEvent(sessionid as string || "",
+        await recordEvent(
             'mention-nav',
-            `{"params":"${params}","league":"${league}","team":"${team}","name":"${name}","pagetype":"${pgt}","sessionid":"${sessionid}"}`
+            `{"params":"${params}","league":"${league}","team":"${team}","name":"${name}","pagetype":"${pgt}"}`
         );
-    },[league,team,type,params,sessionid]);
+    },[league,team,type,params]);
 
     const enableRedirect = useCallback(() => {
         if (window && window.Clerk) {
@@ -423,33 +423,33 @@ const Mention: React.FC<Props> = ({mini, startExtended, linkType,mention, mutate
 
     const onExtended =useCallback( async (on: boolean) => {
 
-        await recordEvent(sessionid as string || "",
+        await recordEvent(
             'mention-extended',
             `{"on":"${on}","summary","${summary}","url":"${url}","params":"${params}"}`
         );
-    },[sessionid,params]);
+    },[params]);
 
     const onHover = useCallback((label: string) => {
         try {
-            recordEvent(sessionid as string || "", `mention-hover`, `{"label":"${label}","url":"${url}","params":"${params}"}`)
+            recordEvent(`mention-hover`, `{"label":"${label}","url":"${url}","params":"${params}"}`)
                 .then((r: any) => {
                     console.log("recordEvent", r);
                 });
         } catch (x) {
             console.log('recordEvent', x);
         }
-    },[sessionid,params]);
+    },[params]);
 
     const onShare = useCallback((url: string) => {
         try {
-            recordEvent(sessionid as string || "", `mention-share`, `{"url","${url}","params":"${params}"}`)
+            recordEvent( `mention-share`, `{"url","${url}","params":"${params}"}`)
                 .then((r: any) => {
                     console.log("recordEvent", r);
                 });
         } catch (x) {
             console.log('recordEvent', x);
         }
-    },[sessionid,params]);
+    },[params]);
 
     const onCopyClick = useCallback(() => {
         setCopied(true);

@@ -142,7 +142,7 @@ const RightScroll = styled.div`
 interface Props {
 }
 const MyTeam: React.FC<Props> = () => {
-    const { userId, isMobile, noUser, setLeague, setView, setPagetype, setTeam, setPlayer, setMode, sessionid, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName, setTeamName } = useAppContext();
+    const { userId, isMobile, noUser, setLeague, setView, setPagetype, setTeam, setPlayer, setMode, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName, setTeamName } = useAppContext();
 
     const trackerListMembersKey: TrackerListMembersKey = { type: "tracker_list_members", league, noUser, noLoad: false };
     const { data: trackerListMembers, error: trackerListError, isLoading: trackerListLoading, mutate: trackerListMutate } = useSWR(trackerListMembersKey, getTrackerListMembers);

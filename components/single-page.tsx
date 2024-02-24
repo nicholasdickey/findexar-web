@@ -21,11 +21,11 @@ import { UserButton } from "@clerk/nextjs";
 import { useSubscription } from "use-stripe-subscription";
 //other
 import 'material-icons/iconfont/outlined.css';
-import { getCookie, hasCookie } from 'cookies-next';
+//import { getCookie, hasCookie } from 'cookies-next';
 //local
 import { palette } from '@/lib/palette';
 import GlobalStyle from '@/components/globalstyles';
-import { recordEvent, AMentionKey, getAMention,AStoryKey,getAStory,getASlugStory,ASlugStoryKey } from '@/lib/api';
+import { recordEvent, AMentionKey, getAMention,getASlugStory,ASlugStoryKey } from '@/lib/api';
 import { AppWrapper } from '@/lib/context';
 
 import Header from "@/components/nav-components/header";
@@ -69,9 +69,9 @@ interface Props {
   tab: string;
   mode: string;
   findexarxid: string;
-  sid: string;
   teamName:string;
   slug:string;
+  tracker_filter:number;
 }
 const SubscriptionWrap= styled.div`
   margin-top:20px;
@@ -79,7 +79,7 @@ const SubscriptionWrap= styled.div`
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 
 const SinglePage: React.FC<Props> = (props) => {
-  let { teamName:tn,findexarxid, sid,slug="", mode, tab, t1, fbclid = "", sessionid = "", isfb, isbot, list, freeUser, createdAt, userId, utm_content, dark, leagues, league = "", team = "", pagetype = "league", player = "", view = "" } = props;
+  let { tracker_filter=0,teamName:tn,findexarxid,slug="", tab, t1, fbclid = "", isfb, isbot, list, freeUser, createdAt, userId, utm_content, dark, leagues, league = "", team = "", pagetype = "league", player = "", view = "" } = props;
 
   const [localTeam, setLocalTeam] = useState(team);
   const [localPlayer, setLocalPlayer] = useState(player);
@@ -94,9 +94,9 @@ const SinglePage: React.FC<Props> = (props) => {
   const [tp, setTp] = useState("");
   const [tp2, setTp2] = useState("");
   const [localTab, setLocalTab] = React.useState(tab);
-  const [localMode, setLocalMode] = React.useState(mode);
+  const [localMode, setLocalMode] = React.useState(dark==-1?'unknown':dark==1? 'dark' : 'light');
   const [localFindexarxid, setLocalFindexarxid] = React.useState(findexarxid||"");
-  const [localSid, setLocalSid] = React.useState(sid||"");
+ // const [localSid, setLocalSid] = React.useState(sid||"");
   const [localSlug, setLocalSlug] = React.useState(slug||"");
   const [localView, setLocalView] = useState(view.toLowerCase());
   const [teamName, setTeamName] = useState(tn);
@@ -242,14 +242,14 @@ const SinglePage: React.FC<Props> = (props) => {
   useEffect(() => {
     if (t1>0) {
       const t2 = new Date().getTime();
-      recordEvent(sessionid as string || "", `spa-loaded-time`, `{"fbclid":"${fbclid}","utm_content":"${utm_content}", "slug":"${slug}", "findexarxid":"${findexarxid}","t1":"${t1}","time":"${t2 - t1 || 0}"}`).then(() => { });
+      recordEvent(`spa-loaded-time`, `{"fbclid":"${fbclid}","utm_content":"${utm_content}", "slug":"${slug}", "findexarxid":"${findexarxid}","t1":"${t1}","time":"${t2 - t1 || 0}"}`).then(() => { });
     }
-  }, [fbclid,t1, sessionid,utm_content, slug, findexarxid]);
+  }, [fbclid,t1, utm_content, slug, findexarxid]);
 
   useEffect(() => {
     if (pagetype != 'landing') {
       try {
-        recordEvent(sessionid as string || "", `spa-enter`, `{"fbclid":"${fbclid}","isbot":"${isbot}","league":"${league}", "team":"${team}", "player":"${player}", "pagetype":"${pagetype}", "view":"${view}", "userId":"${localUserId}", "slug":"${slug}", "findexarxid":"${findexarxid}","utm_content":"${utm_content}"}`)
+        recordEvent(`spa-enter`, `{"fbclid":"${fbclid}","isbot":"${isbot}","league":"${league}", "team":"${team}", "player":"${player}", "pagetype":"${pagetype}", "view":"${view}", "userId":"${localUserId}", "slug":"${slug}", "findexarxid":"${findexarxid}","utm_content":"${utm_content}"}`)
           .then((r: any) => {
             console.log("recordEvent", r);
           });
@@ -257,20 +257,16 @@ const SinglePage: React.FC<Props> = (props) => {
         console.log('recordEvent', x);
       }
     }
-  }, [pagetype, league, team, player, view, fbclid, utm_content, isbot, localUserId, sessionid]);
+  }, [pagetype, league, team, player, view, fbclid, utm_content, isbot, localUserId]);
 
   useEffect(() => {
-    if (!hasCookie('mode')) {
+    if (localMode=='unknown') {
       const matchMedia = window.matchMedia("(prefers-color-scheme: dark)");
       const matches = matchMedia.matches;
       document.body.setAttribute("data-theme", matchMedia.matches ? 'dark' : 'light');
-      setLocalMode('light');//matchMedia.matches ? 'dark' : 'light');
+      setLocalMode(matchMedia.matches ? 'dark' : 'light');
     }
-    else {
-      let mode = getCookie('mode') || "";
-      if (mode != localMode)
-        setLocalMode(mode);
-    }
+    
   }, []);
 
   const onLeagueNavClick = useCallback(async (l: string) => {
@@ -279,11 +275,10 @@ const SinglePage: React.FC<Props> = (props) => {
     console.log("onLeagueNavClick", l, "setpagetype league2")
     setLocalPageType('league');
     setLocalTeam("")
-    await recordEvent(sessionid as string || "",
-      'league-nav',
-      `{"fbclid":"${fbclid}","utm_content":"${utm_content}","league":"${l}", "sid":"${sid}", "findexarxid:","${findexarxid}"}`
+    await recordEvent('league-nav',
+      `{"fbclid":"${fbclid}","utm_content":"${utm_content}","league":"${l}", "findexarxid:","${findexarxid}"}`
     );
-  }, [fbclid, utm_content, sessionid]);
+  }, [fbclid, utm_content]);
 
   console.log("PAGE state:", { userId, localUserId, v, localMode, localPageType, localLeague, localTeam, localPlayer, params, params2 })
 
@@ -291,12 +286,9 @@ const SinglePage: React.FC<Props> = (props) => {
   //console.log("aMentionKey:", aMentionKey);
   const { data: amention } = useSWR(aMentionKey, getAMention)
   const { summary: amentionSummary = "", league: amentionLeague = "", type = "", team: amentionTeam = "", teamName: amentionTeamName = "", name: amentionPlayer = "", image: amentionImage = "", date: amentionDate = "" } = amention ? amention : {};
-
-  const astoryKey: AStoryKey = { type: "AStory", sid:localSid, noLoad: localSid == "" ? true : false };
-  let { data: astory } = useSWR(astoryKey, getAStory)
   const aSlugStoryKey: ASlugStoryKey = { type: "ASlugStory", slug:localSlug, noLoad: localSlug == "" ? true : false };
   let { data: aSlugStory } = useSWR(aSlugStoryKey, getASlugStory);
-  astory=astory||aSlugStory;
+  let astory=aSlugStory;
   const { title:astoryTitle="",site_name:astorySite_Name="",authors:astoryAuthors="",digest: astoryDigest = "", image: astoryImage = "", createdTime: astoryDate = "" ,mentions:mentions=[],image_width=0,image_height=0} = astory ? astory : {};
   //console.log("astory:",localSid,astory)
   const astoryImageOgUrl=astoryImage?`${process.env.NEXT_PUBLIC_SERVER}/api/og.png/${encodeURIComponent(astoryImage||"")}/${encodeURIComponent(astorySite_Name||"")}/${image_width}/${image_height}`:``;
@@ -323,8 +315,8 @@ const SinglePage: React.FC<Props> = (props) => {
   let ogImage = astoryImageOgUrl ? astoryImageOgUrl : process.env.NEXT_PUBLIC_SITE_NAME=="Findexar"?"https://findexar.com/findexar-logo.png":"https://www.qwiket.com/QLogo.png";
   let ogTitle = ogTarget ? `${ogTarget}` : `${[process.env.NEXT_PUBLIC_SITE_NAME]} Sports Media Index`;
   if(astory){
-    ogUrl= league?`${process.env.NEXT_PUBLIC_SERVER}/pub/league/${league}?${localSid?`sid=${localSid}`:localSlug?`story=${localSlug}`:``}`
-     :`${process.env.NEXT_PUBLIC_SERVER}/pub?${localSid?`sid=${localSid}`:localSlug?`story=${localSlug}`:``}`;
+    ogUrl= league?`${process.env.NEXT_PUBLIC_SERVER}/pub/league/${league}?${localSlug?`story=${localSlug}`:``}`
+     :`${process.env.NEXT_PUBLIC_SERVER}/pub?${localSlug?`story=${localSlug}`:``}`;
     ogTitle=astoryTitle;
     ogDescription=astoryDigest.replaceAll('<p>','').replaceAll('</p>',"\n\n");
     ogImage=astoryImageOgUrl;
@@ -380,7 +372,7 @@ const SinglePage: React.FC<Props> = (props) => {
             //@ts-ignore
             theme={palette}>
             <GlobalStyle $light={localMode == "light"} />
-            <AppWrapper userId={localUserId} isMobile={isMobile} setUserId={setLocalUserId} params={params} params2={params2} tp={tp} tp2={tp2} findexarxid={localFindexarxid} view={v} tab={localTab} noUser={!localUserId} mode={localMode} setMode={setLocalMode} pagetype={localPageType} sessionid={sessionid} setLeague={setLocalLeague} setPagetype={setLocalPageType} setPlayer={setLocalPlayer} setTeam={setLocalTeam} setTab={setLocalTab} setView={setLocalView} league={localLeague.toUpperCase()} team={localTeam} player={localPlayer} fbclid={fbclid} utm_content={utm_content} teamName={teamName} setTeamName={setTeamName} sid={localSid} setSid={setLocalSid} slug={localSlug} setSlug={setLocalSlug}>
+            <AppWrapper userId={localUserId} isMobile={isMobile} setUserId={setLocalUserId} params={params} params2={params2} tp={tp} tp2={tp2} findexarxid={localFindexarxid} view={v} tab={localTab} noUser={!localUserId} mode={localMode} setMode={setLocalMode} pagetype={localPageType} setLeague={setLocalLeague} setPagetype={setLocalPageType} setPlayer={setLocalPlayer} setTeam={setLocalTeam} setTab={setLocalTab} setView={setLocalView} league={localLeague.toUpperCase()} team={localTeam} player={localPlayer} fbclid={fbclid} utm_content={utm_content} teamName={teamName} setTeamName={setTeamName} slug={localSlug} setSlug={setLocalSlug}>
               <Header leagues={leagues} />
               {!dismiss&&subscriptionPrompt&&<SubscriptionWrap><SubscriptionMenu  products={products}  redirectToCheckout={redirectToCheckout}
     redirectToCustomerPortal={redirectToCustomerPortal}

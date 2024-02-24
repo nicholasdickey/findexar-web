@@ -35,7 +35,7 @@ const SelectedSideTeam = styled.div`
 interface Props {
 }
 const Teams: React.FC<Props> = () => {
-  const { mode, userId, isMobile, setLeague, setView, setTab, setPagetype, setTeam, setPlayer, setMode, sessionid, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName, setTeamName } = useAppContext();
+  const { mode, userId, isMobile, setLeague, setView, setTab, setPagetype, setTeam, setPlayer, setMode, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName, setTeamName } = useAppContext();
 
   const leagueTeamsKey: LeagueTeamsKey = { func: "leagueTeams", league: league || "", noLoad: pagetype == "landing" };
   const { data: teams, error, isLoading } = useSWR(leagueTeamsKey, getLeagueTeams);
@@ -52,11 +52,11 @@ const Teams: React.FC<Props> = () => {
               return true;
           }
       })
-      await recordEvent(sessionid as string || "",
+      await recordEvent(
         'team-nav',
         `{"params":"${params}","teamid":"${name}"}`
       );
-  }, [sessionid, params]);
+  }, [ params]);
 
 
   let TeamsNav = null;

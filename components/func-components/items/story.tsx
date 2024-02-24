@@ -220,7 +220,7 @@ interface Props {
 }
 
 const Story: React.FC<Props> = ({ story }) => {
-    const { mode, userId, noUser, view, tab, isMobile, setLeague, setView, setPagetype, setTeam, setPlayer, setMode, sessionid, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName, setTeamName } = useAppContext();
+    const { mode, userId, noUser, view, tab, isMobile, setLeague, setView, setPagetype, setTeam, setPlayer, setMode, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName, setTeamName } = useAppContext();
 
     let { title, url, digest, site_name, image, authors, createdTime, mentions, xid,slug } = story;
     //console.log("STORY CREATED TIME", createdTime,title,site_name);
@@ -256,23 +256,23 @@ const Story: React.FC<Props> = ({ story }) => {
 
     const onShare = useCallback((url: string) => {
         try {
-            recordEvent(sessionid as string || "", `story-share`, `{"url","${url}","params":"${params}"}`)
+            recordEvent(`story-share`, `{"url":"${url}","params":"${params}"}`)
                 .then((r: any) => {
                     console.log("recordEvent", r);
                 });
         } catch (x) {
             console.log('recordEvent', x);
         }
-    }, [sessionid, params]);
+    }, [ params]);
 
     const onDigestCopyClick = useCallback(() => {
         setDigestCopied(true);
         copy(digest);
     }, [digest]);
-    const onMentionClick = useCallback((mention:any) => {
 
+    const onMentionClick = useCallback((mention:any) => {
        try {
-        recordEvent(sessionid as string || "", `min-mention-click`, `{"mention","${JSON.stringify(mention)}","params":"${params}"}`)
+        recordEvent(`min-mention-click`, `{"mention","${JSON.stringify(mention)}","params":"${params}"}`)
             .then((r: any) => {
                 console.log("recordEvent", r);
             });
@@ -281,11 +281,21 @@ const Story: React.FC<Props> = ({ story }) => {
     } 
     }, []);
 
+    const onStoryClick = useCallback(() => {
+        try {
+         recordEvent(`story-click`, `{"story","${JSON.stringify(story)}","params":"${params}"}`)
+             .then((r: any) => {
+                 console.log("recordEvent", r);
+             });
+     } catch (x) {
+         console.log('recordEvent', x);
+     } 
+     }, []);
+
     const Mentions = <MentionsWrap>{mentions && mentions.map((mention: any, i: number) => {
         return (
-            <MiniMention onClick={()=>onMentionClick(mention)} key={`mention-${i}`} {...mention} sessionid={sessionid} params={params} tp={tp} selectedXid={selectedXid} setSelectedXid={setSelectedXid} mutate={()=>{}}/>
+            <MiniMention onClick={()=>onMentionClick(mention)} key={`mention-${i}`} {...mention} params={params} tp={tp} selectedXid={selectedXid} setSelectedXid={setSelectedXid} mutate={()=>{}}/>
         )
-
     })}</MentionsWrap>;
 
     if (image&&image.indexOf("thestar.com/content/tncms/custom/image/f84403b8-7d76-11ee-9d02-a72a4951957f.png") >= 0)
@@ -294,28 +304,28 @@ const Story: React.FC<Props> = ({ story }) => {
     return (
         <>
             <DesktopWrap>
-                <Link href={url}>
+                <Link href={url} onClick={onStoryClick}>
                     <Topline><LocalDate><i>{localDate}</i></LocalDate></Topline>
                     <Title>{title}</Title>
                 </Link>
-                <Link href={url}>
+                <Link href={url} onClick={onStoryClick}>
                     <Byline>
                         {authors && <Authors>{authors}</Authors>}
                         <SiteName>{site_name}</SiteName>
                     </Byline>
                 </Link>
                 <HorizontalContainer>
-                    <Link href={url}>
+                    <Link href={url} onClick={onStoryClick}>
                         <ImageWrapper>
                             {image && !(image.indexOf("thestar.com/content/tncms/custom/image/f84403b8-7d76-11ee-9d02-a72a4951957f.png") >= 0) && <Image src={image} alt={title} />}
                         </ImageWrapper>
                     </Link>
                     <Body>
-                        {false && <Link href={url} target="_blank"><ArticleDigest>
+                        {false && <Link href={url} onClick={onStoryClick} target="_blank"><ArticleDigest>
                             <b>{true ? 'Digest:' : 'Short Digest:'}</b>
                         </ArticleDigest></Link>}
                         <Digest>
-                            <Link href={url} target="_blank">
+                            <Link href={url} onClick={onStoryClick} target="_blank">
                                 <div dangerouslySetInnerHTML={{ __html: digest }} />
                             </Link>
                             <ContentCopyIcon style={{ paddingTop: 6, marginTop: -10, cursor: 'pointer' }} fontSize="small" sx={{ color: digestCopied ? 'green' : '' }} onClick={() => onDigestCopyClick()} />
@@ -327,7 +337,7 @@ const Story: React.FC<Props> = ({ story }) => {
                     {Mentions}
                 </ArticleMentions>
                 <br />
-                <Link style={{marginLeft:10}} href={url} target="_blank">{url?.substring(0, 50)}..</Link>
+                <Link style={{marginLeft:10}} href={url} onClick={onStoryClick} target="_blank">{url?.substring(0, 50)}..</Link>
                 <BottomLine>
                     <ShareGroup><RWebShare
                         data={{
@@ -346,25 +356,25 @@ const Story: React.FC<Props> = ({ story }) => {
             </DesktopWrap>
             <MobileWrap>
                 <Topline><LocalDate><i>{localDate}</i></LocalDate></Topline>
-                <Link href={url}><Title>{title}</Title></Link>
-                <Link href={url}><Byline>
+                <Link href={url} onClick={onStoryClick}><Title>{title}</Title></Link>
+                <Link href={url} onClick={onStoryClick}><Byline>
                     {authors && <Authors>{authors}</Authors>}
                     <SiteName>{site_name}</SiteName>
                 </Byline>
                 </Link>
                 <HorizontalContainer>
-                    <Link href={url}>
+                    <Link href={url} onClick={onStoryClick}>
                         <ImageWrapper>
                             <Image src={image} width={100} height={100} alt={title} />
                         </ImageWrapper>
                     </Link>
                     <Body>
-                        {false && <Link href={url||""}><ArticleDigest>
+                        {false && <Link onClick={onStoryClick} href={url||""}><ArticleDigest>
                             {true ? 'Article Digest:' : 'Short Digest:'}
                         </ArticleDigest>
                         </Link>}
                         <Digest>
-                            <Link href={url||""}> <div dangerouslySetInnerHTML={{ __html: digest }} /></Link>
+                            <Link href={url||""} onClick={onStoryClick}> <div dangerouslySetInnerHTML={{ __html: digest }} /></Link>
                             <ShareContainerInline>
                                 <ContentCopyIcon style={{ paddingTop: 6, marginBottom: 0, marginTop: -10 }} fontSize="small" sx={{ color: digestCopied ? 'green' : '' }} onClick={() => onDigestCopyClick()} />
                             </ShareContainerInline>

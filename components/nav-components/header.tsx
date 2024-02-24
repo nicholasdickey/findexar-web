@@ -337,7 +337,7 @@ let s = false;
 const HeaderNav: React.FC<Props> = ({ leagues }) => {
   const [scrolled, setScrolled] = useState(false);
   const [scrollY, setScrollY] = useState(0);
-  const { mode, userId, isMobile, setLeague, setView, setPagetype, setTeam, setPlayer, setMode, sessionid, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName } = useAppContext();
+  const { mode, userId, isMobile, setLeague, setView, setPagetype, setTeam, setPlayer, setMode, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName } = useAppContext();
 
   const router = useRouter();
   const onLeagueNavClick = useCallback(async (l: string) => {
@@ -345,11 +345,11 @@ const HeaderNav: React.FC<Props> = ({ leagues }) => {
     setView('mentions');
     setPagetype('league');
     setTeam("")
-    await recordEvent(sessionid as string || "",
+    await recordEvent(
       'league-nav',
       `{"fbclid":"${fbclid}","utm_content":"${utm_content}","league":"${l}"}`
     );
-  }, [fbclid, utm_content, sessionid]);
+  }, [fbclid, utm_content]);
 
   useEffect(() => {
     const listener = () => {
@@ -360,7 +360,7 @@ const HeaderNav: React.FC<Props> = ({ leagues }) => {
           try {
             s = true;
             setScrolled(true);
-            recordEvent(sessionid||"", `header-scrolled`, `{"league":"${league}","team":"${team}","player":"${player}","fbclid":"${fbclid}", "utm_content":"${utm_content}"}`)
+            recordEvent(`header-scrolled`, `{"league":"${league}","team":"${team}","player":"${player}","fbclid":"${fbclid}", "utm_content":"${utm_content}"}`)
               .then((r: any) => {
                 console.log("recordEvent", r);
               });
@@ -390,7 +390,15 @@ const HeaderNav: React.FC<Props> = ({ leagues }) => {
 
   const updateMode = useCallback(async (mode: string) => {
     setMode(mode);
-    await setCookie({ name: 'mode', value: mode });
+    await fetch(`/api/session/save`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({ session: { dark: mode=='dark'?1:0 } })
+    });
+    //await setCookie({ name: 'mode', value: mode });
   }, []);
 
   const LeaguesNav = leagues?.map((l: string, i: number) => {

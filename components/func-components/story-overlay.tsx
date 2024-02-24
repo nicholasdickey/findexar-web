@@ -6,7 +6,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import { AStoryKey,getAStory, recordEvent,removeAStory,ASlugStoryKey,getASlugStory } from '@/lib/api';
+import {  recordEvent,ASlugStoryKey,getASlugStory,removeASlugStory } from '@/lib/api';
 import Story from '@/components/func-components/items/story';
 import { useAppContext } from '@/lib/context';
 
@@ -98,14 +98,13 @@ interface Props {
 
 const MentionOverlay = ({setDismiss,mutate,...props}:Props) => {
     const [open, setOpen] = React.useState(false);
-    let { tab,view,mode, userId, isMobile,league,team,teamName, setLeague, setView,setTab, setPagetype, setTeam, setPlayer, setMode, sessionid, fbclid, utm_content, params, tp,  pagetype,  sid,slug} = useAppContext();
+    let { tab,view,mode, userId, isMobile,league,team,teamName, setLeague, setView,setTab, setPagetype, setTeam, setPlayer, setMode, fbclid, utm_content, params, tp,  pagetype,  sid,slug} = useAppContext();
     const [xid, setXid] = React.useState<string>(sid||"");
     
-    const key:AStoryKey={type:"AStory",sid:xid,noLoad:xid!==""?false:true};
-    let { data: astory, error, isLoading }= useSWR(key, getAStory);
+
     const aSlugStoryKey: ASlugStoryKey = { type: "ASlugStory", slug:slug, noLoad: slug == "" ? true : false };
     let { data: aSlugStory } = useSWR(aSlugStoryKey, getASlugStory);
-    astory=astory||aSlugStory;
+    let astory=aSlugStory;
 
     const {title, url, digest, site_name, image, authors, createdTime, mentions}=astory||{};
     const theme = useTheme();
@@ -160,7 +159,7 @@ const MentionOverlay = ({setDismiss,mutate,...props}:Props) => {
 
   const remove=useCallback(async ()=>{
     if(admin){
-        await removeAStory(key);
+        await removeASlugStory(aSlugStoryKey);
         setOpen(false);
         setDismiss(true);
     }

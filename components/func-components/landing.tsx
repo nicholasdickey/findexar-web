@@ -190,7 +190,7 @@ const Landing = () => {
                     try {
                         s = true;
                         setScrolled(true);
-                        recordEvent("", `landing-scrolled`, `{"fbclid":"${fbclid}", "utm_content":"${utm_content}"}`)
+                        recordEvent( `landing-scrolled`, `{"fbclid":"${fbclid}", "utm_content":"${utm_content}"}`)
                             .then((r: any) => {
                                 console.log("recordEvent", r);
                             });
@@ -231,7 +231,7 @@ const Landing = () => {
         if (!router.isReady || !params) return;
 
         try {
-            recordEvent("", `landing-loaded`, `{"fbclid":"${fbclid}", "utm_content":"${utm_content}"}`)
+            recordEvent( `landing-loaded`, `{"fbclid":"${fbclid}", "utm_content":"${utm_content}"}`)
                 .then((r: any) => {
                     console.log("recordEvent", r);
                 });
@@ -243,7 +243,7 @@ const Landing = () => {
 
     const onClick = () => {
         try {
-            recordEvent("", `enter-clicked`, `{"fbclid":"${fbclid}", "utm_content":"${utm_content}"}`)
+            recordEvent(`enter-clicked`, `{"fbclid":"${fbclid}", "utm_content":"${utm_content}"}`)
                 .then((r: any) => {
                     console.log("recordEvent", r);
                 });
@@ -253,7 +253,7 @@ const Landing = () => {
     }
     const onFarSide = () => {
         try {
-            recordEvent("", `far-side`, `{"fbclid":"${fbclid}", "utm_content":"${utm_content}"}`)
+            recordEvent( `far-side`, `{"fbclid":"${fbclid}", "utm_content":"${utm_content}"}`)
                 .then((r: any) => {
                     console.log("recordEvent", r);
                 });
@@ -264,7 +264,7 @@ const Landing = () => {
 
     const onHover = (label: string) => {
         try {
-            recordEvent("", `hover`, `{"label","${label}","fbclid":"${fbclid}", "utm_content":"${utm_content}"}`)
+            recordEvent( `hover`, `{"label","${label}","fbclid":"${fbclid}", "utm_content":"${utm_content}"}`)
                 .then((r: any) => {
                     console.log("recordEvent", r);
                 });

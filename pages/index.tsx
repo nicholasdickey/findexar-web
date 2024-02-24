@@ -4,7 +4,7 @@ import { SWRConfig } from 'swr'
 import { isbot } from '../lib/isbot.js';
 import SinglePage from '../components/single-page';
 import { recordEvent } from '../lib/api'
-import { getCookie,setCookie } from 'cookies-next';
+//import { getCookie,setCookie } from 'cookies-next';
 
 
 interface Props {
@@ -14,7 +14,6 @@ interface Props {
     utm_content?: string;
     isbot?: number;
     isfb?: number;
-    sessionid?: string;
     pagetype?: string;
     league?: string;
     team?: string;
@@ -33,6 +32,7 @@ interface Props {
     sid:string;
     teamName:string;
     slug:string;
+    tracker_filter:number;
 }
 export default function Home(props: Props) {
    // const fallback = props.fallback;
@@ -48,7 +48,7 @@ export const getServerSideProps =
         fbclid = fbclid || '';
         const ua = context.req.headers['user-agent'];
         const botInfo = isbot({ ua });
-        let host = context.req.headers.host || "";
+      /*  let host = context.req.headers.host || "";
         var randomstring = () => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
         let fresh = false;
         let sessionid=getCookie('sessionid', { req:context.req, res:context.res });
@@ -58,7 +58,8 @@ export const getServerSideProps =
             sessionid = randomstring();
             setCookie('sessionid', sessionid, { req:context.req, res:context.res, maxAge: 60 * 6 * 24 });  
         }
-        if (!botInfo.bot) {
+        */
+       /* if (!botInfo.bot) {
             console.log('ssr-landing-init');
             try {
                 recordEvent(sessionid, `ssr-landing${fresh?'-init':''}`, `{"fbclid":"${fbclid}","ua":"${ua}","utm_content":"${utm_content}"}`);
@@ -72,7 +73,7 @@ export const getServerSideProps =
             } catch (x) {
                 console.log('ssr-bot-landing-init-error', x);
             }
-        }
+        }*/
       /*  return {
             props: {
                 sessionid,
