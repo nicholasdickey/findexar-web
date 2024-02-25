@@ -290,9 +290,10 @@ const SinglePage: React.FC<Props> = (props) => {
   let { data: aSlugStory } = useSWR(aSlugStoryKey, getASlugStory);
   let astory=aSlugStory;
   const { title:astoryTitle="",site_name:astorySite_Name="",authors:astoryAuthors="",digest: astoryDigest = "", image: astoryImage = "", createdTime: astoryDate = "" ,mentions:mentions=[],image_width=0,image_height=0} = astory ? astory : {};
-  //console.log("astory:",localSid,astory)
+  //console.log("astory=>client:",aSlugStoryKey,astory)
+  //console.log("astoryImage:",astoryImage);
   const astoryImageOgUrl=astoryImage?`${process.env.NEXT_PUBLIC_SERVER}/api/og.png/${encodeURIComponent(astoryImage||"")}/${encodeURIComponent(astorySite_Name||"")}/${image_width}/${image_height}`:``;
- 
+  //console.log("astoryImageOgUrl:",astoryImageOgUrl);
   //prep meta data for amention
   let ogUrl = '';
   if (amention && amentionLeague && amentionTeam && amentionPlayer)
@@ -313,6 +314,7 @@ const SinglePage: React.FC<Props> = (props) => {
 
   let ogDescription = amentionSummary ? amentionSummary : "Fantasy Sports Media Index.";
   let ogImage = astoryImageOgUrl ? astoryImageOgUrl : process.env.NEXT_PUBLIC_SITE_NAME=="Findexar"?"https://findexar.com/findexar-logo.png":"https://www.qwiket.com/QLogo.png";
+  //console.log("ogImage:",ogImage);
   let ogTitle = ogTarget ? `${ogTarget}` : `${[process.env.NEXT_PUBLIC_SITE_NAME]} Sports Media Index`;
   if(astory){
     ogUrl= league?`${process.env.NEXT_PUBLIC_SERVER}/pub/league/${league}?${localSlug?`story=${localSlug}`:``}`

@@ -177,7 +177,7 @@ const getServerSideProps = withSessionSsr(
             const getAMentionKey: AMentionKey = { type: "AMention", findexarxid: findexarxid || "", noLoad: findexarxid == "" ? false : true };
             let amention = null;
            
-            const getASlugStoryKey: ASlugStoryKey = { type: "AStory", slug: story, noLoad: story == "" ? true : false };
+            const getASlugStoryKey: ASlugStoryKey = { type: "ASlugStory", slug: story, noLoad: story == "" ? true : false };
             //let astory = null;
             const metalinkKey: MetaLinkKey = { func: "meta", findexarxid, long: 1 };
             let metaLink = null;
@@ -191,9 +191,10 @@ const getServerSideProps = withSessionSsr(
                 console.log("GOT ASTORY:", astory);
             }*/
             let astory = null;
+           // console.log("story:",story)
             if (story) {
                 astory = await getASlugStory(getASlugStoryKey);
-                console.log("GOT A SLUG STORY:", astory);
+               // console.log("GOT A SLUG STORY:", astory);
             }
             let fetchStories = [];
             console.log("VIEW:", view, "tab:", tab, "team:", team, "player:", player, "league:", league, "userId", userId, "keyMentions:", keyMentions)
@@ -293,6 +294,7 @@ const getServerSideProps = withSessionSsr(
            // fallback[unstable_serialize({ type: "options", noUser: userId ? false : true })] = options;
             fallback[unstable_serialize(trackerListMembersKey)] = trackerListMembers;
             fallback[unstable_serialize(getAMentionKey)] = amention;
+           // console.log("fallback:",getASlugStoryKey,astory)
             fallback[unstable_serialize(getASlugStoryKey)] = astory;
             fallback[unstable_serialize(metalinkKey)] = metaLink;
 
