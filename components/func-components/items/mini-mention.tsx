@@ -115,9 +115,11 @@ interface Props {
     startExtended?: boolean;
     selectedXid: string;
     setSelectedXid: (xid: string) => void;
+
+    handleClose: () => void;
 }
 
-const MiniMention: React.FC<Props> = ({ selectedXid, setSelectedXid, startExtended, linkType, tp,  params, noUser, league, type, team, teamName, name, date, url, findex, summary, findexarxid, fav, setLocalPageType, setLocalPlayer, setLocalLeague, setLocalTeam, mutate }) => {
+const MiniMention: React.FC<Props> = ({ handleClose,selectedXid, setSelectedXid, startExtended, linkType, tp,  params, noUser, league, type, team, teamName, name, date, url, findex, summary, findexarxid, fav, setLocalPageType, setLocalPlayer, setLocalLeague, setLocalTeam, mutate }) => {
     const [expanded, setExpanded] = React.useState(startExtended);
     const [hide, setHide] = React.useState(false);
     const [copied, setCopied] = React.useState(false);
@@ -188,7 +190,7 @@ const MiniMention: React.FC<Props> = ({ selectedXid, setSelectedXid, startExtend
                     <Atmention><b>{(type == "person") && '@'}{name}</b> | {type == "person" ? `${teamName} |` : ""}  {league}</Atmention>
                 </MentionSummary>
             </MobileMentionWrap>
-            {selectedXid == findexarxid && <InnerMention><Mention linkType="top" mini={true} startExtended={false} mention={{ league, type, team, teamName, name, date, url, summary, findexarxid, fav }} mutate={mutate} /></InnerMention>}
+            {selectedXid == findexarxid && <InnerMention><Mention handleClose={handleClose} linkType="top" mini={true} startExtended={false} mention={{ league, type, team, teamName, name, date, url, summary, findexarxid, fav }} mutate={mutate} /></InnerMention>}
         </>
     );
 };

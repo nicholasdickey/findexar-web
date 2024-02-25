@@ -23,9 +23,9 @@ const api_key = process.env.LAKE_API_KEY;
 };*/
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-   console.log("SUBSCRIPTION HANDLER")
+   //console.log("SUBSCRIPTION HANDLER")
   const { userId } = getAuth(req);
-  console.log("SUBSCRIPTION HANDLER userId",userId)
+ // console.log("SUBSCRIPTION HANDLER userId",userId)
   if(!userId){
     res.status(401).send("Not logged in");
     return;

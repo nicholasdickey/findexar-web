@@ -182,7 +182,7 @@ const MentionOverlay = ({ setDismiss, mutate, ...props }: Props) => {
       </ContentWrap>
       <ContentWrap>
         <MentionWrap>
-          <Mention startExtended={true} linkType={linkType} mention={{ findexarxid, date, url, summary, fav, type, team, teamName, league, name }} mutate={mutate} />
+          <Mention handleClose={handleClose} startExtended={true} linkType={linkType} mention={{ findexarxid, date, url, summary, fav, type, team, teamName, league, name }} mutate={mutate} />
         </MentionWrap>
       </ContentWrap>
   </Dialog>

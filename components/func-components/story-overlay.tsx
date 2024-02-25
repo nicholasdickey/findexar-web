@@ -186,7 +186,7 @@ const MentionOverlay = ({setDismiss,mutate,...props}:Props) => {
           </ContentWrap>   
       <ContentWrap>
           <MentionWrap>
-            <Story story={astory}/>
+            <Story story={astory} handleClose={handleClose}/>
           </MentionWrap>  
       </ContentWrap> 
    </Dialog>

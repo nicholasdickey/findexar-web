@@ -87,6 +87,7 @@ const Stories: React.FC<Props> = () => {
                 mention={m}
                 key={`mention${i}`}
                 mutate={() => { mutate() }}
+                handleClose={()=>{}}
             />)
     });
     return (

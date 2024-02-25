@@ -90,6 +90,7 @@ const Stories: React.FC<Props> = () => {
         isEmpty || (data && data[data.length - 1]?.length < 5);
     const Stories = stories && stories.map((s: any, i: number) => <Story
         story={s}
+        handleClose={()=>{}}
         key={`story-${i}`}
     />);
     if(!stories||stories.length==0){

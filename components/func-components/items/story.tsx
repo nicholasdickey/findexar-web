@@ -217,9 +217,10 @@ const MentionsWrap = styled.div`
 `;
 interface Props {
     story: any;
+    handleClose:()=>void;
 }
 
-const Story: React.FC<Props> = ({ story }) => {
+const Story: React.FC<Props> = ({ story,handleClose }) => {
     const { mode, userId, noUser, view, tab, isMobile, setLeague, setView, setPagetype, setTeam, setPlayer, setMode, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName, setTeamName } = useAppContext();
 
     let { title, url, digest, site_name, image, authors, createdTime, mentions, xid,slug } = story;
@@ -294,7 +295,7 @@ const Story: React.FC<Props> = ({ story }) => {
 
     const Mentions = <MentionsWrap>{mentions && mentions.map((mention: any, i: number) => {
         return (
-            <MiniMention onClick={()=>onMentionClick(mention)} key={`mention-${i}`} {...mention} params={params} tp={tp} selectedXid={selectedXid} setSelectedXid={setSelectedXid} mutate={()=>{}}/>
+            <MiniMention handleClose={handleClose} onClick={()=>onMentionClick(mention)} key={`mention-${i}`} {...mention} params={params} tp={tp} selectedXid={selectedXid} setSelectedXid={setSelectedXid} mutate={()=>{}}/>
         )
     })}</MentionsWrap>;
 

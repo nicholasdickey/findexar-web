@@ -31,7 +31,7 @@ async function handler(
     }
     
     const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/record-event?name=${encodeURIComponent(name)}&sessionid=${encodeURIComponent(sessionid)}&params=${encodeURIComponent(params)}`;
-    console.log("api url",url);
+   // console.log("api url",url);
     const ret=await fetch(url); 
     res.status(200).json(ret)
 }

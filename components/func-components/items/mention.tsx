@@ -309,9 +309,10 @@ interface Props {
     startExtended?: boolean;
     mutate: any;
     mini?:boolean;
+    handleClose: () => void;
 }
 
-const Mention: React.FC<Props> = ({mini, startExtended, linkType,mention, mutate }) => {
+const Mention: React.FC<Props> = ({mini, startExtended, linkType,mention, mutate,handleClose }) => {
     const { mode, userId, noUser,view,tab,isMobile, setLeague, setView, setPagetype, setTeam, setPlayer, setMode,fbclid, utm_content, params, tp,  pagetype,  setTeamName } = useAppContext();
 
     let { league, type, team, teamName, name, date, url, findex, summary, findexarxid, fav } = mention;
@@ -393,7 +394,7 @@ const Mention: React.FC<Props> = ({mini, startExtended, linkType,mention, mutate
     }, [date])
 
     const onMentionNav = useCallback(async (name: string) => {
-        
+        handleClose();
         setLeague(league);
         setTeam(team);
         setPlayer(type == 'person' ? name : '');
