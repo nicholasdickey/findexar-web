@@ -97,8 +97,8 @@ interface Props {
 }
 
 const MentionOverlay = ({setDismiss,mutate,...props}:Props) => {
-    let { tab,view,mode, userId, isMobile,league,team,teamName, setLeague, setView,setTab, setPagetype, setTeam, setPlayer, setMode, fbclid, utm_content, params, tp,  pagetype,  sid,slug} = useAppContext();
-    const [xid, setXid] = React.useState<string>(sid||"");
+    let { tab,view,mode, userId, isMobile,league,team,teamName, setLeague, setView,setTab, setPagetype, setTeam, setPlayer, setMode, fbclid, utm_content, params, tp,  pagetype,  slug} = useAppContext();
+   // const [xid, setXid] = React.useState<string>(sid||"");
     
     
     const aSlugStoryKey: ASlugStoryKey = { type: "ASlugStory", slug:slug, noLoad: slug == "" ? true : false };
@@ -119,25 +119,14 @@ const MentionOverlay = ({setDismiss,mutate,...props}:Props) => {
         }
     },[astory]);
 
-    useEffect(() => {
-      if(sid){
-          setXid(sid);
-          console.log("openDialog")
-          setOpen(true);
-      }
-      else {
-          setXid("");
-          console.log("closeDialog")
-          setOpen(false);
-      }
-  },[sid]);
+
 
   const handleClose = useCallback(() => {
       setOpen(false);
-      console.log("closeDialog xid=",sid)
-      let localUrl=router.asPath.replace('&sid='+sid,'').replace('?sid='+sid+"&",'?').replace('?sid='+sid,'');
-      router.replace(localUrl,undefined,{shallow:true});
-  }, [sid]);
+      console.log("closeDialog slug=",slug)
+      let localUrl=router.asPath.replace('&story='+slug,'').replace('?story='+slug+"&",'?').replace('?story='+slug,'');
+      router.push(localUrl,undefined,{shallow:true});
+  }, [slug]);
 
   let target=`${teamName}`;
   target=!target||target=='undefined'?'' : target; 
