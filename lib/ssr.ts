@@ -18,12 +18,35 @@ import {
 } from '@/lib/api'
 import { withSessionSsr, Options } from '@/lib/with-session';
 const api_key = process.env.LAKE_API_KEY;
+async function fetchData(t1:any,fallback:any,calls: { key: any, call: Promise<any> }[]) {
+    //const fetchPromise1 = fetch(url1);
+    //const fetchPromise2 = fetch(url2);
+    const promises=calls.map(call=>call.call);
+    try {
+        console.log("========== ========= SSR CHECKPOINT 119:", new Date().getTime() - t1, "ms");
 
+        const responses = await Promise.all(promises);
+        console.log("========== ========= SSR CHECKPOINT 120:", new Date().getTime() - t1, "ms");
+
+       // const dataPromises = responses.map(response => response.json()); // Assuming the fetch URLs return JSON data
+        for(let i=0;i<calls.length;i++){
+            fallback[calls[i].key]= responses[i];
+            console.log(`========== ========= SSR CHECKPOINT 12${i}:`, new Date().getTime() - t1, "ms");
+
+        }
+        //   const data = await Promise.all(dataPromises);
+      //  return data; // Returns an array of data from the two URLs
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        throw error; // Rethrow or handle as appropriate
+    }
+    return fallback;
+}
 const getServerSideProps = withSessionSsr(
     async function getServerSideProps(context: GetServerSidePropsContext): Promise<any> {
         try {
             const t1 = new Date().getTime();
-            let { tab, fbclid, utm_content,  view = "mentions", id, story }:
+            let { tab, fbclid, utm_content, view = "mentions", id, story }:
                 { fbclid: string, utm_content: string, view: string, tab: string, id: string, story: string } = context.query as any;
             let { userId }: { userId: string | null } = getAuth(context.req);
             // console.log("NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY",process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
@@ -32,7 +55,7 @@ const getServerSideProps = withSessionSsr(
             if (userId == "null")
                 userId = '';
             tab = tab || 'all';
-           // sid = sid || '';
+            // sid = sid || '';
             story = story || '';
             console.log("SSR userid:", userId)
             let user;
@@ -51,7 +74,24 @@ const getServerSideProps = withSessionSsr(
                 user = null;
             }
             console.log("========== ========= SSR CHECKPOINT 0:", new Date().getTime() - t1, "ms");
-
+            let calls: { key: any, call: Promise<any> }[] = [];
+          
+            const ssrDataMentions = async (url: string) => {
+                const { data: dataMentions } = await axios.get(url);
+                return dataMentions.mentions;
+            }
+            const ssrDataStories = async (url: string) => {
+                const { data: dataStories } = await axios.get(url);
+                return dataStories.stories;
+            }
+            const ssrDataFavorites = async (url: string) => {
+                const { data } = await axios.get(url);
+                return data.favorites;
+            }
+            const ssrDataTrackListMembers = async (url: string) => {
+                const { data } = await axios.get(url);
+                return data.members;
+            }
             view = view.toLowerCase();
             if (view == 'feed')
                 view = 'mentions';
@@ -61,7 +101,7 @@ const getServerSideProps = withSessionSsr(
 
             const createdAt = user?.createdAt;
             let freeUser = false;
-            let tracker_filter=0;
+            let tracker_filter = 0;
             if (userId && user?.emailAddresses) {
                 for (let i = 0; i < user.emailAddresses.length; i++) {
                     const e = user.emailAddresses[i];
@@ -117,24 +157,24 @@ const getServerSideProps = withSessionSsr(
             }
             console.log("NAME:", player);
             var randomstring = () => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-           
+
             let startoptions = context.req.session?.options || null;
-            ``
+
             if (!startoptions) {
-              var randomstring = () => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-              startoptions = {
-                sessionid: randomstring(),
-                dark: -1,
-              }
-              context.req.session.options = startoptions;
-              await context.req.session.save();
+                var randomstring = () => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+                startoptions = {
+                    sessionid: randomstring(),
+                    dark: -1,
+                }
+                context.req.session.options = startoptions;
+                await context.req.session.save();
             }
             let options1: Options = startoptions;
             if (!options1.sessionid) {
-              options1.sessionid = randomstring();
+                options1.sessionid = randomstring();
             }
             const sessionid = options1.sessionid;
-            const dark= options1.dark;
+            const dark = options1.dark;
             console.log("========== ========= SSR CHECKPOINT 1:", new Date().getTime() - t1, "ms");
 
             let fresh = false;
@@ -150,65 +190,85 @@ const getServerSideProps = withSessionSsr(
             console.log("========== ========= SSR CHECKPOINT 2:", new Date().getTime() - t1, "ms");
 
             let trackerListMembersKey: TrackerListMembersKey = { type: "tracker_list_members", league, noUser: userId ? false : true, noLoad: pagetype != 'league' };
-            let trackerListMembers = [];
+            //let trackerListMembers = [];
 
             if (userId && pagetype == 'league') {
-                const { data } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/tracker-list/get?api_key=${api_key}&userid=${userId || ""}&league=${league}`);
-                trackerListMembers = data.members;
+                // const { data } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/tracker-list/get?api_key=${api_key}&userid=${userId || ""}&league=${league}`);
+                // trackerListMembers = data.members;
+                calls.push({ key: unstable_serialize(trackerListMembersKey), call: ssrDataTrackListMembers(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/tracker-list/get?api_key=${api_key}&userid=${userId || ""}&league=${league}`) });
             }
             console.log("========== ========= SSR CHECKPOINT 21:", new Date().getTime() - t1, "ms");
 
             const leagues = await getLeagues();
             const keyLeagueTeams: LeagueTeamsKey = { func: "leagueTeams", league, noLoad: pagetype == "landing" };
             let leagueTeams = await getLeagueTeams(keyLeagueTeams);
-
-            let teamPlayers = [];
-            let details = {};
+            //calls.push({key:unstable_serialize(keyLeagueTeams),call:leagueTeams});
+            //let teamPlayers = [];
+            // let details = {};
             let keyTeamPlayers: TeamPlayersKey = { type: "teamPlayers", league, teamid: "" };
-            let keyDetails: DetailsKey = { type: "Details", teamid: "", name: "", noUser: userId ? false : true };
-            let keyMentions: MentionsKey = { type: "mentions", league, noUser: userId ? false : true };
+            //let keyDetails: DetailsKey = { type: "Details", teamid: "", name: "", noUser: userId ? false : true };
+            /*let keyMentions: MentionsKey = { type: "mentions", league, noUser: userId ? false : true };
             if (tracker_filter == 1) {
                 keyMentions = { type: "filtered-mentions", league, noUser: userId ? false : true };
+            }*/
+            let keyMentions = us(page => {
+                const keyFetchedMentions: FetchedMentionsKey = { type: "FetchedMentions", teamid: team || "", name: player || "", noUser: userId ? false : true, page: page, league: league || "", myteam: tab == 'myteam' ? 1 : 0, noLoad: view != 'mentions' && tab != 'fav' }
+                // console.log("FETCHED MENTIONS KEY:", keyFetchedMentions);
+                return keyFetchedMentions;
             }
-            let fetchMentions = [];
+            );
+            let keyStories = us(page => {
+                const keyFetchedStories: FetchedStoriesKey = { type: "FetchedStories", noUser: userId ? false : true, page: page, league: league || "", noLoad: (view != 'mentions' && tab != 'fav') || team != '' }
+                // console.log("FETCHED Stories KEY:", keyFetchedStories);
+                return keyFetchedStories;
+            }
+            )
+            //let fetchMentions = [];
 
             console.log("========== ========= SSR CHECKPOINT 3:", new Date().getTime() - t1, "ms");
 
             const getAMentionKey: AMentionKey = { type: "AMention", findexarxid: findexarxid || "", noLoad: findexarxid == "" ? false : true };
             let amention = null;
-           
+
             const getASlugStoryKey: ASlugStoryKey = { type: "ASlugStory", slug: story, noLoad: story == "" ? true : false };
             //let astory = null;
             const metalinkKey: MetaLinkKey = { func: "meta", findexarxid, long: 1 };
             let metaLink = null;
             // console.log("userId:", userId)
+
             if (findexarxid) {
-                amention = await getAMention(getAMentionKey);
-                metaLink = await getMetaLink(metalinkKey);
+                amention = getAMention(getAMentionKey);
+                metaLink = getMetaLink(metalinkKey);
+                calls.push({ key: unstable_serialize(getAMentionKey), call: amention });
+                calls.push({ key: unstable_serialize(metalinkKey), call: metaLink });
             }
-          /*  if (sid) {
-                astory = await getAStory(getAStoryKey);
-                console.log("GOT ASTORY:", astory);
-            }*/
+            /*  if (sid) {
+                  astory = await getAStory(getAStoryKey);
+                  console.log("GOT ASTORY:", astory);
+              }*/
             let astory = null;
-           // console.log("story:",story)
+            // console.log("story:",story)
             if (story) {
-                astory = await getASlugStory(getASlugStoryKey);
-               // console.log("GOT A SLUG STORY:", astory);
+                astory = getASlugStory(getASlugStoryKey);
+                calls.push({ key: unstable_serialize(getASlugStoryKey), call: astory });
+                // console.log("GOT A SLUG STORY:", astory);
             }
-            let fetchStories = [];
+            // let fetchStories = [];
             console.log("VIEW:", view, "tab:", tab, "team:", team, "player:", player, "league:", league, "userId", userId, "keyMentions:", keyMentions)
             let teamName = '';
             if (team) {
                 console.log("in team")
-                const { data: dataMentions } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?api_key=${api_key}&userid=${userId}&teamid=${team}&name=${encodeURIComponent(player as string || "")}&page=0&league=${league}&favorites=0`);
-                fetchMentions = dataMentions.mentions;
+                //const { data: dataMentions } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?api_key=${api_key}&userid=${userId}&teamid=${team}&name=${encodeURIComponent(player as string || "")}&page=0&league=${league}&favorites=0`);
+                //fetchMentions = dataMentions.mentions;
+                calls.push({ key: keyMentions, call: ssrDataMentions(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?api_key=${api_key}&userid=${userId}&teamid=${team}&name=${encodeURIComponent(player as string || "")}&page=0&league=${league}&favorites=0`) });
+
                 console.log(66666)
                 //console.log('==>',leagueTeams,team)
                 const t = leagueTeams?.find((t: any) => t.id == team);
                 teamName = t.name;
                 keyTeamPlayers = { type: 'teamPlayers', league, teamid: team };
-                teamPlayers = await getTeamPlayers(keyTeamPlayers);
+                let teamPlayers = getTeamPlayers(keyTeamPlayers);
+                calls.push({ key: unstable_serialize(keyTeamPlayers), call: teamPlayers });
             }
             else {
                 // console.log(1111);
@@ -221,25 +281,28 @@ const getServerSideProps = withSessionSsr(
                 }
                 else {*/
                 // console.log(3333);
+
                 if (tab == 'fav' || tab == 'myteam') {
-                    if (userId) {
+                   // if (userId) {
                         if (view == 'mentions') {
 
                             console.log("========== ========= SSR CHECKPOINT 31:", new Date().getTime() - t1, "ms");
 
-                            const { data: dataMentions } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?api_key=${api_key}&userid=${userId || ""}&teamid=${team}&name=${encodeURIComponent(player as string || "")}&page=0&league=${league}&myteam=${tab == 'myteam' ? 1 : 0}`);
+                            // const { data: dataMentions } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?api_key=${api_key}&userid=${userId || ""}&teamid=${team}&name=${encodeURIComponent(player as string || "")}&page=0&league=${league}&myteam=${tab == 'myteam' ? 1 : 0}`);
 
-                            console.log("========== ========= SSR CHECKPOINT 32:", new Date().getTime() - t1, "ms");
+                            //  console.log("========== ========= SSR CHECKPOINT 32:", new Date().getTime() - t1, "ms");
 
-                            fetchMentions = dataMentions.mentions;
+                            calls.push({ key: keyMentions, call: ssrDataMentions(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?api_key=${api_key}&userid=${userId || ""}&teamid=${team}&name=${encodeURIComponent(player as string || "")}&page=0&league=${league}&myteam=${tab == 'myteam' ? 1 : 0}`) });
                         }
-                    }
+                    /*}
                     else {
                         if (view == 'mentions') {
-                            const { data: dataMentions } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?api_key=${api_key}&userid=${userId || ""}&teamid=${team}&name=${encodeURIComponent(player as string || "")}&page=0&league=${league}&myteam=${tab == 'myteam' ? 1 : 0}`);
-                            fetchMentions = dataMentions.mentions;
+                            //  const { data: dataMentions } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?api_key=${api_key}&userid=${userId || ""}&teamid=${team}&name=${encodeURIComponent(player as string || "")}&page=0&league=${league}&myteam=${tab == 'myteam' ? 1 : 0}`);
+                            //fetchMentions = dataMentions.mentions;
+                            calls.push({ key: keyMentions, call: ssrDataMentions(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?api_key=${api_key}&userid=${userId || ""}&teamid=${team}&name=${encodeURIComponent(player as string || "")}&page=0&league=${league}&myteam=${tab == 'myteam' ? 1 : 0}`) });
+
                         }
-                    }
+                    }*/
                 }
                 else {
                     //  console.log(4444);
@@ -252,11 +315,13 @@ const getServerSideProps = withSessionSsr(
 
                             console.log("========== ========= SSR CHECKPOINT 131:", new Date().getTime() - t1, "ms");
 
-                            const { data: dataStories } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-stories?api_key=${api_key}&userid=${userId}&page=0&league=${league}`);
+                            // const { data: dataStories } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-stories?api_key=${api_key}&userid=${userId}&page=0&league=${league}`);
 
-                            console.log("========== ========= SSR CHECKPOINT 132:", new Date().getTime() - t1, "ms");
+                            //console.log("========== ========= SSR CHECKPOINT 132:", new Date().getTime() - t1, "ms");
 
-                            fetchStories = dataStories.stories;
+                            // fetchStories = dataStories.stories;
+                            calls.push({ key: keyStories, call: ssrDataStories(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?api_key=${api_key}&userid=${userId || ""}&teamid=${team}&name=${encodeURIComponent(player as string || "")}&page=0&league=${league}&myteam=${tab == 'myteam' ? 1 : 0}`) });
+
                         }
                     }
                     else {
@@ -264,9 +329,10 @@ const getServerSideProps = withSessionSsr(
                             //console.log(6666)
                             console.log("========== ========= SSR CHECKPOINT 332:", new Date().getTime() - t1, "ms");
 
-                            const { data: dataStories } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-stories?api_key=${api_key}&userid=${userId}&page=0&league=${league}`);
-                            fetchStories = dataStories.stories;
-                            console.log("========== ========= SSR CHECKPOINT 333:", new Date().getTime() - t1, "ms");
+                            //const { data: dataStories } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-stories?api_key=${api_key}&userid=${userId}&page=0&league=${league}`);
+                            //fetchStories = dataStories.stories;
+                            //console.log("========== ========= SSR CHECKPOINT 333:", new Date().getTime() - t1, "ms");
+                            calls.push({ key: keyStories, call: ssrDataStories(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-stories?api_key=${api_key}&userid=${userId}&page=0&league=${league}`) });
 
                             // console.log(7777)
                             // console.log(fetchStories)
@@ -279,8 +345,9 @@ const getServerSideProps = withSessionSsr(
             let favoritesKey: FavoritesKey = { type: "Favorites", noUser: userId ? false : true, noLoad: tab != 'fav' };
             let favorites: any[] = [];
             if (tab == 'fav' && userId) {
-                const { data } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/favorites/get?api_key=${api_key}&userid=${userId}`);
-                favorites = data.favorites;
+                // const { data } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/favorites/get?api_key=${api_key}&userid=${userId}`);
+                // favorites = data.favorites;
+                calls.push({ key: unstable_serialize(favoritesKey), call: ssrDataFavorites(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/favorites/get?api_key=${api_key}&userid=${userId}`) });
                 console.log("FAVORITES:========================>", `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/favorites/get?api_key=${api_key}&userid=${userId}`, favorites);
             }
 
@@ -288,55 +355,56 @@ const getServerSideProps = withSessionSsr(
                 [unstable_serialize(keyLeagueTeams)]: leagueTeams,
             };
 
-            fallback[unstable_serialize(keyTeamPlayers)] = teamPlayers;
-            fallback[unstable_serialize(keyDetails)] = details;
-            fallback[unstable_serialize(favoritesKey)] = favorites;
-           // fallback[unstable_serialize({ type: "options", noUser: userId ? false : true })] = options;
-            fallback[unstable_serialize(trackerListMembersKey)] = trackerListMembers;
-            fallback[unstable_serialize(getAMentionKey)] = amention;
-           // console.log("fallback:",getASlugStoryKey,astory)
-            fallback[unstable_serialize(getASlugStoryKey)] = astory;
-            fallback[unstable_serialize(metalinkKey)] = metaLink;
+            // fallback[unstable_serialize(keyTeamPlayers)] = teamPlayers;
+            //fallback[unstable_serialize(keyDetails)] = details;
+            //fallback[unstable_serialize(favoritesKey)] = favorites;
+            // fallback[unstable_serialize({ type: "options", noUser: userId ? false : true })] = options;
+            // fallback[unstable_serialize(trackerListMembersKey)] = trackerListMembers;
+            // fallback[unstable_serialize(getAMentionKey)] = amention;
+            // console.log("fallback:",getASlugStoryKey,astory)
+            //fallback[unstable_serialize(getASlugStoryKey)] = astory;
+            //  fallback[unstable_serialize(metalinkKey)] = metaLink;
 
-            fallback[us(page => {
-                const keyFetchedMentions: FetchedMentionsKey = { type: "FetchedMentions", teamid: team || "", name: player || "", noUser: userId ? false : true, page: page, league: league || "", myteam: tab == 'myteam' ? 1 : 0, noLoad: view != 'mentions' && tab != 'fav' }
-                // console.log("FETCHED MENTIONS KEY:", keyFetchedMentions);
-                return keyFetchedMentions;
-            }
-            )] = fetchMentions;
-            fallback[us(page => {
+            /* fallback[us(page => {
+                 const keyFetchedMentions: FetchedMentionsKey = { type: "FetchedMentions", teamid: team || "", name: player || "", noUser: userId ? false : true, page: page, league: league || "", myteam: tab == 'myteam' ? 1 : 0, noLoad: view != 'mentions' && tab != 'fav' }
+                 // console.log("FETCHED MENTIONS KEY:", keyFetchedMentions);
+                 return keyFetchedMentions;
+             }
+             )] = fetchMentions;*/
+            /*fallback[us(page => {
                 const keyFetchedStories: FetchedStoriesKey = { type: "FetchedStories", noUser: userId ? false : true, page: page, league: league || "", noLoad: (view != 'mentions' && tab != 'fav') || team != '' }
                 // console.log("FETCHED Stories KEY:", keyFetchedStories);
                 return keyFetchedStories;
             }
-            )] = fetchStories;
+            )] = fetchStories;*/
             // console.log("fetchedMentions:", fetchMentions)
+            await fetchData(t1,fallback,calls);
             console.log("========== ========= SSR TIME:", new Date().getTime() - t1, "ms");
             if (!botInfo.bot) {
                 try {
                     console.log("RECORD EVENT:", `ssr-pub${fresh ? '-init' : ''}`, `{"fbclid":"${fbclid}","ua":"${ua}","story":"${story}","findexarxid":"${findexarxid}","isMobile":"${isMobile}","utm_content":"${utm_content}","t1":"${t1}","userId":"${userId || ""}","ssrTime":"${new Date().getTime() - t1}","league":"${league}","team":"${team}","player":"${player}"}`);
-                   // await recordEvent(sessionid, `ssr-pub${fresh ? '-init' : ''}`, `{"fbclid":"${fbclid}","ua":"${ua}","story":"${story}","findexarxid":"${findexarxid}","isMobile":"${isMobile}","utm_content":"${utm_content}","t1":"${t1}","userId":"${userId || ""}","ssrTime":"${new Date().getTime() - t1}","league":"${league}","team":"${team}","player":"${player}"}`);
-                    
-                   const name= `ssr-pub${fresh ? '-init' : ''}`;
-                   const params= `{"fbclid":"${fbclid}","ua":"${ua}","story":"${story}","findexarxid":"${findexarxid}","isMobile":"${isMobile}","utm_content":"${utm_content}","t1":"${t1}","userId":"${userId || ""}","ssrTime":"${new Date().getTime() - t1}","league":"${league}","team":"${team}","player":"${player}"}`;
-                   const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/record-event?name=${encodeURIComponent(name)}&sessionid=${encodeURIComponent(sessionid)}&params=${encodeURIComponent(params)}`;
-                    console.log("api url",url);
-                    const ret=await fetch(url); 
-                 
+                    // await recordEvent(sessionid, `ssr-pub${fresh ? '-init' : ''}`, `{"fbclid":"${fbclid}","ua":"${ua}","story":"${story}","findexarxid":"${findexarxid}","isMobile":"${isMobile}","utm_content":"${utm_content}","t1":"${t1}","userId":"${userId || ""}","ssrTime":"${new Date().getTime() - t1}","league":"${league}","team":"${team}","player":"${player}"}`);
+
+                    const name = `ssr-pub${fresh ? '-init' : ''}`;
+                    const params = `{"fbclid":"${fbclid}","ua":"${ua}","story":"${story}","findexarxid":"${findexarxid}","isMobile":"${isMobile}","utm_content":"${utm_content}","t1":"${t1}","userId":"${userId || ""}","ssrTime":"${new Date().getTime() - t1}","league":"${league}","team":"${team}","player":"${player}"}`;
+                    const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/record-event?name=${encodeURIComponent(name)}&sessionid=${encodeURIComponent(sessionid)}&params=${encodeURIComponent(params)}`;
+                    console.log("api url", url);
+                    const ret = await fetch(url);
+
                 } catch (x) {
-                   
+
                     console.log('ssr-landing-init-error', x);
                 }
             }
             if (botInfo.bot) {
                 try {
                     //await recordEvent(sessionid, 'ssr-bot-pub', `{"fbclid":"${fbclid}","ua":"${ua}","utm_content":"${utm_content}","ssrTime":"${new Date().getTime() - t1}","league":"${league}","team":"${team}","player":"${player}"}`);
-                    const name='ssr-bot-pub';
-                    const params=`{"fbclid":"${fbclid}","ua":"${ua}","utm_content":"${utm_content}","ssrTime":"${new Date().getTime() - t1}","league":"${league}","team":"${team}","player":"${player}"}`;
+                    const name = 'ssr-bot-pub';
+                    const params = `{"fbclid":"${fbclid}","ua":"${ua}","utm_content":"${utm_content}","ssrTime":"${new Date().getTime() - t1}","league":"${league}","team":"${team}","player":"${player}"}`;
                     const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/record-event?name=${encodeURIComponent(name)}&sessionid=${encodeURIComponent(sessionid)}&params=${encodeURIComponent(params)}`;
-                    console.log("api url",url);
-                    const ret=await fetch(url); 
-                 
+                    console.log("api url", url);
+                    const ret = await fetch(url);
+
                 } catch (x) {
                     console.log('ssr-bot-landing-init-error', x);
                 }

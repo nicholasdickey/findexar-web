@@ -97,15 +97,15 @@ interface Props {
 }
 
 const MentionOverlay = ({setDismiss,mutate,...props}:Props) => {
-    const [open, setOpen] = React.useState(false);
     let { tab,view,mode, userId, isMobile,league,team,teamName, setLeague, setView,setTab, setPagetype, setTeam, setPlayer, setMode, fbclid, utm_content, params, tp,  pagetype,  sid,slug} = useAppContext();
     const [xid, setXid] = React.useState<string>(sid||"");
     
-
+    
     const aSlugStoryKey: ASlugStoryKey = { type: "ASlugStory", slug:slug, noLoad: slug == "" ? true : false };
     let { data: aSlugStory } = useSWR(aSlugStoryKey, getASlugStory);
     let astory=aSlugStory;
-
+    const [open, setOpen] = React.useState(astory?true:false);
+    console.log("DIALOG open:",open)
     const {title, url, digest, site_name, image, authors, createdTime, mentions}=astory||{};
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
