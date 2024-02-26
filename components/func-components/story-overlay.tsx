@@ -194,7 +194,7 @@ const MentionOverlay = ({ setDismiss, mutate, ...props }: Props) => {
         <DialogTitleMobileWrap> <DialogTitle /></DialogTitleMobileWrap>
         <DialogTitleWrap><DialogTitle onClick={() => { setDismiss(true); }}><TitleWrap>Qwiket Sports Media Index</TitleWrap></DialogTitle></DialogTitleWrap>
         <ContentWrap>
-            <GotoFeed onClick={() => handleClose()}>Go To {league} Digest</GotoFeed>
+            <GotoFeed onClick={() => handleClose()}>Go To Full {league} Digest</GotoFeed>
 
             <div autoFocus onClick={() => { handleClose(); }}>
                 <XContainer><XElement>x</XElement></XContainer>
