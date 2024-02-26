@@ -91,6 +91,30 @@ const DialogTitleMobileWrap = styled.div`
         display:none;
     }
 `;
+
+const GotoFeed=styled.div`
+    position:absolute;
+    z-index:1000;
+    top:82px;
+    right:20px;
+    font-size:14px;
+   // color:var(--text);
+    color:var(--qwiket-border-new);
+    border-color:var(--qwiket-border-new);
+    border-style:solid;
+    border-width:1px;
+    border-radius: 6px;
+    padding:4px;
+    cursor: pointer;
+    &:hover{
+        color:var(--qwiket-border-recent);
+        border-color:var(--qwiket-border-recent);
+    }
+    @media (max-width: 1199px) {
+        top: 90px;
+    }
+    
+`;
 interface Props {
     mutate: () => void;
     setDismiss: (dismiss: boolean) => void;
@@ -164,8 +188,10 @@ const MentionOverlay = ({setDismiss,mutate,...props}:Props) => {
         },
       }} >
       <DialogTitleMobileWrap> <DialogTitle/></DialogTitleMobileWrap>
-      <DialogTitleWrap><DialogTitle onClick={()=>{setDismiss(true);}}><TitleWrap>Qwiket Sports Media Index</TitleWrap></DialogTitle></DialogTitleWrap>
+       <DialogTitleWrap><DialogTitle onClick={()=>{setDismiss(true);}}><TitleWrap>Qwiket Sports Media Index</TitleWrap></DialogTitle></DialogTitleWrap>
       <ContentWrap>
+      <GotoFeed onClick={()=>handleClose()}>Go To {league} Digest</GotoFeed>
+     
           <div autoFocus onClick={()=>{handleClose();}}>
            <XContainer><XElement>x</XElement></XContainer> 
           </div>  

@@ -134,6 +134,27 @@ const SinglePage: React.FC<Props> = (props) => {
     setLocalLeague(league.toUpperCase());
   }, [league]);
 
+  useEffect(() => {
+    //const subscription = router.events.on('routeChangeComplete', () => {
+      // Get the updated query params
+      const updatedQueryParams = new URLSearchParams(router.query as any as string);
+
+     /* // Check if the query params have changed
+      if (updatedQueryParams.toString() !== queryParams.toString()) {
+        // Do something when the query params change
+      }*/
+     // console.log("queryParams:",updatedQueryParams)
+      const story=updatedQueryParams.get('story');
+    //  console.log("new story:",story)
+      if(story!=localSlug)
+        setLocalSlug(story||"");
+
+   // });
+    
+   // return () => subscription.unsubscribe();
+  }, [router.query]);
+
+
   view = view ? view.toLowerCase() : "";
   const subscriptionObject = useSubscription();
 
