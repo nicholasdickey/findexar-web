@@ -64,7 +64,7 @@ const ReportItem= function(name:string,expanded:string,setExpanded:any,sessionid
                 <Typography>Name: {eventName}</Typography>
                 {ssrTime&&<Typography>SSR Time:{ssrTime}</Typography>}
                 {time&&<Typography>SPA Time:{time}</Typography>}
-                {t1&&<Typography>SSR start time (t1):{t1}</Typography>}
+                {false&&t1&&<Typography>SSR start time (t1):{t1}</Typography>}
                 {params&&<Typography>Params{params}</Typography>}
                 {fbclid&&<Typography>fbclid:{fbclid}</Typography>}
                 {stamp&&<Typography>stamp:{stamp}</Typography>}
