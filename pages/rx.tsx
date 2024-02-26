@@ -101,7 +101,7 @@ const ReportItem= function(name:string,expanded:string,setExpanded:any,sessionid
                   aria-controls="panel4bh-content"
                   id="panel4bh-header"
                 >
-                  <Typography sx={{ width: '33%', flexShrink: 0,color:bot?"#004400":items.length>1&&cs?"#afa":"888" }}>{name}</Typography>
+                  <Typography sx={{ width: '100%',color:bot?"#004400":items.length>1&&cs?"#afa":"888" }}>{name}:{reportItem.stamp}</Typography>
                 </AccordionSummary>
                 <AccordionDetails style={{ borderRadius: 14 }}>
                   <Box sx={{ my: 4 }}>
