@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback,useRef } from "react";
 import Link from 'next/link';
 import { styled, useTheme } from "styled-components";
 import { RWebShare } from "react-web-share";
@@ -11,7 +11,7 @@ import { convertToUTCDateString, convertToReadableLocalTime } from "@/lib/date-c
 import useCopyToClipboard from '@/lib/copy-to-clipboard';
 import MiniMention from '@/components/func-components/items/mini-mention';
 import { useAppContext } from '@/lib/context';
-
+import { useInView } from 'react-intersection-observer';
 declare global {
     interface Window {
         Clerk: any;
@@ -230,6 +230,7 @@ const Story: React.FC<Props> = ({ story,handleClose }) => {
     const [digestCopied, setDigestCopied] = React.useState(false);
     const [selectedXid, setSelectedXid] = React.useState("");
     const [value, copy] = useCopyToClipboard();
+    const [visible, setVisible] = React.useState(false);
 
     let prepDigest = digest?digest.replaceAll('<p>', '').replaceAll('</p>', '\n\n'):"";
 
@@ -238,7 +239,19 @@ const Story: React.FC<Props> = ({ story,handleClose }) => {
     const fbShareUrl = league ? `${process.env.NEXT_PUBLIC_SERVER}/pub/league/${league}?story=${slug}&utm_content=fbslink` : `${process.env.NEXT_PUBLIC_SERVER}/pub?story=${slug}&utm_content=fbslink`;
     const twitterLink = `https://twitter.com/intent/tweet?text=${encodeURIComponent(prepDigest.substring(0, 230) + '...')}&url=${twitterShareUrl}&via=findexar`;
     const fbLink = `https://www.facebook.com/sharer.php?kid_directed_site=0&sdk=joey&u=${encodeURIComponent(fbShareUrl)}&t=${encodeURIComponent('Findexar')}&quote=${encodeURIComponent(prepDigest.substring(0, 140) + '...')}&hashtag=%23findexar&display=popup&ref=plugin&src=share_button`;
-
+    const { ref, inView, entry } = useInView({
+        /* Optional options */
+        threshold: 0,
+      });
+    useEffect(() => {
+        if (inView&&!visible) {
+            setVisible(true);
+            recordEvent(`story-inview`, `{"slug":"${slug}","url":"${url}","params":"${params}"}`)
+            .then((r: any) => {
+                console.log("recordEvent", r);
+            });
+        }
+    }, [inView]);
     useEffect(() => {
         setTimeout(() => {
             setDigestCopied(false);
@@ -303,7 +316,7 @@ const Story: React.FC<Props> = ({ story,handleClose }) => {
         return null;
 
     return (
-        <>
+        <div ref={ref}>
             <DesktopWrap>
                 <Link href={url} onClick={onStoryClick}>
                     <Topline><LocalDate><i>{localDate}</i></LocalDate></Topline>
@@ -403,7 +416,7 @@ const Story: React.FC<Props> = ({ story,handleClose }) => {
                     </ShareGroup>
                 </BottomLine>
             </MobileWrap>
-        </>
+        </div>
     );
 };
 

@@ -27,6 +27,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-image-size": "^2.3.2",
+    "react-intersection-observer": "^9.8.1",
     "react-loader-spinner": "^6.1.6",
     "react-telegram-comments": "^2.0.0",
     "react-web-share": "^2.0.2",
