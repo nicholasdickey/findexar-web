@@ -52,7 +52,7 @@ const ReportItem= function(name:string,expanded:string,setExpanded:any,sessionid
   let bot=false;
   const items=reportItem.items.map((record:any,i:number)=>{
       console.log("record:",record);
-        const {url,name:eventName,utm_content='',league='',params='',fbclid='',team='',stamp='',player='',slug='',view='',time='',isMobile,ssrTime,userId,t1,findexarxid,story,sid,ua}=record;
+        const {ogImage="",url,name:eventName,utm_content='',league='',params='',fbclid='',team='',stamp='',player='',slug='',view='',time='',isMobile,ssrTime,userId,t1,findexarxid,story,sid,ua}=record;
         console.log("ReportItem",record,stamp,name)
         if(eventName.indexOf('ssr')<0)
           cs=true;
@@ -75,6 +75,7 @@ const ReportItem= function(name:string,expanded:string,setExpanded:any,sessionid
                 {player&&<Typography>Player:{player}</Typography>}
                 {slug&&<Typography>Slug:{slug}</Typography>}
                 {url&&<Typography>Url:{url}</Typography>}
+                {ogImage&&<Typography>og:image:{ogImage}</Typography>}
                 {view&&<Typography>View:{view}</Typography>}
                 {sid&&<Typography>SID:{sid}</Typography>}
                 {ua&&<Typography>User Agent:{ua}</Typography>}
