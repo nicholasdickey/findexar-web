@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useSWRInfinite from 'swr/infinite'
 import Container from '@mui/material/Container';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -27,7 +28,7 @@ import LightModeTwoToneIcon from '@mui/icons-material/LightModeOutlined';
 import AddCircleTwoToneIcon from '@mui/icons-material/AddCircleTwoTone';
 import { useState, useCallback, useEffect } from "react"
 import { useRouter } from 'next/router'
-import { getReport } from '../lib/api'
+import { fetchReport,FetchedReportKey } from '../lib/api'
 import styled from 'styled-components';
 import Script from 'next/script'
 
@@ -44,6 +45,7 @@ import Image from 'next/image'
 import { Roboto } from 'next/font/google';
 import { AnyPtrRecord } from 'dns';
 import Paper from '@mui/material/Paper';
+import LoadMore from "@/components/func-components/load-more";
 
 const ReportItem= function(name:string,expanded:string,setExpanded:any,sessionid:string,reportItem:any){
   let cs=false;  
@@ -87,14 +89,10 @@ const ReportItem= function(name:string,expanded:string,setExpanded:any,sessionid
                         <Typography>slug:{story.slug}</Typography>
                         <Typography>summary:{story.summary}</Typography>
                 </>}
-
-
-                
            </Paper>
         )
         });
 
-  
     return <Accordion key={name} style={{ background:'#844',color:"white",  borderRadius: 14 }} sx={{ mt: 5 }} expanded={expanded == sessionid} onChange={()=>setExpanded(expanded==sessionid?'':sessionid)}>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
@@ -114,22 +112,39 @@ const ReportItem= function(name:string,expanded:string,setExpanded:any,sessionid
 
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 let v = false;
-export default function Report({ report}:
-  { report:any}) {
-
-
+export default function Report() {
   const router = useRouter();
   const matches = useMediaQuery('(min-height:600px)');
 const [expanded,setExpanded]=React.useState<string>("");
-  const canvasRef = React.useRef<HTMLDivElement>(null);
+  //const canvasRef = React.useRef<HTMLDivElement>(null);
+
+  const fetchReportKey = (pageIndex: number, previousPageData: any): FetchedReportKey | null => {
+    let key: FetchedReportKey = { type: "FetchedReport",page: pageIndex};
+    if (previousPageData && !previousPageData.length) return null // reached the end
+    return key;
+}
+const { data, error: storiesError, mutate, size, setSize, isValidating, isLoading } = useSWRInfinite(fetchReportKey, fetchReport, { initialSize: 1, revalidateAll: true,parallel:true })
+if(data)
+console.log("R1",...(data as any[]))
+
+//let report:{}={};
+
   let theme: any;
   let itemsAll:any[]=[];
-  for (const key in report){
-    const item=report[key];
+  if(data)
+  for(let i=0;i<data.length;i++){
+    const sub=data[i];
+    for (const key in sub){
+        const item=sub[key];
     const {sessionid,items}=item
-    itemsAll.push(ReportItem(`${sessionid},items:${item.items.length};last:${items.length>0?items[0].name:''}`,expanded,setExpanded,sessionid,item))
+    itemsAll.push(ReportItem(`${sessionid},items:${items.length};last:${items.length>0?items[0].name:''}`,expanded,setExpanded,sessionid,item))
+    }
   };
-
+  const isLoadingMore =
+  isLoading || (size > 0 && data && typeof data[size - 1] === "undefined");
+let isEmpty = data?.[0]?.length === 0;
+let isReachingEnd =
+  isEmpty || (data && data[data.length - 1]?.length < 5);
 
   return (
     <>
@@ -155,6 +170,9 @@ const [expanded,setExpanded]=React.useState<string>("");
             </Script>
          <div style={{padding:"20px",background:"#444",color:"white",position:"absolute",top:"0"}}>
           {itemsAll}
+          <LoadMore setSize={setSize} size={size} isLoadingMore={isLoadingMore || false} isReachingEnd={isReachingEnd || false} />
+           <br/>
+           <br/>   
          </div>   
         
         </main>
@@ -167,17 +185,16 @@ export const getServerSideProps =
   async function getServerSideProps(context: GetServerSidePropsContext): Promise<any> {
     try {
   
- 
+ /*
       const data = await getReport();
       let report:any=null;
       if (data?.success) {
         report = data.report;
       }
-
+*/
      
       return {
         props: {
-            report
         }
       }
     } catch (x) {
