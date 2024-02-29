@@ -20,7 +20,7 @@ import LightModeTwoToneIcon from '@mui/icons-material/LightModeOutlined';
 import { UserButton, SignInButton, SignedOut, SignedIn } from "@clerk/nextjs";
 //other
 import { useAppContext } from '@/lib/context';
-import { recordEvent, setCookie } from '@/lib/api';
+import { recordEvent } from '@/lib/api';
 import PlayerPhoto from "@/components/util-components/player-photo";
 
 //styles

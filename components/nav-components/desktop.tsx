@@ -15,6 +15,7 @@ import { useAppContext } from '@/lib/context';
 import TertiaryTabs  from "@/components/nav-components/tertiary-tabs";
 import MentionOverlay from "@/components/func-components/mention-overlay";
 import StoryOverlay from "@/components/func-components/story-overlay";
+import { recordEvent } from '@/lib/api';
 
 const PageWrap = styled.div`
   width:100%;
@@ -128,6 +129,10 @@ const Desktop: React.FC<Props> = () => {
         setView("mentions");
         let tp = tab != 'all' ? params ? `&tab=${tab}` : `?tab=${tab}` : ``;
         router.push(league ? `/pub/league/${league}${params}${tp}` : params ? `/pub${params}${tp}` : `/pub?tab=${tab}`)
+        await recordEvent(
+            'tab-nav',
+            `{"fbclid":"${fbclid}","utm_content":"${utm_content}","tab":"${tab}"}`
+        );
     }
    // console.log("DESKTOP:",{pagetype,view,tab})
     return (

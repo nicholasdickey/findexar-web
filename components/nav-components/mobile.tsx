@@ -89,6 +89,10 @@ const Mobile: React.FC<Props> = () => {
         setView("mentions");
         let tp = tab != 'all' ? params ? `&tab=${tab}` : `?tab=${tab}` : ``;
         router.push(league ? `/pub/league/${league}${params}${tp}` : params ? `/pub${params}${tp}` : `/pub?tab=${tab}`)
+        await recordEvent(
+            'tab-nav',
+            `{"fbclid":"${fbclid}","utm_content":"${utm_content}","tab":"${tab}"}`
+        );
     }
 
     const onViewNav = useCallback(async (option: { name: string, access: string }) => {
