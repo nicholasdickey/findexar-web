@@ -177,6 +177,10 @@ const Players: React.FC<Props> = () => {
                                 })
                             }, false);
                             await removeTrackerListMember(removeTrackerListMemberParams);
+                            await recordEvent(
+                                'player-remove-myteam',
+                                `{"params":"${params}","team":"${team||""}","player":"${p.name}"}`
+                            );
                         }
                         else {
                             const addTrackerListMemberParams: AddTrackerListMemberParams = { member: p.name, teamid: team || "" };
@@ -190,6 +194,10 @@ const Players: React.FC<Props> = () => {
                             }, false);
                             console.log("after mutatePlayers");
                             await addTrackerListMember(addTrackerListMemberParams);
+                            await recordEvent(
+                                'player-add-myteam',
+                                `{"params":"${params}","team":"${team||""}","player":"${p.name}"}`
+                            );
                         }
                     }} size="large" aria-label="Add new list">
                     <SideIcon highlight={p.tracked}>
