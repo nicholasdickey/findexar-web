@@ -118,7 +118,7 @@ let v = false;
 export default function Report() {
   const router = useRouter();
   const matches = useMediaQuery('(min-height:600px)');
-const [expanded,setExpanded]=React.useState<string>("");
+  const [expanded,setExpanded]=React.useState<string>("");
   //const canvasRef = React.useRef<HTMLDivElement>(null);
 
   const fetchReportKey = (pageIndex: number, previousPageData: any): FetchedReportKey | null => {

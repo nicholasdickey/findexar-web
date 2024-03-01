@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback,useRef } from "react";
+import React, { useEffect, useCallback, useRef } from "react";
 import Link from 'next/link';
 import { styled, useTheme } from "styled-components";
 import { RWebShare } from "react-web-share";
@@ -217,22 +217,22 @@ const MentionsWrap = styled.div`
 `;
 interface Props {
     story: any;
-    handleClose:()=>void;
+    handleClose: () => void;
 }
 
-const Story: React.FC<Props> = ({ story,handleClose }) => {
+const Story: React.FC<Props> = ({ story, handleClose }) => {
     const { mode, userId, noUser, view, tab, isMobile, setLeague, setView, setPagetype, setTeam, setPlayer, setMode, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName, setTeamName } = useAppContext();
 
-    let { title, url, digest, site_name, image, authors, createdTime, mentions, xid,slug } = story;
+    let { title, url, digest, site_name, image, authors, createdTime, mentions, xid, slug } = story;
     //console.log("STORY CREATED TIME", createdTime,title,site_name);
-    url=url||"";
+    url = url || "";
     const [localDate, setLocalDate] = React.useState(convertToUTCDateString(createdTime));
     const [digestCopied, setDigestCopied] = React.useState(false);
     const [selectedXid, setSelectedXid] = React.useState("");
     const [value, copy] = useCopyToClipboard();
     const [visible, setVisible] = React.useState(false);
 
-    let prepDigest = digest?digest.replaceAll('<p>', '').replaceAll('</p>', '\n\n'):"";
+    let prepDigest = digest ? digest.replaceAll('<p>', '').replaceAll('</p>', '\n\n') : "";
 
     const shareUrl = league ? `${process.env.NEXT_PUBLIC_SERVER}/pub/league/${league}?story=${slug}&utm_content=shareslink` : `${process.env.NEXT_PUBLIC_SERVER}/pub?story=${slug}&utm_content=shareslink`;
     const twitterShareUrl = league ? `${process.env.NEXT_PUBLIC_SERVER}/pub/league/${league}?story=${slug}&utm_content=xslink` : `${process.env.NEXT_PUBLIC_SERVER}/pub?story=${slug}&utm_content=xslink`;
@@ -242,21 +242,29 @@ const Story: React.FC<Props> = ({ story,handleClose }) => {
     const { ref, inView, entry } = useInView({
         /* Optional options */
         threshold: 0,
-      });
+    });
     useEffect(() => {
-        if (inView&&!visible) {
+        if (inView && !visible) {
             setVisible(true);
             recordEvent(`story-inview`, `{"slug":"${slug}","url":"${url}","params":"${params}"}`)
-            .then((r: any) => {
-                console.log("recordEvent", r);
-            });
+                .then((r: any) => {
+                    console.log("recordEvent", r);
+                });
         }
     }, [inView]);
+
+    useEffect(() => {
+        if (!site_name) {
+            recordEvent('bad-site_name', `{"fbclid":"${fbclid}","utm_content":"${utm_content}","slug":"${slug}","url":"${shareUrl}"}`).then((r: any) => {
+                console.log("recordEvent", r);
+            });;
+        }
+    }, [site_name]);
+
     useEffect(() => {
         setTimeout(() => {
             setDigestCopied(false);
-        }
-            , 2000);
+        }, 2000);
     }, [digestCopied]);
 
     useEffect(() => {
@@ -277,42 +285,42 @@ const Story: React.FC<Props> = ({ story,handleClose }) => {
         } catch (x) {
             console.log('recordEvent', x);
         }
-    }, [ params]);
+    }, [params]);
 
     const onDigestCopyClick = useCallback(() => {
         setDigestCopied(true);
         copy(digest);
     }, [digest]);
 
-    const onMentionClick = useCallback((mention:any) => {
-       try {
-        recordEvent(`min-mention-click`, `{"mention","${JSON.stringify(mention)}","params":"${params}"}`)
-            .then((r: any) => {
-                console.log("recordEvent", r);
-            });
-    } catch (x) {
-        console.log('recordEvent', x);
-    } 
+    const onMentionClick = useCallback((mention: any) => {
+        try {
+            recordEvent(`min-mention-click`, `{"mention","${JSON.stringify(mention)}","params":"${params}"}`)
+                .then((r: any) => {
+                    console.log("recordEvent", r);
+                });
+        } catch (x) {
+            console.log('recordEvent', x);
+        }
     }, []);
 
     const onStoryClick = useCallback(() => {
         try {
-         recordEvent(`story-click`, `{"url":"${url}","story","${JSON.stringify(story)}","params":"${params}"}`)
-             .then((r: any) => {
-                 console.log("recordEvent", r);
-             });
-     } catch (x) {
-         console.log('recordEvent', x);
-     } 
-     }, []);
+            recordEvent(`story-click`, `{"url":"${url}","story","${JSON.stringify(story)}","params":"${params}"}`)
+                .then((r: any) => {
+                    console.log("recordEvent", r);
+                });
+        } catch (x) {
+            console.log('recordEvent', x);
+        }
+    }, []);
 
     const Mentions = <MentionsWrap>{mentions && mentions.map((mention: any, i: number) => {
         return (
-            <MiniMention handleClose={handleClose} onClick={()=>onMentionClick(mention)} key={`mention-${i}`} {...mention} params={params} tp={tp} selectedXid={selectedXid} setSelectedXid={setSelectedXid} mutate={()=>{}}/>
+            <MiniMention handleClose={handleClose} onClick={() => onMentionClick(mention)} key={`mention-${i}`} {...mention} params={params} tp={tp} selectedXid={selectedXid} setSelectedXid={setSelectedXid} mutate={() => { }} />
         )
     })}</MentionsWrap>;
 
-    if (image&&image.indexOf("thestar.com/content/tncms/custom/image/f84403b8-7d76-11ee-9d02-a72a4951957f.png") >= 0)
+    if (image && image.indexOf("thestar.com/content/tncms/custom/image/f84403b8-7d76-11ee-9d02-a72a4951957f.png") >= 0)
         return null;
 
     return (
@@ -351,7 +359,7 @@ const Story: React.FC<Props> = ({ story,handleClose }) => {
                     {Mentions}
                 </ArticleMentions>
                 <br />
-                <Link style={{marginLeft:10}} href={url} onClick={onStoryClick} target="_blank">{url?.substring(0, 50)}..</Link>
+                <Link style={{ marginLeft: 10 }} href={url} onClick={onStoryClick} target="_blank">{url?.substring(0, 50)}..</Link>
                 <BottomLine>
                     <ShareGroup><RWebShare
                         data={{
@@ -383,12 +391,12 @@ const Story: React.FC<Props> = ({ story,handleClose }) => {
                         </ImageWrapper>
                     </Link>
                     <Body>
-                        {false && <Link onClick={onStoryClick} href={url||""}><ArticleDigest>
+                        {false && <Link onClick={onStoryClick} href={url || ""}><ArticleDigest>
                             {true ? 'Article Digest:' : 'Short Digest:'}
                         </ArticleDigest>
                         </Link>}
                         <Digest>
-                            <Link href={url||""} onClick={onStoryClick}> <div dangerouslySetInnerHTML={{ __html: digest }} /></Link>
+                            <Link href={url || ""} onClick={onStoryClick}> <div dangerouslySetInnerHTML={{ __html: digest }} /></Link>
                             <ShareContainerInline>
                                 <ContentCopyIcon style={{ paddingTop: 6, marginBottom: 0, marginTop: -10 }} fontSize="small" sx={{ color: digestCopied ? 'green' : '' }} onClick={() => onDigestCopyClick()} />
                             </ShareContainerInline>
@@ -399,7 +407,7 @@ const Story: React.FC<Props> = ({ story,handleClose }) => {
                     <ArticleMentionsTitle><b>Mentions:</b></ArticleMentionsTitle>
                     {Mentions}</ArticleMentions>
                 <br />
-                <Link href={url||""}> {url?.substring(0, 30)}...</Link>
+                <Link href={url || ""}> {url?.substring(0, 30)}...</Link>
                 <BottomLine>
                     <ShareGroup><RWebShare
                         data={{

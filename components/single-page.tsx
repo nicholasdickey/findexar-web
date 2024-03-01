@@ -344,11 +344,7 @@ const SinglePage: React.FC<Props> = (props) => {
     ogDescription=astoryDigest.replaceAll('<p>','').replaceAll('</p>',"\n\n");
     ogImage=astoryImageOgUrl;
   }
-  if(ogImage.indexOf('pcdn.co')>=0){
-    recordEvent('bad-og-image',`{"fbclid":"${fbclid}","utm_content":"${utm_content}","slug":"${localSlug}","url":"${ogUrl}","ogImage":"${ogImage}"}`).then((r: any) => {
-      console.log("recordEvent", r);
-    });;
-  }
+  
   const noindex=+(process.env.NEXT_PUBLIC_NOINDEX||"0");
   return (
     <>
