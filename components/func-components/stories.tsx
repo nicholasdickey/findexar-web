@@ -64,8 +64,7 @@ interface Props {
 const Stories: React.FC<Props> = () => {
     const { mode, userId, noUser, view, tab, isMobile, setLeague, setView, setPagetype, setTeam, setPlayer, setMode, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName, setTeamName } = useAppContext();
     const [firstXid, setFirstXid] = useState("");
-   
-   
+     
     const fetchStoriesKey = (pageIndex: number, previousPageData: any): FetchedStoriesKey | null => {
         let key: FetchedStoriesKey = { type: "FetchedStories", noUser, page: pageIndex, league, noLoad: view != "mentions" && tab != "all" };
         if (previousPageData && !previousPageData.length) return null // reached the end
@@ -74,15 +73,7 @@ const Stories: React.FC<Props> = () => {
     const { data, error: storiesError, mutate, size, setSize, isValidating, isLoading } = useSWRInfinite(fetchStoriesKey, fetchStories, { initialSize: 1, revalidateAll: true,parallel:true })
    
     let stories = data ? [].concat(...data):[];
-   /* useEffect(() => {
-        //@ts-ignore
-        const xid=stories && stories.length>0?stories[0].xid:"";
-        if(xid!=firstXid){
-            console.log("setFirstXid=",xid,firstXid)
-            setFirstXid(xid);
-        }   
-    }, [stories[0]])*/
-    //console.log("stories=",stories);
+   
     const isLoadingMore =
         isLoading || (size > 0 && data && typeof data[size - 1] === "undefined");
     let isEmpty = data?.[0]?.length === 0;
@@ -116,4 +107,5 @@ const Stories: React.FC<Props> = () => {
         </>
     )
 }
+
 export default Stories;

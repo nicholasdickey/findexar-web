@@ -53,7 +53,7 @@ const MobileMentionsOuterContainer = styled.div`
 interface Props {
 }
 const Stories: React.FC<Props> = () => {
-    let { mode, userId, noUser, view, tab, isMobile, setLeague, setView, setPagetype, setTeam, setPlayer, setMode,  fbclid, utm_content, params, tp, league, pagetype, team, player, teamName, setTeamName } = useAppContext();
+    let { mode, userId, noUser, view, tab, isMobile, setLeague, setView, setPagetype, setTeam, setPlayer, setMode, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName, setTeamName } = useAppContext();
 
     const fetchMentionsKey = (pageIndex: number, previousPageData: any): FetchedMentionsKey | null => {
         let key: FetchedMentionsKey = { type: "FetchedMentions", teamid: team || "", name: player || "", noUser, page: pageIndex, league, myteam: tab == 'myteam' ? 1 : 0, noLoad: tab == "fav" || view != "mentions" };
@@ -61,7 +61,7 @@ const Stories: React.FC<Props> = () => {
         return key;
     }
     // now swrInfinite code:
-    const { data, error: mentionsError, mutate, size, setSize, isValidating, isLoading } = useSWRInfinite(fetchMentionsKey, fetchMentions, { initialSize: 1,  revalidateAll: true, parallel: true })
+    const { data, error: mentionsError, mutate, size, setSize, isValidating, isLoading } = useSWRInfinite(fetchMentionsKey, fetchMentions, { initialSize: 1, revalidateAll: true, parallel: true })
     let mentions = data ? [].concat(...data) : [];
     const isLoadingMore =
         isLoading || (size > 0 && data && typeof data[size - 1] === "undefined");
@@ -87,7 +87,7 @@ const Stories: React.FC<Props> = () => {
                 mention={m}
                 key={`mention${i}`}
                 mutate={() => { mutate() }}
-                handleClose={()=>{}}
+                handleClose={() => { }}
             />)
     });
     return (

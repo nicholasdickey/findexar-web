@@ -43,8 +43,8 @@ const lightValues = css`
     --mobile-leagues-selected:${({ theme }) => theme.light.colors.mobileLeaguesSelected};
     --mobile-leagues-highlight:${({ theme }) => theme.light.colors.mobileLeaguesHighlight};
     --xColor:${({ theme }) => theme.light.colors.xColor};
-
 `;
+
 const darkValues = css`
     --text: ${({ theme }) => theme.dark.colors.text};
     --background: ${({ theme }) => theme.dark.colors.background};
@@ -89,22 +89,13 @@ const darkValues = css`
     --mobile-leagues-selected:${({ theme }) => theme.dark.colors.mobileLeaguesSelected};
     --mobile-leagues-highlight:${({ theme }) => theme.dark.colors.mobileLeaguesHighlight};
     --xColor:${({ theme }) => theme.dark.colors.xColor};
-    
 `;
 
 const GlobalStyle = createGlobalStyle<{ $light?: boolean; }>`
   html,
   body {
     ${props=>(props.$light?lightValues:darkValues)}
-    
  
-   /* [data-theme="light"] {
-        ${lightValues}
-    }
-    [data-theme="dark"] {
-        ${darkValues}
-    }  */
-    
     background-color:var(--background) !important;
     color:var(--text);
     padding: 0;
@@ -131,7 +122,5 @@ const GlobalStyle = createGlobalStyle<{ $light?: boolean; }>`
   text-transform: none;
   background-color: #611bbd;
 }
- 
-  
-`
+ `
 export default GlobalStyle

@@ -2,7 +2,6 @@ import React, { use, useCallback, useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 //next
 import Head from 'next/head'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Roboto } from 'next/font/google';
 import Script from "next/script";
@@ -12,27 +11,21 @@ import { styled, ThemeProvider } from "styled-components";
 //mui
 import { Tabs, Tab, } from '@mui/material'
 import { ThemeProvider as MuiTP } from '@mui/material/styles';
-import Button from '@mui/material/Button';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-//clerk
-import { UserButton } from "@clerk/nextjs";
 //stripe
 import { useSubscription } from "use-stripe-subscription";
 //other
 import 'material-icons/iconfont/outlined.css';
-//import { getCookie, hasCookie } from 'cookies-next';
-//local
 import { palette } from '@/lib/palette';
 import GlobalStyle from '@/components/globalstyles';
-import { recordEvent, AMentionKey, getAMention,getASlugStory,ASlugStoryKey } from '@/lib/api';
+import { recordEvent, AMentionKey, getAMention, getASlugStory, ASlugStoryKey } from '@/lib/api';
 import { AppWrapper } from '@/lib/context';
 
 import Header from "@/components/nav-components/header";
 import Desktop from "@/components/nav-components/desktop";
 import Mobile from "@/components/nav-components/mobile";
 import SubscriptionMenu from "./util-components/subscription-menu";
-
 
 /*==========================================*/
 interface LeaguesNavProps {
@@ -43,7 +36,6 @@ const LeaguesTab = styled(Tab) <LeaguesNavProps>`
    color:${({ selected }) => selected ? 'var(--mobile-leagues-selected)' : 'var(--mobile-leagues-text)'} !important;
    :hover{
       color:var(--mobile-leagues-highlight) !important;
-    
    }
 `;
 /*==========================================*/
@@ -69,17 +61,18 @@ interface Props {
   tab: string;
   mode: string;
   findexarxid: string;
-  teamName:string;
-  slug:string;
-  tracker_filter:number;
+  teamName: string;
+  slug: string;
+  tracker_filter: number;
 }
-const SubscriptionWrap= styled.div`
+const SubscriptionWrap = styled.div`
   margin-top:20px;
 `;
+
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 
 const SinglePage: React.FC<Props> = (props) => {
-  let { tracker_filter=0,teamName:tn,findexarxid,slug="", tab, t1, fbclid = "", isfb, isbot, list, freeUser, createdAt, userId, utm_content, dark, leagues, league = "", team = "", pagetype = "league", player = "", view = "" } = props;
+  let { teamName: tn, findexarxid, slug = "", tab, t1, fbclid = "", isbot, freeUser, createdAt, userId, utm_content, dark, leagues, league = "", team = "", pagetype = "league", player = "", view = "" } = props;
 
   const [localTeam, setLocalTeam] = useState(team);
   const [localPlayer, setLocalPlayer] = useState(player);
@@ -90,29 +83,30 @@ const SinglePage: React.FC<Props> = (props) => {
   const [hardStop, setHardStop] = useState(false);
   const [params, setParams] = useState("");
   const [params2, setParams2] = useState("");
-  const [localUserId, setLocalUserId] = useState(userId||"");
+  const [localUserId, setLocalUserId] = useState(userId || "");
   const [tp, setTp] = useState("");
   const [tp2, setTp2] = useState("");
   const [localTab, setLocalTab] = React.useState(tab);
-  const [localMode, setLocalMode] = React.useState(dark==-1?'unknown':dark==1? 'dark' : 'light');
-  const [localFindexarxid, setLocalFindexarxid] = React.useState(findexarxid||"");
- // const [localSid, setLocalSid] = React.useState(sid||"");
-  const [localSlug, setLocalSlug] = React.useState(slug||"");
+  const [localMode, setLocalMode] = React.useState(dark == -1 ? 'unknown' : dark == 1 ? 'dark' : 'light');
+  const [localFindexarxid, setLocalFindexarxid] = React.useState(findexarxid || "");
+  const [localSlug, setLocalSlug] = React.useState(slug || "");
   const [localView, setLocalView] = useState(view.toLowerCase());
   const [teamName, setTeamName] = useState(tn);
   const router = useRouter();
   const muiTheme = useTheme();
   const fullScreen = useMediaQuery(muiTheme.breakpoints.down('md'));
   const isMobile = useMediaQuery('(max-width:1199px)');
-  const { isLoaded:isClerkLoaded, isSignedIn, user } = useUser();
-  console.log("isSignedIn:", isSignedIn, "isLoaded:", isClerkLoaded, "user:", user);
-  
-  useEffect(()=>{
-  if(isClerkLoaded&&isSignedIn){
-    if(user.id!=localUserId)
-      setLocalUserId(user.id);
-  }},[isClerkLoaded,isSignedIn,user]); 
-  
+  const { isLoaded: isClerkLoaded, isSignedIn, user } = useUser();
+
+  //console.log("isSignedIn:", isSignedIn, "isLoaded:", isClerkLoaded, "user:", user);
+
+  useEffect(() => {
+    if (isClerkLoaded && isSignedIn) {
+      if (user.id != localUserId)
+        setLocalUserId(user.id);
+    }
+  }, [isClerkLoaded, isSignedIn, user]);
+
   useEffect(() => {
     document.body.setAttribute("data-theme", localMode);
   }, [localMode]);
@@ -135,29 +129,15 @@ const SinglePage: React.FC<Props> = (props) => {
   }, [league]);
 
   useEffect(() => {
-    //const subscription = router.events.on('routeChangeComplete', () => {
-      // Get the updated query params
-      const updatedQueryParams = new URLSearchParams(router.query as any as string);
-
-     /* // Check if the query params have changed
-      if (updatedQueryParams.toString() !== queryParams.toString()) {
-        // Do something when the query params change
-      }*/
-     // console.log("queryParams:",updatedQueryParams)
-      const story=updatedQueryParams.get('story');
-    //  console.log("new story:",story)
-      if(story!=localSlug)
-        setLocalSlug(story||"");
-
-   // });
-    
-   // return () => subscription.unsubscribe();
+    // Get the updated query params
+    const updatedQueryParams = new URLSearchParams(router.query as any as string);
+    const story = updatedQueryParams.get('story');
+    if (story != localSlug)
+      setLocalSlug(story || "");
   }, [router.query]);
-
 
   view = view ? view.toLowerCase() : "";
   const subscriptionObject = useSubscription();
-
   const {
     isLoaded,
     products,
@@ -165,14 +145,12 @@ const SinglePage: React.FC<Props> = (props) => {
     redirectToCheckout,
     redirectToCustomerPortal,
   } = subscriptionObject;
-  
 
   useEffect(() => {
     if (isLoaded && !freeUser) {
       if (!subscription && userId) {
         const now = new Date().getTime();
         const diff: number = (now - (+(createdAt || 0))) / 1000;
-        console.log("no subscription", diff)
 
         if (diff > 10000 * 24 * 3600) { // if account created over three days ago, hard stop
           console.log("hard stop");
@@ -253,7 +231,7 @@ const SinglePage: React.FC<Props> = (props) => {
       tp2 = tp.replace(/&/g, '?');
     if (!params)
       tp = tp.replace(/&/g, '?');
-   
+
     setParams(params);
     setParams2(params2)
     setTp(tp);
@@ -261,11 +239,11 @@ const SinglePage: React.FC<Props> = (props) => {
   }, [fbclid, utm_content, localTab]);
 
   useEffect(() => {
-    if (t1>0) {
+    if (t1 > 0) {
       const t2 = new Date().getTime();
       recordEvent(`spa-loaded-time`, `{"fbclid":"${fbclid}","utm_content":"${utm_content}", "slug":"${slug}", "findexarxid":"${findexarxid}","t1":"${t1}","time":"${t2 - t1 || 0}"}`).then(() => { });
     }
-  }, [fbclid,t1, utm_content, slug, findexarxid]);
+  }, [fbclid, t1, utm_content, slug, findexarxid]);
 
   useEffect(() => {
     if (pagetype != 'landing') {
@@ -281,40 +259,26 @@ const SinglePage: React.FC<Props> = (props) => {
   }, [pagetype, league, team, player, view, fbclid, utm_content, isbot, localUserId]);
 
   useEffect(() => {
-    if (localMode=='unknown') {
+    if (localMode == 'unknown') {
       const matchMedia = window.matchMedia("(prefers-color-scheme: dark)");
       const matches = matchMedia.matches;
       document.body.setAttribute("data-theme", matchMedia.matches ? 'dark' : 'light');
       setLocalMode(matchMedia.matches ? 'dark' : 'light');
     }
-    
-  }, []);
 
-  const onLeagueNavClick = useCallback(async (l: string) => {
-    setLocalLeague(l);
-    setLocalView('mentions');
-    console.log("onLeagueNavClick", l, "setpagetype league2")
-    setLocalPageType('league');
-    setLocalTeam("")
-    await recordEvent('league-nav',
-      `{"fbclid":"${fbclid}","utm_content":"${utm_content}","league":"${l}", "findexarxid:","${findexarxid}"}`
-    );
-  }, [fbclid, utm_content]);
+  }, []);
 
   console.log("PAGE state:", { userId, localUserId, v, localMode, localPageType, localLeague, localTeam, localPlayer, params, params2 })
 
   const aMentionKey: AMentionKey = { type: "AMention", findexarxid: localFindexarxid, noLoad: localFindexarxid !== "" ? false : true };
-  //console.log("aMentionKey:", aMentionKey);
   const { data: amention } = useSWR(aMentionKey, getAMention)
   const { summary: amentionSummary = "", league: amentionLeague = "", type = "", team: amentionTeam = "", teamName: amentionTeamName = "", name: amentionPlayer = "", image: amentionImage = "", date: amentionDate = "" } = amention ? amention : {};
-  const aSlugStoryKey: ASlugStoryKey = { type: "ASlugStory", slug:localSlug, noLoad: localSlug == "" ? true : false };
+  const aSlugStoryKey: ASlugStoryKey = { type: "ASlugStory", slug: localSlug, noLoad: localSlug == "" ? true : false };
   let { data: aSlugStory } = useSWR(aSlugStoryKey, getASlugStory);
-  let astory=aSlugStory;
-  const { title:astoryTitle="",site_name:astorySite_Name="",authors:astoryAuthors="",digest: astoryDigest = "", image: astoryImage = "", createdTime: astoryDate = "" ,mentions:mentions=[],image_width=0,image_height=0} = astory ? astory : {};
-  //console.log("astory=>client:",aSlugStoryKey,astory)
-  //console.log("astoryImage:",astoryImage);
-  const astoryImageOgUrl=astoryImage?`${process.env.NEXT_PUBLIC_SERVER}/api/og.png/${encodeURIComponent(astoryImage||"")}/${encodeURIComponent(astorySite_Name||"")}/${image_width}/${image_height}`:``;
-  //console.log("astoryImageOgUrl:",astoryImageOgUrl);
+  let astory = aSlugStory;
+  const { title: astoryTitle = "", site_name: astorySite_Name = "", authors: astoryAuthors = "", digest: astoryDigest = "", image: astoryImage = "", createdTime: astoryDate = "", mentions: mentions = [], image_width = 0, image_height = 0 } = astory ? astory : {};
+  const astoryImageOgUrl = astoryImage ? `${process.env.NEXT_PUBLIC_SERVER}/api/og.png/${encodeURIComponent(astoryImage || "")}/${encodeURIComponent(astorySite_Name || "")}/${image_width}/${image_height}` : ``;
+
   //prep meta data for amention
   let ogUrl = '';
   if (amention && amentionLeague && amentionTeam && amentionPlayer)
@@ -334,58 +298,56 @@ const SinglePage: React.FC<Props> = (props) => {
     ogTarget = `${amentionTeamName} on ${process.env.NEXT_PUBLIC_SITE_NAME}`;
 
   let ogDescription = amentionSummary ? amentionSummary : "Fantasy Sports Media Index.";
-  let ogImage = astoryImageOgUrl ? astoryImageOgUrl : process.env.NEXT_PUBLIC_SITE_NAME=="Findexar"?"https://findexar.com/findexar-logo.png":"https://www.qwiket.com/QLogo.png";
-  //console.log("ogImage:",ogImage);
+  let ogImage = astoryImageOgUrl ? astoryImageOgUrl : process.env.NEXT_PUBLIC_SITE_NAME == "Findexar" ? "https://findexar.com/findexar-logo.png" : "https://www.qwiket.com/QLogo.png";
   let ogTitle = ogTarget ? `${ogTarget}` : `${[process.env.NEXT_PUBLIC_SITE_NAME]} Sports Media Index`;
-  if(astory){
-    ogUrl= league?`${process.env.NEXT_PUBLIC_SERVER}/pub/league/${league}?${localSlug?`story=${localSlug}`:``}`
-     :`${process.env.NEXT_PUBLIC_SERVER}/pub?${localSlug?`story=${localSlug}`:``}`;
-    ogTitle=astoryTitle;
-    ogDescription=astoryDigest.replaceAll('<p>','').replaceAll('</p>',"\n\n");
-    ogImage=astoryImageOgUrl;
+  if (astory) {
+    ogUrl = league ? `${process.env.NEXT_PUBLIC_SERVER}/pub/league/${league}?${localSlug ? `story=${localSlug}` : ``}`
+      : `${process.env.NEXT_PUBLIC_SERVER}/pub?${localSlug ? `story=${localSlug}` : ``}`;
+    ogTitle = astoryTitle;
+    ogDescription = astoryDigest.replaceAll('<p>', '').replaceAll('</p>', "\n\n");
+    ogImage = astoryImageOgUrl;
   }
-  
-  const noindex=+(process.env.NEXT_PUBLIC_NOINDEX||"0");
+  const noindex = +(process.env.NEXT_PUBLIC_NOINDEX || "0");
   return (
     <>
       <Head>
         <title>{process.env.NEXT_PUBLIC_APP_NAME}</title>
         <link rel="canonical" href={ogUrl} />
-        {(noindex==1) && <meta name="robots" content="noindex,nofollow" />}
+        {(noindex == 1) && <meta name="robots" content="noindex,nofollow" />}
         <meta property="og:description" content={ogDescription} />
         <meta name="title" content={ogTitle} />
         <meta property="og:title" content={ogTitle} />
         <meta name="description" content={ogDescription} />
         <meta property="og:type" content="website" />
         <meta property="fb:appid" content="358234474670240" />
-        <meta property="og:site_name" content={process.env.NEXT_PUBLIC_APP_NAME=="Finexar"?"findexar.com":"qwiket.com"} />
+        <meta property="og:site_name" content={process.env.NEXT_PUBLIC_APP_NAME == "Finexar" ? "findexar.com" : "qwiket.com"} />
         <meta property="og:image" data-type="new3" content={ogImage} />
         <meta property="og:url" content={ogUrl} />
-        
+
         <meta property="findexar:verify" content="findexar" />
         <meta httpEquiv='X-UA-Compatible' content='IE=edge' />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@findexar" />
         <meta name='viewport' content='width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no' />
-        <link rel="apple-touch-icon" href={process.env.NEXT_PUBLIC_APP_NAME=="Findexar"?"/FiLogo.png":"/QLogo.png"}></link>
+        <link rel="apple-touch-icon" href={process.env.NEXT_PUBLIC_APP_NAME == "Findexar" ? "/FiLogo.png" : "/QLogo.png"}></link>
         <meta name="theme-color" content={localMode == 'dark' ? palette.dark.colors.background : palette.light.colors.background} />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         {(pagetype != 'league' || league || team || player) && <meta name="robots" content="noindex,nofollow" />}
         <link
           rel="shortcut icon"
           type="image/png"
-          href={process.env.NEXT_PUBLIC_APP_NAME=="Findexar"?"/FiLogo.png":"/QLogo.png"}
+          href={process.env.NEXT_PUBLIC_APP_NAME == "Findexar" ? "/FiLogo.png" : "/QLogo.png"}
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
-      <Script src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_APP_NAME=="Findexar"?'G-LWYQDGSGWQ':'G-8ZWPQEPDPB'}`} strategy="afterInteractive"></Script>
+      <Script src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_APP_NAME == "Findexar" ? 'G-LWYQDGSGWQ' : 'G-8ZWPQEPDPB'}`} strategy="afterInteractive"></Script>
       <Script id="google-analytics" strategy="afterInteractive" dangerouslySetInnerHTML={{
         __html: `
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
-          gtag('config', '${process.env.NEXT_PUBLIC_APP_NAME=="Findexar"?'G-LWYQDGSGWQ':'G-8ZWPQEPDPB'}', {
+          gtag('config', '${process.env.NEXT_PUBLIC_APP_NAME == "Findexar" ? 'G-LWYQDGSGWQ' : 'G-8ZWPQEPDPB'}', {
             page_path: window.location.pathname,
           });
         `,
@@ -398,11 +360,11 @@ const SinglePage: React.FC<Props> = (props) => {
             <GlobalStyle $light={localMode == "light"} />
             <AppWrapper userId={localUserId} isMobile={isMobile} setUserId={setLocalUserId} params={params} params2={params2} tp={tp} tp2={tp2} findexarxid={localFindexarxid} view={v} tab={localTab} noUser={!localUserId} mode={localMode} setMode={setLocalMode} pagetype={localPageType} setLeague={setLocalLeague} setPagetype={setLocalPageType} setPlayer={setLocalPlayer} setTeam={setLocalTeam} setTab={setLocalTab} setView={setLocalView} league={localLeague.toUpperCase()} team={localTeam} player={localPlayer} fbclid={fbclid} utm_content={utm_content} teamName={teamName} setTeamName={setTeamName} slug={localSlug} setSlug={setLocalSlug}>
               <Header leagues={leagues} />
-              {!dismiss&&subscriptionPrompt&&<SubscriptionWrap><SubscriptionMenu  products={products}  redirectToCheckout={redirectToCheckout}
-    redirectToCustomerPortal={redirectToCustomerPortal}
-    setDismiss={(val:boolean)=>{setDismiss(val);}} hardStop={hardStop} /></SubscriptionWrap>}
-              {!isMobile &&!hardStop&& <Desktop />}
-              {isMobile && !hardStop&&<Mobile />}
+              {!dismiss && subscriptionPrompt && <SubscriptionWrap><SubscriptionMenu products={products} redirectToCheckout={redirectToCheckout}
+                redirectToCustomerPortal={redirectToCustomerPortal}
+                setDismiss={(val: boolean) => { setDismiss(val); }} hardStop={hardStop} /></SubscriptionWrap>}
+              {!isMobile && !hardStop && <Desktop />}
+              {isMobile && !hardStop && <Mobile />}
             </AppWrapper>
           </ThemeProvider>
         </main>

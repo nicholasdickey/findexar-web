@@ -72,11 +72,9 @@ const RElement = styled.div`
 
 const TitleWrap = styled.div`
     color:#fff !important;
-
 `;
 
 const DialogTitleWrap = styled.div`
-   // display:none;
     height:20px;
     @media (max-width: 1199px) {
         display:none;
@@ -98,7 +96,6 @@ const GotoFeed = styled.div`
     top:82px;
     right:20px;
     font-size:14px;
-   // color:var(--text);
     color:var(--qwiket-border-new);
     border-color:var(--qwiket-border-new);
     border-style:solid;
@@ -112,8 +109,7 @@ const GotoFeed = styled.div`
     }
     @media (max-width: 1199px) {
         top: 90px;
-    }
-    
+    } 
 `;
 interface Props {
     mutate: () => void;
@@ -122,8 +118,6 @@ interface Props {
 
 const MentionOverlay = ({ setDismiss, mutate, ...props }: Props) => {
     let { tab, view, mode, userId, isMobile, league, team, teamName, setLeague, setView, setTab, setPagetype, setTeam, setPlayer, setMode, fbclid, utm_content, params, tp, pagetype, slug } = useAppContext();
-    // const [xid, setXid] = React.useState<string>(sid||"");
-
 
     const aSlugStoryKey: ASlugStoryKey = { type: "ASlugStory", slug: slug, noLoad: slug == "" ? true : false };
     let { data: aSlugStory } = useSWR(aSlugStoryKey, getASlugStory);
@@ -142,8 +136,6 @@ const MentionOverlay = ({ setDismiss, mutate, ...props }: Props) => {
             setOpen(true);
         }
     }, [astory]);
-
-
 
     const handleClose = useCallback(() => {
         setOpen(false);

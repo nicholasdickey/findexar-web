@@ -1,49 +1,26 @@
 import * as React from 'react';
 import useSWRInfinite from 'swr/infinite'
-import Container from '@mui/material/Container';
+
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Box from '@mui/material/Box';
-import { AppBar } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Divider from '@mui/material/Divider';
-import Drawer from '@mui/material/Drawer';
-import IconButton from '@mui/material/IconButton';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import MenuIcon from '@mui/icons-material/Menu';
-import Toolbar from '@mui/material/Toolbar';
-import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
-import Button from '@mui/material/Button';
-import ModeNightTwoToneIcon from '@mui/icons-material/ModeNightOutlined';
-import LightModeTwoToneIcon from '@mui/icons-material/LightModeOutlined';
-import AddCircleTwoToneIcon from '@mui/icons-material/AddCircleTwoTone';
-import { useState, useCallback, useEffect } from "react"
+
 import { useRouter } from 'next/router'
 import { fetchReport,FetchedReportKey } from '../lib/api'
-import styled from 'styled-components';
 import Script from 'next/script'
 
 import {
   GetServerSidePropsContext,
 } from "next";
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+
 import Head from 'next/head'
-import { blueGrey } from '@mui/material/colors'
+
 import useMediaQuery from '@mui/material/useMediaQuery';
-import axios from 'axios';
-import Image from 'next/image'
-//import { useSession, signIn, signOut } from "next-auth/react"
 import { Roboto } from 'next/font/google';
-import { AnyPtrRecord } from 'dns';
 import Paper from '@mui/material/Paper';
 import LoadMore from "@/components/func-components/load-more";
 
@@ -59,6 +36,7 @@ const ReportItem= function(name:string,expanded:string,setExpanded:any,sessionid
         if(eventName.indexOf('bot')>=0){
           bot=true;
           console.log("===============>>>>bot",name);
+          return null
         }
           
         return (

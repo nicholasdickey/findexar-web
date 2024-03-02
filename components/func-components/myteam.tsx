@@ -75,6 +75,7 @@ const SideIcon = styled.div<SideProps>`
     height:20px;
     color:${props => props.highlight ? 'var(--selected))' : 'var(--link)'};  
 `;
+
 const SideButton = styled.div`
     width:40px;
 `;
@@ -85,6 +86,7 @@ const RightExplanation = styled.div`
     font-size: 14px;
     margin-bottom:10px;
 `;
+
 const MobileRightExplanation = styled.div`
     max-width: 280px; 
     line-height:1.5;
@@ -92,6 +94,7 @@ const MobileRightExplanation = styled.div`
     margin-bottom:10px;
     padding-right:20px;
 `;
+
 const MobilePlayersPanel = styled.div`
     height:100%;
     width:100%;

@@ -3,9 +3,8 @@ import { styled, useTheme } from "styled-components";
 import { Tabs, Tab } from '@mui/material'
 
 const TabsWrap = styled.div`
-background-color:var(--secondary-tabs-bg);
-font-size:10px;
-//color:#fff !important;
+  background-color:var(--secondary-tabs-bg);
+  font-size:10px;
 `;
 
 interface StyledTabsProps {
@@ -38,10 +37,10 @@ interface StyledTabProps {
 
 }
 interface STabsProps {
-  selected: boolean;
+    selected: boolean;
 }
 const STab = styled(Tab) <STabsProps>`
-    color:${({ selected }) => selected?'var(--secondary-tabs-selected)':'var(--secondary-tabs-text)'} !important;
+    color:${({ selected }) => selected ? 'var(--secondary-tabs-selected)' : 'var(--secondary-tabs-text)'} !important;
     font-size: 9px !important;
     max-height: 10px !important;
     margin:-10px !important;
@@ -68,9 +67,9 @@ const SecondaryTabs: React.FC<Props> = ({ options, onChange, selectedOptionName 
   const palette = theme[mode].colors;
   let selectedValue = 0;
   const IconTabs = options.map((option: Option, i: number) => {
-    let name=option.name.toLowerCase();
-    if(name=='feed')
-      name='mentions';
+    let name = option.name.toLowerCase();
+    if (name == 'feed')
+      name = 'mentions';
     console.log("options.map", option.name, selectedOptionName)
     let selected = false;
     if (name == selectedOptionName?.toLowerCase()) {

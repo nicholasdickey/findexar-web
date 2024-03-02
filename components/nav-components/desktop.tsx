@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { useRouter } from 'next/router'
 import { styled, ThemeProvider } from "styled-components";
 
-
 import Landing from "@/components/func-components/landing";
 import Teams from "@/components/func-components/teams";
 import Welcome from "@/components/func-components/welcome";
@@ -114,10 +113,9 @@ const RightPanel = styled.div`
         }
     }
 `;
-
-
 interface Props {
 }
+
 const Desktop: React.FC<Props> = () => {
     const router = useRouter();
     let { tab,view,mode, userId, isMobile, setLeague, setView,setTab, setPagetype, setTeam, setPlayer, setMode, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName ,findexarxid} = useAppContext();
@@ -134,7 +132,7 @@ const Desktop: React.FC<Props> = () => {
             `{"fbclid":"${fbclid}","utm_content":"${utm_content}","tab":"${tab}"}`
         );
     }
-   // console.log("DESKTOP:",{pagetype,view,tab})
+
     return (
         <ContainerWrap>
              <MentionOverlay setDismiss={(dismiss:boolean)=>{setView("mentions");}} mutate={() => {}}  />

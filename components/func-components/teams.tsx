@@ -11,6 +11,7 @@ const SideLeagueName = styled.div`
     color:var(--text);
     font-size: 20px;
 `;
+
 const SideTeam = styled.div`
     height: 30px;
     padding-left:20px;

@@ -2,7 +2,7 @@ import React from "react";
 import useSWR from 'swr';
 import { styled } from "styled-components";
 import Skeleton from '@mui/material/Skeleton';
-import { PlayerPhotoKey,getPlayerPhoto } from '@/lib/api';
+import { PlayerPhotoKey, getPlayerPhoto } from '@/lib/api';
 import Avatar from '@mui/material/Avatar';
 
 const Photo = styled.div`
@@ -20,26 +20,23 @@ const MobilePhoto = styled.div`
     }
 `;
 interface Props {
-   name:string;
-   teamid:string;
+    name: string;
+    teamid: string;
 }
 
 const PlayerPhoto: React.FC<Props> = (props) => {
     const { teamid, name } = props;
-    const photoKey: PlayerPhotoKey = { func:"photo",teamid: teamid || "", name: name || "" };
-    const {data:photo,error,isLoading} = useSWR(photoKey, getPlayerPhoto);
+    const photoKey: PlayerPhotoKey = { func: "photo", teamid: teamid || "", name: name || "" };
+    const { data: photo, error, isLoading } = useSWR(photoKey, getPlayerPhoto);
 
-
-    if(isLoading||!photo) return (
+    if (isLoading || !photo) return (
         <Skeleton variant="circular" animation="pulse" height={40} />
-         )
-   
-
-  
+    )
     return (<>
-       <Photo><Avatar sx={{width:60,height:60}} src={photo} alt={name}></Avatar></Photo>
-       <MobilePhoto><Avatar sx={{width:40,height:40}} src={photo} alt={name}></Avatar></MobilePhoto>
-       </>
+        <Photo><Avatar sx={{ width: 60, height: 60 }} src={photo} alt={name}></Avatar></Photo>
+        <MobilePhoto><Avatar sx={{ width: 40, height: 40 }} src={photo} alt={name}></Avatar></MobilePhoto>
+    </>
     );
 };
+
 export default PlayerPhoto;

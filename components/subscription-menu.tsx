@@ -1,8 +1,6 @@
-import React from 'react';
-import { Gate, useSubscription } from "use-stripe-subscription";
+import {Gate} from "use-stripe-subscription";
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
-import { styled } from '@mui/material/styles';
 
 interface Props {
     products: any[];

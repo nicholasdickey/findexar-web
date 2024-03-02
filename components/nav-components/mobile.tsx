@@ -10,7 +10,7 @@ import PlayerIcon from '@mui/icons-material/PersonPinOutlined';
 
 import Landing from "@/components/func-components/landing";
 import Teams from "@/components/func-components/teams";
-import Welcome from "@/components/func-components/welcome";
+
 import Readme from "@/components/func-components/readme";
 import Mentions from "@/components/func-components/mentions";
 import Stories from "@/components/func-components/stories";
@@ -22,18 +22,19 @@ import TertiaryTabs from "@/components/nav-components/tertiary-tabs";
 import MentionOverlay from "@/components/func-components/mention-overlay";
 import StoryOverlay from "@/components/func-components/story-overlay";
 import { recordEvent } from '@/lib/api';
+
 const MobileContainerWrap = styled.div`
     display: flex;
     flex-direction: column;
     height: 100%;
     width: 100%;
-   // color: #111;
     font-family: 'Roboto', sans-serif;
     border-top: 1px solid #ccc;
     @media screen and (min-width: 1200px) {
       display: none;
     }
 `;
+
 const LeftMobilePanel = styled.div`
     width:100%;
     display:flex;
@@ -49,7 +50,6 @@ const LeftMobilePanel = styled.div`
         }
     }
 `;
-
 
 const CenterPanel = styled.div`
     position:relative;
@@ -75,9 +75,9 @@ const SideLeagueName = styled.div`
     color:var(--text);
     font-size: 20px;
 `;
-
 interface Props {
 }
+
 const Mobile: React.FC<Props> = () => {
     const router = useRouter();
     let { tab, view, mode, userId, isMobile, setLeague, setView, setTab, params2, tp2, setPagetype, setTeam, setPlayer, setMode, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName } = useAppContext();
@@ -111,10 +111,9 @@ const Mobile: React.FC<Props> = () => {
             `{"fbclid":"${fbclid}","utm_content":"${utm_content}","view":"${name}"}`
         );
     }, [fbclid, utm_content,  league, params2, tp2]);
-    //console.log("MOBILE:", { pagetype, view, tab })
+
     return (
         <MobileContainerWrap>
-
             {pagetype == "landing" && <Landing />}
             {pagetype == "league" && !league && <SecondaryTabs options={[{ name: "Feed", icon: <MentionIcon fontSize="small" />, access: "pub" }, { name: "My Team", icon: <ListIcon fontSize="small" />, access: "pub" }, { name: "Readme", icon: <ContactSupportIcon fontSize="small" />, access: "pub" }]} onChange={async (option: any) => { await onViewNav(option); }} selectedOptionName={view} />
             }
@@ -140,4 +139,5 @@ const Mobile: React.FC<Props> = () => {
         </MobileContainerWrap >
     )
 }
+
 export default Mobile;

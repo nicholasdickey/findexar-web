@@ -105,7 +105,6 @@ const League = styled.div<HeaderProps>`
     @media screen and (max-width: 1199px) {
       height: 24px;
     }
- 
 `;
 
 const SelectedLeague = styled.div<HeaderProps>`
@@ -155,7 +154,6 @@ const Leagues = styled.div<HeaderProps>`
 const LeagueIcon = styled.div<HeaderProps>`
     min-height: ${({ scrolled }) => scrolled ? 10 : 26}px;
     margin-top:${({ scrolled }) => scrolled ? -5 : -6}px;
-  
 `;
 
 const MuiTabs = styled(Tabs)`
@@ -208,6 +206,7 @@ const SubheadMobile = styled.div`
         display:none;
     }
 `;
+
 const HeaderTopline = styled.div`
     display:flex;
     height:100%;
@@ -258,6 +257,7 @@ const HeaderCenter = styled.div`
         margin-left:0px;
     }
 `;
+
 const HeaderRight = styled.div`
     display:flex;
     flex-direction:row;
@@ -299,8 +299,8 @@ const FLogoMobile = styled.div`
 `;
 
 const SUserButton = styled(UserButton)`
-
 `;
+
 const PlayerNameGroup = styled.div`
     display:flex;
     flex-direction:row;
@@ -313,6 +313,7 @@ const PlayerNameGroup = styled.div`
         margin-right:0px;
     }
 `;
+
 const PlayerName = styled.div`
     text-align:left;
 `;
@@ -325,7 +326,6 @@ const LeaguesTab = styled(Tab) <LeaguesNavProps>`
    color:${({ selected }) => selected ? 'var(--mobile-leagues-selected)' : 'var(--mobile-leagues-text)'} !important;
    :hover{
       color:var(--mobile-leagues-highlight) !important;
-    
    }
 `;
 /*==========================================*/
@@ -398,7 +398,7 @@ const HeaderNav: React.FC<Props> = ({ leagues }) => {
       },
       body: JSON.stringify({ session: { dark: mode=='dark'?1:0 } })
     });
-    //await setCookie({ name: 'mode', value: mode });
+   
   }, []);
 
   const LeaguesNav = leagues?.map((l: string, i: number) => {
