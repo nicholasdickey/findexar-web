@@ -1,9 +1,9 @@
-import axios from 'axios';
 // Records event
 export const recordEvent = async (name: string, params: string) => {
   try {
     const url = `${process.env.NEXT_PUBLIC_SERVER}/api/record-event?name=${encodeURIComponent(name)}&params=${encodeURIComponent(params)}`;
-    const res = await axios.get(url);
+    const fetchResponse = await fetch(url);
+    const res = await fetchResponse.json();
     return res.data.success;
   }
   catch (e) {
@@ -32,8 +32,9 @@ export const getLeagueTeams = async ({ league, noLoad }: LeagueTeamsKey) => {
   try {
     if (noLoad) return [];
     const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-league-teams?league=${encodeURIComponent(league)}`;
-    const res = await axios.get(url);
-    return res.data.teams;
+    const fetchResponse = await fetch(url);
+    const data = await fetchResponse.json();
+    return data.teams;
   }
   catch (e) {
     console.log("getLeagueTeams", e);
@@ -52,8 +53,9 @@ export const getDetails = async ({ type, teamid, name, noUser }: DetailsKey) => 
     else
       url = `${process.env.NEXT_PUBLIC_SERVER}/api/user/get-details-favorites?teamid=${encodeURIComponent(teamid)}&name=${encodeURIComponent(name)}`;
 
-    const res = await axios.get(url);
-    return res.data.details;
+    const fetchResponse = await fetch(url);
+    const data = await fetchResponse.json();
+    return data.details;
   }
   catch (e) {
     console.log("getDetails", e);
@@ -72,8 +74,9 @@ export const getMentions = async ({ type, league, noUser }: MentionsKey) => {
     else {
       url = league ? `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-mentions?league=${encodeURIComponent(league)}` : `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-mentions`;
     }
-    const res = await axios.get(url);
-    return res.data.mentions;
+    const fetchResponse = await fetch(url);
+    const data = await fetchResponse.json();
+    return data.mentions;
   }
   catch (e) {
     console.log("getMentions", e);
@@ -88,8 +91,9 @@ export const getFilteredMentions = async ({ type, league, noUser }: MentionsKey)
       return;
     }
     const url = league ? `${process.env.NEXT_PUBLIC_SERVER}/api/user/get-filtered-mentions?league=${encodeURIComponent(league)}` : `${process.env.NEXT_PUBLIC_SERVER}/api/user/get-filtered-mentions`;
-    const res = await axios.get(url);
-    return res.data.mentions;
+    const fetchResponse = await fetch(url);
+    const data = await fetchResponse.json();
+    return data.mentions;
   }
   catch (e) {
     console.log("getFilteredMentions", e);
@@ -103,9 +107,9 @@ export const getMetaLink = async ({ func, findexarxid, long = 0 }: MetaLinkKey) 
   try {
     const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-meta-link?xid=${findexarxid}&long=${long}`;
 
-    const res = await axios.get(url);
-    //console.log("getMetaLink=>",{findexarxid,url,resp:res.data.meta});
-    return res.data.meta;
+    const fetchResponse = await fetch(url);
+    const data = await fetchResponse.json();
+    return data.meta;
   }
   catch (e) {
     console.log("getMeta", e);
@@ -118,8 +122,9 @@ export type PlayerPhotoKey = { func: string, name: string, teamid: string };
 export const getPlayerPhoto = async ({ func, name, teamid }: PlayerPhotoKey) => {
   try {
     const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-player-photo?name=${encodeURIComponent(name)}&teamid=${encodeURIComponent(teamid)}`;
-    const res = await axios.get(url);
-    return res.data.photo;
+    const fetchResponse = await fetch(url);
+    const data = await fetchResponse.json();
+    return data.photo;
   }
   catch (e) {
     console.log("getPlayerPhoto", e);
@@ -132,9 +137,11 @@ export type UserListsKey = { type: string };
 export const getUserLists = async ({ type }: UserListsKey) => {
   try {
     const url = `${process.env.NEXT_PUBLIC_SERVER}/api/user/get-lists`;
-    const res = await axios.get(url);
-    console.log("getUserLists", url, res.data.lists)
-    return res.data.lists;
+
+    const fetchResponse = await fetch(url);
+    const data = await fetchResponse.json();
+    console.log("getUserLists", url, data.lists)
+    return data.lists;
   }
   catch (e) {
     console.log("getUserLists", e);
@@ -147,8 +154,8 @@ export type UserAddListParams = { name: string, description: string };
 export const addUserList = async ({ name, description }: UserAddListParams) => {
   try {
     const url = `${process.env.NEXT_PUBLIC_SERVER}/api/user/add-list?name=${encodeURIComponent(name)}&description=${encodeURIComponent(description)}`;
-
-    const { data } = await axios.get(url);
+    const fetchResponse = await fetch(url);
+    const data = await fetchResponse.json();
     console.log("addUserList", { name, description, url, data })
     return data.lists;
   }
@@ -161,7 +168,8 @@ export type UpdateListParams = { listxid: string, name: string, description: str
 export const updateUserList = async ({ name, description, listxid }: UpdateListParams) => {
   try {
     const url = `${process.env.NEXT_PUBLIC_SERVER}/api/user/update-list?listxid=${listxid}&name=${encodeURIComponent(name)}&description=${encodeURIComponent(description)}`;
-    const { data } = await axios.get(url);
+    const fetchResponse = await fetch(url);
+    const data = await fetchResponse.json();
     return data.lists;
   }
   catch (e) {
@@ -174,12 +182,13 @@ export type UserListMembersKey = { type: string, listxid: string };
 export const getUserListMembers = async ({ type, listxid }: UserListMembersKey) => {
   try {
     const url = `${process.env.NEXT_PUBLIC_SERVER}/api/user/get-list-members?listxid=${listxid}`;
-    const res = await axios.get(url);
-    return res.data.members;
+    // const res = await axios.get(url);
+    const fetchResponse = await fetch(url);
+    const data = await fetchResponse.json();
+    return data.members;
   }
   catch (e) {
     console.log("getUserListMembers", e);
-
   }
 }
 
@@ -187,10 +196,15 @@ export type UserUpdateListMembersParams = { listxid: string, members: { member: 
 export const updateUserListMembers = async ({ listxid, members }: UserUpdateListMembersParams) => {
   try {
     const url = `${process.env.NEXT_PUBLIC_SERVER}/api/user/update-list-members?listxid=${listxid}`;
-    const res = await axios.put(url, {
-      members
+
+    const fetchResponse = await fetch(url, {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+      }, body: JSON.stringify({ members })
     });
-    return res.data.members;
+    const data = await fetchResponse.json();
+    return data.members;
   }
   catch (e) {
     console.log("getUserListMembers", e);
@@ -201,10 +215,10 @@ export type TrackerListMembersKey = { type: string, league: string, noUser: bool
 export const getTrackerListMembers = async ({ type, league, noUser, noLoad }: TrackerListMembersKey) => {
   try {
     if (noUser || noLoad) return [];
-    console.log("getTrackerListMembers", league)
     const url = `${process.env.NEXT_PUBLIC_SERVER}/api/user/get-tracker-list-members?league=${league || ""}`;
-    const res = await axios.get(url);
-    return res.data.members;
+    const fetchResponse = await fetch(url);
+    const data = await fetchResponse.json();
+    return data.members;
   }
   catch (e) {
     console.log("getUserListMembers", e);
@@ -215,9 +229,9 @@ export type AddTrackerListMemberParams = { member: string, teamid: string };
 export const addTrackerListMember = async ({ member, teamid }: AddTrackerListMemberParams) => {
   try {
     const url = `${process.env.NEXT_PUBLIC_SERVER}/api/user/add-tracker-list-member?member=${encodeURIComponent(member)}&teamid=${teamid}`;
-    const res = await axios.get(url);
-    console.log("addTrackerListMember", url, res.data.success)
-    return res.data.success;
+    const fetchResponse = await fetch(url);
+    const data = await fetchResponse.json();
+    return data.success;
   }
   catch (e) {
     console.log("addTrackerListMember", e);
@@ -228,21 +242,23 @@ export type RemoveTrackerListMemberParams = { member: string, teamid: string };
 export const removeTrackerListMember = async ({ member, teamid }: AddTrackerListMemberParams) => {
   try {
     const url = `${process.env.NEXT_PUBLIC_SERVER}/api/user/remove-tracker-list-member?member=${encodeURIComponent(member)}&teamid=${teamid}`;
-    const res = await axios.get(url);
-    console.log("removeTrackerListMember", url, res.data.success)
-    return res.data.success;
+    const fetchResponse = await fetch(url);
+    const data = await fetchResponse.json();
+    return data.success;
   }
   catch (e) {
     console.log("removeTrackerListMember", e);
   }
 }
+
 // SWR get all players for the Team
 export type TeamPlayersKey = { type: string, league: string; teamid: string };
 export const getTeamPlayers = async ({ type, league, teamid }: TeamPlayersKey) => {
   try {
     const url = `${process.env.NEXT_PUBLIC_SERVER}/api/user/get-team-players?league=${encodeURIComponent(league)}&teamid=${encodeURIComponent(teamid)}`;
-    const res = await axios.get(url);
-    return res.data.players;
+    const fetchResponse = await fetch(url);
+    const data = await fetchResponse.json();
+    return data.players;
   }
   catch (e) {
     console.log("getTeamPlayers", e);
@@ -255,8 +271,9 @@ export const getOptions = async ({ type, noUser }: UserOptionsKey) => {
   try {
     if (noUser) return {};
     const url = `${process.env.NEXT_PUBLIC_SERVER}/api/user/user-options`;
-    const res = await axios.get(url);
-    return res.data.options;
+    const fetchResponse = await fetch(url);
+    const data = await fetchResponse.json();
+    return data.options;
   }
   catch (e) {
     console.log("getOptions", e);
@@ -268,8 +285,9 @@ export type SetTrackerFilterParams = { tracker_filter: number };
 export const setTrackerFilter = async ({ tracker_filter }: SetTrackerFilterParams) => {
   try {
     const url = `${process.env.NEXT_PUBLIC_SERVER}/api/user/set-tracker-filter?tracker_filter=${tracker_filter}`;
-    await axios.get(url);
-    console.log("called setTrackerFilter", url)
+    const fetchResponse = await fetch(url);
+    const data = await fetchResponse.json();
+    return data.success;
   }
   catch (e) {
     console.log("getTeamPlayers", e);
@@ -283,8 +301,9 @@ export const getFavorites = async ({ type, noUser, noLoad }: FavoritesKey) => {
     if (noUser || noLoad) return [];
     console.log("getFavorites")
     const url = `${process.env.NEXT_PUBLIC_SERVER}/api/user/get-favorites`;
-    const res = await axios.get(url);
-    return res.data.favorites;
+    const fetchResponse = await fetch(url);
+    const data = await fetchResponse.json();
+    return data.favorites;
   }
   catch (e) {
     console.log("getFavorites", e);
@@ -295,20 +314,21 @@ export type FavoriteParams = { findexarxid: string };
 export const addFavorite = async ({ findexarxid }: FavoriteParams) => {
   try {
     const url = `${process.env.NEXT_PUBLIC_SERVER}/api/user/add-favorite?findexarxid=${encodeURIComponent(findexarxid)}`;
-    const res = await axios.get(url);
-    console.log("addTrackerListMember", url, res.data.success)
-    return res.data.success;
+    const fetchResponse = await fetch(url);
+    const data = await fetchResponse.json();
+    return data.success;
   }
   catch (e) {
     console.log("addTrackerListMember", e);
   }
 }
+
 export const removeFavorite = async ({ findexarxid }: FavoriteParams) => {
   try {
     const url = `${process.env.NEXT_PUBLIC_SERVER}/api/user/remove-favorite?findexarxid=${encodeURIComponent(findexarxid)}`;
-    const res = await axios.get(url);
-    console.log("addTrackerListMember", url, res.data.success)
-    return res.data.success;
+    const fetchResponse = await fetch(url);
+    const data = await fetchResponse.json();
+    return data.success;
   }
   catch (e) {
     console.log("addTrackerListMember", e);
@@ -327,8 +347,9 @@ export const getPagedMentions = async ({ type, league, noUser, page }: PagedMent
     else {
       url = league ? `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-mentions?league=${encodeURIComponent(league)}&page=${page}` : `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-mentions?page=${page}`;
     }
-    const res = await axios.get(url);
-    return res.data.mentions;
+    const fetchResponse = await fetch(url);
+    const data = await fetchResponse.json();
+    return data.mentions;
   }
   catch (e) {
     console.log("getPageMentions", e);
@@ -343,8 +364,9 @@ export const getPagedFilteredMentions = async ({ type, league, noUser, page }: P
       return;
     }
     const url = league ? `${process.env.NEXT_PUBLIC_SERVER}/api/user/get-filtered-mentions?league=${encodeURIComponent(league)}&page=${page}` : `${process.env.NEXT_PUBLIC_SERVER}/api/user/get-filtered-mentions?page=${page}`;
-    const res = await axios.get(url);
-    return res.data.mentions;
+    const fetchResponse = await fetch(url);
+    const data = await fetchResponse.json();
+    return data.mentions;
   }
   catch (e) {
     console.log("getPagedFilteredMentions", e);
@@ -359,7 +381,7 @@ export type FetchedMentionsKey = { type: string, league?: string, noUser: boolea
 export const fetchMentions = async ({ type, league, noUser, page, teamid, name, myteam, noLoad }: FetchedMentionsKey) => {
   try {
     if (noLoad) return [];
-    console.log("api: fetchMentions", type, league, noUser, page, teamid, name, myteam)
+
     let url = '';
     if (!noUser) {
       url = `${process.env.NEXT_PUBLIC_SERVER}/api/user/fetch-mentions?league=${encodeURIComponent(league || "")}&page=${page || 0}&teamid=${encodeURIComponent(teamid || "")}&name=${encodeURIComponent(name || "")}&myteam=${encodeURIComponent(myteam || "")}`;
@@ -369,28 +391,12 @@ export const fetchMentions = async ({ type, league, noUser, page, teamid, name, 
         return [];
       url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-mentions?league=${encodeURIComponent(league || "")}&page=${page || 0}&teamid=${encodeURIComponent(teamid || "")}&name=${encodeURIComponent(name || "")}&myteam=${encodeURIComponent(myteam || "")}`;
     }
-    console.log("fetchMentions-url", url)
-    const res = await axios.get(url);
-    return res.data.mentions;
+    const fetchResponse = await fetch(url);
+    const data = await fetchResponse.json();
+    return data.mentions;
   }
   catch (e) {
     console.log("fetchMentions", e);
-    return false;
-  }
-}
-interface SetCookieParams {
-  name: string;
-  value: string;
-}
-export const setCookie = async ({ name, value }: SetCookieParams) => {
-  try {
-
-    const url = `${process.env.NEXT_PUBLIC_SERVER}/api/set-cookie?name=${encodeURIComponent(name)}&value=${value}`;
-    const res = await axios.get(url);
-    return res.data.success;
-  }
-  catch (e) {
-    console.log("setCookie", e);
     return false;
   }
 }
@@ -400,12 +406,11 @@ export type AMentionKey = { type: string, findexarxid: string, noLoad: boolean }
 export const getAMention = async ({ type, findexarxid, noLoad }: AMentionKey) => {
   try {
     if (noLoad) return null;
-    console.log("api: getAMention", type, findexarxid)
     let url = '';
     url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-mention?findexarxid=${findexarxid}`;
-    console.log("getMention-url", url)
-    const res = await axios.get(url);
-    return res.data.mention;
+    const fetchResponse = await fetch(url);
+    const data = await fetchResponse.json();
+    return data.mention;
   }
   catch (e) {
     console.log("getAMention", e);
@@ -415,12 +420,12 @@ export const getAMention = async ({ type, findexarxid, noLoad }: AMentionKey) =>
 export const removeAMention = async ({ type, findexarxid, noLoad }: AMentionKey) => {
   try {
     if (noLoad) return null;
-    console.log("api: removeAMention", type, findexarxid)
+
     let url = '';
     url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/remove-mention?findexarxid=${findexarxid}`;
-    console.log("removeAMention-url", url)
-    const res = await axios.get(url);
-    return res.data.mention;
+    const fetchResponse = await fetch(url);
+    const data = await fetchResponse.json();
+    return data.mention;
   }
   catch (e) {
     console.log("removeAMention", e);
@@ -436,7 +441,7 @@ export const fetchStories = async ({ type, league, noUser, page, noLoad, firstXi
   try {
     firstXid = firstXid || "";
     if (noLoad) return [];
-    console.log("api: fetchStories", type, league, noUser, page)
+
     let url = '';
     if (!noUser) {
       url = `${process.env.NEXT_PUBLIC_SERVER}/api/user/fetch-stories?league=${encodeURIComponent(league || "")}&page=${page || 0}`;
@@ -444,9 +449,8 @@ export const fetchStories = async ({ type, league, noUser, page, noLoad, firstXi
     else {
       url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/fetch-stories?league=${encodeURIComponent(league || "")}&page=${page || 0}`;
     }
-    console.log("fetchStories-url", url)
-    const res = await fetch(url);
-    const data = await res.json();
+    const fetchResponse = await fetch(url);
+    const data = await fetchResponse.json();
     return data.stories;
   }
   catch (e) {
@@ -459,12 +463,12 @@ export type ASlugStoryKey = { type: string, slug: string, noLoad: boolean };
 export const getASlugStory = async ({ type, slug, noLoad }: ASlugStoryKey) => {
   try {
     if (noLoad) return null;
-    console.log("api: getASlugStory", type, slug)
+
     let url = '';
     url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/get-slug-story?slug=${slug}`;
-    console.log("getStory-url", url)
-    const res = await axios.get(url);
-    return res.data.story;
+    const fetchResponse= await fetch(url);
+    const data = await fetchResponse.json();
+    return data.story;
   }
   catch (e) {
     console.log("getASlugStory", e);
@@ -478,21 +482,14 @@ export const removeASlugStory = async ({ type, slug, noLoad }: ASlugStoryKey) =>
     console.log("api: removeASlugStory", type, slug)
     let url = '';
     url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/remove-slug-story?slug=${slug}`;
-    console.log("removeASlugStory-url", url)
-    const res = await axios.get(url);
-    return res.data.mention;
+    const fetchResponse= await fetch(url);
+    const data = await fetchResponse.json();
+    return data.success;
   }
   catch (e) {
     console.log("removeASlugStory", e);
     return false;
   }
-}
-
-export const getReport = async (): Promise<{ success: boolean, report: any }> => {
-  const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/events/report`;
-  console.log("getReport:", url);
-  const res = await axios.get(url);
-  return res.data;
 }
 
 // SWR infinite:

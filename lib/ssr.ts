@@ -2,7 +2,6 @@ import { unstable_serialize } from 'swr'
 import { unstable_serialize as us } from 'swr/infinite';
 import { getAuth, buildClerkProps } from "@clerk/nextjs/server";
 import { clerkClient } from "@clerk/nextjs";
-import axios from 'axios';
 import { isbot } from '@/lib/isbot.js';
 //import { getCookie, setCookie } from 'cookies-next';
 import {
@@ -70,20 +69,24 @@ const getServerSideProps = withSessionSsr(
             let calls: { key: any, call: Promise<any> }[] = [];
 
             const ssrDataMentions = async (url: string) => {
-                const { data: dataMentions } = await axios.get(url);
+                const fetchResponse = await fetch(url);
+                const dataMentions = await fetchResponse.json();
                 return dataMentions.mentions;
             }
             const ssrDataStories = async (url: string) => {
-                const { data: dataStories } = await axios.get(url);
+                const fetchResponse = await fetch(url);
+                const dataStories = await fetchResponse.json();
                 return dataStories.stories;
             }
             const ssrDataFavorites = async (url: string) => {
-                const { data } = await axios.get(url);
-                return data.favorites;
+                const fetchResponse = await fetch(url);
+                const dataFavorites = await fetchResponse.json();
+                return dataFavorites.favorites;
             }
             const ssrDataTrackListMembers = async (url: string) => {
-                const { data } = await axios.get(url);
-                return data.members;
+                const fetchResponse = await fetch(url);
+                const dataTrackListMembers = await fetchResponse.json();
+                return dataTrackListMembers.members;
             }
             view = view.toLowerCase();
             if (view == 'feed')
@@ -94,13 +97,14 @@ const getServerSideProps = withSessionSsr(
 
             const createdAt = user?.createdAt;
             let freeUser = false;
-            let fresh=false;
+            let fresh = false;
             let tracker_filter = 0;
             if (userId && user?.emailAddresses) {
                 for (let i = 0; i < user.emailAddresses.length; i++) {
                     const e = user.emailAddresses[i];
                     const email = e.emailAddress;
-                    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/options/get?userid=${userId || ""}&api_key=${api_key}&email=${email}`);
+                    const fetchResponse = await fetch(`${process.env.NEXT_PUBLIC_LAKEAPI}/api/v41/findexar/user/options/get?userid=${userId || ""}&api_key=${api_key}&email=${email}`);
+                    const data = await fetchResponse.json();
                     console.log("========== ========= SSR CHECKPOINT 1:", new Date().getTime() - t1, "ms");
 
                     freeUser = data.exists;
@@ -187,14 +191,11 @@ const getServerSideProps = withSessionSsr(
             let keyMentions = us(page => {
                 const keyFetchedMentions: FetchedMentionsKey = { type: "FetchedMentions", teamid: team || "", name: player || "", noUser: userId ? false : true, page: page, league: league || "", myteam: tab == 'myteam' ? 1 : 0, noLoad: view != 'mentions' && tab != 'fav' }
                 return keyFetchedMentions;
-            }
-            );
+            });
             let keyStories = us(page => {
                 const keyFetchedStories: FetchedStoriesKey = { type: "FetchedStories", noUser: userId ? false : true, page: page, league: league || "", noLoad: (view != 'mentions' && tab != 'fav') || team != '' }
-                // console.log("FETCHED Stories KEY:", keyFetchedStories);
                 return keyFetchedStories;
-            }
-            )
+            });
 
             console.log("========== ========= SSR CHECKPOINT 3:", new Date().getTime() - t1, "ms");
 
