@@ -1,8 +1,8 @@
-import React, { use, useCallback, useEffect, useState } from "react";
+import React, { useCallback} from "react";
 import Link from 'next/link'
 import useSWR from 'swr';
 import { styled } from "styled-components";
-import { LeagueTeamsKey, getLeagueTeams, recordEvent, setCookie, AMentionKey, getAMention } from '@/lib/api';
+import { LeagueTeamsKey, getLeagueTeams, recordEvent } from '@/lib/api';
 import { useAppContext } from '@/lib/context';
 
 const SideLeagueName = styled.div`
