@@ -81,7 +81,7 @@ interface Props {
 const Mobile: React.FC<Props> = () => {
     const router = useRouter();
     let { tab, view, mode, userId, isMobile, setLeague, setView, setTab, params2, tp2, setPagetype, setTeam, setPlayer, setMode, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName } = useAppContext();
-
+    console.log("isMobile mobile")
     tab = tab || "all";
     const onTabNav = async (option: any) => {
         const tab = option.tab;

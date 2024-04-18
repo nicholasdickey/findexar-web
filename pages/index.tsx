@@ -29,7 +29,7 @@ interface Props {
     tracker_filter:number;
 }
 export default function Home(props: Props) {
-    return <SinglePage  {...props} />
+    return null;//<SinglePage  {...props} />
 }
 
 export const getServerSideProps =

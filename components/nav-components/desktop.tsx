@@ -121,6 +121,7 @@ const Desktop: React.FC<Props> = () => {
     let { tab,view,mode, userId, isMobile, setLeague, setView,setTab, setPagetype, setTeam, setPlayer, setMode, fbclid, utm_content, params, tp, league, pagetype, team, player, teamName ,findexarxid} = useAppContext();
     tab=tab||"all";
     view=view||"mentions";
+    console.log("isMobile desktop")
     const onTabNav = async (option: any) => {
         const tab = option.tab;
         setTab(tab);

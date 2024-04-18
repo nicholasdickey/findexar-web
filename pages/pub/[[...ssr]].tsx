@@ -44,6 +44,7 @@ interface Props {
     teamName:string;
     slug:string;
     tracker_filter:number;
+    isMobile:boolean;
 }
 export default function Home(props: Props) {
     const fallback = props.fallback;

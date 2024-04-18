@@ -6,7 +6,11 @@ import { Roboto } from 'next/font/google';
 //styled-components
 import { styled, ThemeProvider } from "styled-components";
 //mui
-import { Tabs, Tab, } from '@mui/material'
+//import { Tabs, Tab, } from '@mui/material'
+//import Tabs from '../tw-mui/tabs';
+//import Tab from '../tw-mui/tab';
+import { Tabs } from 'flowbite-react';
+import { HiAdjustments, HiClipboardList, HiUserCircle } from 'react-icons/hi';
 import { blueGrey, cyan, teal } from '@mui/material/colors'
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -83,15 +87,25 @@ const ContainerWrap = styled.div`
 `;
 
 const MobileContainerWrap = styled.div`
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+    //display: flex;
+    //flex-direction: column;
+   // height: 100%;
     width: 100%;
     color: #111;
     font-family: 'Roboto', sans-serif;
     border-top: 1px solid #ccc;
     @media screen and (min-width: 1200px) {
       display: none;
+    }
+    div[role="tabpanel"]{
+      display:none;
+    }
+    button[role="tab"]{
+      border-color:black;
+      :focus{
+        border-color:blue !important;
+      }
+
     }
 `;
 
@@ -157,11 +171,11 @@ const LeagueIcon = styled.div<HeaderProps>`
 `;
 
 const MuiTabs = styled(Tabs)`
-    width:100%;
+   // width:100%;
     padding:0px;
     margin:0px;
-    color: var(--mobile-leagues-text);
-    background-color:var(--mobile-leagues-bg);
+   // color: var(--mobile-leagues-text);
+   background-color:var(--mobile-leagues-bg);
 `;
 
 const Superhead = styled.div<HeaderProps>`
@@ -322,12 +336,12 @@ interface LeaguesNavProps {
   selected: boolean;
 }
 
-const LeaguesTab = styled(Tab) <LeaguesNavProps>`
+/*const LeaguesTab = styled(Tab) <LeaguesNavProps>`
    color:${({ selected }) => selected ? 'var(--mobile-leagues-selected)' : 'var(--mobile-leagues-text)'} !important;
    :hover{
       color:var(--mobile-leagues-highlight) !important;
    }
-`;
+`;*/
 /*==========================================*/
 interface Props {
   leagues: string[];
@@ -406,11 +420,10 @@ const HeaderNav: React.FC<Props> = ({ leagues }) => {
   });
 
   const MobileLeaguesNav = leagues?.map((l: string, i: number) => {
-    //@ts-ignore
-    return <LeaguesTab selected={l == league} key={`league-${i}`} label={l} onClick={() => { onLeagueNavClick(l).then(() => { }); router.replace(`/pub/league/${l}${params}${tp}`); }} />
+    
+    return <Tabs.Item  className=" focus:bg-red-600" active={l == league} key={`league-${i}`} title={l} onClick={() => { onLeagueNavClick(l).then(() => { }); router.replace(`/pub/league/${l}${params}${tp}`); }} ><div className="h-0 w-0 p-0 m-0 top-0 display:hidden"/></Tabs.Item>
   })
-  //@ts-ignore
-  MobileLeaguesNav.unshift(<LeaguesTab selected={!league} key={`league-${leagues?.length}`} icon={<HomeIcon />} onClick={() => { onLeagueNavClick('').then(() => { }); router.replace(`/pub${params}${tp}`); }} />)
+  MobileLeaguesNav.unshift(<Tabs.Item active={!league} title="Home" key={`league-${leagues?.length}`} icon={HiUserCircle} onClick={() => { onLeagueNavClick('').then(() => { }); router.replace(`/pub${params}${tp}`); }} />)
   LeaguesNav.unshift(league ? <League scrolled={scrollY != 0} key={`league-${leagues?.length}`}><Link href={`/pub${params}${tp}`} shallow onClick={() => { onLeagueNavClick('').then(() => { }) }}><LeagueIcon scrolled={scrollY != 0}><HomeIcon fontSize={scrollY != 0 ? "small" : "medium"} sx={{ m: 0.3 }} /></LeagueIcon></Link></League> : <SelectedLeague scrolled={scrollY != 0} key={`league-${leagues?.length}`}><Link href={`/pub${params}${tp}`} shallow onClick={() => { onLeagueNavClick('').then(() => { }) }}><LeagueIcon scrolled={scrollY != 0}><HomeIcon fontSize={scrollY != 0 ? "small" : "medium"} sx={{ m: 0.3 }} /></LeagueIcon></Link></SelectedLeague>)
   const selectedLeague = leagues?.findIndex((l: string) => l == league) + 1;
 
@@ -447,17 +460,18 @@ const HeaderNav: React.FC<Props> = ({ leagues }) => {
           {LeaguesNav}
         </Leagues></ContainerWrap>}
       </Header>
-      {isMobile && <MobileContainerWrap>
-        <MuiTabs
-          value={selectedLeague}
-          variant="scrollable"
-          scrollButtons={true}
-          allowScrollButtonsMobile
-          aria-label="scrollable auto tabs example"
+      {isMobile && <MobileContainerWrap><div className="overflow-x-auto">
+        <Tabs
+         // value={selectedLeague}
+         // variant="scrollable"
+         // scrollButtons={true}
+         // allowScrollButtonsMobile
+         style="default"
+          aria-label="league tabs"
         >
           {MobileLeaguesNav}
-        </MuiTabs>
-      </MobileContainerWrap>}
+        </Tabs>
+      </div></MobileContainerWrap> }
     </>
   )
 }

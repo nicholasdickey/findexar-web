@@ -6,12 +6,14 @@ import { useRouter } from 'next/router'
 import { Roboto } from 'next/font/google';
 import Script from "next/script";
 import useSWR from 'swr';
+import { ThemeModeScript, CustomFlowbiteTheme, Flowbite } from 'flowbite-react';
+
 //styled-components
 import { styled, ThemeProvider } from "styled-components";
 //mui
-import { Tabs, Tab, } from '@mui/material'
+
 import { ThemeProvider as MuiTP } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
+//import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 //stripe
 import { useSubscription } from "use-stripe-subscription";
@@ -27,17 +29,33 @@ import Desktop from "@/components/nav-components/desktop";
 import Mobile from "@/components/nav-components/mobile";
 import SubscriptionMenu from "./util-components/subscription-menu";
 
+//change left side from quoted to unquoted copilot
+//@ts-ignore
+const customTheme: CustomFlowbiteTheme = {
+  button: {
+    color: {
+      primary: 'bg-red-500 hover:bg-red-600 focus:ring-magenta-500',
+    },
+  },
+  //@ts-ignore
+  tabitem:{
+    styles:{
+      default:{
+        active:{
+          on:"bg-gray-100 text-magenta-600 dark:bg-gray-800 dark:text-magenta-500 focus:ring-magenta-500",
+          off:"bg-gray-100 text-magenta-600 dark:bg-gray-800 dark:text-magenta-500 focus:ring-magenta-500"
+    
+        }
+      }
+    }
+  }
+};
+
 /*==========================================*/
 interface LeaguesNavProps {
   selected: boolean;
 }
 
-const LeaguesTab = styled(Tab) <LeaguesNavProps>`
-   color:${({ selected }) => selected ? 'var(--mobile-leagues-selected)' : 'var(--mobile-leagues-text)'} !important;
-   :hover{
-      color:var(--mobile-leagues-highlight) !important;
-   }
-`;
 /*==========================================*/
 interface Props {
   disable?: boolean;
@@ -64,6 +82,7 @@ interface Props {
   teamName: string;
   slug: string;
   tracker_filter: number;
+  isMobile: boolean;
 }
 const SubscriptionWrap = styled.div`
   margin-top:20px;
@@ -72,7 +91,7 @@ const SubscriptionWrap = styled.div`
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 
 const SinglePage: React.FC<Props> = (props) => {
-  let { teamName: tn, findexarxid, slug = "", tab, t1, fbclid = "", isbot, freeUser, createdAt, userId, utm_content, dark, leagues, league = "", team = "", pagetype = "league", player = "", view = "" } = props;
+  let { teamName: tn, findexarxid, slug = "", tab, t1, fbclid = "", isbot, freeUser, createdAt, userId, utm_content, dark, leagues, league = "", team = "", pagetype = "league", player = "", view = "", isMobile: defaultIsMobile = false } = props;
 
   const [localTeam, setLocalTeam] = useState(team);
   const [localPlayer, setLocalPlayer] = useState(player);
@@ -92,13 +111,35 @@ const SinglePage: React.FC<Props> = (props) => {
   const [localSlug, setLocalSlug] = React.useState(slug || "");
   const [localView, setLocalView] = useState(view.toLowerCase());
   const [teamName, setTeamName] = useState(tn);
+  const [isMobile, setIsMobile] = useState(defaultIsMobile);
   const router = useRouter();
   const muiTheme = useTheme();
-  const fullScreen = useMediaQuery(muiTheme.breakpoints.down('md'));
-  const isMobile = useMediaQuery('(max-width:1199px)');
+  //const fullScreen = useMediaQuery(muiTheme.breakpoints.down('md'));
+  // const isMobile = useMediaQuery('(max-width:1199px)');
   const { isLoaded: isClerkLoaded, isSignedIn, user } = useUser();
 
   //console.log("isSignedIn:", isSignedIn, "isLoaded:", isClerkLoaded, "user:", user);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (!isMobile && window.innerWidth < 1200) {
+        setIsMobile(true);
+        console.log("setting isMobile true")
+      }
+      else if (isMobile && window.innerWidth >= 1200) {
+        setIsMobile(false);
+        console.log("setting isMobile false")
+      }
+      console.log("isMobile:", isMobile, "window.innerWidth:", window.innerWidth)
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [isMobile]);
+
 
   useEffect(() => {
     if (isClerkLoaded && isSignedIn) {
@@ -308,6 +349,7 @@ const SinglePage: React.FC<Props> = (props) => {
     ogImage = astoryImageOgUrl;
   }
   const noindex = +(process.env.NEXT_PUBLIC_NOINDEX || "0");
+  console.log("render isMobile", isMobile)
   return (
     <>
       <Head>
@@ -339,6 +381,7 @@ const SinglePage: React.FC<Props> = (props) => {
           href={process.env.NEXT_PUBLIC_APP_NAME == "Findexar" ? "/FiLogo.png" : "/QLogo.png"}
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <ThemeModeScript />
       </Head>
 
       <Script src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_APP_NAME == "Findexar" ? 'G-LWYQDGSGWQ' : 'G-8ZWPQEPDPB'}`} strategy="afterInteractive"></Script>
@@ -352,23 +395,26 @@ const SinglePage: React.FC<Props> = (props) => {
           });
         `,
       }} />
-      <MuiTP theme={muiTheme}>
-        <main className={roboto.className} >
-          <ThemeProvider
-            //@ts-ignore
-            theme={palette}>
-            <GlobalStyle $light={localMode == "light"} />
-            <AppWrapper userId={localUserId} isMobile={isMobile} setUserId={setLocalUserId} params={params} params2={params2} tp={tp} tp2={tp2} findexarxid={localFindexarxid} view={v} tab={localTab} noUser={!localUserId} mode={localMode} setMode={setLocalMode} pagetype={localPageType} setLeague={setLocalLeague} setPagetype={setLocalPageType} setPlayer={setLocalPlayer} setTeam={setLocalTeam} setTab={setLocalTab} setView={setLocalView} league={localLeague.toUpperCase()} team={localTeam} player={localPlayer} fbclid={fbclid} utm_content={utm_content} teamName={teamName} setTeamName={setTeamName} slug={localSlug} setSlug={setLocalSlug}>
-              <Header leagues={leagues} />
-              {!dismiss && subscriptionPrompt && <SubscriptionWrap><SubscriptionMenu products={products} redirectToCheckout={redirectToCheckout}
-                redirectToCustomerPortal={redirectToCustomerPortal}
-                setDismiss={(val: boolean) => { setDismiss(val); }} hardStop={hardStop} /></SubscriptionWrap>}
-              {!isMobile && !hardStop && <Desktop />}
-              {isMobile && !hardStop && <Mobile />}
-            </AppWrapper>
-          </ThemeProvider>
-        </main>
-      </MuiTP>
+      <Flowbite theme={{ theme: customTheme }}>
+        <MuiTP theme={muiTheme}>
+          <main className={roboto.className} >
+            <ThemeProvider
+              //@ts-ignore
+              theme={palette}>
+              <GlobalStyle $light={localMode == "light"} />
+              <AppWrapper userId={localUserId} isMobile={isMobile} setUserId={setLocalUserId} params={params} params2={params2} tp={tp} tp2={tp2} findexarxid={localFindexarxid} view={v} tab={localTab} noUser={!localUserId} mode={localMode} setMode={setLocalMode} pagetype={localPageType} setLeague={setLocalLeague} setPagetype={setLocalPageType} setPlayer={setLocalPlayer} setTeam={setLocalTeam} setTab={setLocalTab} setView={setLocalView} league={localLeague.toUpperCase()} team={localTeam} player={localPlayer} fbclid={fbclid} utm_content={utm_content} teamName={teamName} setTeamName={setTeamName} slug={localSlug} setSlug={setLocalSlug}>
+                <Header leagues={leagues} />
+                {!dismiss && subscriptionPrompt && <SubscriptionWrap><SubscriptionMenu products={products} redirectToCheckout={redirectToCheckout}
+                  redirectToCustomerPortal={redirectToCustomerPortal}
+                  setDismiss={(val: boolean) => { setDismiss(val); }} hardStop={hardStop} /></SubscriptionWrap>}
+                {!isMobile && !hardStop && <Desktop />}
+                {isMobile && !hardStop && <Mobile />}
+              </AppWrapper>
+            </ThemeProvider>
+          </main>
+        </MuiTP>
+      </Flowbite>
+
     </>
   )
 }

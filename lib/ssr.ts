@@ -316,6 +316,7 @@ const getServerSideProps = withSessionSsr(
                     findexarxid,
                     teamName,
                     slug: story,
+                    isMobile
 
                 }
             }

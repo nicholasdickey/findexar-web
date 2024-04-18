@@ -83,12 +83,12 @@ const Stories: React.FC<Props> = () => {
 
     const Mentions = mentions && mentions.map((m: any, i: number) => {
         return (
+            <div key={`mention${i}`}>
             <Mention
                 mention={m}
-                key={`mention${i}`}
                 mutate={() => { mutate() }}
                 handleClose={() => { }}
-            />)
+            /></div>)
     });
     return (
         <>
