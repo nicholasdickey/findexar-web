@@ -193,6 +193,7 @@ const SinglePage: React.FC<Props> = (props) => {
     }
     else if (arg3 == 'player') {
       qplayer = arg4.replaceAll('_', ' ');
+      
     }
     setLocalLeague(qleague);
     setLocalTeam(qteam);
